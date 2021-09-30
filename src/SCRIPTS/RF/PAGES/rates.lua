@@ -70,6 +70,7 @@ if apiVersion >= 1.043 then
     fields[#fields + 1] = { t = "Rates Type",     x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 4, vals = { 23 }, table = { [0] = "BF", "RF", "KISS", "ACTUAL", "QUICK"}, postEdit = function(self) self.updateRatesType(self, true) end }
 end
 
+--[[
 if apiVersion >= 1.016 then
     labels[#labels + 1] = { t = "Throttle",       x = x,          y = inc.y(lineSpacing) }
     fields[#fields + 1] = { t = "Mid",            x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 100, vals = { 7 }, scale = 100 }
@@ -85,6 +86,7 @@ if apiVersion >= 1.016 then
     fields[#fields + 1] = { t = "Rate",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 100, vals = { 6 } , scale = 100 }
     fields[#fields + 1] = { t = "Breakpoint",     x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 1000, max = 2000, vals = { 9, 10 } }
 end
+--]]
 
 return {
     read        = 111, -- MSP_RC_TUNING
