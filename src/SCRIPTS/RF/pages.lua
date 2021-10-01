@@ -21,6 +21,7 @@ if apiVersion >= 1.016 then
 end
 
 if apiVersion >= 1.043 then
+    PageFiles[#PageFiles + 1] = { title = "Governor", script = "governor.lua" }
     PageFiles[#PageFiles + 1] = { title = "Heli", script = "heli.lua" }
 end
 

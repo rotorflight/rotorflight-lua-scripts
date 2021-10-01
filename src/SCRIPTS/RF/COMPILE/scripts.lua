@@ -2,6 +2,7 @@ local scripts = {
     "/SCRIPTS/RF/PAGES/failsafe.lua",
     "/SCRIPTS/RF/PAGES/filters1.lua",
     "/SCRIPTS/RF/PAGES/filters2.lua",
+    "/SCRIPTS/RF/PAGES/governor.lua",
     "/SCRIPTS/RF/PAGES/gpspids.lua",
     "/SCRIPTS/RF/PAGES/heli.lua",
     "/SCRIPTS/RF/PAGES/pid_advanced.lua",
