@@ -46,7 +46,7 @@ return {
     read        = 142, -- MSP_GOVERNOR
     write       = 143, -- MSP_SET_GOVERNOR
     title       = "Governor",
-    reboot      = false,
+    reboot      = true,
     eepromWrite = true,
     minBytes    = 39,
     labels      = labels,
