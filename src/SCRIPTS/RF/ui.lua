@@ -28,7 +28,7 @@ local currentField = 1
 local saveTS = 0
 local saveTimeout = protocol.saveTimeout
 local saveRetries = 0
-local saveMaxRetries = protocol.saveMaxRetries
+local saveMaxRetries = 0 --protocol.saveMaxRetries
 local popupMenuActive = 1
 local killEnterBreak = 0
 local pageScrollY = 0
@@ -91,9 +91,6 @@ local function createPopupMenu()
     end
     popupMenu[#popupMenu + 1] = { t = "reboot", f = rebootFc }
     popupMenu[#popupMenu + 1] = { t = "acc cal", f = function() confirm("CONFIRM/acc_cal.lua") end }
-    if apiVersion >= 1.042 then
-        popupMenu[#popupMenu + 1] = { t = "vtx tables", f = function() confirm("CONFIRM/vtx_tables.lua") end }
-    end
 end
 
 local function processMspReply(cmd,rx_buf)
@@ -225,7 +222,7 @@ local function drawScreen()
             lcd.drawText(f.sp or f.x, y, val, valueOptions)
         end
     end
-    drawScreenTitle("Betaflight / "..Page.title)
+    drawScreenTitle("Rotorflight / "..Page.title)
 end
 
 local function incValue(inc)
@@ -282,7 +279,7 @@ local function run_ui(event)
         end
     elseif uiState == uiStatus.init then
         lcd.clear()
-        drawScreenTitle("Betaflight Config")
+        drawScreenTitle("Rotorflight Config")
         init = init or assert(loadScript("ui_init.lua"))()
         lcd.drawText(6, radio.yMinLimit, init.t)
         if not init.f() then
@@ -328,7 +325,7 @@ local function run_ui(event)
                 lcd.drawText(6, y, PageFiles[i].title, attr)
             end
         end
-        drawScreenTitle("Betaflight Config")
+        drawScreenTitle("Rotorflight Config")
     elseif uiState == uiStatus.pages then
         if pageState == pageStatus.saving then
             if saveTS + saveTimeout < getTime() then
