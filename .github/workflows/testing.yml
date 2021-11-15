@@ -1,0 +1,29 @@
+name: Makefile CI
+
+on:
+  push:
+    tags:
+      - 'testing/*'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Install Lua compiler
+      run: sudo apt-get -y install lua5.2
+      
+    - name: Make
+      run: make
+      
+    - name: Move artifacts
+      run: mv obj/* .
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: rotorflight-opentx-lua-testing-${{ env.revision }}
+        path: rotorflight-opentx-lua*
