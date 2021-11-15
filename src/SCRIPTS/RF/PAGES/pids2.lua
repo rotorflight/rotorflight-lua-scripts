@@ -1,9 +1,4 @@
-local template = loadScript(radio.templateHome.."pids2.lua")
-if template then
-    template = template()
-else
-    template = assert(loadScript(radio.templateHome.."default_template.lua"))()
-end
+local template = assert(loadScript(radio.template))()
 local margin = template.margin
 local indent = template.indent
 local lineSpacing = template.lineSpacing
@@ -15,6 +10,12 @@ local y = yMinLim - lineSpacing
 local inc = { x = function(val) x = x + val return x end, y = function(val) y = y + val return y end }
 local labels = {}
 local fields = {}
+
+local dMinMax = 100
+
+if apiVersion >= 1.044 then
+    dMinMax = 250
+end
 
 if apiVersion >= 1.040 then
     x = margin
@@ -38,9 +39,9 @@ if apiVersion >= 1.040 then
         y = yMinLim - tableSpacing.header
 
         labels[#labels + 1] = { t = "D Min", x = x, y = inc.y(tableSpacing.header) }
-        fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 100, vals = { 40 } }
-        fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 100, vals = { 41 } }
-        fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 100, vals = { 42 } }
+        fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = dMinMax, vals = { 40 } }
+        fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = dMinMax, vals = { 41 } }
+        fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = dMinMax, vals = { 42 } }
     end
     
     x = margin
@@ -48,15 +49,13 @@ if apiVersion >= 1.040 then
 end
 
 if apiVersion >= 1.040 then
-    labels[#labels + 1] = { t = "Feedforward", x = x,          y = inc.y(lineSpacing) }
-    fields[#fields + 1] = { t = "Transition",  x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 100, vals = { 9 }, scale = 100 }
-end
-
-if apiVersion >= 1.044 then
-    labels[#labels + 1] = { t = "FF Interpolate", x = x,          y = inc.y(lineSpacing) }
-    fields[#fields + 1] = { t = "Mode",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 4, vals = { 51 }, table = { [0] = "OFF", "ON", "AVG_2", "AVG_3", "AVG_4" } }
-    fields[#fields + 1] = { t = "Smoothness",     x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 75, vals = { 52 } }
-    fields[#fields + 1] = { t = "Boost",          x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 50, vals = { 53 } }
+    labels[#labels + 1] = { t = "Feedforward",    x = x,          y = inc.y(lineSpacing) }
+    fields[#fields + 1] = { t = "Transition",     x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 100, vals = { 9 }, scale = 100 }
+    if apiVersion >= 1.044 then
+        fields[#fields + 1] = { t = "Averaging",  x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 3, vals = { 51 }, table = { [0] = "OFF", "2_POINT", "3_POINT", "4_POINT" } }
+        fields[#fields + 1] = { t = "Smoothness", x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 75, vals = { 52 } }
+        fields[#fields + 1] = { t = "Boost",      x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 50, vals = { 53 } }
+    end
 end
 
 if apiVersion >= 1.041 then

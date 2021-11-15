@@ -9,11 +9,9 @@
 
 ## Installing
 
-**!! IMPORTANT: DON'T COPY THE CONTENTS OF THIS REPOSITORY ONTO YOUR SDCARD !!**
-
 Download a zip file containing the latest version from the [releases page](https://github.com/rotorflight/rotorflight-opentx-lua/releases).
 
-Unzip the files from the link above and drag the contents of the `obj` folder to your radios SD card. If you do this correctly, the `SCRIPTS` directory will merge with your existing directories, placing the scripts in their appropriate paths.  You will know if you did this correctly if the `bf.lua` file shows up in your `/SCRIPTS/TOOLS` directory.
+Unzip the files from the link above and drag the contents of the `SCRIPTS` folder to your radios SD card. If you do this correctly, the `SCRIPTS` directory will merge with your existing directories, placing the scripts in their appropriate paths.  You will know if you did this correctly if the `rf.lua` file shows up in your `/SCRIPTS/TOOLS` directory.
 
 ### How to install
 

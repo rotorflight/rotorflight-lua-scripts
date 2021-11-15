@@ -16,7 +16,8 @@ if [ ${#MANIFEST[@]} -eq 0 ]; then
     exit 1
 fi
 
-SCRIPTS_LUA=obj/SCRIPTS/BF/COMPILE/scripts.lua
+SCRIPTS_LUA=obj/SCRIPTS/RF/COMPILE/scripts.lua
+rm $SCRIPTS_LUA
 
 echo 'local scripts = {' >> $SCRIPTS_LUA
 for f in ${MANIFEST[@]};

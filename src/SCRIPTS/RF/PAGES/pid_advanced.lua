@@ -1,9 +1,4 @@
-local template = loadScript(radio.templateHome.."pid_advanced.lua")
-if template then
-    template = template()
-else
-    template = assert(loadScript(radio.templateHome.."default_template.lua"))()
-end
+local template = assert(loadScript(radio.template))()
 local margin = template.margin
 local indent = template.indent
 local lineSpacing = template.lineSpacing
@@ -17,22 +12,13 @@ local labels = {}
 local fields = {}
 
 if apiVersion >= 1.040 then
-    labels[#labels + 1] = { t = "Feed Forward",      x = x,          y = inc.y(lineSpacing) }
-    fields[#fields + 1] = { t = "Roll",              x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 2000, vals = { 33, 34 } }
-    fields[#fields + 1] = { t = "Pitch",             x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 2000, vals = { 35, 36 } }
-    fields[#fields + 1] = { t = "Yaw",               x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 2000, vals = { 37, 38 } }
-    fields[#fields + 1] = { t = "Angle Level Limit", x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 10, max = 90, vals = { 18 } }
-end
-
-if apiVersion >= 1.040 then
     labels[#labels + 1] = { t = "Acro Trainer",      x = x,          y = inc.y(lineSpacing) }
-    fields[#fields + 1] = { t = "Angle Limit",       x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 10, max = 80, vals = { 32 } }
---    fields[#fields + 1] = { t = "Throttle Boost",    x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 100, vals = { 31 } }
-    fields[#fields + 1] = { t = "Absolute Control",  x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 200, vals = { 30 } }
+    fields[#fields + 1] = { t = "Angle Limit",       x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 20, max = 80, vals = { 32 } }
+    fields[#fields + 1] = { t = "Throttle Boost",    x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 100, vals = { 31 } }
+    fields[#fields + 1] = { t = "Absolute Control",  x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 20, vals = { 30 } }
     fields[#fields + 1] = { t = "I Term Rotation",   x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1, vals = { 26 }, table = { [0]="OFF", "ON" } }
 end
 
---[[
 if apiVersion >= 1.043 then
     fields[#fields + 1] = { t = "Dynamic Idle",      x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 100, vals = { 50 } }
 end
@@ -53,7 +39,6 @@ end
 if apiVersion >= 1.041 then
     fields[#fields + 1] = { t = "Integrated Yaw",    x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1, vals = { 45 }, table = { [0]="OFF", "ON" } }
 end
---]]
 
 if apiVersion >= 1.040 then
     labels[#labels + 1] = { t = "I Term Relax",      x = x,          y = inc.y(lineSpacing) }
@@ -66,7 +51,6 @@ if apiVersion >= 1.040 then
     end
 end
 
---[[
 if apiVersion >= 1.036 then
     labels[#labels + 1] = { t = "Anti Gravity",      x = x,          y = inc.y(lineSpacing) }
     if apiVersion >= 1.040 then
@@ -79,7 +63,6 @@ if apiVersion >= 1.036 then
     end
     fields[#fields + 1] = { t = "Threshold",         x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 20, max = 1000, vals = { 20, 21 } }
 end
---]]
 
 return {
     read        = 94, -- MSP_PID_ADVANCED

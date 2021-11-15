@@ -1,0 +1,29 @@
+name: Snapshot
+
+on:
+  push:
+    tags:
+      - 'snapshot/*'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Install Lua compiler
+      run: sudo apt-get -y install lua5.2
+
+    - name: Set build variables
+      run: echo "revision=${GITHUB_REF##*/}" >> ${GITHUB_ENV}
+
+    - name: Make
+      run: make
+      
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: rotorflight-opentx-lua-snapshot-${{ env.revision }}
+        path: ./obj
