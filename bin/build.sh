@@ -17,6 +17,7 @@ if [ ${#MANIFEST[@]} -eq 0 ]; then
 fi
 
 SCRIPTS_LUA=obj/SCRIPTS/RF/COMPILE/scripts.lua
+rm $SCRIPTS_LUA
 
 echo 'local scripts = {' >> $SCRIPTS_LUA
 for f in ${MANIFEST[@]};
