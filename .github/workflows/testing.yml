@@ -27,3 +27,6 @@ jobs:
       with:
         name: rotorflight-opentx-lua-testing-${{ env.revision }}
         path: ./obj
+        
+    - name: Delete tag
+      run: git push origin :${GITHUB_REF}        
