@@ -25,5 +25,5 @@ jobs:
     - name: Upload Artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: rotorflight-opentx-lua-testing-${{ env.revision }}
+        name: rotorflight-opentx-lua-snapshot-${{ env.revision }}
         path: ./obj
