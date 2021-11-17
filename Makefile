@@ -1,16 +1,23 @@
-DIR := ${CURDIR}
+
+VARIANT ?= obj
+VERSION ?= 0.0.0
+
+ZIPFILE ?= rotorflight-opentx-lua-$(VARIANT)-$(VERSION).zip
+
+
+.PHONY: all files package clean
 
 all:	files
 
 files:
-	@bin/build.sh
+	@bin/build.sh $(VARIANT)
+
+package:
+	@bin/build.sh $(VARIANT) && \
+	  rm -f $(ZIPFILE) && \
+          cd $(VARIANT) && \
+	  zip -q -r ../$(ZIPFILE) *
 
 clean:
-	@rm -rf obj/*
+	@rm -rf obj test release snapshot $(VARIANT) rotorflight-opentx-lua-*.zip
 
-release: clean files
-	@RELEASE_DIR=release; \
-	FILE_NAME="betaflight-tx-lua-scripts_$$(git describe --abbrev=0 --tags).zip"; \
-	mkdir -p $${RELEASE_DIR}; \
-	rm -f $${RELEASE_DIR}/$${FILE_NAME}; \
-	zip -q -r $${RELEASE_DIR}/$${FILE_NAME} obj/

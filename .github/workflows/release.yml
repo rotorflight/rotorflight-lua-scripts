@@ -1,9 +1,9 @@
-name: Snapshot
+name: Release
 
 on:
   push:
     tags:
-      - 'snapshot/*'
+      - 'release/*'
 
 jobs:
 
@@ -21,12 +21,12 @@ jobs:
     - name: Set build variables
       run: echo "revision=${GITHUB_REF##*/}" >> ${GITHUB_ENV}
 
-    - name: Make snapshot package
-      run: make package ZIPFILE="rotorflight-opentx-lua-snapshot-${GITHUB_REF##*/}.zip"
+    - name: Make release package
+      run: make package ZIPFILE="rotorflight-opentx-lua-${GITHUB_REF##*/}.zip"
 
-    - name: Create Snapshot
+    - name: Create Release
       run: |
-        gh release create ${GITHUB_REF##refs/tags/} --prerelease --notes-file "Snapshot.md" --title "Rotorflight LUA Scripts Snapshot ${GITHUB_REF##*/}" *.zip
+        gh release create ${GITHUB_REF##refs/tags/} --notes-file "Release.md" --title "Rotorflight LUA Scripts Release ${GITHUB_REF##*/}" *.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

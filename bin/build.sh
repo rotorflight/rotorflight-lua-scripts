@@ -1,47 +1,47 @@
 #!/bin/bash
 
-if [ -d obj ]; then
-    rm -fR obj/*
-else
-    mkdir obj
-fi
+TARGET=${1:-obj}
 
-cp -fR src/* obj
+rm -fr ${TARGET}
+cp -fr src ${TARGET}
 
-MANIFEST=(`find obj/ -name *.lua -type f`);
-LAST_FAILURE=0
+MANIFEST=(`find ${TARGET} -name '*.lua' -type f`)
 
-if [ ${#MANIFEST[@]} -eq 0 ]; then
+if [ ${#MANIFEST[@]} -eq 0 ]
+then
     echo -e "\e[1m\e[39m[\e[31mTEST FAILED\e[39m]\e[21m No scripts could be found!."
     exit 1
 fi
 
-SCRIPTS_LUA=obj/SCRIPTS/RF/COMPILE/scripts.lua
-rm $SCRIPTS_LUA
+SCRIPTS=${TARGET}/SCRIPTS/RF/COMPILE/scripts.lua
 
-echo 'local scripts = {' >> $SCRIPTS_LUA
-for f in ${MANIFEST[@]};
+rm -f ${SCRIPTS}
+
+echo 'local scripts = {' >> ${SCRIPTS}
+for FILE in ${MANIFEST[@]}
 do
-    echo '    ''"'${f/\obj/}'",' >> $SCRIPTS_LUA
+    echo '    "'${FILE#*/}'",' >> ${SCRIPTS}
 done
-echo '}' >> $SCRIPTS_LUA
-echo 'return scripts[...]' >> $SCRIPTS_LUA
+echo '}' >> ${SCRIPTS}
+echo 'return scripts[...]' >> ${SCRIPTS}
 
-MANIFEST+=($SCRIPTS_LUA);
+MANIFEST+=(${SCRIPTS})
 
-for f in ${MANIFEST[@]};
+EXIT=0
+
+for FILE in ${MANIFEST[@]}
 do
-    SRC_NAME=$f
-    echo -e "Testing file \e[1m${SRC_NAME}\e[21m..."
-    luac -p ${SRC_NAME}
-    _fail=$?
-    if [[ $_fail -ne 0 ]]; then
-        LAST_FAILURE=$_fail
-        echo -e "\e[1m\e[39m[\e[31mBUILD FAILED\e[39m]\e[21m Error in file ${SRC_NAME}\e[1m"
+    echo -e "Testing file \e[1m${FILE}\e[21m..."
+    luac -p ${FILE} ; E=$?
+    if [[ $E -ne 0 ]]
+    then
+        EXIT=$E
+        echo -e "\e[1m\e[39m[\e[31mBUILD FAILED\e[39m]\e[21m Error in file ${FILE}\e[1m"
     fi
 done
 
-if [[ $LAST_FAILURE -eq 0 ]]; then
+if [[ ${EXIT} -eq 0 ]]; then
     echo -e "\e[1m\e[39m[\e[32mTEST SUCCESSFUL\e[39m]\e[21m"
 fi
-exit $LAST_FAILURE
+
+exit ${EXIT}
