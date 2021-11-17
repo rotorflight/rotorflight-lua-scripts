@@ -20,7 +20,7 @@ rm -f ${SCRIPTS}
 echo 'local scripts = {' >> ${SCRIPTS}
 for FILE in ${MANIFEST[@]}
 do
-    echo '    "'${FILE#*/}'",' >> ${SCRIPTS}
+    echo "    \"/${FILE#*/}\"," >> ${SCRIPTS}
 done
 echo '}' >> ${SCRIPTS}
 echo 'return scripts[...]' >> ${SCRIPTS}
