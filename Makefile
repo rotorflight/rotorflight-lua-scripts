@@ -2,7 +2,7 @@
 VARIANT ?= obj
 VERSION ?= 0.0.0
 
-ZIPFILE ?= rotorflight-opentx-lua-$(VARIANT)-$(VERSION).zip
+ZIPFILE ?= rotorflight-lua-scripts-$(VARIANT)-$(VERSION).zip
 
 
 .PHONY: all files package clean
@@ -19,5 +19,5 @@ package:
 	  zip -q -r ../$(ZIPFILE) *
 
 clean:
-	@rm -rf obj test release snapshot $(VARIANT) rotorflight-opentx-lua-*.zip
+	@rm -rf obj test release snapshot $(VARIANT) rotorflight-*.zip
 

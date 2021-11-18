@@ -22,7 +22,7 @@ jobs:
       run: echo "revision=${GITHUB_REF##*/}" >> ${GITHUB_ENV}
 
     - name: Make snapshot package
-      run: make package ZIPFILE="rotorflight-opentx-lua-snapshot-${GITHUB_REF##*/}.zip"
+      run: make package ZIPFILE="rotorflight-lua-scripts-snapshot-${GITHUB_REF##*/}.zip"
 
     - name: Create Snapshot
       run: |

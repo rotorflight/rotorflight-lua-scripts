@@ -22,7 +22,7 @@ jobs:
       run: echo "revision=${GITHUB_REF##*/}" >> ${GITHUB_ENV}
 
     - name: Make release package
-      run: make package ZIPFILE="rotorflight-opentx-lua-${GITHUB_REF##*/}.zip"
+      run: make package ZIPFILE="rotorflight-lua-scripts-${GITHUB_REF##*/}.zip"
 
     - name: Create Release
       run: |
