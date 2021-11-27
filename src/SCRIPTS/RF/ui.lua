@@ -108,6 +108,9 @@ local function processMspReply(cmd,rx_buf)
         invalidatePages()
     elseif cmd == Page.read and #rx_buf > 0 then
         Page.values = rx_buf
+        if Page.postRead then
+            Page.postRead(Page)
+        end
         for i=1,#Page.fields do
             if #Page.values >= Page.minBytes then
                 local f = Page.fields[i]
