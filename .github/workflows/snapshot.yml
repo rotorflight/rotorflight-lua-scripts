@@ -19,14 +19,17 @@ jobs:
       run: sudo apt-get -y install lua5.2
 
     - name: Set build variables
-      run: echo "revision=${GITHUB_REF##*/}" >> ${GITHUB_ENV}
+      run: |
+        echo "GIT_VER=${GITHUB_REF##*/}" >> ${GITHUB_ENV}
+        echo "GIT_TAG=${GITHUB_REF##refs/tags/}" >> ${GITHUB_ENV}
+        cat ${GITHUB_ENV}
 
     - name: Make snapshot package
-      run: make package ZIPFILE="rotorflight-lua-scripts-snapshot-${GITHUB_REF##*/}.zip"
+      run: make package ZIPFILE="rotorflight-lua-scripts-snapshot-${{ env.GIT_VER }}.zip"
 
     - name: Create Snapshot
       run: |
-        gh release create ${GITHUB_REF##refs/tags/} --prerelease --notes-file "Snapshot.md" --title "Rotorflight LUA Scripts Snapshot ${GITHUB_REF##*/}" *.zip
+        gh release create ${{ env.GIT_TAG }} --prerelease --notes-file "Snapshot.md" --title "Rotorflight LUA Scripts Snapshot ${{ env.GIT_VER }}" *.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
