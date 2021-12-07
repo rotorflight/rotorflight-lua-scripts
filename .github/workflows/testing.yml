@@ -6,6 +6,7 @@ on:
       - 'testing/*'
 
 jobs:
+
   build:
 
     runs-on: ubuntu-latest
@@ -17,7 +18,10 @@ jobs:
       run: sudo apt-get -y install lua5.2
 
     - name: Set build variables
-      run: echo "revision=${GITHUB_REF##*/}" >> ${GITHUB_ENV}
+      run: |
+        echo "GIT_VER=${GITHUB_REF##*/}" >> ${GITHUB_ENV}
+        echo "GIT_TAG=${GITHUB_REF##refs/tags/}" >> ${GITHUB_ENV}
+        cat ${GITHUB_ENV}
 
     - name: Make test files
       run: make files
@@ -25,7 +29,7 @@ jobs:
     - name: Upload Artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: rotorflight-lua-scripts-testing-${{ env.revision }}
+        name: rotorflight-lua-scripts-testing-${{ env.GIT_VER }}
         path: ./obj
 
     - name: Delete tag
