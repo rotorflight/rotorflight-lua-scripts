@@ -46,6 +46,7 @@ local function init()
             collectgarbage()
         end
 --]]
+--[[
     elseif not boardInfoReceived then
         getBoardInfo = getBoardInfo or assert(loadScript("board_info.lua"))()
         returnTable.t = getBoardInfo.t
@@ -54,11 +55,13 @@ local function init()
             getBoardInfo = nil
             collectgarbage()
         end
+--]]
     else
         return true
     end
     --return apiVersionReceived and vtxTablesReceived and mcuId and boardInfoReceived
-    return apiVersionReceived and mcuId and boardInfoReceived
+    --return apiVersionReceived and mcuId and boardInfoReceived
+    return apiVersionReceived and mcuId
 end
 
 returnTable.f = init
