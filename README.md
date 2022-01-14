@@ -8,26 +8,28 @@
 - or an ELRS 2.0.1 or newer receiver. 
 
 ## Installation
-Download the [latest release](https://github.com/rotorflight/rotorflight-lua-scripts/releases) and copy the contents of the SCRIPTS folder to your transmitter. 
+Download the [latest release](https://github.com/rotorflight/rotorflight-lua-scripts/releases) and copy the contents of the SCRIPTS folder to your transmitter. You will know if you did this correctly if the `rf.lua` file shows up in the `/SCRIPTS/TOOLS` directory. Also *Rotorflight conf* should now show up in the *Tools* menu of your transmitter. 
 
 ### Copying the SCRIPTS folder
 
-Bootloader Method
+USB Method
 
-1. Power off your transmitter and power it back on in boot loader mode.
-2. Connect a USB cable and open the SD card drive on your computer.
-3. Unzip the file and copy the scripts to the root of the SD card.
-4. Unplug the USB cable and power cycle your transmitter.
+1. Connect your transmitter to a computer with an USB cable.
+2. Open the new drive on your computer.
+3. Unzip the file and copy the SCRIPTS folder to the root the new drive.
+4. Eject the drive.
+5. Unplug the USB cable.
 
-Manual method (varies, based on the model of your transmitter)
+SD Card Method
 
 1. Power off your transmitter.
-2. Remove the SD card and plug it into a computer
-3. Unzip the file and copy the scripts to the root of the SD card.
-4. Reinsert your SD card into the transmitter
-5. Power up your transmitter.
+2. Remove the SD card and plug it into a computer.
+3. Unzip the file and copy the SCRIPTS folder to the root of the SD card.
+4. Eject the SD card.
+5. Reinsert your SD card into the transmitter.
+6. Power up your transmitter.
 
-If you copied the files correctly, you can now go into the OpenTx Tools screen from the main menu and access the Rotorflight Configuration tool. The first time you run the script, a message 'Compiling...' will appear in the display before the script is started - this is normal, and is done to minimise the RAM usage of the script.
+If you copied the files correctly, you can now go into the *Tools* menu on your transmitter and access the Rotorflight Configuration tool. The first time you run the script, a message 'Compiling...' will appear in the display before the script is started. This is normal and is done to minimise the RAM usage of the script.
 
 ## Usage
 See the [Lua Scripts Wiki page](https://github.com/rotorflight/rotorflight/wiki/Lua-Scripts).
@@ -39,6 +41,6 @@ The optional background script offers RTC synchronization and RSSI through MSP. 
 
 ## Building from source on Unix-like systems
 
-- Be sure to have `make` and `luac` in version 5.2 installed in the path
-- Run `make` from the root folder
-- The installation files will be created in the `obj` folder. Copy the files to your transmitter as instructed in the '[Installing](#installing)' section as if you unzipped from a downloaded file.
+- Be sure to have `make` and `luac` in version 5.2 installed in the path.
+- Run `make` from the root folder.
+- The installation files will be created in the `obj` folder. Copy the files to your transmitter as instructed in the [Installation](#installation) section as if you unzipped from a downloaded file.
