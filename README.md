@@ -1,19 +1,16 @@
-# Rotorflight Lua Scripts for OpenTX
+# Rotorflight Lua Scripts for OpenTX and EdgeTX
 
 ## Firmware Considerations
 
-- Rotorflight - As a best practice, it is recommended to use the most recent stable release of Rotorflight to obtain the best possible results;
-- OpenTX - 2.3.4 or newer;
-- Crossfire TX / RX - v2.11 or newer;
-- FrSky TX / RX with support for SmartPort - While most receivers with SmartPort support work fine, it is recommended to update the receiver to the most recent firmware version to correct any known bugs in telemetry.
+- OpenTX 2.3.12 or EdgeTX 2.5.0 or newer on the transmitter and
+- a FrSky Smartport or F.Port receiver
+- or a Crossfire v2.11 or newer receiver
+- or an ELRS 2.0.1 or newer receiver. 
 
-## Installing
+## Installation
+Download the [latest release](https://github.com/rotorflight/rotorflight-lua-scripts/releases) and copy the contents of the SCRIPTS folder to your transmitter. 
 
-Download a zip file containing the latest version from the [releases page](https://github.com/rotorflight/rotorflight-lua-scripts/releases).
-
-Unzip the files from the link above and drag the contents of the `SCRIPTS` folder to your radios SD card. If you do this correctly, the `SCRIPTS` directory will merge with your existing directories, placing the scripts in their appropriate paths.  You will know if you did this correctly if the `rf.lua` file shows up in your `/SCRIPTS/TOOLS` directory.
-
-### How to install
+### Copying the SCRIPTS folder
 
 Bootloader Method
 
@@ -32,21 +29,15 @@ Manual method (varies, based on the model of your transmitter)
 
 If you copied the files correctly, you can now go into the OpenTx Tools screen from the main menu and access the Rotorflight Configuration tool. The first time you run the script, a message 'Compiling...' will appear in the display before the script is started - this is normal, and is done to minimise the RAM usage of the script.
 
-### Running the script as a telemetry page
+## Usage
+See the [Lua Scripts Wiki page](https://github.com/rotorflight/rotorflight/wiki/Lua-Scripts).
 
-Due to issues with input mapping and memory overruns, running the script as a telemetry page **is no longer supported**. The only way to run the script is through the Tools screen in the OpenTX main menu.
-
-### Setting up VTX Tables
-
-If you are using a VTX that supports the SmartAudio or Tramp protocols then bands and channels etc. are managed using VTX tables since Rotorflight version 4.1.0. The script will be downloading and storing the current VTX table for every model the first time the model is connected and the script is run. If you change the VTX table, you have to re-load the updated VTX table in the script, by choosing the 'vtx tables' option in the function menu.
-
-### Background script
+## Background script
 The optional background script offers RTC synchronization and RSSI through MSP. It can be setup as a special or global function in OpenTX. The image below shows how to run the background script as a special function.
 
 ![Background script setup](docs/assets/images/background_script_setup.png)
 
-
-## Building from source
+## Building from source on Unix-like systems
 
 - Be sure to have `make` and `luac` in version 5.2 installed in the path
 - Run `make` from the root folder
