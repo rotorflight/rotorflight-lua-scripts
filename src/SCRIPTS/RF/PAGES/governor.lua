@@ -23,9 +23,8 @@ fields[#fields + 1] = { t = "AR Bailout Time",   x = x, y = inc.y(lineSpacing), 
 fields[#fields + 1] = { t = "AR Min Entry Time", x = x, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 100,   vals = { 12,13 } }
 fields[#fields + 1] = { t = "Lost Throttle TO",  x = x, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 100,   vals = { 14,15 }, scale = 10 }
 fields[#fields + 1] = { t = "Lost Headspeed TO", x = x, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 100,   vals = { 16,17 }, scale = 10 }
-fields[#fields + 1] = { t = "Gear Ratio",        x = x, y = inc.y(lineSpacing), sp = x + sp, min = 1000, max = 30000,   vals = { 18,19 }, scale = 1000 }
-fields[#fields + 1] = { t = "Power Filter",      x = x, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 1000,   vals = { 20,21 } }
-fields[#fields + 1] = { t = "RPM Filter",        x = x, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 1000,   vals = { 22,23 } }
+fields[#fields + 1] = { t = "Power Filter",      x = x, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 1000,   vals = { 18,19 } }
+fields[#fields + 1] = { t = "RPM Filter",        x = x, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 1000,   vals = { 20,21 } }
 
 return {
     read        = 142, -- MSP_GOVERNOR
@@ -33,7 +32,7 @@ return {
     title       = "Governor",
     reboot      = true,
     eepromWrite = true,
-    minBytes    = 23,
+    minBytes    = 21,
     labels      = labels,
     fields      = fields,
 }
