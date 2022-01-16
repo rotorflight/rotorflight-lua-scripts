@@ -28,7 +28,7 @@ return {
     reboot      = true,
     eepromWrite = true,
     title       = "Motors",
-    minBytes    = 16,
+    minBytes    = 28,
     labels      = labels,
     fields      = fields,
 }
