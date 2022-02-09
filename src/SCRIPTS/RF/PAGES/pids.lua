@@ -21,30 +21,30 @@ labels[#labels + 1] = { t = "Ya",     x = x, y = inc.y(tableSpacing.row) }
 x = x + tableSpacing.col/2
 y = yMinLim - tableSpacing.header
 labels[#labels + 1] = { t = "P",     x = x, y = inc.y(tableSpacing.header) }
-fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 200, vals = { 1 } }
-fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 200, vals = { 5 } }
-fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 200, vals = { 9 } }
+fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 250, vals = { 1 } }
+fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 250, vals = { 5 } }
+fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 250, vals = { 9 } }
 
 x = x + tableSpacing.col
 y = yMinLim - tableSpacing.header
 labels[#labels + 1] = { t = "I",     x = x, y = inc.y(tableSpacing.header) }
-fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 200, vals = { 2 } }
-fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 200, vals = { 6 } }
-fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 200, vals = { 10 } }
+fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 250, vals = { 2 } }
+fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 250, vals = { 6 } }
+fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 250, vals = { 10 } }
 
 x = x + tableSpacing.col
 y = yMinLim - tableSpacing.header
 labels[#labels + 1] = { t = "D",     x = x, y = inc.y(tableSpacing.header) }
-fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 200, vals = { 3 } }
-fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 200, vals = { 7 } }
-fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 200, vals = { 11 } }
+fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 250, vals = { 3 } }
+fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 250, vals = { 7 } }
+fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 250, vals = { 11 } }
 
 x = x + tableSpacing.col
 y = yMinLim - tableSpacing.header
 labels[#labels + 1] = { t = "F",     x = x, y = inc.y(tableSpacing.header) }
-fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 200, vals = { 4 } }
-fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 200, vals = { 8 } }
-fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 200, vals = { 12 } }
+fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 250, vals = { 4 } }
+fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 250, vals = { 8 } }
+fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 250, vals = { 12 } }
 
 return {
     read        = 112, -- MSP_PID

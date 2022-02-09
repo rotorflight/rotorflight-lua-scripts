@@ -31,8 +31,8 @@ fields[#fields + 1] = { t = "Collective",              x = x + indent, y = inc.y
 
 labels[#labels + 1] = { t = "Yaw",                     x = x,          y = inc.y(lineSpacing) }
 fields[#fields + 1] = { t = "Center Offset",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = -250, max = 250, vals = { 19, 20 } }
-fields[#fields + 1] = { t = "CW Stop Gain",            x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 50, max = 200, vals = { 21 } }
-fields[#fields + 1] = { t = "CCW Stop Gain",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min =50, max = 200, vals = { 22 } }
+fields[#fields + 1] = { t = "CW Stop Gain",            x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 50, max = 250, vals = { 21 } }
+fields[#fields + 1] = { t = "CCW Stop Gain",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 50, max = 250, vals = { 22 } }
 fields[#fields + 1] = { t = "Cyclic FF Gain",          x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 23 } }
 fields[#fields + 1] = { t = "Col. FF Gain",            x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 24 } }
 fields[#fields + 1] = { t = "Col. FF Imp Gain",        x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 25 } }
@@ -60,7 +60,7 @@ fields[#fields + 1] = { t = "F-gain",                  x = x + indent, y = inc.y
 fields[#fields + 1] = { t = "Cyclic Precomp.",         x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 200, vals = { 43 } }
 fields[#fields + 1] = { t = "Col. Precomp",            x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 200, vals = { 44 } }
 fields[#fields + 1] = { t = "TTA Gain",                x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 200, vals = { 41 } }
-fields[#fields + 1] = { t = "TTA Limit",               x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 100, vals = { 42 } }
+fields[#fields + 1] = { t = "TTA Limit",               x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 200, vals = { 42 } }
 
 return {
     read        = 94, -- MSP_PID_ADVANCED
