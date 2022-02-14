@@ -27,8 +27,8 @@ return {
     labels      = labels,
     fields      = fields,
     postRead = function(self)
-        self.maxPidProfiles = self.values[15]
-        self.currentPidProfile = self.values[16]
+        self.maxPidProfiles = self.values[19]
+        self.currentPidProfile = self.values[20]
         self.values = { 0, self.getDestinationPidProfile(self), self.currentPidProfile }
         self.minBytes = 3
     end,
