@@ -13,9 +13,9 @@ local fields = {}
 
 local escProtocols = { [0] = "PWM", "OS125", "OS42", "MSHOT", "BRUSHED", "DS150", "DS300", "DS600", "PS1000", "DISABLED" }
 
-fields[#fields + 1] = { t = "Min Command",     x = x,      y = inc.y(lineSpacing), sp = x + sp, min = 750, max = 2250, vals = { 1, 2 } }
-fields[#fields + 1] = { t = "Min Throttle",    x = x,      y = inc.y(lineSpacing), sp = x + sp, min = 750, max = 2250, vals = { 3, 4 } }
-fields[#fields + 1] = { t = "Max Throttle",    x = x,      y = inc.y(lineSpacing), sp = x + sp, min = 750, max = 2250, vals = { 5, 6 } }
+fields[#fields + 1] = { t = "Min Command",     x = x,      y = inc.y(lineSpacing), sp = x + sp, min = 750, max = 2250, vals = { 5, 6 } }
+fields[#fields + 1] = { t = "Min Throttle",    x = x,      y = inc.y(lineSpacing), sp = x + sp, min = 750, max = 2250, vals = { 1, 2 } }
+fields[#fields + 1] = { t = "Max Throttle",    x = x,      y = inc.y(lineSpacing), sp = x + sp, min = 750, max = 2250, vals = { 3, 4 } }
 fields[#fields + 1] = { t = "Protocol",        x = x,      y = inc.y(lineSpacing), sp = x + sp, min = 0, max = #escProtocols, vals = { 8 }, table = escProtocols }
 fields[#fields + 1] = { t = "PWM Frequency",   x = x,      y = inc.y(lineSpacing), sp = x + sp, min = 200, max = 32000, vals = { 9, 10 }, mult = 100 }
 fields[#fields + 1] = { t = "PWM Inversion",   x = x,      y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1, vals = { 11 }, table = { [0] = "OFF", "ON" } }
