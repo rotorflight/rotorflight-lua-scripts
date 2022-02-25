@@ -23,12 +23,12 @@ return {
     reboot      = false,
     eepromWrite = true,
     title       = "Copy",
-    minBytes    = 24,
+    minBytes    = 29,
     labels      = labels,
     fields      = fields,
     postRead = function(self)
-        self.maxPidProfiles = self.values[19]
-        self.currentPidProfile = self.values[20]
+        self.maxPidProfiles = self.values[25]
+        self.currentPidProfile = self.values[24]
         self.values = { 0, self.getDestinationPidProfile(self), self.currentPidProfile }
         self.minBytes = 3
     end,
