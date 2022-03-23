@@ -7,6 +7,7 @@ local INTERVAL = 50
 local function processMspReply(cmd,rx_buf)
     if cmd == MSP_SET_RTC then
         timeIsSet = true
+        playTone(1600, 500, 0, PLAY_BACKGROUND)
     end
 end
 
