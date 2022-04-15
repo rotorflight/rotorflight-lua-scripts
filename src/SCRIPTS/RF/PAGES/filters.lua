@@ -37,7 +37,7 @@ labels[#labels + 1] = { t = "D Term Lowpass 1",         x = x,          y = inc.
 fields[#fields + 1] = { t = "Filter Type",              x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = #gyroFilterType, vals = { 16 }, table = gyroFilterType }
 fields[#fields + 1] = { t = "Cutoff",                   x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 4000, vals = { 17, 18 } }
 
-labels[#labels + 1] = { t = "D Term Lowpass 1 Dynanic", x = x,          y = inc.y(lineSpacing) }
+labels[#labels + 1] = { t = "D Term Lowpass 1 Dynamic", x = x,          y = inc.y(lineSpacing) }
 fields[#fields + 1] = { t = "Min Cutoff",               x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000, vals = { 30, 31 } }
 fields[#fields + 1] = { t = "Max Cutoff",               x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000, vals = { 32, 33 } }
 
