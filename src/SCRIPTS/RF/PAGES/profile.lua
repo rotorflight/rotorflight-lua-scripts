@@ -12,10 +12,10 @@ local labels = {}
 local fields = {}
 
 labels[#labels + 1] = { t = "I-term limit",            x = x,          y = inc.y(lineSpacing) }
-fields[#fields + 1] = { t = "Roll",                    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000, vals = { 1, 2 } }
-fields[#fields + 1] = { t = "Pitch",                   x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000, vals = { 3, 4 } }
-fields[#fields + 1] = { t = "Yaw",                     x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000, vals = { 5, 6 } }
-fields[#fields + 1] = { t = "I Term Decay",            x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 7 } }
+fields[#fields + 1] = { t = "Roll",                    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000, vals = { 1, 2 }, scale = 5 }
+fields[#fields + 1] = { t = "Pitch",                   x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000, vals = { 3, 4 }, scale = 5 }
+fields[#fields + 1] = { t = "Yaw",                     x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000, vals = { 5, 6 }, scale = 5 }
+fields[#fields + 1] = { t = "I Term Decay",            x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 7 }, scale = 10 }
 fields[#fields + 1] = { t = "I Term Rotation",         x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1, vals = { 8 }, table = { [0] = "OFF", "ON" } }
 
 labels[#labels + 1] = { t = "I Term Relax",            x = x,          y = inc.y(lineSpacing) }
@@ -37,6 +37,8 @@ fields[#fields + 1] = { t = "Cyclic FF Gain",          x = x + indent, y = inc.y
 fields[#fields + 1] = { t = "Col. FF Gain",            x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 2500, vals = { 25,26 } }
 fields[#fields + 1] = { t = "Col. FF Imp Gain",        x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 2500, vals = { 27,28 } }
 fields[#fields + 1] = { t = "Col. FF Imp Freq",        x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 29 } }
+fields[#fields + 1] = { t = "TTA Gain",                x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 200, vals = { 44 } }
+fields[#fields + 1] = { t = "TTA Limit",               x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 200, vals = { 45 } }
 
 labels[#labels + 1] = { t = "Auto-levelling",          x = x,          y = inc.y(lineSpacing) }
 fields[#fields + 1] = { t = "Acro Tr Lev Gain",        x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 25, max = 255, vals = { 17 } }
@@ -48,7 +50,7 @@ fields[#fields + 1] = { t = "Horizon Lev Gain",        x = x + indent, y = inc.y
 labels[#labels + 1] = { t = "Rescue",                  x = x,          y = inc.y(lineSpacing) }
 fields[#fields + 1] = { t = "Climb Collective",        x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000, vals = { 32, 33 } }
 fields[#fields + 1] = { t = "Init. Climb Boost",       x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000, vals = { 34, 35 } }
-fields[#fields + 1] = { t = "Init. Climb Dura.",       x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 100, vals = { 36 } }
+fields[#fields + 1] = { t = "Init. Climb Dura.",       x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 100, vals = { 36 }, scale = 10 }
 
 labels[#labels + 1] = { t = "Governor",                x = x,          y = inc.y(lineSpacing) }
 fields[#fields + 1] = { t = "Full Headspeed",          x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 10000, vals = { 37, 38 }, mult = 10}
@@ -59,8 +61,6 @@ fields[#fields + 1] = { t = "D-gain",                  x = x + indent, y = inc.y
 fields[#fields + 1] = { t = "F-gain",                  x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 200, vals = { 43 } }
 fields[#fields + 1] = { t = "Cyclic Precomp.",         x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 200, vals = { 46 } }
 fields[#fields + 1] = { t = "Col. Precomp",            x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 200, vals = { 47 } }
-fields[#fields + 1] = { t = "TTA Gain",                x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 200, vals = { 44 } }
-fields[#fields + 1] = { t = "TTA Limit",               x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 200, vals = { 45 } }
 
 return {
     read        = 94, -- MSP_PID_ADVANCED
