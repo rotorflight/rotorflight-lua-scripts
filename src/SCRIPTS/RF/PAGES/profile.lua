@@ -53,7 +53,7 @@ fields[#fields + 1] = { t = "Init. Climb Boost",       x = x + indent, y = inc.y
 fields[#fields + 1] = { t = "Init. Climb Dura.",       x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 100, vals = { 36 }, scale = 10 }
 
 labels[#labels + 1] = { t = "Governor",                x = x,          y = inc.y(lineSpacing) }
-fields[#fields + 1] = { t = "Full Headspeed",          x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 10000, vals = { 37, 38 }, mult = 10}
+fields[#fields + 1] = { t = "Full Headspeed",          x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 50000, vals = { 37, 38 }, mult = 10}
 fields[#fields + 1] = { t = "PID Master Gain",         x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 200, vals = { 39 } }
 fields[#fields + 1] = { t = "P-gain",                  x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 200, vals = { 40 } }
 fields[#fields + 1] = { t = "I-gain",                  x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 200, vals = { 41 } }

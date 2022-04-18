@@ -122,6 +122,13 @@ local function processMspReply(cmd,rx_buf)
                         f.value = bit32.bor(f.value, raw_val)
                     end
                     f.value = f.value/(f.scale or 1)
+                    if f.min < 0 then
+                      if #f.vals == 1 and f.value > 127 then
+                        f.value = -256 + f.value
+                      elseif #f.vals == 2 and f.value > 32767 then
+                        f.value = -65536 + f.value
+                      end
+                    end
                 end
             end
         end
