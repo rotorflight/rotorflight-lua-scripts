@@ -50,7 +50,7 @@ fields[#fields + 1] = { t = "Horizon Lev Gain",        x = x + indent, y = inc.y
 labels[#labels + 1] = { t = "Rescue",                  x = x,          y = inc.y(lineSpacing) }
 fields[#fields + 1] = { t = "Climb Collective",        x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000, vals = { 32, 33 } }
 fields[#fields + 1] = { t = "Init. Climb Boost",       x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000, vals = { 34, 35 } }
-fields[#fields + 1] = { t = "Init. Climb Dura.",       x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 100, vals = { 36 }, scale = 10 }
+fields[#fields + 1] = { t = "Init. Climb Dura.",       x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 255, vals = { 36 }, scale = 10 }
 
 labels[#labels + 1] = { t = "Governor",                x = x,          y = inc.y(lineSpacing) }
 fields[#fields + 1] = { t = "Full Headspeed",          x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 50000, vals = { 37, 38 }, mult = 10}
