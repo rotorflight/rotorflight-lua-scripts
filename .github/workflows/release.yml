@@ -38,7 +38,7 @@ jobs:
 
     - name: Create Release
       run: |
-        gh release create ${{ env.GIT_TAG }} --notes-file "Release.md" --title "Rotorflight LUA Scripts ${{ end.GH_TYPE }} ${{ env.GIT_VER }}" *.zip
+        gh release create ${{ env.GIT_TAG }} --notes-file "Release.md" --title "Rotorflight LUA Scripts ${{ env.GH_TYPE }} ${{ env.GIT_VER }}" *.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
