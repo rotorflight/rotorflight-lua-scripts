@@ -25,10 +25,6 @@ fields[#fields + 1] = { t = "Roll Cutoff",             x = x + indent, y = inc.y
 fields[#fields + 1] = { t = "Pitch Cutoff",            x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 50, vals = { 12 } }
 fields[#fields + 1] = { t = "Yaw Cutoff",              x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 50, vals = { 13 } }
 
-labels[#labels + 1] = { t = "Rate Normalization Mode", x = x,          y = inc.y(lineSpacing) }
-fields[#fields + 1] = { t = "Cyclic",                  x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 30 }, table = { [0] = "ABSOLUTE", "LINEAR", "NATURAL" } }
-fields[#fields + 1] = { t = "Collective",              x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 31 }, table = { [0] = "ABSOLUTE", "LINEAR", "NATURAL" } }
-
 labels[#labels + 1] = { t = "Yaw",                     x = x,          y = inc.y(lineSpacing) }
 fields[#fields + 1] = { t = "Center Offset",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = -250, max = 250, vals = { 19, 20 } }
 fields[#fields + 1] = { t = "CW Stop Gain",            x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 50, max = 250, vals = { 21 } }
