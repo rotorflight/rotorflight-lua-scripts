@@ -1,14 +1,29 @@
 # Rotorflight Lua Scripts for OpenTX and EdgeTX
 
-## Firmware Considerations
+**Rotorflight** is a _Flight Control_/_FBL_ Software Suite for traditional single-rotor RC helicopters. It is based on Betaflight 4.2, enjoying all the great features of the Betaflight platform, plus many new features added for helicopters. Rotorflight borrows ideas and code also from Heliflight3D, an earlier fork of Betaflight for helicopters.
 
-- OpenTX 2.3.12 or EdgeTX 2.5.0 or newer on the transmitter and
-- a FrSky Smartport or F.Port receiver
-- or a Crossfire v2.11 or newer receiver
-- or an ELRS 2.0.1 or newer receiver. 
+**Rotorflight Lua Scripts** is a package of OpenTX/EdgeTX Lua scripts for accessing and configuring the Rotorflight FC from the transmitter.
+
+Rotorflight does **NOT** support multi-rotor 'drones', nor airplanes; it is only for traditinal RC helicopters, including co-axial and tandem helicopters.
+
+
+## Requirements
+
+- OpenTX 2.3.12 or EdgeTX 2.5.0 or later transmitter firmware
+- A receiver supporting remote configuration:
+  - a FrSky Smartport or F.Port receiver, _or_
+  - a Crossfire v2.11 or newer receiver, _or_
+  - an ELRS 2.0.1 or newer receiver
 
 ## Installation
-Download the [latest release](https://github.com/rotorflight/rotorflight-lua-scripts/releases) and copy the contents of the SCRIPTS folder to your transmitter. You will know if you did this correctly if the `rf.lua` file shows up in the `/SCRIPTS/TOOLS` directory. Also *Rotorflight conf* should now show up in the *Tools* menu of your transmitter. 
+
+Please download the latest version from github:
+
+ - https://github.com/rotorflight/rotorflight-lua-scripts/releases
+
+and copy the contents of the SCRIPTS folder to your transmitter.
+
+You will know if you did this correctly if the `rf.lua` file shows up in the `/SCRIPTS/TOOLS` directory. Also *Rotorflight conf* should now show up in the *Tools* menu of your transmitter.
 
 ### Copying the SCRIPTS folder
 
@@ -41,7 +56,7 @@ The background script can be setup as a special or global function in OpenTX. Th
 
 ![Background script setup](docs/assets/images/background_script_setup.png)
 
-## Building from source on Unix-like systems
+## Building from source on Linux
 
 - Be sure to have `make` and `luac` in version 5.2 installed in the path.
 - Run `make` from the root folder.
