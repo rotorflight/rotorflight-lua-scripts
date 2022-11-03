@@ -47,7 +47,7 @@ local function init()
         end
 --]]
 --[[
-    elseif not boardInfoReceived then
+    elseif not boardInfoReceived and apiVersion >= 1.044 then
         getBoardInfo = getBoardInfo or assert(loadScript("board_info.lua"))()
         returnTable.t = getBoardInfo.t
         boardInfoReceived = getBoardInfo.f()

@@ -18,6 +18,7 @@ PageFiles[#PageFiles + 1] = { title = "Motors", script = "motors.lua" }
 --PageFiles[#PageFiles + 1] = { title = "GPS PIDs", script = "gpspids.lua" }
 
 -- Original Betaflight pages that are incompatible, because the MSP messages are different or not implemented in RF.
+--PageFiles[#PageFiles + 1] = { title = "Profiles", script = "profiles.lua" }
 --PageFiles[#PageFiles + 1] = { title = "PIDs 1", script = "pids1.lua" }
 --PageFiles[#PageFiles + 1] = { title = "PIDs 2", script = "pids2.lua" }
 --PageFiles[#PageFiles + 1] = { title = "PIDs Advanced", script = "pids_advanced.lua" }
