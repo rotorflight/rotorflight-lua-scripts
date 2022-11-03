@@ -12,9 +12,9 @@ local labels = {}
 local fields = {}
 
 labels[#labels + 1] = { t = "I-term limit",            x = x,          y = inc.y(lineSpacing) }
-fields[#fields + 1] = { t = "Roll",                    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000, vals = { 1, 2 }, scale = 5 }
-fields[#fields + 1] = { t = "Pitch",                   x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000, vals = { 3, 4 }, scale = 5 }
-fields[#fields + 1] = { t = "Yaw",                     x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000, vals = { 5, 6 }, scale = 5 }
+fields[#fields + 1] = { t = "Roll",                    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000, vals = { 1, 2 }, scale = 5, mult = 5 }
+fields[#fields + 1] = { t = "Pitch",                   x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000, vals = { 3, 4 }, scale = 5, mult = 5 }
+fields[#fields + 1] = { t = "Yaw",                     x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000, vals = { 5, 6 }, scale = 5, mult = 5 }
 fields[#fields + 1] = { t = "I Term Decay",            x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 7 }, scale = 10 }
 fields[#fields + 1] = { t = "I Term Rotation",         x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1, vals = { 8 }, table = { [0] = "OFF", "ON" } }
 
@@ -27,8 +27,8 @@ fields[#fields + 1] = { t = "Yaw Cutoff",              x = x + indent, y = inc.y
 
 labels[#labels + 1] = { t = "Yaw",                     x = x,          y = inc.y(lineSpacing) }
 fields[#fields + 1] = { t = "Center Offset",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = -250, max = 250, vals = { 19, 20 } }
-fields[#fields + 1] = { t = "CW Stop Gain",            x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 50, max = 250, vals = { 21 } }
-fields[#fields + 1] = { t = "CCW Stop Gain",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 50, max = 250, vals = { 22 } }
+fields[#fields + 1] = { t = "CW Stop Gain",            x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 21 } }
+fields[#fields + 1] = { t = "CCW Stop Gain",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 22 } }
 fields[#fields + 1] = { t = "Cyclic FF Gain",          x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 2500, vals = { 23,24 } }
 fields[#fields + 1] = { t = "Col. FF Gain",            x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 2500, vals = { 25,26 } }
 fields[#fields + 1] = { t = "Col. FF Imp Gain",        x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 2500, vals = { 27,28 } }
