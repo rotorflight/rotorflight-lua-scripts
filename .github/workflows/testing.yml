@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Install Lua compiler
       run: sudo apt-get -y install lua5.2
@@ -27,7 +27,7 @@ jobs:
       run: make files
 
     - name: Upload Artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: rotorflight-lua-scripts-testing-${{ env.GIT_VER }}
         path: ./obj
