@@ -47,8 +47,8 @@ fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 1000, vals = { 23,24 } }
 
 return {
-    read        = 112, -- MSP_PID
-    write       = 202, -- MSP_SET_PID
+    read        = 112, -- MSP_PID_TUNING
+    write       = 202, -- MSP_SET_PID_TUNING
     title       = "PIDs",
     reboot      = false,
     eepromWrite = true,
