@@ -97,5 +97,5 @@ return {
     end,
     postLoad = function(self)
         self.updateRatesType(self)
-    end,     
+    end,
 }

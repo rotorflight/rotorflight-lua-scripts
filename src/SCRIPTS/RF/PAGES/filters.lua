@@ -13,39 +13,39 @@ local fields = {}
 
 local gyroFilterType = { [0] = "PT1", "BIQUAD" }
 
-labels[#labels + 1] = { t = "Gyro Lowpass 1",           x = x,          y = inc.y(lineSpacing) }
-fields[#fields + 1] = { t = "Filter Type",              x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = #gyroFilterType, vals = { 2 }, table = gyroFilterType }
+labels[#labels + 1] = { t = "Gyro lowpass 1",           x = x,          y = inc.y(lineSpacing) }
+fields[#fields + 1] = { t = "Filter type",              x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = #gyroFilterType, vals = { 2 }, table = gyroFilterType }
 fields[#fields + 1] = { t = "Cutoff",                   x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 4000, vals = { 3, 4 } }
 
-labels[#labels + 1] = { t = "Gyro Lowpass 1 Dynamic",   x = x,          y = inc.y(lineSpacing) }
-fields[#fields + 1] = { t = "Min Cutoff",               x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000, vals = { 26, 27 } }
-fields[#fields + 1] = { t = "Max Cutoff",               x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000, vals = { 28, 29 } }
+labels[#labels + 1] = { t = "Gyro lowpass 1 dynamic",   x = x,          y = inc.y(lineSpacing) }
+fields[#fields + 1] = { t = "Min cutoff",               x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000, vals = { 26, 27 } }
+fields[#fields + 1] = { t = "Max cutoff",               x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000, vals = { 28, 29 } }
 
-labels[#labels + 1] = { t = "Gyro Lowpass 2",           x = x,          y = inc.y(lineSpacing) }
-fields[#fields + 1] = { t = "Filter Type",              x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = #gyroFilterType, vals = { 5 }, table = gyroFilterType }
+labels[#labels + 1] = { t = "Gyro lowpass 2",           x = x,          y = inc.y(lineSpacing) }
+fields[#fields + 1] = { t = "Filter type",              x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = #gyroFilterType, vals = { 5 }, table = gyroFilterType }
 fields[#fields + 1] = { t = "Cutoff",                   x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 4000, vals = { 6, 7 } }
 
-labels[#labels + 1] = { t = "Gyro Notch 1",             x = x,          y = inc.y(lineSpacing) }
+labels[#labels + 1] = { t = "Gyro notch 1",             x = x,          y = inc.y(lineSpacing) }
 fields[#fields + 1] = { t = "Center",                   x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 4000, vals = { 8, 9 } }
 fields[#fields + 1] = { t = "Cutoff",                   x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 4000, vals = { 10, 11 } }
 
-labels[#labels + 1] = { t = "Gyro Notch 2",             x = x,          y = inc.y(lineSpacing) }
+labels[#labels + 1] = { t = "Gyro notch 2",             x = x,          y = inc.y(lineSpacing) }
 fields[#fields + 1] = { t = "Center",                   x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 4000, vals = { 12, 13 } }
 fields[#fields + 1] = { t = "Cutoff",                   x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 4000, vals = { 14, 15 } }
 
-labels[#labels + 1] = { t = "D Term Lowpass 1",         x = x,          y = inc.y(lineSpacing) }
-fields[#fields + 1] = { t = "Filter Type",              x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = #gyroFilterType, vals = { 16 }, table = gyroFilterType }
+labels[#labels + 1] = { t = "D-term lowpass 1",         x = x,          y = inc.y(lineSpacing) }
+fields[#fields + 1] = { t = "Filter type",              x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = #gyroFilterType, vals = { 16 }, table = gyroFilterType }
 fields[#fields + 1] = { t = "Cutoff",                   x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 4000, vals = { 17, 18 } }
 
-labels[#labels + 1] = { t = "D Term Lowpass 1 Dynamic", x = x,          y = inc.y(lineSpacing) }
-fields[#fields + 1] = { t = "Min Cutoff",               x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000, vals = { 30, 31 } }
-fields[#fields + 1] = { t = "Max Cutoff",               x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000, vals = { 32, 33 } }
+labels[#labels + 1] = { t = "D-term lowpass 1 dynamic", x = x,          y = inc.y(lineSpacing) }
+fields[#fields + 1] = { t = "Min cutoff",               x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000, vals = { 30, 31 } }
+fields[#fields + 1] = { t = "Max cutoff",               x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000, vals = { 32, 33 } }
 
-labels[#labels + 1] = { t = "D Term Lowpass 2",         x = x,          y = inc.y(lineSpacing) }
-fields[#fields + 1] = { t = "Filter Type",              x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = #gyroFilterType, vals = { 19 }, table = gyroFilterType }
+labels[#labels + 1] = { t = "D-term lowpass 2",         x = x,          y = inc.y(lineSpacing) }
+fields[#fields + 1] = { t = "Filter type",              x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = #gyroFilterType, vals = { 19 }, table = gyroFilterType }
 fields[#fields + 1] = { t = "Cutoff",                   x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 4000, vals = { 20, 21 } }
 
-labels[#labels + 1] = { t = "D Term Notch",             x = x,          y = inc.y(lineSpacing) }
+labels[#labels + 1] = { t = "D-term notch",             x = x,          y = inc.y(lineSpacing) }
 fields[#fields + 1] = { t = "Center",                   x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 4000, vals = { 22, 23 } }
 fields[#fields + 1] = { t = "Cutoff",                   x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 4000, vals = { 24, 25 } }
 
