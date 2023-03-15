@@ -48,6 +48,5 @@ local scripts = {
     "/SCRIPTS/RF2/TEMPLATES/212x64.lua",
     "/SCRIPTS/RF2/TEMPLATES/480x272.lua",
     "/SCRIPTS/TOOLS/rf2.lua",
-    "/SCRIPTS/TOOLS/rf2Cms.lua",
 }
 return scripts[...]
