@@ -91,9 +91,13 @@ local function createPopupMenu()
     end
     popupMenu[#popupMenu + 1] = { t = "reboot", f = rebootFc }
     popupMenu[#popupMenu + 1] = { t = "acc cal", f = function() confirm("CONFIRM/acc_cal.lua") end }
+    --[[if apiVersion >= 1.42 then
+        popupMenu[#popupMenu + 1] = { t = "vtx tables", f = function() confirm("CONFIRM/vtx_tables.lua") end }
+    end
+    --]]
 end
 
-local function processMspReply(cmd,rx_buf)
+local function processMspReply(cmd,rx_buf,err)
     if not Page or not rx_buf then
     elseif cmd == Page.write then
         if Page.eepromWrite then
@@ -106,6 +110,9 @@ local function processMspReply(cmd,rx_buf)
             rebootFc()
         end
         invalidatePages()
+    elseif cmd == Page.read and err then
+        Page.fields = { { x = 6, y = radio.yMinLimit, value = "", ro = true } }
+        Page.labels = { { x = 6, y = radio.yMinLimit, t = "N/A" } }
     elseif cmd == Page.read and #rx_buf > 0 then
         Page.values = rx_buf
         if Page.postRead then
@@ -121,14 +128,11 @@ local function processMspReply(cmd,rx_buf)
                         raw_val = bit32.lshift(raw_val, (idx-1)*8)
                         f.value = bit32.bor(f.value, raw_val)
                     end
-                    f.value = f.value/(f.scale or 1)
-                    if f.min < 0 then
-                      if #f.vals == 1 and f.value > 127 then
-                        f.value = -256 + f.value
-                      elseif #f.vals == 2 and f.value > 32767 then
-                        f.value = -65536 + f.value
-                      end
+                    local bits = #f.vals * 8
+                    if f.min and f.min < 0 and bit32.btest(f.value, bit32.lshift(1, bits - 1)) then
+                        f.value = f.value - (2 ^ bits)
                     end
+                    f.value = f.value/(f.scale or 1)
                 end
             end
         end

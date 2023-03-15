@@ -1,5 +1,5 @@
-local toolName = "TNS|Rotorflight conf|TNE"
-chdir("/SCRIPTS/RF")
+local toolName = "TNS|Rotorflight 2|TNE"
+chdir("/SCRIPTS/RF2")
 
 apiVersion = 0
 mcuId = nil

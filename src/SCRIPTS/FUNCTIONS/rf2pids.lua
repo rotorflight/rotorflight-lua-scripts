@@ -1,4 +1,4 @@
-chdir("/SCRIPTS/RF")
+chdir("/SCRIPTS/RF2")
 
 assert(loadScript("MSP/messages.lua"))()
 

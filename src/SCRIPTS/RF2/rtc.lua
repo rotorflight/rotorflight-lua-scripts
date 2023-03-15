@@ -4,8 +4,8 @@ local timeIsSet = false
 local lastRunTS = 0
 local INTERVAL = 50
 
-local function processMspReply(cmd,rx_buf)
-    if cmd == MSP_SET_RTC then
+local function processMspReply(cmd,rx_buf,err)
+    if cmd == MSP_SET_RTC and not err then
         timeIsSet = true
         playTone(1600, 500, 0, PLAY_BACKGROUND)
     end
@@ -16,7 +16,7 @@ local function setRtc()
         -- only send datetime one time after telemetry connection became available
         -- or when connection is restored after e.g. lipo refresh
         local values = {}
-        if apiVersion >= 1.041 then
+        if apiVersion >= 1.41 then
             -- format: seconds after the epoch (32) / milliseconds (16)
             local now = getRtcTime()
 

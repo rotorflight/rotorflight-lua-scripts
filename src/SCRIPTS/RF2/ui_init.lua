@@ -1,7 +1,8 @@
 local apiVersionReceived = false
+local vtxTablesReceived = false
 local mcuIdReceived = false
 local boardInfoReceived = false
-local getApiVersion, getVtxTables, getMCUId, getBoardInfo, f
+local getApiVersion, getVtxTables, getMCUId, getBoardInfo
 local returnTable = { f = nil, t = "" }
 
 local function init()
@@ -15,7 +16,7 @@ local function init()
             getApiVersion = nil
             collectgarbage()
         end
-    elseif not mcuIdReceived and apiVersion >= 1.042 then
+    elseif not mcuIdReceived and apiVersion >= 1.42 then
         getMCUId = getMCUId or assert(loadScript("mcu_id.lua"))()
         returnTable.t = getMCUId.t
         mcuIdReceived = getMCUId.f()
