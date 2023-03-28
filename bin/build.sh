@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 TARGET=${1:-obj}
 
@@ -13,7 +13,7 @@ then
     exit 1
 fi
 
-SCRIPTS=${TARGET}/SCRIPTS/RF/COMPILE/scripts.lua
+SCRIPTS=${TARGET}/SCRIPTS/RF2/COMPILE/scripts.lua
 
 rm -f ${SCRIPTS}
 
