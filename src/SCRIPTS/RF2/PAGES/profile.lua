@@ -11,9 +11,7 @@ local inc = { x = function(val) x = x + val return x end, y = function(val) y = 
 local labels = {}
 local fields = {}
 
-fields[#fields + 1] = { t = "PID mode",                x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 2, vals = { 1 }, table = { [0] = "MODE 0", "MODE 1", "MODE 2" } }
--- TODO? add MODE 9
--- TODO? show WAY in mode 2 and 9 (see configurator, but it doesn't seem to work there?)
+fields[#fields + 1] = { t = "PID mode",                x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 2, vals = { 1 }, table = { [0] = "MODE 0", "MODE 1", "MODE 2" } }
 
 fields[#fields + 1] = { t = "Error decay",             x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 2 }, scale = 10 }
 fields[#fields + 1] = { t = "Error rotation",          x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1, vals = { 3 }, table = { [0] = "OFF", "ON" } }
@@ -26,9 +24,9 @@ fields[#fields + 1] = { t = "I-term relax type",       x = x,          y = inc.y
 fields[#fields + 1] = { t = "Cut-off point R",         x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 100, vals = { 14 } }
 fields[#fields + 1] = { t = "Cut-off point P",         x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 100, vals = { 15 } }
 fields[#fields + 1] = { t = "Cut-off point Y",         x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 100, vals = { 16 } }
-fields[#fields + 1] = { t = "I-term relax level R",    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 10, max = 250, vals = { 11 } }
-fields[#fields + 1] = { t = "I-term relax level P",    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 10, max = 250, vals = { 12 } }
-fields[#fields + 1] = { t = "I-term relax level Y",    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 10, max = 250, vals = { 13 } }
+fields[#fields + 1] = { t = "Relax level R",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 10, max = 250, vals = { 11 } }
+fields[#fields + 1] = { t = "Relax level P",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 10, max = 250, vals = { 12 } }
+fields[#fields + 1] = { t = "Relax level Y",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 10, max = 250, vals = { 13 } }
 
 labels[#labels + 1] = { t = "Yaw",                     x = x,          y = inc.y(lineSpacing) }
 fields[#fields + 1] = { t = "CW stop gain",            x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 25, max = 250, vals = { 17 } }
