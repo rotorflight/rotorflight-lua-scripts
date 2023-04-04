@@ -15,9 +15,9 @@ fields[#fields + 1] = { t = "PID mode",                x = x,          y = inc.y
 
 fields[#fields + 1] = { t = "Error decay",             x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 2 }, scale = 10 }
 fields[#fields + 1] = { t = "Error rotation",          x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1, vals = { 3 }, table = { [0] = "OFF", "ON" } }
-fields[#fields + 1] = { t = "Error limit roll",        x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000, vals = { 4,5 }, scale = 5, mult = 5 }
-fields[#fields + 1] = { t = "Error limit pitch",       x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000, vals = { 6,7 }, scale = 5, mult = 5 }
-fields[#fields + 1] = { t = "Error limit yaw",         x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000, vals = { 8,9 }, scale = 5, mult = 5 }
+fields[#fields + 1] = { t = "Error limit roll",        x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000, vals = { 4,5 } }
+fields[#fields + 1] = { t = "Error limit pitch",       x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000, vals = { 6,7 } }
+fields[#fields + 1] = { t = "Error limit yaw",         x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000, vals = { 8,9 } }
 -- TODO? toggle 'I-term limits', off = 1000
 
 fields[#fields + 1] = { t = "I-term relax type",       x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 2, vals = { 10 }, table = { [0] = "OFF", "RP", "RPY" } }
