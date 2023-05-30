@@ -11,10 +11,10 @@ local inc = { x = function(val) x = x + val return x end, y = function(val) y = 
 local labels = {}
 local fields = {}
 
-local gyroFilterType = { "1ST", "2ND" }
+local gyroFilterType = { [0] = "NONE", "1ST", "2ND" }
 
 labels[#labels + 1] = { t = "Gyro lowpass 1",           x = x,          y = inc.y(lineSpacing) }
-fields[#fields + 1] = { t = "Filter type",              x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = #gyroFilterType, vals = { 2 }, table = gyroFilterType }
+fields[#fields + 1] = { t = "Filter type",              x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = #gyroFilterType, vals = { 2 }, table = gyroFilterType }
 fields[#fields + 1] = { t = "Cutoff",                   x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 4000, vals = { 3, 4 } }
 
 labels[#labels + 1] = { t = "Gyro lowpass 1 dynamic",   x = x,          y = inc.y(lineSpacing) }
@@ -22,7 +22,7 @@ fields[#fields + 1] = { t = "Min cutoff",               x = x + indent, y = inc.
 fields[#fields + 1] = { t = "Max cutoff",               x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000, vals = { 18, 19 } }
 
 labels[#labels + 1] = { t = "Gyro lowpass 2",           x = x,          y = inc.y(lineSpacing) }
-fields[#fields + 1] = { t = "Filter type",              x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = #gyroFilterType, vals = { 5 }, table = gyroFilterType }
+fields[#fields + 1] = { t = "Filter type",              x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = #gyroFilterType, vals = { 5 }, table = gyroFilterType }
 fields[#fields + 1] = { t = "Cutoff",                   x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 4000, vals = { 6, 7 } }
 
 labels[#labels + 1] = { t = "Gyro notch 1",             x = x,          y = inc.y(lineSpacing) }
