@@ -11,7 +11,7 @@ local inc = { x = function(val) x = x + val return x end, y = function(val) y = 
 local labels = {}
 local fields = {}
 
-local gyroFilterType = { "1ST", "2ND", "PT1" }
+local gyroFilterType = { "1ST", "2ND" }
 
 labels[#labels + 1] = { t = "Gyro lowpass 1",           x = x,          y = inc.y(lineSpacing) }
 fields[#fields + 1] = { t = "Filter type",              x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = #gyroFilterType, vals = { 2 }, table = gyroFilterType }
