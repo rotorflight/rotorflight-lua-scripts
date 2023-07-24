@@ -32,13 +32,13 @@ fields[#fields + 1] = { t = "Cut-off point Y",         x = x + indent, y = inc.y
 labels[#labels + 1] = { t = "Yaw",                     x = x,          y = inc.y(lineSpacing) }
 fields[#fields + 1] = { t = "CW stop gain",            x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 25, max = 250, vals = { 19 } }
 fields[#fields + 1] = { t = "CCW stop gain",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 25, max = 250, vals = { 20 } }
-fields[#fields + 1] = { t = "Cyclic FF gain",          x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 2500, vals = { 21,22 } }
-fields[#fields + 1] = { t = "Col. FF gain",            x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 2500, vals = { 23,24 } }
-fields[#fields + 1] = { t = "Col. imp FF gain",        x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 2500, vals = { 25,26 } }
-fields[#fields + 1] = { t = "Col. imp FF freq",        x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 27 } }
+fields[#fields + 1] = { t = "Cyclic FF gain",          x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 21 } }
+fields[#fields + 1] = { t = "Col. FF gain",            x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 22 } }
+fields[#fields + 1] = { t = "Col. imp FF gain",        x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 23 } }
+fields[#fields + 1] = { t = "Col. imp FF decay",       x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 24 } }
 
 labels[#labels + 1] = { t = "Pitch",                   x = x,          y = inc.y(lineSpacing) }
-fields[#fields + 1] = { t = "Col. FF gain",            x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 2500, vals = { 28,29 } }
+fields[#fields + 1] = { t = "Col. FF gain",            x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 25 } }
 
 labels[#labels + 1] = { t = "PID Controller",          x = x,          y = inc.y(lineSpacing) }
 fields[#fields + 1] = { t = "R bandwidth",             x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 9 } }
@@ -49,15 +49,15 @@ fields[#fields + 1] = { t = "P D-term cut-off",        x = x + indent, y = inc.y
 fields[#fields + 1] = { t = "Y D-term cut-off",        x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 14 } }
 
 labels[#labels + 1] = { t = "Acro trainer",            x = x,          y = inc.y(lineSpacing) }
-fields[#fields + 1] = { t = "Leveling gain",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 25, max = 255, vals = { 33 } }
-fields[#fields + 1] = { t = "Maximum angle",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 10, max = 80, vals = { 34 } }
+fields[#fields + 1] = { t = "Leveling gain",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 25, max = 255, vals = { 29 } }
+fields[#fields + 1] = { t = "Maximum angle",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 10, max = 80, vals = { 30 } }
 
 labels[#labels + 1] = { t = "Angle mode",              x = x,          y = inc.y(lineSpacing) }
-fields[#fields + 1] = { t = "Leveling gain",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 200, vals = { 30 } }
-fields[#fields + 1] = { t = "Maximum angle",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 10, max = 90, vals = { 31 } }
+fields[#fields + 1] = { t = "Leveling gain",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 200, vals = { 26 } }
+fields[#fields + 1] = { t = "Maximum angle",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 10, max = 90, vals = { 27 } }
 
 labels[#labels + 1] = { t = "Horizon mode",            x = x,          y = inc.y(lineSpacing) }
-fields[#fields + 1] = { t = "Leveling gain",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 200, vals = { 32 } }
+fields[#fields + 1] = { t = "Leveling gain",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 200, vals = { 28 } }
 
 return {
     read        = 94, -- MSP_PID_PROFILE
@@ -65,7 +65,7 @@ return {
     title       = "Profile",
     reboot      = false,
     eepromWrite = true,
-    minBytes    = 34,
+    minBytes    = 30,
     labels      = labels,
     fields      = fields,
 }
