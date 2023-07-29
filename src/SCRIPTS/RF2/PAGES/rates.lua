@@ -44,7 +44,7 @@ fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0
 
 x = margin
 inc.y(lineSpacing*0.4)
-fields[#fields + 1] = { t = "Rates Type",       x = x, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 4, vals = { 1 }, table = { [0] = "NONE", "BETAFL", "RACEFL", "KISS", "ACTUAL", "QUICK"}, postEdit = function(self) self.updateRatesType(self, true) end }
+fields[#fields + 1] = { t = "Rates Type",       x = x, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 5, vals = { 1 }, table = { [0] = "NONE", "BETAFL", "RACEFL", "KISS", "ACTUAL", "QUICK"}, postEdit = function(self) self.updateRatesType(self, true) end }
 fields[#fields + 1] = { t = "Rates Smoothness", x = x, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 250, vals = { 22 }, mult = 5 }
 
 return {
