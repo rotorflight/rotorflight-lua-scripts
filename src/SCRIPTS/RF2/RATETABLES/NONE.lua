@@ -1,6 +1,9 @@
 return {
-    labels = { "", "", "ROLL", "PITCH", "YAW", "RC", "Rate", "", "Rate", "", "RC Expo" },
+    labels = { "", "", "ROLL", "PITCH", "YAW", "COL", "RC", "Rate", "", "Rate", "", "RC Expo" },
     fields = {
+        { min = 0, max = 0 },
+        { min = 0, max = 0 },
+        { min = 0, max = 0 },
         { min = 0, max = 0 },
         { min = 0, max = 0 },
         { min = 0, max = 0 },
@@ -11,5 +14,5 @@ return {
         { min = 0, max = 0 },
         { min = 0, max = 0 }
     },
-    defaults = { 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+    defaults = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 }
