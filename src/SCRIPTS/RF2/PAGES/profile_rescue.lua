@@ -11,7 +11,7 @@ local inc = { x = function(val) x = x + val return x end, y = function(val) y = 
 local labels = {}
 local fields = {}
 
-fields[#fields + 1] = { t = "Rescue mode enable",    x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1,     vals = { 1 }, table = { [0] = "OFF", "ON" } }
+fields[#fields + 1] = { t = "Rescue mode enable",    x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 2,     vals = { 1 }, table = { [0] = "Off", "On", "Alt hold" } }
 fields[#fields + 1] = { t = "Flip to upright",       x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1,     vals = { 2 }, table = { [0] = "No flip", "Flip" } }
 fields[#fields + 1] = { t = "Pull-up collective",    x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000,  vals = { 9,10 }, mult = 10 }
 fields[#fields + 1] = { t = "Pull-up time",          x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250,   vals = { 5 }, scale = 10 }

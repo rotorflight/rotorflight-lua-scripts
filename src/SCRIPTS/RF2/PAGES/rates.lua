@@ -17,6 +17,7 @@ labels[#labels + 1] = { t = "",      x = x, y = inc.y(tableSpacing.header) }
 labels[#labels + 1] = { t = "ROLL",  x = x, y = inc.y(tableSpacing.row) }
 labels[#labels + 1] = { t = "PITCH", x = x, y = inc.y(tableSpacing.row) }
 labels[#labels + 1] = { t = "YAW",   x = x, y = inc.y(tableSpacing.row) }
+labels[#labels + 1] = { t = "COL",   x = x, y = inc.y(tableSpacing.row) }
 
 x = x + tableSpacing.col
 y = yMinLim - tableSpacing.header
@@ -25,6 +26,7 @@ labels[#labels + 1] = { t = "Rate",  x = x, y = inc.y(tableSpacing.header) }
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 255, vals = { 2 }, scale = 100 }
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 255, vals = { 7 }, scale = 100 }
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 255, vals = { 12 }, scale = 100 }
+fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 255, vals = { 17 }, scale = 100 }
 
 x = x + tableSpacing.col
 y = yMinLim - tableSpacing.header
@@ -33,6 +35,7 @@ labels[#labels + 1] = { t = "Rate",  x = x, y = inc.y(tableSpacing.header) }
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 100, vals = { 4 }, scale = 100 }
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 100, vals = { 9 }, scale = 100 }
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 255, vals = { 14 }, scale = 100 }
+fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 255, vals = { 19 }, scale = 100 }
 
 x = x + tableSpacing.col
 y = yMinLim - tableSpacing.header
@@ -41,10 +44,11 @@ labels[#labels + 1] = { t = "Expo",  x = x, y = inc.y(tableSpacing.header) }
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 100, vals = { 3 }, scale = 100 }
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 100, vals = { 8 }, scale = 100 }
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 100, vals = { 13 }, scale = 100 }
+fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 100, vals = { 18 }, scale = 100 }
 
 x = margin
 inc.y(lineSpacing*0.4)
-fields[#fields + 1] = { t = "Rates Type",       x = x, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 4, vals = { 1 }, table = { [0] = "NONE", "BETAFL", "RACEFL", "KISS", "ACTUAL", "QUICK"}, postEdit = function(self) self.updateRatesType(self, true) end }
+fields[#fields + 1] = { t = "Rates Type",       x = x, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 5, vals = { 1 }, table = { [0] = "NONE", "BETAFL", "RACEFL", "KISS", "ACTUAL", "QUICK"}, postEdit = function(self) self.updateRatesType(self, true) end }
 fields[#fields + 1] = { t = "Rates Smoothness", x = x, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 250, vals = { 22 }, mult = 5 }
 
 return {
