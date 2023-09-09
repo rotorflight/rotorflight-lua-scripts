@@ -3,7 +3,7 @@ local margin = template.margin
 local indent = template.indent
 local lineSpacing = template.lineSpacing
 local tableSpacing = template.tableSpacing
-local colSpacing = tableSpacing.col * 0.75
+local colSpacing = tableSpacing.col * 0.65
 local sp = template.listSpacing.field
 local yMinLim = radio.yMinLimit
 local x = margin
@@ -35,6 +35,12 @@ fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0
 
 x = x + colSpacing
 y = yMinLim - tableSpacing.header
+labels[#labels + 1] = { t = "O",     x = x, y = inc.y(tableSpacing.header) }
+fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 1000, vals = { 31,32 } }
+fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 1000, vals = { 33,34 } }
+
+x = x + colSpacing
+y = yMinLim - tableSpacing.header
 labels[#labels + 1] = { t = "D",     x = x, y = inc.y(tableSpacing.header) }
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 1000, vals = { 5,6 } }
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 1000, vals = { 13,14 } }
@@ -60,7 +66,7 @@ return {
     title       = "PIDs",
     reboot      = false,
     eepromWrite = true,
-    minBytes    = 30,
+    minBytes    = 34,
     labels      = labels,
     fields      = fields,
 }
