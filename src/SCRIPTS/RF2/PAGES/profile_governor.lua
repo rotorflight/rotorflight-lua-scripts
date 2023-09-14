@@ -22,6 +22,7 @@ fields[#fields + 1] = { t = "Cyclic precomp.",         x = x, y = inc.y(lineSpac
 fields[#fields + 1] = { t = "Col. precomp.",           x = x, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 12 } }
 fields[#fields + 1] = { t = "TTA gain",                x = x, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 8 } }
 fields[#fields + 1] = { t = "TTA limit",               x = x, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 9 } }
+fields[#fields + 1] = { t = "Max throttle",            x = x, y = inc.y(lineSpacing), sp = x + sp, min = 40, max = 100, vals = { 13 } }
 
 return {
     read        = 148, -- MSP_GOVERNOR_PROFILE
@@ -29,7 +30,7 @@ return {
     title       = "Profile - Governor",
     reboot      = false,
     eepromWrite = true,
-    minBytes    = 12,
+    minBytes    = 13,
     labels      = labels,
     fields      = fields,
 }
