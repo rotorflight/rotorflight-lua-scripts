@@ -4,6 +4,7 @@ local mcuIdReceived = false
 local boardInfoReceived = false
 local getApiVersion, getVtxTables, getMCUId, getBoardInfo
 local returnTable = { f = nil, t = "" }
+local SUPPORTED_API_VERSION = "11.02"
 
 local function init()
     if getRSSI() == 0 then
@@ -16,20 +17,22 @@ local function init()
             getApiVersion = nil
             collectgarbage()
         end
+    elseif tostring(apiVersion) ~= SUPPORTED_API_VERSION then -- work-around for comparing floats
+        returnTable.t = "Wrong API version: "..tostring(apiVersion).." instead of "..SUPPORTED_API_VERSION
+--[[
     elseif not mcuIdReceived and apiVersion >= 1.42 then
         getMCUId = getMCUId or assert(loadScript("mcu_id.lua"))()
         returnTable.t = getMCUId.t
         mcuIdReceived = getMCUId.f()
         if mcuIdReceived then
             getMCUId = nil
---[[
+
             f = loadScript("VTX_TABLES/"..mcuId..".lua")
             if f and f() then
                 vtxTablesReceived = true
                 f = nil
             end
             collectgarbage()
---]]
             f = loadScript("BOARD_INFO/"..mcuId..".lua")
             if f and f() then
                 boardInfoReceived = true
@@ -37,6 +40,7 @@ local function init()
             end
             collectgarbage()
         end
+--]]
 --[[
     elseif not vtxTablesReceived and apiVersion >= 1.042 then
         getVtxTables = getVtxTables or assert(loadScript("vtx_tables.lua"))()
@@ -58,11 +62,11 @@ local function init()
         end
 --]]
     else
+        -- received correct API version, proceed
         return true
     end
-    --return apiVersionReceived and vtxTablesReceived and mcuId and boardInfoReceived
-    --return apiVersionReceived and mcuId and boardInfoReceived
-    return apiVersionReceived and mcuId
+
+    return false
 end
 
 returnTable.f = init
