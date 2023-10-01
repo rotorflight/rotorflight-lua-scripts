@@ -18,7 +18,7 @@ local function init()
             collectgarbage()
         end
     elseif tostring(apiVersion) ~= SUPPORTED_API_VERSION then -- work-around for comparing floats
-        returnTable.t = "Wrong API version: "..tostring(apiVersion).." instead of "..SUPPORTED_API_VERSION
+        returnTable.t = "This version of the Lua\nscripts ("..SUPPORTED_API_VERSION..") can't be\nused with the selected\nmodel ("..tostring(apiVersion)..")."
 --[[
     elseif not mcuIdReceived and apiVersion >= 1.42 then
         getMCUId = getMCUId or assert(loadScript("mcu_id.lua"))()

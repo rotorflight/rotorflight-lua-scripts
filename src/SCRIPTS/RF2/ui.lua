@@ -190,6 +190,21 @@ local function drawScreenTitle(screenTitle)
     end
 end
 
+local function getLineSpacing()
+    if radio.highRes then
+        return 25
+    end
+    return 10
+end
+
+local function drawTextMultiline(x, y, text, options)
+    local lines = {}
+    for str in string.gmatch(text, "([^\n]+)") do
+        lcd.drawText(x, y, str, options)
+        y = y + getLineSpacing()
+    end
+end
+
 local function drawScreen()
     local yMinLim = radio.yMinLimit
     local yMaxLim = radio.yMaxLimit
@@ -218,7 +233,7 @@ local function drawScreen()
             if pageState == pageStatus.editing then
                 valueOptions = valueOptions + BLINK
             end
-        end 
+        end
         if f.value then
             if f.upd and Page.values then
                 f.upd(Page)
@@ -295,7 +310,7 @@ local function run_ui(event)
         lcd.clear()
         drawScreenTitle("Rotorflight Config")
         init = init or assert(loadScript("ui_init.lua"))()
-        lcd.drawText(6, radio.yMinLimit, init.t)
+        drawTextMultiline(4, radio.yMinLimit, init.t)
         if not init.f() then
             return 0
         end
@@ -320,10 +335,7 @@ local function run_ui(event)
         lcd.clear()
         local yMinLim = radio.yMinLimit
         local yMaxLim = radio.yMaxLimit
-        local lineSpacing = 10
-        if radio.highRes then
-            lineSpacing = 25
-        end
+        local lineSpacing = getLineSpacing()
         local currentFieldY = (currentPage-1)*lineSpacing + yMinLim
         if currentFieldY <= yMinLim then
             mainMenuScrollY = 0
