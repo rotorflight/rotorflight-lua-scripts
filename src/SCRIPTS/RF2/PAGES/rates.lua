@@ -87,7 +87,7 @@ return {
                 end
             end
         else
-            for i = 1, 9 do
+            for i = 1, 12 do
                 local f = self.fields[i]
                 f.value = 0
                 for idx=1, #f.vals do
