@@ -1,3 +1,5 @@
+local LUA_VERSION = "2.0 - 231015"
+
 local uiStatus =
 {
     init     = 1,
@@ -308,7 +310,7 @@ local function run_ui(event)
         end
     elseif uiState == uiStatus.init then
         lcd.clear()
-        drawScreenTitle("Rotorflight Config")
+        drawScreenTitle("Rotorflight "..LUA_VERSION)
         init = init or assert(loadScript("ui_init.lua"))()
         drawTextMultiline(4, radio.yMinLimit, init.t)
         if not init.f() then
@@ -351,7 +353,7 @@ local function run_ui(event)
                 lcd.drawText(6, y, PageFiles[i].title, attr)
             end
         end
-        drawScreenTitle("Rotorflight Config")
+        drawScreenTitle("Rotorflight "..LUA_VERSION)
     elseif uiState == uiStatus.pages then
         if pageState == pageStatus.saving then
             if saveTS + saveTimeout < getTime() then
