@@ -1,6 +1,5 @@
 local scripts = {
-    "/SCRIPTS/FUNCTIONS/rf2bkgd.lua",
-    "/SCRIPTS/FUNCTIONS/rf2pids.lua",
+    "/SCRIPTS/FUNCTIONS/rf2bg.lua",
     "/SCRIPTS/RF2/CONFIRM/acc_cal.lua",
     "/SCRIPTS/RF2/CONFIRM/vtx_tables.lua",
     "/SCRIPTS/RF2/board_info.lua",
@@ -9,7 +8,6 @@ local scripts = {
     "/SCRIPTS/RF2/MSP/common.lua",
     "/SCRIPTS/RF2/MSP/crsf.lua",
     "/SCRIPTS/RF2/MSP/ghst.lua",
-    "/SCRIPTS/RF2/MSP/messages.lua",
     "/SCRIPTS/RF2/MSP/sp.lua",
     "/SCRIPTS/RF2/RATETABLES/ACTUAL.lua",
     "/SCRIPTS/RF2/RATETABLES/QUICK.lua",
