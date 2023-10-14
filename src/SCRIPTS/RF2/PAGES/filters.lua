@@ -33,13 +33,11 @@ labels[#labels + 1] = { t = "Gyro notch 2",             x = x,          y = inc.
 fields[#fields + 1] = { t = "Center",                   x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 4000, vals = { 12, 13 } }
 fields[#fields + 1] = { t = "Cutoff",                   x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 4000, vals = { 14, 15 } }
 
---[[
-labels[#labels + 1] = { t = "Dynamic Notch Filter",     x = x,          y = inc.y(lineSpacing) }
-fields[#fields + 1] = { t = "Width %",                  x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 20, vals = { 20 } }
-fields[#fields + 1] = { t = "Q",                        x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 1000, vals = { 21, 22 } }
-fields[#fields + 1] = { t = "Min Frequency",            x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 60, max = 250, vals = { 23, 24 } }
-fields[#fields + 1] = { t = "Max Frequency",            x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 200, max = 1000, vals = { 25, 26 } }
---]]
+labels[#labels + 1] = { t = "Dynamic Notch Filters",    x = x,          y = inc.y(lineSpacing) }
+fields[#fields + 1] = { t = "Count",                    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 8, vals = { 20 } }
+fields[#fields + 1] = { t = "Q",                        x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 10, max = 100, vals = { 21 }, scale = 10 }
+fields[#fields + 1] = { t = "Min Frequency",            x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 10, max = 200, vals = { 22, 23 } }
+fields[#fields + 1] = { t = "Max Frequency",            x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 100, max = 500, vals = { 24, 25 } }
 
 return {
     read        = 92, -- MSP_FILTER_CONFIG
@@ -47,7 +45,7 @@ return {
     eepromWrite = true,
     reboot      = true,
     title       = "Filters",
-    minBytes    = 26,
+    minBytes    = 25,
     labels      = labels,
     fields      = fields,
 }
