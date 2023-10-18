@@ -1,10 +1,10 @@
-local apiVersionReceived = false
-local timeIsSet = false
+local apiVersionReceived = runningInSimulator
+local timeIsSet = runningInSimulator
 local getApiVersion, setRtc, adjTellerTask
 local adjTellerEnabled = true
 
 local function run_bg()
-    if getRSSI() > 0 then
+    if getRSSI() > 0 or runningInSimulator then
         -- Send data when the telemetry connection is available
         -- assuming when sensor value higher than 0 there is an telemetry connection
         if not apiVersionReceived then

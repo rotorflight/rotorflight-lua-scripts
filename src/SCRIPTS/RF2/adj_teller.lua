@@ -110,19 +110,20 @@ local function init()
     adjfuncIdChanged = false
     adjfuncValueChanged = false
 
-    adjfuncIdSensorId = getTelemetryId("5110")
-    --adjfuncIdSensorId = getTelemetryId("Tmp1")
+    local sensorName
+    if runningInSimulator then sensorName = "Tmp1" else sensorName = "5110" end
+    adjfuncIdSensorId = getTelemetryId(sensorName)
     if adjfuncIdSensorId == -1 then
-        showValue("No 5110 sensor found")
+        showValue("No "..sensorName.." sensor found")
         timeExitTool = getTime() + 200
         return
     end
     currentAdjfuncId = getValue(adjfuncIdSensorId)
 
-    adjfuncValueSensorId = getTelemetryId("5111")
-    --adjfuncValueSensorId = getTelemetryId("Tmp2")
+    if runningInSimulator then sensorName = "Tmp2" else sensorName = "5111" end
+    adjfuncValueSensorId = getTelemetryId(sensorName)
     if adjfuncValueSensorId == -1 then
-        showValue("No 5111 sensor found")
+        showValue("No "..sensorName.." sensor found")
         timeExitTool = getTime() + 200
         return
     end

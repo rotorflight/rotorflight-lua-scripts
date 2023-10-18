@@ -7,6 +7,8 @@ local returnTable = { f = nil, t = "" }
 local SUPPORTED_API_VERSION = "12.01"
 
 local function init()
+    if runningInSimulator then return true end
+
     if getRSSI() == 0 then
         returnTable.t = "Waiting for connection"
     elseif not apiVersionReceived then
