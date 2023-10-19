@@ -21,7 +21,6 @@ local scripts = {
     "/SCRIPTS/RF2/protocols.lua",
     "/SCRIPTS/RF2/PAGES/accelerometer.lua",
     "/SCRIPTS/RF2/PAGES/copy_profiles.lua",
-    "/SCRIPTS/RF2/PAGES/failsafe.lua",
     "/SCRIPTS/RF2/PAGES/filters.lua",
     "/SCRIPTS/RF2/PAGES/governor.lua",
     "/SCRIPTS/RF2/PAGES/pids.lua",
