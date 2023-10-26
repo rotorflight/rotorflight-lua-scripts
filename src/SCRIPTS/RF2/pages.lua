@@ -10,6 +10,5 @@ PageFiles[#PageFiles + 1] = { title = "Rates", script = "rates.lua" }
 PageFiles[#PageFiles + 1] = { title = "Governor", script = "governor.lua" }
 PageFiles[#PageFiles + 1] = { title = "Filters", script = "filters.lua" }
 PageFiles[#PageFiles + 1] = { title = "Accelerometer trim", script = "accelerometer.lua" }
-PageFiles[#PageFiles + 1] = { title = "Failsafe", script = "failsafe.lua" }
 
 return PageFiles
