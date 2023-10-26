@@ -50,7 +50,9 @@ If you copied the files correctly, you can now go into the *Tools* menu on your 
 See the [Lua Scripts Wiki page](https://github.com/rotorflight/rotorflight/wiki/Lua-Scripts).
 
 ## Background script
-The optional background script offers RTC synchronization and RSSI through MSP. RTC synchronization will send the time of the transmitter to the flight controller. The script will beep if RTC synchronization has been completed. Blackbox logs and files created by the FC will now have the correct timestamp.
+The optional background script features *Real Time FC Clock synchronization* and the *Adjustment Teller*. 
+- RTC synchronization will send the time of the transmitter to the flight controller. The script will beep if RTC synchronization has been completed. Blackbox logs and files created by the FC will now have the correct timestamp.
+- The *Adjustment Teller* will [tell you](https://www.youtube.com/watch?v=rbMiiWhzhqI) what adjustment has been made. Currently it only works with s.port/f.port telemetry and telemetry sensors 5110 and 5111 should be discovered/added. It supports all adjustments except profile adjustments. 
 
 The background script can be setup as a special or global function in OpenTX. The image below shows how to configure the background script as a special function. By doing this, the script will automatically run as soon as the model is selected.
 
