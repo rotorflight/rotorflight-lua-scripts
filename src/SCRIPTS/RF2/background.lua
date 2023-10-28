@@ -21,7 +21,7 @@ local function run_bg()
                 setRtc = nil
                 collectgarbage()
             end
-        elseif adjTellerEnabled and protocol.mspTransport == "MSP/sp.lua" then
+        elseif adjTellerEnabled then
             adjTellerTask = adjTellerTask or assert(loadScript(rfBaseDir.."adj_teller.lua"))()
             adjTellerEnabled = adjTellerTask.run()
             if adjTellerEnabled == 2 then

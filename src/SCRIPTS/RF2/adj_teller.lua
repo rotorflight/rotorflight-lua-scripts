@@ -1,9 +1,8 @@
+local adjustmentCollector
 local timeLastChange = -1
 local timeExitTool
 local adjfuncIdChanged
 local adjfuncValueChanged
-local adjfuncIdSensorId
-local adjfuncValueSensorId
 local currentAdjfuncId
 local currentAdjfuncValue
 
@@ -105,29 +104,77 @@ local function showValue(v)
     lcd.drawText(1, 1, tostring(v), 0)
 end
 
+local sportAdjustmentsCollector = {}
+sportAdjustmentsCollector.__index = sportAdjustmentsCollector
+
+function sportAdjustmentsCollector:new(idSensorName, valueSensorName)
+    local self = setmetatable({}, sportAdjustmentsCollector)
+    self.adjfuncId = 0
+    self.adjfuncValue = 0
+    self.adjfuncIdSensorId = getTelemetryId(idSensorName)
+    if self.adjfuncIdSensorId == -1 then
+        self.initFailedMessage = "No "..idSensorName.." sensor found"
+        return self
+    end
+    self.adjfuncValueSensorId = getTelemetryId(valueSensorName)
+    if self.adjfuncValueSensorId == -1 then
+        self.initFailedMessage = "No "..valueSensorName.." sensor found"
+        return self
+    end
+
+    function self:getAdjfuncIdAndValue()
+        self.adjfuncId = getValue(self.adjfuncIdSensorId)
+        self.adjfuncValue = getValue(self.adjfuncValueSensorId)
+        return self.adjfuncId, self.adjfuncValue
+    end
+    return self
+end
+
+local crsfAdjustmentsCollector = {}
+crsfAdjustmentsCollector.__index = crsfAdjustmentsCollector
+
+function crsfAdjustmentsCollector:new()
+    local self = setmetatable({}, crsfAdjustmentsCollector)
+    self.adjfuncId = 0
+    self.adjfuncValue = 0
+    self.flightmodeSensorId = getTelemetryId("FM")
+    if self.flightmodeSensorId == -1 then
+        self.initFailedMessage = "No FM sensor found"
+        return self
+    end
+
+    function self:getAdjfuncIdAndValue()
+        local fm = getValue(self.flightmodeSensorId)
+        local startIndex, _ = string.find(fm, ":")
+        if startIndex and startIndex > 1 then
+            self.adjfuncId = string.sub(fm, 1, startIndex-1)
+            self.adjfuncValue = string.sub(fm, startIndex+1)
+        end
+        return self.adjfuncId, self.adjfuncValue
+    end
+    return self
+end
+
 local function init()
     timeLastChange = 0
     adjfuncIdChanged = false
     adjfuncValueChanged = false
 
-    local sensorName
-    if runningInSimulator then sensorName = "Tmp1" else sensorName = "5110" end
-    adjfuncIdSensorId = getTelemetryId(sensorName)
-    if adjfuncIdSensorId == -1 then
-        showValue("No "..sensorName.." sensor found")
-        timeExitTool = getTime() + 200
-        return
+    if runningInSimulator then
+        adjustmentCollector = sportAdjustmentsCollector:new("Tmp1", "Tmp2")
+    elseif protocol.mspTransport == "MSP/sp.lua" then
+        adjustmentCollector = sportAdjustmentsCollector:new("5110", "5111")
+    else
+        adjustmentCollector = crsfAdjustmentsCollector:new()
     end
-    currentAdjfuncId = getValue(adjfuncIdSensorId)
 
-    if runningInSimulator then sensorName = "Tmp2" else sensorName = "5111" end
-    adjfuncValueSensorId = getTelemetryId(sensorName)
-    if adjfuncValueSensorId == -1 then
-        showValue("No "..sensorName.." sensor found")
+    if adjustmentCollector.initFailedMessage then
+        showValue(adjustmentCollector.initFailedMessage)
         timeExitTool = getTime() + 200
         return
     end
-    currentAdjfuncValue = getValue(adjfuncValueSensorId)
+
+    currentAdjfuncId, currentAdjfuncValue = adjustmentCollector:getAdjfuncIdAndValue()
 
     showValue("Waiting for adjustment...")
 end
@@ -163,14 +210,12 @@ local function run()
 
     local invalidate = false
 
-    local newAdjfuncId = getValue(adjfuncIdSensorId)
+    local newAdjfuncId, newAdjfuncValue = adjustmentCollector:getAdjfuncIdAndValue()
     if newAdjfuncId ~= currentAdjfuncId then
         currentAdjfuncId = newAdjfuncId
         adjfuncIdChanged = true
         invalidate = true
     end
-
-    local newAdjfuncValue = getValue(adjfuncValueSensorId)
     if newAdjfuncValue ~= currentAdjfuncValue then
         currentAdjfuncValue = newAdjfuncValue
         adjfuncValueChanged = true
