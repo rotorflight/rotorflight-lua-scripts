@@ -4,7 +4,7 @@ local mcuIdReceived = false
 local boardInfoReceived = false
 local getApiVersion, getVtxTables, getMCUId, getBoardInfo
 local returnTable = { f = nil, t = "" }
-local SUPPORTED_API_VERSION = "12.01"
+local SUPPORTED_API_VERSION = "12.02"
 
 local function init()
     if runningInSimulator then return true end
