@@ -35,7 +35,7 @@ return {
     title       = "Governor",
     reboot      = true,
     eepromWrite = true,
-    minBytes    = 22,
+    minBytes    = 23,
     labels      = labels,
     fields      = fields,
 }
