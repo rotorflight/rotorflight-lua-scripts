@@ -13,11 +13,11 @@ local fields = {}
 
 fields[#fields + 1] = { t = "Rescue mode enable",    x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 2,     vals = { 1 }, table = { [0] = "Off", "On", "Alt hold" } }
 fields[#fields + 1] = { t = "Flip to upright",       x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1,     vals = { 2 }, table = { [0] = "No flip", "Flip" } }
-fields[#fields + 1] = { t = "Pull-up collective",    x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000,  vals = { 9,10 }, mult = 10 }
+fields[#fields + 1] = { t = "Pull-up collective",    x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000,  vals = { 9,10 }, mult = 10, scale = 10 }
 fields[#fields + 1] = { t = "Pull-up time",          x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250,   vals = { 5 }, scale = 10 }
-fields[#fields + 1] = { t = "Climb collective",      x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000,  vals = { 11,12 }, mult = 10 }
+fields[#fields + 1] = { t = "Climb collective",      x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000,  vals = { 11,12 }, mult = 10, scale = 10 }
 fields[#fields + 1] = { t = "Climb time",            x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250,   vals = { 6 }, scale = 10 }
-fields[#fields + 1] = { t = "Hover collective",      x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000,  vals = { 13,14 }, mult = 10 }
+fields[#fields + 1] = { t = "Hover collective",      x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000,  vals = { 13,14 }, mult = 10, scale = 10 }
 fields[#fields + 1] = { t = "Flip fail time",        x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250,   vals = { 7 }, scale = 10 }
 fields[#fields + 1] = { t = "Exit time",             x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250,   vals = { 8 }, scale = 10 }
 fields[#fields + 1] = { t = "Rescue level gain",     x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 5, max = 250,   vals = { 4 } }
