@@ -4,7 +4,7 @@ local mcuIdReceived = false
 local boardInfoReceived = false
 local getApiVersion, getVtxTables, getMCUId, getBoardInfo
 local returnTable = { f = nil, t = "" }
-local SUPPORTED_API_VERSION = "12.03"
+local SUPPORTED_API_VERSION = "12.04" -- see main/msp/msp_protocol.h
 
 local function init()
     if runningInSimulator then return true end
