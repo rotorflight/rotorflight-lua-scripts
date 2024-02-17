@@ -25,9 +25,10 @@ fields[#fields + 1] = { t = "AR timeout",          x = x, y = inc.y(lineSpacing)
 fields[#fields + 1] = { t = "AR min entry time",   x = x, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 100,   vals = { 18,19 }, scale = 10 }
 fields[#fields + 1] = { t = "Zero throttle TO",    x = x, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 100,   vals = { 10,11 }, scale = 10 }
 fields[#fields + 1] = { t = "HS signal timeout",   x = x, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 100,   vals = { 12,13 }, scale = 10 }
-fields[#fields + 1] = { t = "HS filter cutoff",    x = x, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 250,   vals = { 22 } }
-fields[#fields + 1] = { t = "Volt. filter cutoff", x = x, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 250,   vals = { 21 } }
-fields[#fields + 1] = { t = "TTA filter cutoff",   x = x, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 250,   vals = { 23 } }
+fields[#fields + 1] = { t = "HS filter cutoff",    x = x, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250,   vals = { 22 } }
+fields[#fields + 1] = { t = "Volt. filter cutoff", x = x, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250,   vals = { 21 } }
+fields[#fields + 1] = { t = "TTA bandwidth",       x = x, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250,   vals = { 23 } }
+fields[#fields + 1] = { t = "Precomp bandwidth",   x = x, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250,   vals = { 24 } }
 
 return {
     read        = 142, -- MSP_GOVERNOR_CONFIG
@@ -35,7 +36,7 @@ return {
     title       = "Governor",
     reboot      = true,
     eepromWrite = true,
-    minBytes    = 23,
+    minBytes    = 24,
     labels      = labels,
     fields      = fields,
 }
