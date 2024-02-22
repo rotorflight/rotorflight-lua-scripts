@@ -39,13 +39,13 @@ return {
                 self.servoConfiguration[i][j] = self.values[1 + (i - 1) * 16 + j]
             end
         end
-        if globals.lastChangedServo == nil then
-            globals.lastChangedServo = 1
+        if rfglobals.lastChangedServo == nil then
+            rfglobals.lastChangedServo = 1
         end
-        self.copyServo(self, globals.lastChangedServo)
+        self.setValues(self, rfglobals.lastChangedServo)
         self.minBytes = 1 + 16
     end,
-    copyServo = function(self, servoIndex)
+    setValues = function(self, servoIndex)
         self.values = {}
         self.values[1] = servoIndex - 1
         for i = 1, 16 do
@@ -53,8 +53,8 @@ return {
         end
     end,
     servoChanged = function(self)
-        globals.lastChangedServo = self.values[1] + 1
-        self.copyServo(self, globals.lastChangedServo)
+        rfglobals.lastChangedServo = self.values[1] + 1
+        self.setValues(self, rfglobals.lastChangedServo)
         dataBindFields()
     end
 }

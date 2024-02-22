@@ -1,4 +1,4 @@
-local LUA_VERSION = "2.0 - 240218"
+local LUA_VERSION = "2.0 - 240222"
 
 local uiStatus =
 {
@@ -42,7 +42,7 @@ local foregroundColor = LINE_COLOR or SOLID
 
 local globalTextOptions = TEXT_COLOR or 0
 
-globals = {}
+rfglobals = {}
 
 local function saveSettings()
     if Page.values then
