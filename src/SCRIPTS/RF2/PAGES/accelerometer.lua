@@ -1,3 +1,5 @@
+local localization = require('localization.' .. locale)
+
 local template = assert(loadScript(radio.template))()
 local margin = template.margin
 local indent = template.indent
@@ -11,7 +13,9 @@ local inc = { x = function(val) x = x + val return x end, y = function(val) y = 
 local labels = {}
 local fields = {}
 
-labels[#labels + 1] = { t = "Accelerometer trim",     x = x,          y = inc.y(lineSpacing) }
+-- TODO can i use a global variable for strings?
+
+labels[#labels + 1] = { t = strings.accelerometer_trim,     x = x,          y = inc.y(lineSpacing) }
 fields[#fields + 1] = { t = "Roll",                   x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = -300, max = 300, vals = { 3, 4 } }
 fields[#fields + 1] = { t = "Pitch",                  x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = -300, max = 300, vals = { 1, 2 } }
 
