@@ -34,7 +34,7 @@ fields[#fields + 1] = { t = "Max collective",        x = x + indent, y = inc.y(l
 return {
     read        = 146, -- MSP_RESCUE_PROFILE
     write       = 147, -- MSP_SET_RESCUE_PROFILE
-    title       = "Profile - Rescue",
+    title       = localization.profile_rescue,
     reboot      = false,
     eepromWrite = true,
     minBytes    = 28,

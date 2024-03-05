@@ -25,6 +25,12 @@ and copy the contents of the SCRIPTS folder to your transmitter.
 
 You will know if you did this correctly if the `rf.lua` file shows up in the `/SCRIPTS/TOOLS` directory. Also *Rotorflight conf* should now show up in the *Tools* menu of your transmitter.
 
+Configure your local by editing rf2.lua and setting the locale 
+
+```lua
+local locale = 'en'
+```
+
 ### Copying the SCRIPTS folder
 
 USB Method
