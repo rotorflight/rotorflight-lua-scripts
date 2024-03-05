@@ -10,7 +10,7 @@ local function init()
     if runningInSimulator then return true end
 
     if getRSSI() == 0 then
-        returnTable.t = "Waiting for connection"
+        returnTable.t = localization.waiting_for_connection
     elseif not apiVersionReceived then
         getApiVersion = getApiVersion or assert(loadScript("api_version.lua"))()
         returnTable.t = getApiVersion.t
@@ -20,7 +20,7 @@ local function init()
             collectgarbage()
         end
     elseif tostring(apiVersion) ~= SUPPORTED_API_VERSION then -- work-around for comparing floats
-        returnTable.t = "This version of the Lua\nscripts ("..SUPPORTED_API_VERSION..") can't be\nused with the selected\nmodel ("..tostring(apiVersion)..")."
+        returnTable.t = localization.this_version_of_the_lua_nscripts..SUPPORTED_API_VERSION..localization.cant_be_used_with_the_selected_model..tostring(apiVersion)..")."
 --[[
     elseif not mcuIdReceived and apiVersion >= 1.42 then
         getMCUId = getMCUId or assert(loadScript("mcu_id.lua"))()
