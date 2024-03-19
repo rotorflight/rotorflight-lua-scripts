@@ -252,11 +252,22 @@ local function drawScreen()
             end
         end
         local y = f.y - pageScrollY
+        
+        if runningInSimulator then 
+            val = math.floor((f.max + f.min)*0.2)
+        end 
+
         if y >= 0 and y <= LCD_H then
             if f.t then
                 lcd.drawText(f.x, y, f.t, textOptions)
             end
             lcd.drawText(f.sp or f.x, y, val, valueOptions)
+            -- on big screen, display min/max
+            if LCD_W == 480 then
+                --  local txt = string.format("[ %-9s .. %9d ]", f.min, f.max)
+                 local txt = string.format("[ %s .. %s ]", f.min, f.max)
+                 lcd.drawText(LCD_W - 10, y, txt, SMLSIZE + RIGHT + GREY)
+            end
         end
     end
     drawScreenTitle("Rotorflight / "..Page.title)
