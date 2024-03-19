@@ -63,7 +63,7 @@ fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0
 return {
     read        = 112, -- MSP_PID_TUNING
     write       = 202, -- MSP_SET_PID_TUNING
-    title       = "PIDs",
+    title       = localization.pids,
     reboot      = false,
     eepromWrite = true,
     minBytes    = 34,

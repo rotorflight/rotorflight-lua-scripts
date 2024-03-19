@@ -6,7 +6,7 @@ local supportedRadios =
             template = "TEMPLATES/128x64.lua",
             MenuBox = { x=15, y=12, w=100, x_offset=36, h_line=8, h_offset=3 },
             SaveBox = { x=15, y=12, w=100, x_offset=4,  h=30, h_offset=5 },
-            NoTelem = { 30, 55, "No Telemetry", BLINK },
+            NoTelem = { 30, 55, localization.no_telemetry, BLINK },
             textSize = SMLSIZE,
             yMinLimit = 12,
             yMaxLimit = 52,
@@ -21,7 +21,7 @@ local supportedRadios =
             textSize = SMLSIZE,
             refresh = {
                 event = EVT_VIRTUAL_ENTER,
-                text = "Refresh: [ENT]",
+                text = localization.refresh_ent,
                 top = 1,
                 left = 64,
             },
@@ -33,7 +33,7 @@ local supportedRadios =
             template = "TEMPLATES/128x96.lua",
             MenuBox = { x=15, y=12, w=100, x_offset=36, h_line=8, h_offset=3 },
             SaveBox = { x=15, y=12, w=100, x_offset=4,  h=30, h_offset=5 },
-            NoTelem = { 30, 87, "No Telemetry", BLINK },
+            NoTelem = { 30, 87, localization.no_telemetry, BLINK },
             textSize = SMLSIZE,
             yMinLimit = 12,
             yMaxLimit = 84,
@@ -48,7 +48,7 @@ local supportedRadios =
             textSize = SMLSIZE,
             refresh = {
                 event = EVT_VIRTUAL_ENTER,
-                text = "Refresh: [ENT]",
+                text = localization.refresh_ent,
                 top = 1,
                 left = 64,
             },
@@ -60,7 +60,7 @@ local supportedRadios =
             template = "TEMPLATES/212x64.lua",
             MenuBox = { x=40, y=12, w=120, x_offset=36, h_line=8, h_offset=3 },
             SaveBox = { x=40, y=12, w=120, x_offset=4,  h=30, h_offset=5 },
-            NoTelem = { 70, 55, "No Telemetry", BLINK },
+            NoTelem = { 70, 55, localization.no_telemetry, BLINK },
             textSize = SMLSIZE,
             yMinLimit = 12,
             yMaxLimit = 52,
@@ -75,7 +75,7 @@ local supportedRadios =
             textSize = SMLSIZE,
             refresh = {
                 event = EVT_VIRTUAL_INC,
-                text = "Refresh: [+]",
+                text = localization.refresh_plus,
                 top = 1,
                 left = 156,
             }
@@ -88,7 +88,7 @@ local supportedRadios =
             highRes = true,
             MenuBox = { x=120, y=100, w=200, x_offset=68, h_line=20, h_offset=6 },
             SaveBox = { x=120, y=100, w=180, x_offset=12, h=60, h_offset=12 },
-            NoTelem = { 192, LCD_H - 28, "No Telemetry", (TEXT_COLOR or 0) + INVERS + BLINK },
+            NoTelem = { 192, LCD_H - 28, localization.no_telemetry, (TEXT_COLOR or 0) + INVERS + BLINK },
             textSize = 0,
             yMinLimit = 35,
             yMaxLimit = 235,
@@ -103,7 +103,7 @@ local supportedRadios =
             textSize = MIDSIZE,
             refresh = {
                 event = EVT_VIRTUAL_ENTER,
-                text = "Refresh: [ENT]",
+                text = localization.refresh_ent,
                 top = 1,
                 left = 300,
             }
@@ -116,7 +116,7 @@ local supportedRadios =
             highRes = true,
             MenuBox = { x= (LCD_W -200)/2, y=LCD_H/2, w=200, x_offset=68, h_line=20, h_offset=6 },
             SaveBox = { x= (LCD_W -200)/2, y=LCD_H/2, w=180, x_offset=12, h=60, h_offset=12 },
-            NoTelem = { LCD_W/2 - 50, LCD_H - 28, "No Telemetry", (TEXT_COLOR or 0) + INVERS + BLINK },
+            NoTelem = { LCD_W/2 - 50, LCD_H - 28, localization.no_telemetry, (TEXT_COLOR or 0) + INVERS + BLINK },
             textSize = 0,
             yMinLimit = 35,
             yMaxLimit = 435,
@@ -126,6 +126,6 @@ local supportedRadios =
 }
 
 local resolution = LCD_W.."x"..LCD_H
-local radio = assert(supportedRadios[resolution], resolution.." not supported")
+local radio = assert(supportedRadios[resolution], resolution..localization.not_supported)
 
 return radio

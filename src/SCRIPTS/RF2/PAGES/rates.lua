@@ -14,15 +14,15 @@ local fields = {}
 y = yMinLim - tableSpacing.header
 labels[#labels + 1] = { t = "",      x = x, y = inc.y(tableSpacing.header) }
 labels[#labels + 1] = { t = "",      x = x, y = inc.y(tableSpacing.header) }
-labels[#labels + 1] = { t = "ROLL",  x = x, y = inc.y(tableSpacing.row) }
-labels[#labels + 1] = { t = "PITCH", x = x, y = inc.y(tableSpacing.row) }
-labels[#labels + 1] = { t = "YAW",   x = x, y = inc.y(tableSpacing.row) }
-labels[#labels + 1] = { t = "COL",   x = x, y = inc.y(tableSpacing.row) }
+labels[#labels + 1] = { t = localization.roll,  x = x, y = inc.y(tableSpacing.row) }
+labels[#labels + 1] = { t = localization.pitch, x = x, y = inc.y(tableSpacing.row) }
+labels[#labels + 1] = { t = localization.yaw,   x = x, y = inc.y(tableSpacing.row) }
+labels[#labels + 1] = { t = localization.col,   x = x, y = inc.y(tableSpacing.row) }
 
 x = x + tableSpacing.col
 y = yMinLim - tableSpacing.header
-labels[#labels + 1] = { t = "RC",    x = x, y = inc.y(tableSpacing.header) }
-labels[#labels + 1] = { t = "Rate",  x = x, y = inc.y(tableSpacing.header) }
+labels[#labels + 1] = { t = localization.rc,    x = x, y = inc.y(tableSpacing.header) }
+labels[#labels + 1] = { t = localization.rate,  x = x, y = inc.y(tableSpacing.header) }
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 255, vals = { 2 }, scale = 100 }
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 255, vals = { 8 }, scale = 100 }
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 255, vals = { 14 }, scale = 100 }
@@ -30,8 +30,8 @@ fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0
 
 x = x + tableSpacing.col
 y = yMinLim - tableSpacing.header
-labels[#labels + 1] = { t = "Super", x = x, y = inc.y(tableSpacing.header) }
-labels[#labels + 1] = { t = "Rate",  x = x, y = inc.y(tableSpacing.header) }
+labels[#labels + 1] = { t = localization.super, x = x, y = inc.y(tableSpacing.header) }
+labels[#labels + 1] = { t = localization.rate,  x = x, y = inc.y(tableSpacing.header) }
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 100, vals = { 4 }, scale = 100 }
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 100, vals = { 10 }, scale = 100 }
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 255, vals = { 16 }, scale = 100 }
@@ -39,8 +39,8 @@ fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0
 
 x = x + tableSpacing.col
 y = yMinLim - tableSpacing.header
-labels[#labels + 1] = { t = "RC",    x = x, y = inc.y(tableSpacing.header) }
-labels[#labels + 1] = { t = "Expo",  x = x, y = inc.y(tableSpacing.header) }
+labels[#labels + 1] = { t = localization.rc,    x = x, y = inc.y(tableSpacing.header) }
+labels[#labels + 1] = { t = localization.expo,  x = x, y = inc.y(tableSpacing.header) }
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 100, vals = { 3 }, scale = 100 }
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 100, vals = { 9 }, scale = 100 }
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 100, vals = { 15 }, scale = 100 }
@@ -48,26 +48,26 @@ fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0
 
 x = margin
 inc.y(lineSpacing*0.4)
-fields[#fields + 1] = { t = "Rates Type",          x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 5,      vals = { 1 }, table = { [0] = "NONE", "BETAFL", "RACEFL", "KISS", "ACTUAL", "QUICK"}, postEdit = function(self) self.updateRatesType(self, true) end }
+fields[#fields + 1] = { t = localization.rates_type,         x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 5,      vals = { 1 }, table = { [0] = "NONE", "BETAFL", "RACEFL", "KISS", "ACTUAL", "QUICK"}, postEdit = function(self) self.updateRatesType(self, true) end }
 inc.y(lineSpacing*0.4)
 
-labels[#labels + 1] = { t = "Roll dynamics",       x = x,          y = inc.y(lineSpacing) }
-fields[#fields + 1] = { t = "Response time",       x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250,   vals = { 5 } }
-fields[#fields + 1] = { t = "Max acceleration",    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 50000, vals = { 6,7 },   scale = 0.1 }
-labels[#labels + 1] = { t = "Pitch dynamics",      x = x,          y = inc.y(lineSpacing) }
-fields[#fields + 1] = { t = "Response time",       x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250,   vals = { 11 } }
-fields[#fields + 1] = { t = "Max acceleration",    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 50000, vals = { 12,13 }, scale = 0.1 }
-labels[#labels + 1] = { t = "Yaw dynamics",        x = x,          y = inc.y(lineSpacing) }
-fields[#fields + 1] = { t = "Response time",       x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250,   vals = { 17 } }
-fields[#fields + 1] = { t = "Max acceleration",    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 50000, vals = { 18,19 }, scale = 0.1 }
-labels[#labels + 1] = { t = "Collective dynamics", x = x,          y = inc.y(lineSpacing) }
-fields[#fields + 1] = { t = "Response time",       x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250,   vals = { 23 } }
-fields[#fields + 1] = { t = "Max acceleration",    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 50000, vals = { 24,25 }, scale = 0.1 }
+labels[#labels + 1] = { t = localization.roll_dynamics, x = x,          y = inc.y(lineSpacing) }
+fields[#fields + 1] = { t = localization.response_time, x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250,   vals = { 5 } }
+fields[#fields + 1] = { t = localization.max_acceleration, x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 50000, vals = { 6,7 },   scale = 0.1 }
+labels[#labels + 1] = { t = localization.pitch_dynamics, x = x,          y = inc.y(lineSpacing) }
+fields[#fields + 1] = { t = localization.response_time, x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250,   vals = { 11 } }
+fields[#fields + 1] = { t = localization.max_acceleration, x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 50000, vals = { 12,13 }, scale = 0.1 }
+labels[#labels + 1] = { t = localization.yaw_dynamics, x = x,          y = inc.y(lineSpacing) }
+fields[#fields + 1] = { t = localization.response_time, x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250,   vals = { 17 } }
+fields[#fields + 1] = { t = localization.max_acceleration, x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 50000, vals = { 18,19 }, scale = 0.1 }
+labels[#labels + 1] = { t = localization.collective_dynamics, x = x,          y = inc.y(lineSpacing) }
+fields[#fields + 1] = { t = localization.response_time, x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250,   vals = { 23 } }
+fields[#fields + 1] = { t = localization.max_acceleration, x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 50000, vals = { 24,25 }, scale = 0.1 }
 
 return {
     read        = 111, -- MSP_RC_TUNING
     write       = 204, -- MSP_SET_RC_TUNING
-    title       = "Rates",
+    title       = localization.rates,
     reboot      = false,
     eepromWrite = true,
     minBytes    = 25,
