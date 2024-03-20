@@ -41,7 +41,7 @@ local backgroundFill = TEXT_BGCOLOR or ERASE
 local foregroundColor = LINE_COLOR or SOLID
 
 local globalTextOptions = TEXT_COLOR or 0
-
+local isHighResolutionColor
 rfglobals = {}
 
 local function saveSettings()
@@ -154,6 +154,22 @@ local function incMax(val, inc, base)
     return ((val + inc + base - 1) % base) + 1
 end
 
+local function detectHighResolutionColor()
+    local ver, radio, maj, minor, rev, osname = getVersion()
+    print(osname .. " version: " .. ver)
+
+    if osname ~= "EdgeTX" then
+        print("enhance gui is supported only on EdgeTX: " .. osname)
+        return false
+    end
+    if LCD_W ~= 480 then
+        print("enhance gui is supported only on color high res color screen")
+        return false
+    end
+    return true
+end
+
+
 function clipValue(val,min,max)
     if val < min then
         val = min
@@ -262,9 +278,9 @@ local function drawScreen()
                 lcd.drawText(f.x, y, f.t, textOptions)
             end
             lcd.drawText(f.sp or f.x, y, val, valueOptions)
+
             -- on big screen, display min/max
-            if LCD_W == 480 then
-                --  local txt = string.format("[ %-9s .. %9d ]", f.min, f.max)
+            if isHighResolutionColor then
                  local txt = string.format("[ %s .. %s ]", f.min, f.max)
                  lcd.drawText(LCD_W - 10, y, txt, SMLSIZE + RIGHT + GREY)
             end
@@ -309,6 +325,10 @@ local function drawPopupMenu()
 end
 
 local function run_ui(event)
+    if isHighResolutionColor == nil then
+        isHighResolutionColor = detectHighResolutionColor()
+    end
+
     if popupMenu then
         drawPopupMenu()
         if event == EVT_VIRTUAL_EXIT then
