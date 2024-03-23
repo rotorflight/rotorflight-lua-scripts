@@ -49,10 +49,10 @@ fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0
 
 x = x + colSpacing
 y = yMinLim - tableSpacing.header
-labels[#labels + 1] = { t = "F",     x = x, y = inc.y(tableSpacing.header) }
-fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 1000, vals = { 7,8 } }
-fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 1000, vals = { 15,16 } }
-fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 1000, vals = { 23,24 } }
+labels[#labels + 1] = { t = "F", t2="FF", x = x, y = inc.y(tableSpacing.header) }
+fields[#fields + 1] = {                   x = x, y = inc.y(tableSpacing.row), min = 0, max = 1000, vals = { 7,8 } }
+fields[#fields + 1] = {                   x = x, y = inc.y(tableSpacing.row), min = 0, max = 1000, vals = { 15,16 } }
+fields[#fields + 1] = {                   x = x, y = inc.y(tableSpacing.row), min = 0, max = 1000, vals = { 23,24 } }
 
 x = x + colSpacing
 y = yMinLim - tableSpacing.header
