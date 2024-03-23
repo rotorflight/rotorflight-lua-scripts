@@ -14,12 +14,13 @@ local fields = {}
 
 x = margin
 y = yMinLim - tableSpacing.header
-labels[#labels + 1] = { t = "",      x = x, y = inc.y(tableSpacing.header) }
-labels[#labels + 1] = { t = "Ro",     x = x, y = inc.y(tableSpacing.row) }
-labels[#labels + 1] = { t = "Pi",     x = x, y = inc.y(tableSpacing.row) }
-labels[#labels + 1] = { t = "Ya",     x = x, y = inc.y(tableSpacing.row) }
+labels[#labels + 1] = { t = "",               x = x, y = inc.y(tableSpacing.header) }
+labels[#labels + 1] = { t = "Ro", t2="Roll",  x = x, y = inc.y(tableSpacing.row) }
+labels[#labels + 1] = { t = "Pi", t2="Pitch", x = x, y = inc.y(tableSpacing.row) }
+labels[#labels + 1] = { t = "Ya", t2="yaw",   x = x, y = inc.y(tableSpacing.row) }
 
-x = x + tableSpacing.col/2
+local ident_factor = (LCD_W<480) and 0.5 or 0.8
+x = x + tableSpacing.col * ident_factor
 y = yMinLim - tableSpacing.header
 labels[#labels + 1] = { t = "P",     x = x, y = inc.y(tableSpacing.header) }
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 1000, vals = { 1,2 } }
