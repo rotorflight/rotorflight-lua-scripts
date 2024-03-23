@@ -175,7 +175,7 @@ local function log(fmt, ...)
 end
 
 local function drawProgressBar(field, Y, f_val, isInEdit)
-    log("drawProgressBar2 [%s] y=%s, %s min/max: %s/%s)", field.t, Y, val, field.min, field.max)
+    -- log("drawProgressBar2 [%s] y=%s, %s min/max: %s/%s)", field.t, Y, val, field.min, field.max)
 
     -- can not show on table, since many field on the same height, so show only when edit
     if field.t == nil and isInEdit==false then 
@@ -188,14 +188,14 @@ local function drawProgressBar(field, Y, f_val, isInEdit)
     end
 
     -- range text
-    local txt = string.format("[ %s .. %s ]", field.min, field.max)
+    local txt = string.format("[ %s .. %s ]", field.min/(field.scale or 1), field.max/(field.scale or 1))
     lcd.drawText(LCD_W - 120, Y, txt, SMLSIZE + RIGHT + GREY)
 
-    local f_min = field.min
-    local f_max = field.max
+    local f_min = field.min / (field.scale or 1)
+    local f_max = field.max / (field.scale or 1)
     local percent = (f_val - f_min) / (f_max - f_min)
-    log("percent=%s", percent)
-    log("isInEdit=%s", isInEdit)
+    -- log("percent=%s", percent)
+    -- log("isInEdit=%s", isInEdit)
 
     local bkg_col = LIGHTGREY
     local fg_col = lcd.RGB(0x00, 0xB0, 0xDC)
@@ -332,7 +332,7 @@ local function drawScreen()
         local y = f.y - pageScrollY
         
         if runningInSimulator then 
-            val = math.floor((f.max + f.min)*0.2)
+            val = math.floor((f.max + f.min) / (f.scale or 1) * 0.2)
         end 
 
         if y >= 0 and y <= LCD_H then
@@ -344,7 +344,7 @@ local function drawScreen()
             -- on big screen, display min/max
             if isHighResolutionColor then
                 drawProgressBar(f, y, val, (i == currentField))
-	        end
+            end
         end
     end
     drawScreenTitle("Rotorflight / "..Page.title)
