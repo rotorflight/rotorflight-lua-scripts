@@ -15,7 +15,7 @@ labels[#labels + 1] = { t = "Swashplate",               x = x,          y = inc.
 fields[#fields + 1] = { t = "Geo correction",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = -125,  max = 125,  vals = { 19 }, scale = 5 }
 fields[#fields + 1] = { t = "Total pitch limit",        x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0,     max = 3000, vals = { 10, 11 }, scale = 83.33333333333333, mult = 8.3333333333333 }
 fields[#fields + 1] = { t = "Phase angle",              x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = -1800, max = 1800, vals = { 8, 9 }, scale = 10, mult = 5 }
-fields[#fields + 1] = { t = "Cyclic ring",              x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0,     max = 100,  vals = { 7 } }
+fields[#fields + 1] = { t = "Swash ring",               x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0,     max = 100,  vals = { 7 } }
 fields[#fields + 1] = { t = "TTA precomp",              x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0,     max = 250,  vals = { 18 } }
 
 labels[#labels + 1] = { t = "Swashplate link trims",    x = x,          y = inc.y(lineSpacing) }
