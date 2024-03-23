@@ -41,7 +41,7 @@ local backgroundFill = TEXT_BGCOLOR or ERASE
 local foregroundColor = LINE_COLOR or SOLID
 
 local globalTextOptions = TEXT_COLOR or 0
-
+local isHighResolutionColor
 rfglobals = {}
 
 local function saveSettings()
@@ -154,6 +154,80 @@ local function incMax(val, inc, base)
     return ((val + inc + base - 1) % base) + 1
 end
 
+local function detectHighResolutionColor()
+    local ver, radio, maj, minor, rev, osname = getVersion()
+    print(osname .. " version: " .. ver)
+
+    if osname ~= "EdgeTX" then
+        print("enhance gui is supported only on EdgeTX: " .. osname)
+        return false
+    end
+    if LCD_W ~= 480 then
+        print("enhance gui is supported only on color high res color screen")
+        return false
+    end
+    return true
+end
+
+-- ---------------------------------------------------------------------
+local function log(fmt, ...)
+    print(string.format(fmt, ...))
+end
+
+local function drawProgressBar(field, Y, f_val, isInEdit)
+    -- log("drawProgressBar2 [%s] y=%s, %s min/max: %s/%s)", field.t, Y, val, field.min, field.max)
+
+    -- can not show on table, since many field on the same height, so show only when edit
+    if field.t == nil and isInEdit==false then 
+        return 
+    end
+
+    f_val = tonumber(f_val)
+    if (f_val==nil) then
+        return
+    end
+
+    -- range text
+    local txt = string.format("[ %s .. %s ]", field.min/(field.scale or 1), field.max/(field.scale or 1))
+    lcd.drawText(LCD_W - 120, Y, txt, SMLSIZE + RIGHT + GREY)
+
+    local f_min = field.min / (field.scale or 1)
+    local f_max = field.max / (field.scale or 1)
+    local percent = (f_val - f_min) / (f_max - f_min)
+    -- log("percent=%s", percent)
+    -- log("isInEdit=%s", isInEdit)
+
+    local bkg_col = LIGHTGREY
+    local fg_col = lcd.RGB(0x00, 0xB0, 0xDC)
+    if (isInEdit) then
+        -- bkg_col = GREY
+        bkg_col = lcd.RGB(0x2A, 0x2B, 0x2F)
+    end
+    
+    local w = 100
+    local h = 5
+    local x = LCD_W - w - 5
+    local y = Y + 7
+    local px = (w - 2) * percent
+
+    lcd.drawFilledRectangle(x, y+2, w, h, bkg_col)
+    -- lcd.drawFilledRectangle(x, y, px, h, fg_col)
+
+    -- local ptri_w = 4
+    -- local ptri_h = 6
+    -- y = Y - 3
+    -- lcd.drawFilledTriangle(x + px - ptri_w, y, x + px + ptri_w, y, x + px, y + ptri_h, BLACK)
+    
+    local r = 6
+    if (isInEdit) then
+        r = 8
+    end
+        -- lcd.drawFilledCircle(x + px - r/2, y + r/2, r+2, BLACK)
+    lcd.drawFilledCircle(x + px - r/2, y + r/2, r, fg_col)
+
+end
+
+
 function clipValue(val,min,max)
     if val < min then
         val = min
@@ -229,7 +303,11 @@ local function drawScreen()
         local f = Page.labels[i]
         local y = f.y - pageScrollY
         if y >= 0 and y <= LCD_H then
-            lcd.drawText(f.x, y, f.t, textOptions)
+            local txt = f.t
+            if f.t2 ~= nil then
+                txt = f.t2                
+            end
+            lcd.drawText(f.x, y, txt, textOptions)
         end
     end
     local val = "---"
@@ -252,11 +330,21 @@ local function drawScreen()
             end
         end
         local y = f.y - pageScrollY
+        
+        if runningInSimulator then 
+            val = math.floor((f.max + f.min) / (f.scale or 1) * 0.2)
+        end 
+
         if y >= 0 and y <= LCD_H then
             if f.t then
                 lcd.drawText(f.x, y, f.t, textOptions)
             end
             lcd.drawText(f.sp or f.x, y, val, valueOptions)
+
+            -- on big screen, display min/max
+            if isHighResolutionColor then
+                drawProgressBar(f, y, val, (i == currentField))
+            end
         end
     end
     drawScreenTitle("Rotorflight / "..Page.title)
@@ -298,6 +386,10 @@ local function drawPopupMenu()
 end
 
 local function run_ui(event)
+    if isHighResolutionColor == nil then
+        isHighResolutionColor = detectHighResolutionColor()
+    end
+
     if popupMenu then
         drawPopupMenu()
         if event == EVT_VIRTUAL_EXIT then

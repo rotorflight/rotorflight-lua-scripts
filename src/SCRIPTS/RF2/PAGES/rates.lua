@@ -17,9 +17,10 @@ labels[#labels + 1] = { t = "",      x = x, y = inc.y(tableSpacing.header) }
 labels[#labels + 1] = { t = "ROLL",  x = x, y = inc.y(tableSpacing.row) }
 labels[#labels + 1] = { t = "PITCH", x = x, y = inc.y(tableSpacing.row) }
 labels[#labels + 1] = { t = "YAW",   x = x, y = inc.y(tableSpacing.row) }
-labels[#labels + 1] = { t = "COL",   x = x, y = inc.y(tableSpacing.row) }
+labels[#labels + 1] = { t = "COL",   t2="COLLECTIVE", x = x, y = inc.y(tableSpacing.row) }
 
-x = x + tableSpacing.col
+local ident_factor = (LCD_W<480) and 1 or 1.7
+x = x + tableSpacing.col * ident_factor
 y = yMinLim - tableSpacing.header
 labels[#labels + 1] = { t = "RC",    x = x, y = inc.y(tableSpacing.header) }
 labels[#labels + 1] = { t = "Rate",  x = x, y = inc.y(tableSpacing.header) }
