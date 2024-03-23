@@ -218,9 +218,9 @@ local function drawProgressBar(field, Y, f_val, isInEdit)
     -- y = Y - 3
     -- lcd.drawFilledTriangle(x + px - ptri_w, y, x + px + ptri_w, y, x + px, y + ptri_h, BLACK)
     
-    local r = 8
+    local r = 6
     if (isInEdit) then
-        r = 9
+        r = 8
     end
         -- lcd.drawFilledCircle(x + px - r/2, y + r/2, r+2, BLACK)
     lcd.drawFilledCircle(x + px - r/2, y + r/2, r, fg_col)
@@ -304,7 +304,7 @@ local function drawScreen()
         local y = f.y - pageScrollY
         if y >= 0 and y <= LCD_H then
             local txt = f.t
-            if f.t2 ~= nill then
+            if f.t2 ~= nil then
                 txt = f.t2                
             end
             lcd.drawText(f.x, y, txt, textOptions)
