@@ -169,6 +169,64 @@ local function detectHighResolutionColor()
     return true
 end
 
+-- ---------------------------------------------------------------------
+local function log(fmt, ...)
+    print(string.format(fmt, ...))
+end
+
+local function drawProgressBar(field, Y, f_val, isInEdit)
+    log("drawProgressBar2 [%s] y=%s, %s min/max: %s/%s)", field.t, Y, val, field.min, field.max)
+
+    -- can not show on table, since many field on the same height, so show only when edit
+    if field.t == nil and isInEdit==false then 
+        return 
+    end
+
+    f_val = tonumber(f_val)
+    if (f_val==nil) then
+        return
+    end
+
+    -- range text
+    local txt = string.format("[ %s .. %s ]", field.min, field.max)
+    lcd.drawText(LCD_W - 120, Y, txt, SMLSIZE + RIGHT + GREY)
+
+    local f_min = field.min
+    local f_max = field.max
+    local percent = (f_val - f_min) / (f_max - f_min)
+    log("percent=%s", percent)
+    log("isInEdit=%s", isInEdit)
+
+    local bkg_col = LIGHTGREY
+    local fg_col = lcd.RGB(0x00, 0xB0, 0xDC)
+    if (isInEdit) then
+        -- bkg_col = GREY
+        bkg_col = lcd.RGB(0x2A, 0x2B, 0x2F)
+    end
+    
+    local w = 100
+    local h = 5
+    local x = LCD_W - w - 5
+    local y = Y + 7
+    local px = (w - 2) * percent
+
+    lcd.drawFilledRectangle(x, y+2, w, h, bkg_col)
+    -- lcd.drawFilledRectangle(x, y, px, h, fg_col)
+
+    -- local ptri_w = 4
+    -- local ptri_h = 6
+    -- y = Y - 3
+    -- lcd.drawFilledTriangle(x + px - ptri_w, y, x + px + ptri_w, y, x + px, y + ptri_h, BLACK)
+    
+    local r = 8
+    if (isInEdit) then
+        r = 9
+    end
+        -- lcd.drawFilledCircle(x + px - r/2, y + r/2, r+2, BLACK)
+    lcd.drawFilledCircle(x + px - r/2, y + r/2, r, fg_col)
+
+end
+
 
 function clipValue(val,min,max)
     if val < min then
@@ -281,9 +339,8 @@ local function drawScreen()
 
             -- on big screen, display min/max
             if isHighResolutionColor then
-                 local txt = string.format("[ %s .. %s ]", f.min, f.max)
-                 lcd.drawText(LCD_W - 10, y, txt, SMLSIZE + RIGHT + GREY)
-            end
+                drawProgressBar(f, y, val, (i == currentField))
+	        end
         end
     end
     drawScreenTitle("Rotorflight / "..Page.title)
