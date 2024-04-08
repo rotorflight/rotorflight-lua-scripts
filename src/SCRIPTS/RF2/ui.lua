@@ -170,7 +170,9 @@ local function incPage(inc)
 end
 
 local function incField(inc)
-    currentField = clipValue(currentField + inc, 1, #Page.fields)
+    if Page then
+        currentField = clipValue(currentField + inc, 1, #Page.fields)
+    end
 end
 
 local function incMainMenu(inc)
