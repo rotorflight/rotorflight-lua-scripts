@@ -22,11 +22,6 @@ This version of Rotorflight is also known as **Rotorflight 2** or **RF2**.
 Tutorials, documentation, and flight videos can be found on the [Rotorflight website](https://www.rotorflight.org/).
 
 
-## Installation
-
-Please download the latest version from [GitHub](https://github.com/rotorflight/rotorflight-lua-scripts/releases/).
-
-
 ## Features
 
 Rotorflight has many features:
