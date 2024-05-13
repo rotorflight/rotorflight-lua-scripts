@@ -30,6 +30,16 @@ local supportedProtocols =
         saveMaxRetries  = 2,
         saveTimeout     = 250,
         cms             = {},
+    },
+    simu =
+    {
+        mspTransport    = "MSP/simu.lua",
+        push            = ghostTelemetryPush,
+        maxTxBufferSize = 10, -- Tx -> Rx (Push)
+        maxRxBufferSize = 6,  -- Rx -> Tx (Pop)
+        saveMaxRetries  = 2,
+        saveTimeout     = 250,
+        cms             = {},
     }
 }
 
@@ -40,6 +50,8 @@ local function getProtocol()
         return supportedProtocols.crsf
     elseif supportedProtocols.ghst.push() ~= nil then
         return supportedProtocols.ghst
+    elseif runningInSimulator ~= nil then
+        return supportedProtocols.simu
     end
 end
 
