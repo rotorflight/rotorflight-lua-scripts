@@ -229,7 +229,7 @@ local function drawScreen()
         local f = Page.labels[i]
         local y = f.y - pageScrollY
         if y >= 0 and y <= LCD_H then
-            lcd.drawText(f.x, y, f.t, textOptions)
+            lcd.drawText(f.x, y, f.t2 or f.t, textOptions)
         end
     end
     local val = "---"
@@ -242,6 +242,15 @@ local function drawScreen()
                 valueOptions = valueOptions + BLINK
             end
         end
+
+        if runningInSimulator and f.value == nil and f.label == nil then
+            local val = math.floor((f.max + f.min) / (f.scale or 1) * 0.2)
+            if f.table ~= nil then
+                val = 1
+            end
+            f.value = val
+        end
+
         if f.value then
             if f.upd and Page.values then
                 f.upd(Page)
