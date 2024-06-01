@@ -376,16 +376,14 @@ local function run_ui(event)
                 killEvents(event) -- X10/T16 issue: pageUp is a long press
             elseif event == EVT_VIRTUAL_NEXT_PAGE then
                 incPage(1)
-            elseif event == EVT_VIRTUAL_PREV or event == EVT_VIRTUAL_PREV_REPT then
+            elseif Page and (event == EVT_VIRTUAL_PREV or event == EVT_VIRTUAL_PREV_REPT) then
                 incField(-1)
-            elseif event == EVT_VIRTUAL_NEXT or event == EVT_VIRTUAL_NEXT_REPT then
+            elseif Page and (event == EVT_VIRTUAL_NEXT or event == EVT_VIRTUAL_NEXT_REPT) then
                 incField(1)
-            elseif event == EVT_VIRTUAL_ENTER then
-                if Page then
-                    local f = Page.fields[currentField]
-                    if Page.values and f.vals and Page.values[f.vals[#f.vals]] and not f.ro then
-                        pageState = pageStatus.editing
-                    end
+            elseif Page and event == EVT_VIRTUAL_ENTER then
+                local f = Page.fields[currentField]
+                if Page.values and f.vals and Page.values[f.vals[#f.vals]] and not f.ro then
+                    pageState = pageStatus.editing
                 end
             elseif event == EVT_VIRTUAL_ENTER_LONG then
                 killEnterBreak = 1
