@@ -49,3 +49,5 @@ luac.out
 tmp
 obj
 .vs/
+
+.DS_Store

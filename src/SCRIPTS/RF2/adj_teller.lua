@@ -9,93 +9,93 @@ local currentAdjfuncValue
 
 local adjfunctions = {
     -- rates
-    id5 =  { name = "Pitch Rate", wavs = { "pitch", "rate" } },
-    id6 =  { name = "Roll Rate", wavs = { "roll", "rate" } },
-    id7 =  { name = "Yaw Rate", wavs = { "yaw", "rate" } },
-    id8 =  { name = "Pitch RC Rate", wavs = { "pitch", "rc", "rate" } },
-    id9 =  { name = "Roll RC Rate", wavs = { "roll", "rc", "rate" } },
-    id10 = { name = "Yaw RC Rate", wavs = { "yaw", "rc", "rate" } },
-    id11 = { name = "Pitch RC Expo", wavs = { "pitch", "rc", "expo" } },
-    id12 = { name = "Roll RC Expo", wavs = { "roll", "rc", "expo" } },
-    id13 = { name = "Yaw RC Expo", wavs = { "yaw", "rc", "expo" } },
+    id5 = { name = localization.pitch_rate, wavs = { "pitch", "rate" } },
+    id6 = { name = localization.roll_rate, wavs = { "roll", "rate" } },
+    id7 = { name = localization.yaw_rate, wavs = { "yaw", "rate" } },
+    id8 = { name = localization.pitch_rc_rate, wavs = { "pitch", "rc", "rate" } },
+    id9 = { name = localization.roll_rc_rate, wavs = { "roll", "rc", "rate" } },
+    id10 = { name = localization.yaw_rc_rate, wavs = { "yaw", "rc", "rate" } },
+    id11 = { name = localization.pitch_rc_expo, wavs = { "pitch", "rc", "expo" } },
+    id12 = { name = localization.roll_rc_expo, wavs = { "roll", "rc", "expo" } },
+    id13 = { name = localization.yaw_rc_expo, wavs = { "yaw", "rc", "expo" } },
 
     -- pids
-    id14 = { name = "Pitch P Gain", wavs = { "pitch", "p", "gain" } },
-    id15 = { name = "Pitch I Gain", wavs = { "pitch", "i", "gain" } },
-    id16 = { name = "Pitch D Gain", wavs = { "pitch", "d", "gain" } },
-    id17 = { name = "Pitch F Gain", wavs = { "pitch", "f", "gain" } },
-    id18 = { name = "Roll P Gain", wavs = { "roll", "p", "gain" } },
-    id19 = { name = "Roll I Gain", wavs = { "roll", "i", "gain" } },
-    id20 = { name = "Roll D Gain", wavs = { "roll", "d", "gain" } },
-    id21 = { name = "Roll F Gain", wavs = { "roll", "f", "gain" } },
-    id22 = { name = "Yaw P Gain", wavs = { "yaw", "p", "gain" } },
-    id23 = { name = "Yaw I Gain", wavs = { "yaw", "i", "gain" } },
-    id24 = { name = "Yaw D Gain", wavs = { "yaw", "d", "gain" } },
-    id25 = { name = "Yaw F Gain", wavs = { "yaw", "f", "gain" } },
+    id14 = { name = localization.pitch_p_gain, wavs = { "pitch", "p", "gain" } },
+    id15 = { name = localization.pitch_i_gain, wavs = { "pitch", "i", "gain" } },
+    id16 = { name = localization.pitch_d_gain, wavs = { "pitch", "d", "gain" } },
+    id17 = { name = localization.pitch_f_gain, wavs = { "pitch", "f", "gain" } },
+    id18 = { name = localization.roll_p_gain, wavs = { "roll", "p", "gain" } },
+    id19 = { name = localization.roll_i_gain, wavs = { "roll", "i", "gain" } },
+    id20 = { name = localization.roll_d_gain, wavs = { "roll", "d", "gain" } },
+    id21 = { name = localization.roll_f_gain, wavs = { "roll", "f", "gain" } },
+    id22 = { name = localization.yaw_p_gain, wavs = { "yaw", "p", "gain" } },
+    id23 = { name = localization.yaw_i_gain, wavs = { "yaw", "i", "gain" } },
+    id24 = { name = localization.yaw_d_gain, wavs = { "yaw", "d", "gain" } },
+    id25 = { name = localization.yaw_f_gain, wavs = { "yaw", "f", "gain" } },
 
-    id26 = { name = "Yaw CW Gain", wavs = { "yaw", "cw", "gain" } },
-    id27 = { name = "Yaw CCW Gain", wavs = { "yaw", "ccw", "gain" } },
-    id28 = { name = "Yaw Cyclic FF", wavs = { "yaw", "cyclic", "ff" } },
-    id29 = { name = "Yaw Coll FF", wavs = { "yaw", "collective", "ff" } },
-    id30 = { name = "Yaw Coll Dyn", wavs = { "yaw", "collective", "dyn" } },
-    id31 = { name = "Yaw Coll Decay", wavs = { "yaw", "collective", "decay" } },
-    id32 = { name = "Pitch Coll FF", wavs = { "pitch", "collective", "ff" } },
+    id26 = { name = localization.yaw_cw_gain, wavs = { "yaw", "cw", "gain" } },
+    id27 = { name = localization.yaw_ccw_gain, wavs = { "yaw", "ccw", "gain" } },
+    id28 = { name = localization.yaw_cyclic_ff, wavs = { "yaw", "cyclic", "ff" } },
+    id29 = { name = localization.yaw_coll_ff, wavs = { "yaw", "collective", "ff" } },
+    id30 = { name = localization.yaw_coll_dyn, wavs = { "yaw", "collective", "dyn" } },
+    id31 = { name = localization.yaw_coll_decay, wavs = { "yaw", "collective", "decay" } },
+    id32 = { name = localization.pitch_coll_ff, wavs = { "pitch", "collective", "ff" } },
 
     -- gyro cutoffs
-    id33 = { name = "Pitch Gyro Cutoff", wavs = { "pitch", "gyro", "cutoff" } },
-    id34 = { name = "Roll Gyro Cutoff", wavs = { "roll", "gyro", "cutoff" } },
-    id35 = { name = "Yaw Gyro Cutoff", wavs = { "yaw", "gyro", "cutoff" } },
+    id33 = { name = localization.pitch_gyro_cutoff,   wavs = { "pitch", "gyro", "cutoff" } },
+    id34 = { name = localization.roll_gyro_cutoff,  wavs = { "roll", "gyro", "cutoff" } },
+    id35 = { name = localization.yaw_gyro_cutoff,  wavs = { "yaw", "gyro", "cutoff" } },
 
     -- dterm cutoffs
-    id36 = { name = "Pitch D-term Cutoff", wavs = { "pitch", "dterm", "cutoff" } },
-    id37 = { name = "Roll D-term Cutoff", wavs = { "roll", "dterm", "cutoff" } },
-    id38 = { name = "Yaw D-term Cutoff", wavs = { "yaw", "dterm", "cutoff" } },
+    id36 = { name = localization.pitch_d_term_cutoff,  wavs = { "pitch", "dterm", "cutoff" } },
+    id37 = { name = localization.roll_d_term_cutoff,  wavs = { "roll", "dterm", "cutoff" } },
+    id38 = { name = localization.yaw_d_term_cutoff,  wavs = { "yaw", "dterm", "cutoff" } },
 
     -- rescue
-    id39 = { name = "Rescue Climb Coll", wavs = { "rescue", "climb", "collective" } },
-    id40 = { name = "Rescue Hover Coll", wavs = { "rescue", "hover", "collective" } },
-    id41 = { name = "Rescue Hover Alt", wavs = { "rescue", "hover", "alt" } },
-    id42 = { name = "Rescue Alt P Gain", wavs = { "rescue", "alt", "p", "gain" } },
-    id43 = { name = "Rescue Alt I Gain", wavs = { "rescue", "alt", "i", "gain" } },
-    id44 = { name = "Rescue Alt D Gain", wavs = { "rescue", "alt", "d", "gain" } },
+    id39 = { name = localization.rescue_climb_coll,  wavs = { "rescue", "climb", "collective" } },
+    id40 = { name = localization.rescue_hover_coll,  wavs = { "rescue", "hover", "collective" } },
+    id41 = { name = localization.rescue_hover_alt,  wavs = { "rescue", "hover", "alt" } },
+    id42 = { name = localization.rescue_alt_p_gain,  wavs = { "rescue", "alt", "p", "gain" } },
+    id43 = { name = localization.rescue_alt_i_gain,  wavs = { "rescue", "alt", "i", "gain" } },
+    id44 = { name = localization.rescue_alt_d_gain,  wavs = { "rescue", "alt", "d", "gain" } },
 
     -- leveling
-    id45 = { name = "Angle Level Gain", wavs = { "angle", "level", "gain" } },
-    id46 = { name = "Horizon Level Gain", wavs = { "horizon", "level", "gain" } },
-    id47 = { name = "Acro Trainer Gain", wavs = { "acro", "gain" } },
+    id45 = { name = localization.angle_level_gain,  wavs = { "angle", "level", "gain" } },
+    id46 = { name = localization.horizon_level_gain,  wavs = { "horizon", "level", "gain" } },
+    id47 = { name = localization.acro_trainer_gain, wavs = { "acro", "gain" } },
 
     -- governor
-    id48 = { name = "Governor Gain", wavs = { "gov", "gain" } },
-    id49 = { name = "Governor P Gain", wavs = { "gov", "p", "gain" } },
-    id50 = { name = "Governor I Gain", wavs = { "gov", "i", "gain" } },
-    id51 = { name = "Governor D Gain", wavs = { "gov", "d", "gain" } },
-    id52 = { name = "Governor F Gain", wavs = { "gov", "f", "gain" } },
-    id53 = { name = "Governor TTA Gain", wavs = { "gov", "tta", "gain" } },
-    id54 = { name = "Governor Cyclic FF", wavs = { "gov", "cyclic", "ff" } },
-    id55 = { name = "Governor Coll FF", wavs = { "gov", "collective", "ff" } },
+    id48 = { name = localization.governor_gain, wavs = { "gov", "gain" } },
+    id49 = { name = localization.governor_p_gain, wavs = { "gov", "p", "gain" } },
+    id50 = { name = localization.governor_i_gain, wavs = { "gov", "i", "gain" } },
+    id51 = { name = localization.governor_d_gain, wavs = { "gov", "d", "gain" } },
+    id52 = { name = localization.governor_f_gain, wavs = { "gov", "f", "gain" } },
+    id53 = { name = localization.governor_tta_gain, wavs = { "gov", "tta", "gain" } },
+    id54 = { name = localization.governor_cyclic_ff, wavs = { "gov", "cyclic", "ff" } },
+    id55 = { name = localization.governor_coll_ff, wavs = { "gov", "collective", "ff" } },
 
     -- boost gains
-    id56 = { name = "Pitch B Gain", wavs = { "pitch", "b", "gain" } },
-    id57 = { name = "Roll B Gain", wavs = { "roll", "b", "gain" } },
-    id58 = { name = "Yaw B Gain", wavs = { "yaw", "b", "gain" } },
+    id56 = { name = localization.pitch_b_gain, wavs = { "pitch", "b", "gain" } },
+    id57 = { name = localization.roll_b_gain, wavs = { "roll", "b", "gain" } },
+    id58 = { name = localization.yaw_b_gain, wavs = { "yaw", "b", "gain" } },
 
     -- offset gains
-    id59 = { name = "Pitch O Gain", wavs = { "pitch", "o", "gain" } },
-    id60 = { name = "Roll O Gain", wavs = { "roll", "o", "gain" } },
+    id59 = { name = localization.pitch_o_gain, wavs = { "pitch", "o", "gain" } },
+    id60 = { name = localization.roll_o_gain, wavs = { "roll", "o", "gain" } },
 
     -- cross-coupling
-    id61 = { name = "Cross Coup Gain", wavs = { "crossc", "gain" } },
-    id62 = { name = "Cross Coup Ratio", wavs = { "crossc", "ratio" } },
-    id63 = { name = "Cross Coup Cutoff", wavs = { "crossc", "cutoff" } }
+    id61 = { name = localization.cross_coup_gain, wavs = { "crossc", "gain" } },
+    id62 = { name = localization.cross_coup_ratio, wavs = { "crossc", "ratio" } },
+    id63 = { name = localization.cross_coup_cutoff, wavs = { "crossc", "cutoff" } }
 }
 
 
 local function getTelemetryId(name)
     field = getFieldInfo(name)
     if field then
-      return field.id
+        return field.id
     else
-      return -1
+        return -1
     end
 end
 
@@ -113,12 +113,12 @@ function sportAdjustmentsCollector:new(idSensorName, valueSensorName)
     self.adjfuncValue = 0
     self.adjfuncIdSensorId = getTelemetryId(idSensorName)
     if self.adjfuncIdSensorId == -1 then
-        self.initFailedMessage = "No "..idSensorName.." sensor found"
+        self.initFailedMessage = "No " .. idSensorName .. " sensor found"
         return self
     end
     self.adjfuncValueSensorId = getTelemetryId(valueSensorName)
     if self.adjfuncValueSensorId == -1 then
-        self.initFailedMessage = "No "..valueSensorName.." sensor found"
+        self.initFailedMessage = "No " .. valueSensorName .. " sensor found"
         return self
     end
 
@@ -127,6 +127,7 @@ function sportAdjustmentsCollector:new(idSensorName, valueSensorName)
         self.adjfuncValue = getValue(self.adjfuncValueSensorId)
         return self.adjfuncId, self.adjfuncValue
     end
+
     return self
 end
 
@@ -147,11 +148,12 @@ function crsfAdjustmentsCollector:new()
         local fm = getValue(self.flightmodeSensorId)
         local startIndex, _ = string.find(fm, ":")
         if startIndex and startIndex > 1 then
-            self.adjfuncId = string.sub(fm, 1, startIndex-1)
-            self.adjfuncValue = string.sub(fm, startIndex+1)
+            self.adjfuncId = string.sub(fm, 1, startIndex - 1)
+            self.adjfuncValue = string.sub(fm, startIndex + 1)
         end
         return self.adjfuncId, self.adjfuncValue
     end
+
     return self
 end
 
@@ -192,10 +194,10 @@ local function run()
         timeLastChange = nil
 
         if adjfuncIdChanged then
-            adjfunction = adjfunctions["id"..currentAdjfuncId]
+            adjfunction = adjfunctions["id" .. currentAdjfuncId]
             if adjfunction ~= nil then
                 for index, value in ipairs(adjfunction.wavs) do
-                    playFile("/SCRIPTS/RF2/SOUNDS/"..value..".wav")
+                    playFile("/SCRIPTS/RF2/SOUNDS/" .. value .. ".wav")
                 end
             end
         end
@@ -224,15 +226,15 @@ local function run()
 
     if invalidate then
         timeLastChange = getTime()
-        local adjfunction = adjfunctions["id"..currentAdjfuncId]
+        local adjfunction = adjfunctions["id" .. currentAdjfuncId]
         if adjfunction ~= nil then
-            showValue(adjfunction.name..": "..currentAdjfuncValue)
+            showValue(adjfunction.name .. ": " .. currentAdjfuncValue)
         else
-            showValue("Unknown adjfunc "..currentAdjfuncId..": "..currentAdjfuncValue)
+            showValue("Unknown adjfunc " .. currentAdjfuncId .. ": " .. currentAdjfuncValue)
         end
     end
 
     return 0
 end
 
-return { run=run }
+return { run = run }

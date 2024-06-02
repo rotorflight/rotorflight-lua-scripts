@@ -23,4 +23,4 @@ local function getApiVersion()
     return apiVersionReceived
 end
 
-return { f = getApiVersion, t = "Waiting for API version" }
+return { f = getApiVersion, t = localization.waiting_for_api_version }

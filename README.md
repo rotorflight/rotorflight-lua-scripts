@@ -69,6 +69,12 @@ And many more...
 
 Please download the latest version from [GitHub](https://github.com/rotorflight/rotorflight-lua-scripts/releases/) and copy the contents of the `SCRIPTS` folder to your transmitter. You will know that you've done it correctly when you find the `rf2.lua` file located in the `/SCRIPTS/TOOLS` directory. Plus, you should now see *Rotorflight 2* listed in the *Tools* menu of your transmitter.
 
+Configure your local by editing rf2.lua and setting the locale, 'en', 'fr' or 'de'
+
+```lua
+local locale = 'en'
+```
+
 ### Copying the SCRIPTS folder
 
 USB Method
