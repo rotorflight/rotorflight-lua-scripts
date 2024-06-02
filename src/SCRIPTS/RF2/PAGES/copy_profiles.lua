@@ -23,7 +23,7 @@ return {
     reboot      = false,
     eepromWrite = true,
     title       = localization.copy,
-    minBytes    = 29,
+    minBytes    = 30,
     labels      = labels,
     fields      = fields,
     postRead = function(self)

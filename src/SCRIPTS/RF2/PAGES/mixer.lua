@@ -15,7 +15,6 @@ labels[#labels + 1] = { t = localization.swashplate,         x = x,          y =
 fields[#fields + 1] = { t = localization.geo_correction,     x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = -125,  max = 125,  vals = { 19 }, scale = 5 }
 fields[#fields + 1] = { t = localization.total_pitch_limit,  x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0,     max = 3000, vals = { 10, 11 }, scale = 83.33333333333333, mult = 8.3333333333333 }
 fields[#fields + 1] = { t = localization.phase_angle,        x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = -1800, max = 1800, vals = { 8, 9 }, scale = 10, mult = 5 }
-fields[#fields + 1] = { t = localization.cyclic_ring,        x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0,     max = 100,  vals = { 7 } }
 fields[#fields + 1] = { t = localization.tta_precomp,        x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0,     max = 250,  vals = { 18 } }
 
 labels[#labels + 1] = { t = localization.swashplate_link_trims,  x = x,          y = inc.y(lineSpacing) }
