@@ -34,7 +34,7 @@ function mspProcessTxQ()
     while (i <= protocol.maxTxBufferSize) and mspTxIdx <= #mspTxBuf do
         payload[i] = mspTxBuf[mspTxIdx]
         mspTxIdx = mspTxIdx + 1
-        mspTxCRC = bit32.bxor(mspTxCRC,payload[i])  
+        mspTxCRC = bit32.bxor(mspTxCRC,payload[i])
         i = i + 1
     end
     if i <= protocol.maxTxBufferSize then
@@ -107,6 +107,16 @@ function mspReceivedReply(payload)
     return true
 end
 
+local function joinTableItems(table, delimiter)
+    if table == nil or #table == 0 then return "" end
+    delimiter = delimiter or ""
+    local result = table[1]
+    for i = 2, #table do
+        result = result .. delimiter .. table[i]
+    end
+    return result
+end
+
 function mspPollReply()
     while true do
         local mspData = protocol.mspPoll()
@@ -114,7 +124,9 @@ function mspPollReply()
             return nil
         elseif mspReceivedReply(mspData) then
             mspLastReq = 0
+            rf2.log("Received command " .. mspRxReq)
+            rf2.log("  response: { " .. joinTableItems(mspRxBuf, ", ") .. " }")
             return mspRxReq, mspRxBuf, mspRxError
-        end     
+        end
     end
 end
