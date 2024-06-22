@@ -17,7 +17,6 @@ local pageStatus =
 
 local uiMsp =
 {
-    reboot = 68,
     eepromWrite = 250,
 }
 
@@ -73,8 +72,13 @@ local function invalidatePages()
 end
 
 local function rebootFc()
-    rf2.protocol.mspRead(uiMsp.reboot)
-    invalidatePages()
+    pageState = pageStatus.rebooting
+    rf2.mspQueue:add({
+        command = 68, -- MSP_REBOOT
+        processReply = function(self, buf)
+            invalidatePages()
+        end
+    })
 end
 
 local function eepromWrite()
@@ -185,10 +189,38 @@ local function incPopupMenu(inc)
     popupMenuActive = clipValue(popupMenuActive + inc, 1, #popupMenu)
 end
 
+local mspLoadSettings =
+{
+    processReply = function(self, buf)
+        print("Page is processing reply for cmd "..tostring(self.command).." len buf: "..#buf.." expected: "..Page.minBytes)
+        Page.values = buf
+        if Page.postRead then
+            Page.postRead(Page)
+        end
+        rf2.dataBindFields()
+        if Page.postLoad then
+            Page.postLoad(Page)
+        end
+        rf2.lcdNeedsInvalidate = true
+    end
+}
+
+rf2.readPage = function()
+    if type(Page.read) == "function" then
+        Page.read(Page)
+    else
+        mspLoadSettings.command = Page.read
+        mspLoadSettings.simulatorResponse = Page.simulatorResponse
+        rf2.mspQueue:add(mspLoadSettings)
+    end
+end
+
 local function requestPage()
-    if Page.read and ((not Page.reqTS) or (Page.reqTS + requestTimeout <= getTime())) then
+    if not Page.reqTS or Page.reqTS + requestTimeout <= getTime() then
         Page.reqTS = getTime()
-        rf2.protocol.mspRead(Page.read)
+        if Page.read then
+            rf2.readPage()
+        end
     end
 end
 
@@ -366,13 +398,9 @@ local function run_ui(event)
         drawScreenTitle("Rotorflight "..LUA_VERSION)
     elseif uiState == uiStatus.pages then
         if pageState == pageStatus.saving then
-            if saveTS + saveTimeout < getTime() then
-                if saveRetries < saveMaxRetries then
-                    saveSettings()
-                else
-                    pageState = pageStatus.display
-                    invalidatePages()
-                end
+            if saveTS + saveTimeout >= getTime() then
+                pageState = pageStatus.display
+                invalidatePages()
             end
         elseif pageState == pageStatus.display then
             if event == EVT_VIRTUAL_PREV_PAGE then
@@ -444,8 +472,9 @@ local function run_ui(event)
     if getRSSI() == 0 then
         lcd.drawText(rf2.radio.NoTelem[1],rf2.radio.NoTelem[2],rf2.radio.NoTelem[3],rf2.radio.NoTelem[4])
     end
-    mspProcessTxQ()
-    processMspReply(mspPollReply())
+
+    rf2.mspQueue:processQueue()
+
     return 0
 end
 

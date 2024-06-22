@@ -28,20 +28,33 @@ function joinTableItems(table, delimiter)
 end
 --]]
 
+local function popFirstElement(tbl)
+    if tbl == nil or #tbl == 0 then return nil end
+    local firstElement = tbl[1]
+
+    for i = 1, #tbl - 1 do
+        tbl[i] = tbl[i + 1]
+    end
+    tbl[#tbl] = nil
+
+    return firstElement
+end
+
 function MspQueueController:processQueue()
     if self:isProcessed() then
         return
     end
 
     if not self.currentMessage then
-        self.currentMessage = table.remove(self.messageQueue, 1)
+        --self.currentMessage = table.remove(self.messageQueue, 1)
+        self.currentMessage = popFirstElement(self.messageQueue)
         self.retryCount = 0
     end
 
     local cmd, buf, err
 
     if not rf2.runningInSimulator then
-        if self.lastTimeCommandSent == 0 or self.lastTimeCommandSent + 50 < rf2.getTime() then
+        if self.lastTimeCommandSent == 0 or self.lastTimeCommandSent + 50 < getTime() then
             if self.currentMessage.payload then
                 rf2.protocol.mspWrite(self.currentMessage.command, self.currentMessage.payload)
             else
@@ -93,7 +106,8 @@ end
 
 function MspQueueController:add(message)
     message = deepCopy(message)
-    table.insert(self.messageQueue, message)
+    --table.insert(self.messageQueue, message)
+    self.messageQueue[#self.messageQueue + 1] =  message
     return self
 end
 

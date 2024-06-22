@@ -63,6 +63,7 @@ fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0
 return {
     read        = 112, -- MSP_PID_TUNING
     write       = 202, -- MSP_SET_PID_TUNING
+    simulatorResponse = { 50, 0, 100, 0, 10, 0, 100, 0, 50, 0, 100, 0, 20, 0, 100, 0, 50, 0, 50, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 0, 25, 0 },
     title       = "PIDs",
     reboot      = false,
     eepromWrite = true,
