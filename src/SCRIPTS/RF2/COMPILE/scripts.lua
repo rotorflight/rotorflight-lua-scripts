@@ -37,6 +37,7 @@ local scripts = {
     "/SCRIPTS/RF2/protocols.lua",
     "/SCRIPTS/RF2/radios.lua",
     "/SCRIPTS/RF2/rtc.lua",
+    "/SCRIPTS/RF2/tool.lua",
     "/SCRIPTS/RF2/ui_init.lua",
     "/SCRIPTS/RF2/ui.lua",
     "/SCRIPTS/RF2/vtx_tables.lua",
