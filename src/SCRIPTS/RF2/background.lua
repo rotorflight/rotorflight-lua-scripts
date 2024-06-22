@@ -1,10 +1,10 @@
-local apiVersionReceived = runningInSimulator
-local timeIsSet = runningInSimulator
+local apiVersionReceived = rf2.runningInSimulator
+local timeIsSet = rf2.runningInSimulator
 local getApiVersion, setRtc, adjTellerTask
 local adjTellerEnabled = true
 
 local function run_bg()
-    if getRSSI() > 0 or runningInSimulator then
+    if getRSSI() > 0 or rf2.runningInSimulator then
         -- Send data when the telemetry connection is available
         -- assuming when sensor value higher than 0 there is an telemetry connection
         if not apiVersionReceived then

@@ -160,7 +160,7 @@ local function init()
     adjfuncIdChanged = false
     adjfuncValueChanged = false
 
-    if runningInSimulator then
+    if rf2.runningInSimulator then
         adjustmentCollector = sportAdjustmentsCollector:new("Tmp1", "Tmp2")
     elseif rf2.protocol.mspTransport == "MSP/sp.lua" then
         adjustmentCollector = sportAdjustmentsCollector:new("5110", "5111")

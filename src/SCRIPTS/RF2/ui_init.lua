@@ -7,7 +7,7 @@ local returnTable = { f = nil, t = "" }
 local SUPPORTED_API_VERSION = "12.06" -- see main/msp/msp_protocol.h
 
 local function init()
-    if runningInSimulator then return true end
+    if rf2.runningInSimulator then return true end
 
     if getRSSI() == 0 then
         returnTable.t = "Waiting for connection"
