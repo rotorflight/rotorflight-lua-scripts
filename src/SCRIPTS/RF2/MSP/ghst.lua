@@ -5,21 +5,21 @@ local GHST_FRAMETYPE_MSP_RESP   = 0x28
 
 local ghstMspType = 0
 
-protocol.mspSend = function(payload)
-    return protocol.push(ghstMspType, payload)
+rf2.protocol.mspSend = function(payload)
+    return rf2.protocol.push(ghstMspType, payload)
 end
 
-protocol.mspRead = function(cmd)
+rf2.protocol.mspRead = function(cmd)
     ghstMspType = GHST_FRAMETYPE_MSP_REQ
     return mspSendRequest(cmd, {})
 end
 
-protocol.mspWrite = function(cmd, payload)
+rf2.protocol.mspWrite = function(cmd, payload)
     ghstMspType = GHST_FRAMETYPE_MSP_WRITE
     return mspSendRequest(cmd, payload)
 end
 
-protocol.mspPoll = function()
+rf2.protocol.mspPoll = function()
     while true do
         local type, data = ghostTelemetryPop()
         if type == GHST_FRAMETYPE_MSP_RESP then

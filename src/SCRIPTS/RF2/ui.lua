@@ -28,9 +28,9 @@ local requestTimeout = 80
 local currentPage = 1
 local currentField = 1
 local saveTS = 0
-local saveTimeout = protocol.saveTimeout
+local saveTimeout = rf2.protocol.saveTimeout
 local saveRetries = 0
-local saveMaxRetries = protocol.saveMaxRetries
+local saveMaxRetries = rf2.protocol.saveMaxRetries
 local popupMenuActive = 1
 local killEnterBreak = 0
 local pageScrollY = 0
@@ -42,7 +42,11 @@ local foregroundColor = LINE_COLOR or SOLID
 
 local globalTextOptions = TEXT_COLOR or 0
 
-rfglobals = {}
+rf2.log = function(str)
+    local f = io.open("/LOGS/rf2.log", 'a')
+    io.write(f, str .. "\n")
+    io.close(f)
+end
 
 local function saveSettings()
     if Page.values then
@@ -50,7 +54,7 @@ local function saveSettings()
         if Page.preSave then
             payload = Page.preSave(Page)
         end
-        protocol.mspWrite(Page.write, payload)
+        rf2.protocol.mspWrite(Page.write, payload)
         saveTS = getTime()
         if pageState == pageStatus.saving then
             saveRetries = saveRetries + 1
@@ -69,12 +73,12 @@ local function invalidatePages()
 end
 
 local function rebootFc()
-    protocol.mspRead(uiMsp.reboot)
+    rf2.protocol.mspRead(uiMsp.reboot)
     invalidatePages()
 end
 
 local function eepromWrite()
-    protocol.mspRead(uiMsp.eepromWrite)
+    rf2.protocol.mspRead(uiMsp.eepromWrite)
 end
 
 local function confirm(page)
@@ -95,13 +99,13 @@ local function createPopupMenu()
     end
     popupMenu[#popupMenu + 1] = { t = "reboot", f = rebootFc }
     popupMenu[#popupMenu + 1] = { t = "acc cal", f = function() confirm("CONFIRM/acc_cal.lua") end }
-    --[[if apiVersion >= 1.42 then
+    --[[if rf2.apiVersion >= 1.42 then
         popupMenu[#popupMenu + 1] = { t = "vtx tables", f = function() confirm("CONFIRM/vtx_tables.lua") end }
     end
     --]]
 end
 
-function dataBindFields()
+rf2.dataBindFields = function()
     for i=1,#Page.fields do
         if #Page.values >= Page.minBytes then
             local f = Page.fields[i]
@@ -136,14 +140,14 @@ local function processMspReply(cmd,rx_buf,err)
         end
         invalidatePages()
     elseif cmd == Page.read and err then
-        Page.fields = { { x = 6, y = radio.yMinLimit, value = "", ro = true } }
-        Page.labels = { { x = 6, y = radio.yMinLimit, t = "N/A" } }
+        Page.fields = { { x = 6, y = rf2.radio.yMinLimit, value = "", ro = true } }
+        Page.labels = { { x = 6, y = rf2.radio.yMinLimit, t = "N/A" } }
     elseif cmd == Page.read and #rx_buf > 0 then
         Page.values = rx_buf
         if Page.postRead then
             Page.postRead(Page)
         end
-        dataBindFields()
+        rf2.dataBindFields()
         if Page.postLoad then
             Page.postLoad(Page)
         end
@@ -184,12 +188,12 @@ end
 local function requestPage()
     if Page.read and ((not Page.reqTS) or (Page.reqTS + requestTimeout <= getTime())) then
         Page.reqTS = getTime()
-        protocol.mspRead(Page.read)
+        rf2.protocol.mspRead(Page.read)
     end
 end
 
 local function drawScreenTitle(screenTitle)
-    if radio.highRes then
+    if rf2.radio.highRes then
         lcd.drawFilledRectangle(0, 0, LCD_W, 30, TITLE_BGCOLOR)
         lcd.drawText(5,5,screenTitle, MENU_TITLE_COLOR)
     else
@@ -199,7 +203,7 @@ local function drawScreenTitle(screenTitle)
 end
 
 local function getLineSpacing()
-    if radio.highRes then
+    if rf2.radio.highRes then
         return 25
     end
     return 10
@@ -214,10 +218,10 @@ local function drawTextMultiline(x, y, text, options)
 end
 
 local function drawScreen()
-    local yMinLim = radio.yMinLimit
-    local yMaxLim = radio.yMaxLimit
+    local yMinLim = rf2.radio.yMinLimit
+    local yMaxLim = rf2.radio.yMaxLimit
     local currentFieldY = Page.fields[currentField].y
-    local textOptions = radio.textSize + globalTextOptions
+    local textOptions = rf2.radio.textSize + globalTextOptions
     if currentFieldY <= Page.fields[1].y then
         pageScrollY = 0
     elseif currentFieldY - pageScrollY <= yMinLim then
@@ -277,11 +281,11 @@ local function incValue(inc)
 end
 
 local function drawPopupMenu()
-    local x = radio.MenuBox.x
-    local y = radio.MenuBox.y
-    local w = radio.MenuBox.w
-    local h_line = radio.MenuBox.h_line
-    local h_offset = radio.MenuBox.h_offset
+    local x = rf2.radio.MenuBox.x
+    local y = rf2.radio.MenuBox.y
+    local w = rf2.radio.MenuBox.w
+    local h_line = rf2.radio.MenuBox.h_line
+    local h_offset = rf2.radio.MenuBox.h_offset
     local h = #popupMenu * h_line + h_offset*2
 
     lcd.drawFilledRectangle(x,y,w,h,backgroundFill)
@@ -293,7 +297,7 @@ local function drawPopupMenu()
         if popupMenuActive == i then
             textOptions = textOptions + INVERS
         end
-        lcd.drawText(x+radio.MenuBox.x_offset,y+(i-1)*h_line+h_offset,e.t,textOptions)
+        lcd.drawText(x+rf2.radio.MenuBox.x_offset,y+(i-1)*h_line+h_offset,e.t,textOptions)
     end
 end
 
@@ -318,7 +322,7 @@ local function run_ui(event)
         lcd.clear()
         drawScreenTitle("Rotorflight "..LUA_VERSION)
         init = init or assert(loadScript("ui_init.lua"))()
-        drawTextMultiline(4, radio.yMinLimit, init.t)
+        drawTextMultiline(4, rf2.radio.yMinLimit, init.t)
         if not init.f() then
             return 0
         end
@@ -341,8 +345,8 @@ local function run_ui(event)
             createPopupMenu()
         end
         lcd.clear()
-        local yMinLim = radio.yMinLimit
-        local yMaxLim = radio.yMaxLimit
+        local yMinLim = rf2.radio.yMinLimit
+        local yMaxLim = rf2.radio.yMaxLimit
         local lineSpacing = getLineSpacing()
         local currentFieldY = (currentPage-1)*lineSpacing + yMinLim
         if currentFieldY <= yMinLim then
@@ -420,9 +424,9 @@ local function run_ui(event)
             if saveRetries > 0 then
                 saveMsg = "Retrying"
             end
-            lcd.drawFilledRectangle(radio.SaveBox.x,radio.SaveBox.y,radio.SaveBox.w,radio.SaveBox.h,backgroundFill)
-            lcd.drawRectangle(radio.SaveBox.x,radio.SaveBox.y,radio.SaveBox.w,radio.SaveBox.h,SOLID)
-            lcd.drawText(radio.SaveBox.x+radio.SaveBox.x_offset,radio.SaveBox.y+radio.SaveBox.h_offset,saveMsg,DBLSIZE + globalTextOptions)
+            lcd.drawFilledRectangle(rf2.radio.SaveBox.x,rf2.radio.SaveBox.y,rf2.radio.SaveBox.w,rf2.radio.SaveBox.h,backgroundFill)
+            lcd.drawRectangle(rf2.radio.SaveBox.x,rf2.radio.SaveBox.y,rf2.radio.SaveBox.w,rf2.radio.SaveBox.h,SOLID)
+            lcd.drawText(rf2.radio.SaveBox.x+rf2.radio.SaveBox.x_offset,rf2.radio.SaveBox.y+rf2.radio.SaveBox.h_offset,saveMsg,DBLSIZE + globalTextOptions)
         end
     elseif uiState == uiStatus.confirm then
         lcd.clear()
@@ -438,7 +442,7 @@ local function run_ui(event)
         end
     end
     if getRSSI() == 0 then
-        lcd.drawText(radio.NoTelem[1],radio.NoTelem[2],radio.NoTelem[3],radio.NoTelem[4])
+        lcd.drawText(rf2.radio.NoTelem[1],rf2.radio.NoTelem[2],rf2.radio.NoTelem[3],rf2.radio.NoTelem[4])
     end
     mspProcessTxQ()
     processMspReply(mspPollReply())

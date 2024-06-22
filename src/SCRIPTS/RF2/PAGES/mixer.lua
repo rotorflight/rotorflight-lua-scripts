@@ -1,10 +1,10 @@
-local template = assert(loadScript(radio.template))()
+local template = assert(loadScript(rf2.radio.template))()
 local margin = template.margin
 local indent = template.indent
 local lineSpacing = template.lineSpacing
 local tableSpacing = template.tableSpacing
 local sp = template.listSpacing.field
-local yMinLim = radio.yMinLimit
+local yMinLim = rf2.radio.yMinLimit
 local x = margin
 local y = yMinLim - lineSpacing
 local inc = { x = function(val) x = x + val return x end, y = function(val) y = y + val return y end }

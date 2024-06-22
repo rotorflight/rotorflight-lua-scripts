@@ -74,20 +74,20 @@ local function processMspReply(cmd, payload, err)
         end
         requestedPowerLevel = requestedPowerLevel + 1
         vtxPowerTableReceived = requestedPowerLevel > vtxTableConfig.powerLevels
-    end 
+    end
 end
 
 local function getVtxTables()
     if lastRunTS + INTERVAL < getTime() then
         lastRunTS = getTime()
         if not vtxConfigReceived then
-            protocol.mspRead(MSP_VTX_CONFIG)
+            rf2.protocol.mspRead(MSP_VTX_CONFIG)
         elseif vtxConfigReceived and not vtxTableAvailable then
             return true
         elseif not vtxFrequencyTableReceived then
-            protocol.mspWrite(MSP_VTXTABLE_BAND, { requestedBand })
+            rf2.protocol.mspWrite(MSP_VTXTABLE_BAND, { requestedBand })
         elseif not vtxPowerTableReceived then
-            protocol.mspWrite(MSP_VTXTABLE_POWERLEVEL, { requestedPowerLevel })
+            rf2.protocol.mspWrite(MSP_VTXTABLE_POWERLEVEL, { requestedPowerLevel })
         else
             vtxTablesReceived = true
         end

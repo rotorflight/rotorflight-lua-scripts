@@ -20,7 +20,7 @@ function mspProcessTxQ()
     if (#(mspTxBuf) == 0) then
         return false
     end
-    if not protocol.push() then
+    if not rf2.protocol.push() then
         return true
     end
     local payload = {}
@@ -31,21 +31,21 @@ function mspProcessTxQ()
         payload[1] = payload[1] + MSP_STARTFLAG
     end
     local i = 2
-    while (i <= protocol.maxTxBufferSize) and mspTxIdx <= #mspTxBuf do
+    while (i <= rf2.protocol.maxTxBufferSize) and mspTxIdx <= #mspTxBuf do
         payload[i] = mspTxBuf[mspTxIdx]
         mspTxIdx = mspTxIdx + 1
-        mspTxCRC = bit32.bxor(mspTxCRC,payload[i])  
+        mspTxCRC = bit32.bxor(mspTxCRC,payload[i])
         i = i + 1
     end
-    if i <= protocol.maxTxBufferSize then
+    if i <= rf2.protocol.maxTxBufferSize then
         payload[i] = mspTxCRC
-        protocol.mspSend(payload)
+        rf2.protocol.mspSend(payload)
         mspTxBuf = {}
         mspTxIdx = 1
         mspTxCRC = 0
         return false
     end
-    protocol.mspSend(payload)
+    rf2.protocol.mspSend(payload)
     return true
 end
 
@@ -90,12 +90,12 @@ function mspReceivedReply(payload)
         mspStarted = false
         return nil
     end
-    while (idx <= protocol.maxRxBufferSize) and (#mspRxBuf < mspRxSize) do
+    while (idx <= rf2.protocol.maxRxBufferSize) and (#mspRxBuf < mspRxSize) do
         mspRxBuf[#mspRxBuf + 1] = payload[idx]
         mspRxCRC = bit32.bxor(mspRxCRC, payload[idx])
         idx = idx + 1
     end
-    if idx > protocol.maxRxBufferSize then
+    if idx > rf2.protocol.maxRxBufferSize then
         mspRemoteSeq = seq
         return false
     end
@@ -109,12 +109,12 @@ end
 
 function mspPollReply()
     while true do
-        local mspData = protocol.mspPoll()
+        local mspData = rf2.protocol.mspPoll()
         if mspData == nil then
             return nil
         elseif mspReceivedReply(mspData) then
             mspLastReq = 0
             return mspRxReq, mspRxBuf, mspRxError
-        end     
+        end
     end
 end

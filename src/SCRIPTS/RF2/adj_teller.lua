@@ -162,7 +162,7 @@ local function init()
 
     if runningInSimulator then
         adjustmentCollector = sportAdjustmentsCollector:new("Tmp1", "Tmp2")
-    elseif protocol.mspTransport == "MSP/sp.lua" then
+    elseif rf2.protocol.mspTransport == "MSP/sp.lua" then
         adjustmentCollector = sportAdjustmentsCollector:new("5110", "5111")
     else
         adjustmentCollector = crsfAdjustmentsCollector:new()

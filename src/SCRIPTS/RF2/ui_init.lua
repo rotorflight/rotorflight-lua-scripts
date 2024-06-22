@@ -19,10 +19,10 @@ local function init()
             getApiVersion = nil
             collectgarbage()
         end
-    elseif tostring(apiVersion) ~= SUPPORTED_API_VERSION then -- work-around for comparing floats
-        returnTable.t = "This version of the Lua\nscripts ("..SUPPORTED_API_VERSION..") can't be\nused with the selected\nmodel ("..tostring(apiVersion)..")."
+    elseif tostring(rf2.apiVersion) ~= SUPPORTED_API_VERSION then -- work-around for comparing floats
+        returnTable.t = "This version of the Lua\nscripts ("..SUPPORTED_API_VERSION..") can't be\nused with the selected\nmodel ("..tostring(rf2.apiVersion)..")."
 --[[
-    elseif not mcuIdReceived and apiVersion >= 1.42 then
+    elseif not mcuIdReceived and rf2.apiVersion >= 1.42 then
         getMCUId = getMCUId or assert(loadScript("mcu_id.lua"))()
         returnTable.t = getMCUId.t
         mcuIdReceived = getMCUId.f()
@@ -44,7 +44,7 @@ local function init()
         end
 --]]
 --[[
-    elseif not vtxTablesReceived and apiVersion >= 1.042 then
+    elseif not vtxTablesReceived and rf2.apiVersion >= 1.042 then
         getVtxTables = getVtxTables or assert(loadScript("vtx_tables.lua"))()
         returnTable.t = getVtxTables.t
         vtxTablesReceived = getVtxTables.f()
@@ -54,7 +54,7 @@ local function init()
         end
 --]]
 --[[
-    elseif not boardInfoReceived and apiVersion >= 1.044 then
+    elseif not boardInfoReceived and rf2.apiVersion >= 1.044 then
         getBoardInfo = getBoardInfo or assert(loadScript("board_info.lua"))()
         returnTable.t = getBoardInfo.t
         boardInfoReceived = getBoardInfo.f()

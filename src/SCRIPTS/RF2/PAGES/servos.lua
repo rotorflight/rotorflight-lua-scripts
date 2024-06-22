@@ -1,10 +1,10 @@
-local template = assert(loadScript(radio.template))()
+local template = assert(loadScript(rf2.radio.template))()
 local margin = template.margin
 local indent = template.indent
 local lineSpacing = template.lineSpacing
 local tableSpacing = template.tableSpacing
 local sp = template.listSpacing.field
-local yMinLim = radio.yMinLimit
+local yMinLim = rf2.radio.yMinLimit
 local x = margin
 local y = yMinLim - lineSpacing
 local inc = { x = function(val) x = x + val return x end, y = function(val) y = y + val return y end }
@@ -39,10 +39,10 @@ return {
                 self.servoConfiguration[i][j] = self.values[1 + (i - 1) * 16 + j]
             end
         end
-        if rfglobals.lastChangedServo == nil then
-            rfglobals.lastChangedServo = 1
+        if not rf2.lastChangedServo then
+            rf2.lastChangedServo = 1
         end
-        self.setValues(self, rfglobals.lastChangedServo)
+        self.setValues(self, rf2.lastChangedServo)
         self.minBytes = 1 + 16
     end,
     setValues = function(self, servoIndex)
@@ -53,8 +53,8 @@ return {
         end
     end,
     servoChanged = function(self)
-        rfglobals.lastChangedServo = self.values[1] + 1
-        self.setValues(self, rfglobals.lastChangedServo)
-        dataBindFields()
+        rf2.lastChangedServo = self.values[1] + 1
+        self.setValues(self, rf2.lastChangedServo)
+        rf2.dataBindFields()
     end
 }

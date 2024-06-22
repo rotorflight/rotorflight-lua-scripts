@@ -16,7 +16,7 @@ local function setRtc()
         -- only send datetime one time after telemetry connection became available
         -- or when connection is restored after e.g. lipo refresh
         local values = {}
-        if apiVersion >= 1.41 then
+        if rf2.apiVersion >= 1.41 then
             -- format: seconds after the epoch (32) / milliseconds (16)
             local now = getRtcTime()
 
@@ -42,7 +42,7 @@ local function setRtc()
             values[7] = now.sec
         end
 
-        protocol.mspWrite(MSP_SET_RTC, values)
+        rf2.protocol.mspWrite(MSP_SET_RTC, values)
         lastRunTS = getTime()
     end
 

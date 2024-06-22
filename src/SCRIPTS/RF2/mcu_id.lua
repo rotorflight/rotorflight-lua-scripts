@@ -26,7 +26,7 @@ local function getMCUId()
     if lastRunTS + INTERVAL < getTime() then
         lastRunTS = getTime()
         if not MCUIdReceived then
-            protocol.mspRead(MSP_UID)
+            rf2.protocol.mspRead(MSP_UID)
         end
     end
     mspProcessTxQ()

@@ -13,7 +13,7 @@ local function accCal()
     if lastRunTS == 0 or lastRunTS + INTERVAL < getTime() then
         lastRunTS = getTime()
         if not accCalibrated then
-            protocol.mspRead(MSP_ACC_CALIBRATION)
+            rf2.protocol.mspRead(MSP_ACC_CALIBRATION)
         end
     end
     mspProcessTxQ()

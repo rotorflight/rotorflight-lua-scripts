@@ -6,14 +6,14 @@ local INTERVAL = 50
 
 local function processMspReply(cmd,rx_buf,err)
     if cmd == MSP_API_VERSION and #rx_buf >= 3 and not err then
-        apiVersion = rx_buf[2] + rx_buf[3] / 100
+        rf2.apiVersion = rx_buf[2] + rx_buf[3] / 100
         apiVersionReceived = true
     end
 end
 
 local function getApiVersion()
     if lastRunTS == 0 or lastRunTS + INTERVAL < getTime() then
-        protocol.mspRead(MSP_API_VERSION)
+        rf2.protocol.mspRead(MSP_API_VERSION)
         lastRunTS = getTime()
     end
 
