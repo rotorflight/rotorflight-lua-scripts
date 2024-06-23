@@ -108,6 +108,7 @@ function MspQueueController:add(message)
     message = deepCopy(message)
     --table.insert(self.messageQueue, message)
     self.messageQueue[#self.messageQueue + 1] =  message
+    --rf2.log("#messageQueue: "..#self.messageQueue)
     return self
 end
 

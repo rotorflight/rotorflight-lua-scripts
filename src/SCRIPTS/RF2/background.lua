@@ -1,20 +1,10 @@
-local apiVersionReceived = rf2.runningInSimulator
 local timeIsSet = rf2.runningInSimulator
-local getApiVersion, setRtc, adjTellerTask
+local setRtc, adjTellerTask
 local adjTellerEnabled = true
 
 local function run_bg()
     if getRSSI() > 0 or rf2.runningInSimulator then
-        -- Send data when the telemetry connection is available
-        -- assuming when sensor value higher than 0 there is an telemetry connection
-        if not apiVersionReceived then
-            getApiVersion = getApiVersion or assert(loadScript(rfBaseDir.."api_version.lua"))()
-            apiVersionReceived = getApiVersion.f()
-            if apiVersionReceived then
-                getApiVersion = nil
-                collectgarbage()
-            end
-        elseif not timeIsSet then
+        if not timeIsSet then
             setRtc = setRtc or assert(loadScript(rfBaseDir.."rtc.lua"))()
             timeIsSet = setRtc.f()
             if timeIsSet then
@@ -31,11 +21,9 @@ local function run_bg()
             end
         end
     else
-        apiVersionReceived = false
         timeIsSet = false
         adjTellerEnabled = true
-        if getApiVersion or setRtc or adjTellerTask then
-            getApiVersion = nil
+        if setRtc or adjTellerTask then
             setRtc = nil
             adjTellerTask = nil
             collectgarbage()
