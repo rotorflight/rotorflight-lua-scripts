@@ -15,20 +15,13 @@ local pageStatus =
     saving  = 3,
 }
 
-local uiMsp =
-{
-    eepromWrite = 250,
-}
-
 local uiState = uiStatus.init
 local prevUiState
 local pageState = pageStatus.display
 local requestTimeout = 80
 local currentPage = 1
 local currentField = 1
-local saveTS = 0
 local saveTimeout = rf2.protocol.saveTimeout
-local saveRetries = 0
 local saveMaxRetries = rf2.protocol.saveMaxRetries
 local popupMenuActive = 1
 local killEnterBreak = 0
@@ -55,23 +48,6 @@ rf2.log = function(str)
     io.close(f)
 end
 
-local function saveSettings()
-    if Page.values then
-        local payload = Page.values
-        if Page.preSave then
-            payload = Page.preSave(Page)
-        end
-        rf2.protocol.mspWrite(Page.write, payload)
-        saveTS = getTime()
-        if pageState == pageStatus.saving then
-            saveRetries = saveRetries + 1
-        else
-            pageState = pageStatus.saving
-            saveRetries = 0
-        end
-    end
-end
-
 local function invalidatePages()
     Page = nil
     pageState = pageStatus.display
@@ -85,12 +61,96 @@ local function rebootFc()
         command = 68, -- MSP_REBOOT
         processReply = function(self, buf)
             invalidatePages()
-        end
+        end,
+        simulatorResponse = {}
     })
 end
 
+local mspEepromWrite =
+{
+    command = 250, -- MSP_EEPROM_WRITE, fails when armed
+    processReply = function(self, buf)
+        if Page.reboot then
+            rebootFc()
+        end
+        invalidatePages()
+    end,
+    simulatorResponse = {}
+}
+
 local function eepromWrite()
-    rf2.protocol.mspRead(uiMsp.eepromWrite)
+    rf2.mspQueue:add(mspEepromWrite)
+end
+
+rf2.settingsSaved = function()
+    -- check if this page requires writing to eeprom to save (most do)
+    if Page and Page.eepromWrite then
+        -- don't write again if we're already responding to earlier page.write()s
+        if pageState ~= pageStatus.eepromWrite then
+            pageState = pageStatus.eepromWrite
+            rf2.mspQueue:add(mspEepromWrite)
+        end
+    elseif pageState ~= pageStatus.eepromWrite then
+        -- If we're not already trying to write to eeprom from a previous save, then we're done.
+        invalidatePages()
+    end
+end
+
+local mspSaveSettings =
+{
+    processReply = function(self, buf)
+        rf2.settingsSaved()
+    end
+}
+
+local function saveSettings()
+    if pageState ~= pageStatus.saving then
+        pageState = pageStatus.saving
+
+        if Page.values then
+            local payload = Page.values
+            mspSaveSettings.command = Page.write
+            mspSaveSettings.payload = payload
+            mspSaveSettings.simulatorResponse = {}
+            rf2.mspQueue:add(mspSaveSettings)
+        elseif type(Page.write) == "function" then
+            Page.write(Page)
+        end
+    end
+end
+
+local mspLoadSettings =
+{
+    processReply = function(self, buf)
+        rf2.print("Page is processing reply for cmd "..tostring(self.command).." len buf: "..#buf.." expected: "..Page.minBytes)
+        Page.values = buf
+        if Page.postRead then
+            Page.postRead(Page)
+        end
+        rf2.dataBindFields()
+        if Page.postLoad then
+            Page.postLoad(Page)
+        end
+    end
+}
+
+rf2.readPage = function()
+    if type(Page.read) == "function" then
+        Page.read(Page)
+    else
+        mspLoadSettings.command = Page.read
+        mspLoadSettings.simulatorResponse = Page.simulatorResponse
+        rf2.mspQueue:add(mspLoadSettings)
+    end
+end
+
+local function requestPage()
+    if not Page.reqTS or Page.reqTS + requestTimeout <= getTime() then
+        Page.reqTS = getTime()
+        if Page.read then
+            rf2.readPage()
+        end
+    end
 end
 
 local function confirm(page)
@@ -134,34 +194,6 @@ rf2.dataBindFields = function()
     end
 end
 
-local function processMspReply(cmd,rx_buf,err)
-    if not Page or not rx_buf then
-    elseif cmd == Page.write then
-        if Page.eepromWrite then
-            eepromWrite()
-        else
-            invalidatePages()
-        end
-    elseif cmd == uiMsp.eepromWrite then
-        if Page.reboot then
-            rebootFc()
-        end
-        invalidatePages()
-    elseif cmd == Page.read and err then
-        Page.fields = { { x = 6, y = rf2.radio.yMinLimit, value = "", ro = true } }
-        Page.labels = { { x = 6, y = rf2.radio.yMinLimit, t = "N/A" } }
-    elseif cmd == Page.read and #rx_buf > 0 then
-        Page.values = rx_buf
-        if Page.postRead then
-            Page.postRead(Page)
-        end
-        rf2.dataBindFields()
-        if Page.postLoad then
-            Page.postLoad(Page)
-        end
-    end
-end
-
 local function incMax(val, inc, base)
     return ((val + inc + base - 1) % base) + 1
 end
@@ -191,41 +223,6 @@ end
 
 local function incPopupMenu(inc)
     popupMenuActive = clipValue(popupMenuActive + inc, 1, #popupMenu)
-end
-
-local mspLoadSettings =
-{
-    processReply = function(self, buf)
-        rf2.print("Page is processing reply for cmd "..tostring(self.command).." len buf: "..#buf.." expected: "..Page.minBytes)
-        Page.values = buf
-        if Page.postRead then
-            Page.postRead(Page)
-        end
-        rf2.dataBindFields()
-        if Page.postLoad then
-            Page.postLoad(Page)
-        end
-        rf2.lcdNeedsInvalidate = true
-    end
-}
-
-rf2.readPage = function()
-    if type(Page.read) == "function" then
-        Page.read(Page)
-    else
-        mspLoadSettings.command = Page.read
-        mspLoadSettings.simulatorResponse = Page.simulatorResponse
-        rf2.mspQueue:add(mspLoadSettings)
-    end
-end
-
-local function requestPage()
-    if not Page.reqTS or Page.reqTS + requestTimeout <= getTime() then
-        Page.reqTS = getTime()
-        if Page.read then
-            rf2.readPage()
-        end
-    end
 end
 
 local function drawScreenTitle(screenTitle)
@@ -282,10 +279,15 @@ local function drawScreen()
                 valueOptions = valueOptions + BLINK
             end
         end
-        if f.value then
-            if f.upd and Page.values then
-                f.upd(Page)
+        if f.data and f.data.value then
+            val = f.data.value
+            if type(val) == "number" then
+                val = val / (f.data.scale or 1)
             end
+            if f.data.table and f.data.table[val] then
+                val = f.data.table[val]
+            end
+        elseif f.value then
             val = f.value
             if f.table and f.table[f.value] then
                 val = f.table[f.value]
@@ -304,15 +306,24 @@ end
 
 local function incValue(inc)
     local f = Page.fields[currentField]
-    local scale = f.scale or 1
-    local mult = f.mult or 1
-    f.value = clipValue(f.value + inc*mult/scale, (f.min or 0)/scale, (f.max or 255)/scale)
-    f.value = math.floor(f.value*scale/mult + 0.5)*mult/scale
-    for idx=1, #f.vals do
-        Page.values[f.vals[idx]] = bit32.rshift(math.floor(f.value*scale + 0.5), (idx-1)*8)
+    if f.data then
+        local scale = f.data.scale or 1
+        local mult = f.data.mult or 1
+        f.data.value = clipValue(f.data.value + inc*mult, (f.data.min or 0), (f.data.max or 255))
+        f.data.value = math.floor(f.data.value/mult + 0.5)*mult
+    else
+        local scale = f.scale or 1
+        local mult = f.mult or 1
+        f.value = clipValue(f.value + inc*mult/scale, (f.min or 0)/scale, (f.max or 255)/scale)
+        f.value = math.floor(f.value*scale/mult + 0.5)*mult/scale
+        if Page.values then
+            for idx=1, #f.vals do
+                Page.values[f.vals[idx]] = bit32.rshift(math.floor(f.value*scale + 0.5), (idx-1)*8)
+            end
+        end
     end
-    if f.upd and Page.values then
-        f.upd(Page)
+    if f.change then
+        f:change(Page)
     end
 end
 
@@ -418,8 +429,11 @@ local function run_ui(event)
                 incField(1)
             elseif Page and event == EVT_VIRTUAL_ENTER then
                 local f = Page.fields[currentField]
-                if Page.values and f.vals and Page.values[f.vals[#f.vals]] and not f.ro then
+                if (Page.isReady or (Page.values and f.vals and Page.values[f.vals[#f.vals]])) and not f.ro then
                     pageState = pageStatus.editing
+                    if Page.fields[currentField].preEdit then
+                        Page.fields[currentField]:preEdit(Page)
+                    end
                 end
             elseif event == EVT_VIRTUAL_ENTER_LONG then
                 killEnterBreak = 1
@@ -433,7 +447,7 @@ local function run_ui(event)
         elseif pageState == pageStatus.editing then
             if event == EVT_VIRTUAL_EXIT or event == EVT_VIRTUAL_ENTER then
                 if Page.fields[currentField].postEdit then
-                    Page.fields[currentField].postEdit(Page)
+                    Page.fields[currentField]:postEdit(Page)
                 end
                 pageState = pageStatus.display
             elseif event == EVT_VIRTUAL_INC or event == EVT_VIRTUAL_INC_REPT then
@@ -446,16 +460,17 @@ local function run_ui(event)
             Page = assert(loadScript("PAGES/"..PageFiles[currentPage].script))()
             collectgarbage()
         end
-        if not Page.values and pageState == pageStatus.display then
+        if not(Page.values or Page.isReady) and pageState == pageStatus.display then
             requestPage()
+        end
+        if Page and Page.timer and (not Page.lastTimeTimerFired or Page.lastTimeTimerFired + 50 < getTime()) then
+            Page.timer(Page)
+            Page.lastTimeTimerFired = getTime()
         end
         lcd.clear()
         drawScreen()
         if pageState == pageStatus.saving then
             local saveMsg = "Saving..."
-            if saveRetries > 0 then
-                saveMsg = "Retrying"
-            end
             lcd.drawFilledRectangle(rf2.radio.SaveBox.x,rf2.radio.SaveBox.y,rf2.radio.SaveBox.w,rf2.radio.SaveBox.h,backgroundFill)
             lcd.drawRectangle(rf2.radio.SaveBox.x,rf2.radio.SaveBox.y,rf2.radio.SaveBox.w,rf2.radio.SaveBox.h,SOLID)
             lcd.drawText(rf2.radio.SaveBox.x+rf2.radio.SaveBox.x_offset,rf2.radio.SaveBox.y+rf2.radio.SaveBox.h_offset,saveMsg,DBLSIZE + globalTextOptions)
