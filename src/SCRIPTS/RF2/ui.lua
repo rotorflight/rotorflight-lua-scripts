@@ -41,6 +41,14 @@ local foregroundColor = LINE_COLOR or SOLID
 
 local globalTextOptions = TEXT_COLOR or 0
 
+rf2.print = function(str)
+    if rf2.runningInSimulator then
+        print(str)
+    else
+        serialWrite(str.."\r\n") -- 115200 bps
+    end
+end
+
 rf2.log = function(str)
     local f = io.open("/LOGS/rf2.log", 'a')
     io.write(f, str .. "\n")
@@ -188,7 +196,7 @@ end
 local mspLoadSettings =
 {
     processReply = function(self, buf)
-        print("Page is processing reply for cmd "..tostring(self.command).." len buf: "..#buf.." expected: "..Page.minBytes)
+        rf2.print("Page is processing reply for cmd "..tostring(self.command).." len buf: "..#buf.." expected: "..Page.minBytes)
         Page.values = buf
         if Page.postRead then
             Page.postRead(Page)
