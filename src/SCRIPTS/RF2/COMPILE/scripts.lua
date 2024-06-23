@@ -6,6 +6,7 @@ local scripts = {
     "/SCRIPTS/RF2/MSP/common.lua",
     "/SCRIPTS/RF2/MSP/crsf.lua",
     "/SCRIPTS/RF2/MSP/ghst.lua",
+    "/SCRIPTS/RF2/MSP/mspAccCalibration.lua",
     "/SCRIPTS/RF2/MSP/mspApiVersion.lua",
     "/SCRIPTS/RF2/MSP/mspHelper.lua",
     "/SCRIPTS/RF2/MSP/mspQueue.lua",
