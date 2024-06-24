@@ -5,14 +5,14 @@ local adjTellerEnabled = true
 local function run_bg()
     if getRSSI() > 0 or rf2.runningInSimulator then
         if not timeIsSet then
-            setRtc = setRtc or assert(loadScript(rfBaseDir.."rtc.lua"))()
+            setRtc = setRtc or assert(loadScript(rf2.rfBaseDir.."rtc.lua"))()
             timeIsSet = setRtc.f()
             if timeIsSet then
                 setRtc = nil
                 collectgarbage()
             end
         elseif adjTellerEnabled then
-            adjTellerTask = adjTellerTask or assert(loadScript(rfBaseDir.."adj_teller.lua"))()
+            adjTellerTask = adjTellerTask or assert(loadScript(rf2.rfBaseDir.."adj_teller.lua"))()
             adjTellerEnabled = adjTellerTask.run()
             if adjTellerEnabled == 2 then
                 adjTellerTask = nil

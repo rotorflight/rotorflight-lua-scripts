@@ -11,9 +11,10 @@ local function init()
         return false
     end
 
-    if not apiVersion and (not lastRunTS or lastRunTS + 100 < getTime()) then
+    if not apiVersion and (not lastRunTS or lastRunTS + 200 < getTime()) then
         returnTable.t = "Waiting for API version"
         mspApiVersion.getApiVersion(function(_, version) apiVersion = version end)
+        lastRunTS = getTime()
     end
 
     rf2.mspQueue:processQueue()

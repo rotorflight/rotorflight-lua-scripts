@@ -6,7 +6,7 @@ local supportedProtocols =
         push            = sportTelemetryPush,
         maxTxBufferSize = 6,
         maxRxBufferSize = 6,
-        saveMaxRetries  = 2,
+        maxRetries      = 3,
         saveTimeout     = 500,
         cms             = {},
     },
@@ -17,7 +17,7 @@ local supportedProtocols =
         push            = crossfireTelemetryPush,
         maxTxBufferSize = 8,
         maxRxBufferSize = 58,
-        saveMaxRetries  = 2,
+        maxRetries      = 3,
         saveTimeout     = 150,
         cms             = {},
     },
@@ -27,7 +27,7 @@ local supportedProtocols =
         push            = ghostTelemetryPush,
         maxTxBufferSize = 10, -- Tx -> Rx (Push)
         maxRxBufferSize = 6,  -- Rx -> Tx (Pop)
-        saveMaxRetries  = 2,
+        maxRetries      = 3,
         saveTimeout     = 250,
         cms             = {},
     }
