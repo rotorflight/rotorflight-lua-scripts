@@ -149,11 +149,11 @@ local function createPopupMenu()
     popupMenuActive = 1
     popupMenu = {}
     if uiState == uiStatus.pages then
-        popupMenu[#popupMenu + 1] = { t = "save page", f = saveSettings }
-        popupMenu[#popupMenu + 1] = { t = "reload", f = invalidatePages }
+        popupMenu[#popupMenu + 1] = { t = "Save Page", f = saveSettings }
+        popupMenu[#popupMenu + 1] = { t = "Reload", f = invalidatePages }
     end
-    popupMenu[#popupMenu + 1] = { t = "reboot", f = rebootFc }
-    popupMenu[#popupMenu + 1] = { t = "acc cal", f = function() confirm("CONFIRM/acc_cal.lua") end }
+    popupMenu[#popupMenu + 1] = { t = "Reboot", f = rebootFc }
+    popupMenu[#popupMenu + 1] = { t = "Acc Cal", f = function() confirm("CONFIRM/acc_cal.lua") end }
 end
 
 rf2.dataBindFields = function()
@@ -181,7 +181,7 @@ local function incMax(val, inc, base)
     return ((val + inc + base - 1) % base) + 1
 end
 
-function clipValue(val,min,max)
+local function clipValue(val,min,max)
     if val < min then
         val = min
     elseif val > max then

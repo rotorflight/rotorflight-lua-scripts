@@ -5,7 +5,6 @@ local scriptsCompiled = assert(loadScript("COMPILE/scripts_compiled.lua"))()
 
 if scriptsCompiled then
     assert(loadScript("/SCRIPTS/RF2/rf2.lua"))()
-    rf2.lastChangedServo = 1
     rf2.protocol = assert(loadScript("protocols.lua"))()
     rf2.radio = assert(loadScript("radios.lua"))().msp
     rf2.mspQueue = assert(loadScript("MSP/mspQueue.lua"))()

@@ -18,4 +18,3 @@ rf2 = {
         return getTime() / 100
     end
 }
-
