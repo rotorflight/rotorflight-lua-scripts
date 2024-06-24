@@ -18,11 +18,8 @@ local pageStatus =
 local uiState = uiStatus.init
 local prevUiState
 local pageState = pageStatus.display
-local requestTimeout = 80
 local currentPage = 1
 local currentField = 1
-local saveTimeout = rf2.protocol.saveTimeout
-local saveMaxRetries = rf2.protocol.saveMaxRetries
 local popupMenuActive = 1
 local killEnterBreak = 0
 local pageScrollY = 0
@@ -33,20 +30,6 @@ local backgroundFill = TEXT_BGCOLOR or ERASE
 local foregroundColor = LINE_COLOR or SOLID
 
 local globalTextOptions = TEXT_COLOR or 0
-
-rf2.print = function(str)
-    if rf2.runningInSimulator then
-        print(str)
-    else
-        serialWrite(str.."\r\n") -- 115200 bps
-    end
-end
-
-rf2.log = function(str)
-    local f = io.open("/LOGS/rf2.log", 'a')
-    io.write(f, str .. "\n")
-    io.close(f)
-end
 
 local function invalidatePages()
     Page = nil
@@ -145,7 +128,7 @@ rf2.readPage = function()
 end
 
 local function requestPage()
-    if not Page.reqTS or Page.reqTS + requestTimeout <= getTime() then
+    if not Page.reqTS or Page.reqTS + 200 <= getTime() then
         Page.reqTS = getTime()
         if Page.read then
             rf2.readPage()
@@ -413,7 +396,7 @@ local function run_ui(event)
         drawScreenTitle("Rotorflight "..LUA_VERSION)
     elseif uiState == uiStatus.pages then
         if pageState == pageStatus.saving then
-            if saveTS + saveTimeout >= getTime() then
+            if saveTS + rf2.protocol.saveTimeout >= getTime() then
                 pageState = pageStatus.display
                 invalidatePages()
             end

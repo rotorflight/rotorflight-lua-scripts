@@ -1,12 +1,7 @@
-rfBaseDir = "/SCRIPTS/RF2/"
-
-rf2 = {
-    runningInSimulator = string.sub(select(2,getVersion()), -4) == "simu"
-}
-
-rf2.protocol = assert(loadScript(rfBaseDir.."protocols.lua"))()
-assert(loadScript(rfBaseDir..rf2.protocol.mspTransport))()
-assert(loadScript(rfBaseDir.."MSP/common.lua"))()
-local background = assert(loadScript(rfBaseDir.."background.lua"))()
+assert(loadScript("/SCRIPTS/RF2/rf2.lua"))()
+rf2.protocol = assert(loadScript(rf2.rfBaseDir.."protocols.lua"))()
+assert(loadScript(rf2.rfBaseDir..rf2.protocol.mspTransport))()
+assert(loadScript(rf2.rfBaseDir.."MSP/common.lua"))()
+local background = assert(loadScript(rf2.rfBaseDir.."background.lua"))()
 
 return { run = background }
