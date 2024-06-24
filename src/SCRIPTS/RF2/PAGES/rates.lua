@@ -73,6 +73,7 @@ return {
     minBytes    = 25,
     labels      = labels,
     fields      = fields,
+    simulatorResponse = { 4, 18, 25, 32, 20, 0, 0, 18, 25, 32, 20, 0, 0, 32, 50, 45, 10, 0, 0, 56, 0, 56, 20, 0, 0 },
     ratesType,
     getRatesType = function(self)
         for i = 1, #self.fields do

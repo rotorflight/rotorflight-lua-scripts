@@ -48,4 +48,5 @@ return {
     minBytes    = 25,
     labels      = labels,
     fields      = fields,
+    simulatorResponse = { 0, 1, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 25, 25, 0, 245, 0 },
 }

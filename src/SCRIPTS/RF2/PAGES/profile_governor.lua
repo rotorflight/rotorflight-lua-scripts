@@ -33,4 +33,5 @@ return {
     minBytes    = 13,
     labels      = labels,
     fields      = fields,
+    simulatorResponse = { 208, 7, 100, 10, 125, 5, 20, 0, 20, 10, 40, 100, 100 },
 }

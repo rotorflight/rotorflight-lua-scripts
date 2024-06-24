@@ -11,7 +11,7 @@ local inc = { x = function(val) x = x + val return x end, y = function(val) y = 
 local labels = {}
 local fields = {}
 
-fields[#fields + 1] = { t = "Servo",         x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 7, vals = { 1 }, table = { [0] = "ELEVATOR", "CYCL L", "CYCL R", "TAIL" }, postEdit = function(self) self.servoChanged(self) end }
+fields[#fields + 1] = { t = "Servo",         x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 7, vals = { 1 }, table = { [0] = "ELEVATOR", "CYCL L", "CYCL R", "TAIL" }, postEdit = function(self, page) page.servoChanged(page) end }
 fields[#fields + 1] = { t = "Center",        x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 50, max = 2250, vals = { 2,3 } }
 fields[#fields + 1] = { t = "Min",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = -1000, max = 1000, vals = { 4,5 } }
 fields[#fields + 1] = { t = "Max",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = -1000, max = 1000, vals = { 6,7 } }
@@ -29,6 +29,7 @@ return {
     minBytes    = 33,
     labels      = labels,
     fields      = fields,
+    simulatorResponse = { 4, 180, 5, 12, 254, 244, 1, 244, 1, 244, 1, 144, 0, 0, 0, 1, 0, 160, 5, 12, 254, 244, 1, 244, 1, 244, 1, 144, 0, 0, 0, 1, 0, 14, 6, 12, 254, 244, 1, 244, 1, 244, 1, 144, 0, 0, 0, 0, 0, 120, 5, 212, 254, 44, 1, 244, 1, 244, 1, 77, 1, 0, 0, 0, 0},
     postRead = function(self)
         local servoCount = self.values[1]
         self.fields[1].max = servoCount - 1
