@@ -1,4 +1,4 @@
-local mspAccCalibration = assert(rf2.loadScript("/scripts/RF2/MSP/mspAccCalibration.lua"))()
+local mspAccCalibration = assert(rf2.loadScript("MSP/mspAccCalibration.lua"))()
 local sentCalibrate = false
 
 local function calibrate()

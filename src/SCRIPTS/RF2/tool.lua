@@ -4,7 +4,7 @@ local run = nil
 local scriptsCompiled = assert(loadScript("COMPILE/scripts_compiled.lua"))()
 
 if scriptsCompiled then
-    assert(loadScript("/SCRIPTS/RF2/rf2.lua"))()
+    assert(loadScript("rf2.lua"))()
     rf2.protocol = assert(rf2.loadScript("protocols.lua"))()
     rf2.radio = assert(rf2.loadScript("radios.lua"))().msp
     rf2.mspQueue = assert(rf2.loadScript("MSP/mspQueue.lua"))()

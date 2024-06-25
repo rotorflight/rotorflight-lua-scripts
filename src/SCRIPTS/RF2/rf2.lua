@@ -1,5 +1,5 @@
 rf2 = {
-    rfbaseDir = "/SCRIPTS/RF2/",
+    baseDir = "/SCRIPTS/RF2/",
     runningInSimulator = string.sub(select(2,getVersion()), -4) == "simu",
     loadScript = loadScript,
     log = function(str)

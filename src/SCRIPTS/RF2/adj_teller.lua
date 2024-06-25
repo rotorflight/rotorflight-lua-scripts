@@ -195,7 +195,7 @@ local function run()
             adjfunction = adjfunctions["id"..currentAdjfuncId]
             if adjfunction ~= nil then
                 for index, value in ipairs(adjfunction.wavs) do
-                    playFile("/SCRIPTS/RF2/SOUNDS/"..value..".wav")
+                    playFile(rf2.baseDir.."SOUNDS/"..value..".wav")
                 end
             end
         end

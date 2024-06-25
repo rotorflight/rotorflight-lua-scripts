@@ -1,6 +1,6 @@
 local SUPPORTED_API_VERSION = "12.06" -- see main/msp/msp_protocol.h
 
-local mspApiVersion = assert(rf2.loadScript("/scripts/RF2/MSP/mspApiVersion.lua"))()
+local mspApiVersion = assert(rf2.loadScript("MSP/mspApiVersion.lua"))()
 local returnTable = { f = nil, t = "" }
 local apiVersion
 local lastRunTS
