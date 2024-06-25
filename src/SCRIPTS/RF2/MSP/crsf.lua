@@ -1,6 +1,7 @@
 -- CRSF Devices
 local CRSF_ADDRESS_BETAFLIGHT          = 0xC8
 local CRSF_ADDRESS_RADIO_TRANSMITTER   = 0xEA
+
 -- CRSF Frame Types
 local CRSF_FRAMETYPE_MSP_REQ           = 0x7A      -- response request using msp sequence as command
 local CRSF_FRAMETYPE_MSP_RESP          = 0x7B      -- reply with 60 byte chunked binary

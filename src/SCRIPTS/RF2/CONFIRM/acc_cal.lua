@@ -1,4 +1,4 @@
-local template = assert(loadScript(rf2.radio.template))()
+local template = assert(rf2.loadScript(rf2.radio.template))()
 local margin = template.margin
 local indent = template.indent
 local lineSpacing = template.lineSpacing
@@ -21,5 +21,5 @@ return {
     title  = "Accelerometer",
     labels = labels,
     fields = fields,
-    init   = assert(loadScript("acc_cal.lua"))(),
+    init   = assert(rf2.loadScript("acc_cal.lua"))(),
 }

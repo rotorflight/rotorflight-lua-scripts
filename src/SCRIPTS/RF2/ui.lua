@@ -1,4 +1,4 @@
-local LUA_VERSION = "2.0.0"
+local LUA_VERSION = "2.0.0 - 240625"
 
 local uiStatus =
 {
@@ -141,7 +141,7 @@ local function confirm(page)
     uiState = uiStatus.confirm
     invalidatePages()
     currentField = 1
-    Page = assert(loadScript(page))()
+    Page = assert(rf2.loadScript(page))()
     collectgarbage()
 end
 
@@ -351,13 +351,13 @@ local function run_ui(event)
     elseif uiState == uiStatus.init then
         lcd.clear()
         drawScreenTitle("Rotorflight "..LUA_VERSION)
-        init = init or assert(loadScript("ui_init.lua"))()
+        init = init or assert(rf2.loadScript("ui_init.lua"))()
         drawTextMultiline(4, rf2.radio.yMinLimit, init.t)
         if not init.f() then
             return 0
         end
         init = nil
-        PageFiles = assert(loadScript("pages.lua"))()
+        PageFiles = assert(rf2.loadScript("pages.lua"))()
         invalidatePages()
         uiState = prevUiState or uiStatus.mainMenu
         prevUiState = nil
@@ -440,10 +440,11 @@ local function run_ui(event)
             end
         end
         if not Page then
-            Page = assert(loadScript("PAGES/"..PageFiles[currentPage].script))()
+            Page = assert(rf2.loadScript("PAGES/"..PageFiles[currentPage].script))()
             collectgarbage()
         end
         if not(Page.values or Page.isReady) and pageState == pageStatus.display then
+            rf2.print("Requesting page...")
             requestPage()
         end
         if Page and Page.timer and (not Page.lastTimeTimerFired or Page.lastTimeTimerFired + 0.5 < rf2.clock()) then

@@ -1,4 +1,4 @@
-local template = assert(loadScript(rf2.radio.template))()
+local template = assert(rf2.loadScript(rf2.radio.template))()
 local margin = template.margin
 local indent = template.indent
 local lineSpacing = template.lineSpacing
@@ -83,7 +83,7 @@ return {
         end
     end,
     updateRatesType = function(self, applyDefaults)
-        local ratesTable = assert(loadScript("RATETABLES/"..self.getRatesType(self)..".lua"))()
+        local ratesTable = assert(rf2.loadScript("RATETABLES/"..self.getRatesType(self)..".lua"))()
         for i = 1, #ratesTable.labels do
             self.labels[i].t = ratesTable.labels[i]
         end
