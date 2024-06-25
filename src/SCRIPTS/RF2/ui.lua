@@ -128,8 +128,8 @@ rf2.readPage = function()
 end
 
 local function requestPage()
-    if not Page.reqTS or Page.reqTS + 200 <= getTime() then
-        Page.reqTS = getTime()
+    if not Page.reqTS or Page.reqTS + 2 <= rf2.clock() then
+        Page.reqTS = rf2.clock()
         if Page.read then
             rf2.readPage()
         end
@@ -396,7 +396,7 @@ local function run_ui(event)
         drawScreenTitle("Rotorflight "..LUA_VERSION)
     elseif uiState == uiStatus.pages then
         if pageState == pageStatus.saving then
-            if saveTS + rf2.protocol.saveTimeout >= getTime() then
+            if saveTS + rf2.protocol.saveTimeout >= rf2.clock() then
                 pageState = pageStatus.display
                 invalidatePages()
             end
@@ -446,9 +446,9 @@ local function run_ui(event)
         if not(Page.values or Page.isReady) and pageState == pageStatus.display then
             requestPage()
         end
-        if Page and Page.timer and (not Page.lastTimeTimerFired or Page.lastTimeTimerFired + 50 < getTime()) then
+        if Page and Page.timer and (not Page.lastTimeTimerFired or Page.lastTimeTimerFired + 0.5 < rf2.clock()) then
             Page.timer(Page)
-            Page.lastTimeTimerFired = getTime()
+            Page.lastTimeTimerFired = rf2.clock()
         end
         lcd.clear()
         drawScreen()

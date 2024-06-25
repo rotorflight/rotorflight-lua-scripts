@@ -170,7 +170,7 @@ local function init()
 
     if adjustmentCollector.initFailedMessage then
         showValue(adjustmentCollector.initFailedMessage)
-        timeExitTool = getTime() + 200
+        timeExitTool = rf2.clock() + 2
         return
     end
 
@@ -184,11 +184,11 @@ local function run()
 
     if timeExitTool then
         -- just show message
-        if getTime() > timeExitTool then return 2 end
+        if rf2.clock() > timeExitTool then return 2 end
         return 0
     end
 
-    if timeLastChange and getTime() - timeLastChange > 100 then
+    if timeLastChange and rf2.clock() - timeLastChange > 1 then
         timeLastChange = nil
 
         if adjfuncIdChanged then
@@ -223,7 +223,7 @@ local function run()
     end
 
     if invalidate then
-        timeLastChange = getTime()
+        timeLastChange = rf2.clock()
         local adjfunction = adjfunctions["id"..currentAdjfuncId]
         if adjfunction ~= nil then
             showValue(adjfunction.name..": "..currentAdjfuncValue)

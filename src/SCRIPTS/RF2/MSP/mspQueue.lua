@@ -52,15 +52,16 @@ function MspQueueController:processQueue()
     end
 
     local cmd, buf, err
+    --rf2.print("retryCount: "..self.retryCount)
 
     if not rf2.runningInSimulator then
-        if self.lastTimeCommandSent == 0 or self.lastTimeCommandSent + 50 < getTime() then
+        if self.lastTimeCommandSent == 0 or self.lastTimeCommandSent + 0.5 < rf2.clock() then
             if self.currentMessage.payload then
                 rf2.protocol.mspWrite(self.currentMessage.command, self.currentMessage.payload)
             else
                 rf2.protocol.mspWrite(self.currentMessage.command, {})
             end
-            self.lastTimeCommandSent = getTime()
+            self.lastTimeCommandSent = rf2.clock()
             self.retryCount = self.retryCount + 1
         end
 

@@ -2,7 +2,6 @@ local MSP_SET_RTC = 246
 
 local timeIsSet = false
 local lastRunTS = 0
-local INTERVAL = 50
 
 local function processMspReply(cmd,rx_buf,err)
     if cmd == MSP_SET_RTC and not err then
@@ -12,7 +11,7 @@ local function processMspReply(cmd,rx_buf,err)
 end
 
 local function setRtc()
-    if lastRunTS == 0 or lastRunTS + INTERVAL < getTime() then
+    if lastRunTS == 0 or lastRunTS + 0.5 < rf2.clock() then
         -- only send datetime one time after telemetry connection became available
         -- or when connection is restored after e.g. lipo refresh
 
@@ -29,7 +28,7 @@ local function setRtc()
         values[6] = 0
 
         rf2.protocol.mspWrite(MSP_SET_RTC, values)
-        lastRunTS = getTime()
+        lastRunTS = rf2.clock()
     end
 
     mspProcessTxQ()
