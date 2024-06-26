@@ -14,7 +14,7 @@ rf2 = {
         if rf2.runningInSimulator then
             print(tostring(str))
         else
-            serialWrite(tostring(str).."\r\n") -- 115200 bps
+            --serialWrite(tostring(str).."\r\n") -- 115200 bps
             --rf2.log(str)
         end
     end,
