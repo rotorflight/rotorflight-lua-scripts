@@ -122,11 +122,10 @@ local function mspReceivedReply(payload)
 end
 
 function mspPollReply()
-    while true do
+    local startTime = rf2.clock()
+    while (rf2.clock() - startTime < 0.05) do
         local mspData = rf2.protocol.mspPoll()
-        if mspData == nil then
-            return nil
-        elseif mspReceivedReply(mspData) then
+        if mspData ~= nil and mspReceivedReply(mspData) then
             mspLastReq = 0
             return mspRxReq, mspRxBuf, mspRxError
         end
