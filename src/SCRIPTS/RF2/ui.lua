@@ -129,6 +129,7 @@ end
 
 local function requestPage()
     if not Page.reqTS or Page.reqTS + 2 <= rf2.clock() then
+        --rf2.print("Requesting page...")
         Page.reqTS = rf2.clock()
         if Page.read then
             rf2.readPage()
@@ -444,7 +445,6 @@ local function run_ui(event)
             collectgarbage()
         end
         if not(Page.values or Page.isReady) and pageState == pageStatus.display then
-            rf2.print("Requesting page...")
             requestPage()
         end
         if Page and Page.timer and (not Page.lastTimeTimerFired or Page.lastTimeTimerFired + 0.5 < rf2.clock()) then

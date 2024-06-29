@@ -74,6 +74,7 @@ local function mspReceivedReply(payload)
     local start = bit32.btest(status, 0x10)
     local seq = bit32.band(status, 0x0F)
     idx = idx + 1
+    --rf2.print("payload length: "..#payload)
     --rf2.print(" msp sequence #:  "..string.format("%u",seq))
     if start then
         -- start flag set
@@ -90,6 +91,7 @@ local function mspReceivedReply(payload)
         mspRxCRC = bit32.bxor(mspRxSize, mspRxReq)
         if mspRxReq == mspLastReq then
             mspStarted = true
+            --rf2.print("Started cmd "..mspLastReq)
         end
     elseif not mspStarted then
 		rf2.print("  mspReceivedReply: missing Start flag")
