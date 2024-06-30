@@ -6,20 +6,20 @@ local REPLY_FRAME_ID   = 0x32
 
 local lastSensorId, lastFrameId, lastDataId, lastValue
 
-protocol.mspSend = function(payload)
+rf2.protocol.mspSend = function(payload)
     local dataId = payload[1] + bit32.lshift(payload[2], 8)
     local value = 0
     for i = 3, #payload do
         value = value + bit32.lshift(payload[i], (i - 3) * 8)
     end
-    return protocol.push(LOCAL_SENSOR_ID, REQUEST_FRAME_ID, dataId, value)
+    return rf2.protocol.push(LOCAL_SENSOR_ID, REQUEST_FRAME_ID, dataId, value)
 end
 
-protocol.mspRead = function(cmd)
+rf2.protocol.mspRead = function(cmd)
     return mspSendRequest(cmd, {})
 end
 
-protocol.mspWrite = function(cmd, payload)
+rf2.protocol.mspWrite = function(cmd, payload)
     return mspSendRequest(cmd, payload)
 end
 
@@ -41,10 +41,11 @@ local function smartPortTelemetryPop()
     end
 end
 
-protocol.mspPoll = function()
+rf2.protocol.mspPoll = function()
     while true do
         local sensorId, frameId, dataId, value = smartPortTelemetryPop()
         if (sensorId == SMARTPORT_REMOTE_SENSOR_ID or sensorId == FPORT_REMOTE_SENSOR_ID) and frameId == REPLY_FRAME_ID then
+	 	    --rf2.print("sensorId:0x"..string.format("%X", sensorId).." frameId:0x"..string.format("%X", frameId).." dataId:0x"..string.format("%X", dataId).." value:0x"..string.format("%X", value))
             local payload = {}
             payload[1] = bit32.band(dataId, 0xFF)
             dataId = bit32.rshift(dataId, 8)
@@ -56,6 +57,9 @@ protocol.mspPoll = function()
             payload[5] = bit32.band(value, 0xFF)
             value = bit32.rshift(value, 8)
             payload[6] = bit32.band(value, 0xFF)
+            --for i=1,#payload do
+            --    rf2.print(  "["..string.format("%u", i).."]:  0x"..string.format("%X", payload[i]))
+            --end
             return payload
         elseif sensorId == nil then
             return nil

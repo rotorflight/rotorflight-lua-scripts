@@ -1,71 +1,32 @@
-local apiVersionReceived = false
-local vtxTablesReceived = false
-local mcuIdReceived = false
-local boardInfoReceived = false
-local getApiVersion, getVtxTables, getMCUId, getBoardInfo
-local returnTable = { f = nil, t = "" }
 local SUPPORTED_API_VERSION = "12.06" -- see main/msp/msp_protocol.h
 
+local mspApiVersion = assert(rf2.loadScript("MSP/mspApiVersion.lua"))()
+local returnTable = { f = nil, t = "" }
+local apiVersion
+local lastRunTS
+
 local function init()
-    if runningInSimulator then return true end
-
-    if getRSSI() == 0 then
+    if getRSSI() == 0 and not rf2.runningInSimulator then
         returnTable.t = "Waiting for connection"
-    elseif not apiVersionReceived then
-        getApiVersion = getApiVersion or assert(loadScript("api_version.lua"))()
-        returnTable.t = getApiVersion.t
-        apiVersionReceived = getApiVersion.f()
-        if apiVersionReceived then
-            getApiVersion = nil
-            collectgarbage()
-        end
-    elseif tostring(apiVersion) ~= SUPPORTED_API_VERSION then -- work-around for comparing floats
-        returnTable.t = "This version of the Lua\nscripts ("..SUPPORTED_API_VERSION..") can't be\nused with the selected\nmodel ("..tostring(apiVersion)..")."
---[[
-    elseif not mcuIdReceived and apiVersion >= 1.42 then
-        getMCUId = getMCUId or assert(loadScript("mcu_id.lua"))()
-        returnTable.t = getMCUId.t
-        mcuIdReceived = getMCUId.f()
-        if mcuIdReceived then
-            getMCUId = nil
+        return false
+    end
 
-            f = loadScript("VTX_TABLES/"..mcuId..".lua")
-            if f and f() then
-                vtxTablesReceived = true
-                f = nil
-            end
+    if not apiVersion and (not lastRunTS or lastRunTS + 2 < rf2.clock()) then
+        returnTable.t = "Waiting for API version"
+        mspApiVersion.getApiVersion(function(_, version) apiVersion = version end)
+        lastRunTS = rf2.clock()
+    end
+
+    rf2.mspQueue:processQueue()
+
+    if rf2.mspQueue:isProcessed() and apiVersion then
+        if tostring(apiVersion) ~= SUPPORTED_API_VERSION then -- work-around for comparing floats
+            returnTable.t = "This version of the Lua scripts ("..SUPPORTED_API_VERSION..")\ncan't be used with the selected model ("..tostring(apiVersion)..")."
+        else
+            -- received correct API version, proceed
             collectgarbage()
-            f = loadScript("BOARD_INFO/"..mcuId..".lua")
-            if f and f() then
-                boardInfoReceived = true
-                f = nil
-            end
-            collectgarbage()
+            return true
         end
---]]
---[[
-    elseif not vtxTablesReceived and apiVersion >= 1.042 then
-        getVtxTables = getVtxTables or assert(loadScript("vtx_tables.lua"))()
-        returnTable.t = getVtxTables.t
-        vtxTablesReceived = getVtxTables.f()
-        if vtxTablesReceived then
-            getVtxTables = nil
-            collectgarbage()
-        end
---]]
---[[
-    elseif not boardInfoReceived and apiVersion >= 1.044 then
-        getBoardInfo = getBoardInfo or assert(loadScript("board_info.lua"))()
-        returnTable.t = getBoardInfo.t
-        boardInfoReceived = getBoardInfo.f()
-        if boardInfoReceived then
-            getBoardInfo = nil
-            collectgarbage()
-        end
---]]
-    else
-        -- received correct API version, proceed
-        return true
     end
 
     return false

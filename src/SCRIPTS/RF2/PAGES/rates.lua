@@ -1,10 +1,10 @@
-local template = assert(loadScript(radio.template))()
+local template = assert(rf2.loadScript(rf2.radio.template))()
 local margin = template.margin
 local indent = template.indent
 local lineSpacing = template.lineSpacing
 local tableSpacing = template.tableSpacing
 local sp = template.listSpacing.field
-local yMinLim = radio.yMinLimit
+local yMinLim = rf2.radio.yMinLimit
 local x = margin
 local y = yMinLim - lineSpacing
 local inc = { x = function(val) x = x + val return x end, y = function(val) y = y + val return y end }
@@ -48,7 +48,7 @@ fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0
 
 x = margin
 inc.y(lineSpacing*0.4)
-fields[#fields + 1] = { t = "Rates Type",          x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 5,      vals = { 1 }, table = { [0] = "NONE", "BETAFL", "RACEFL", "KISS", "ACTUAL", "QUICK"}, postEdit = function(self) self.updateRatesType(self, true) end }
+fields[#fields + 1] = { t = "Rates Type",          x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 5,      vals = { 1 }, table = { [0] = "NONE", "BETAFL", "RACEFL", "KISS", "ACTUAL", "QUICK"}, postEdit = function(self, page) page.updateRatesType(page, true) end }
 inc.y(lineSpacing*0.4)
 
 labels[#labels + 1] = { t = "Roll dynamics",       x = x,          y = inc.y(lineSpacing) }
@@ -73,6 +73,7 @@ return {
     minBytes    = 25,
     labels      = labels,
     fields      = fields,
+    simulatorResponse = { 4, 18, 25, 32, 20, 0, 0, 18, 25, 32, 20, 0, 0, 32, 50, 45, 10, 0, 0, 56, 0, 56, 20, 0, 0 },
     ratesType,
     getRatesType = function(self)
         for i = 1, #self.fields do
@@ -82,7 +83,7 @@ return {
         end
     end,
     updateRatesType = function(self, applyDefaults)
-        local ratesTable = assert(loadScript("RATETABLES/"..self.getRatesType(self)..".lua"))()
+        local ratesTable = assert(rf2.loadScript("RATETABLES/"..self.getRatesType(self)..".lua"))()
         for i = 1, #ratesTable.labels do
             self.labels[i].t = ratesTable.labels[i]
         end

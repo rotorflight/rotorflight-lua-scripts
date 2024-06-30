@@ -1,20 +1,21 @@
 chdir("/SCRIPTS/RF2")
 
-apiVersion = 0
-mcuId = nil
-runningInSimulator = string.sub(select(2,getVersion()), -4) == "simu"
-
 local run = nil
 local scriptsCompiled = assert(loadScript("COMPILE/scripts_compiled.lua"))()
 
 if scriptsCompiled then
-    protocol = assert(loadScript("protocols.lua"))()
-    radio = assert(loadScript("radios.lua"))().msp
-    assert(loadScript(protocol.mspTransport))()
-    assert(loadScript("MSP/common.lua"))()
-    run = assert(loadScript("ui.lua"))()
+    assert(loadScript("rf2.lua"))()
+    rf2.protocol = assert(rf2.loadScript("protocols.lua"))()
+    rf2.radio = assert(rf2.loadScript("radios.lua"))().msp
+    rf2.mspQueue = assert(rf2.loadScript("MSP/mspQueue.lua"))()
+    rf2.mspQueue.maxRetries = rf2.protocol.maxRetries
+    rf2.mspHelper = assert(rf2.loadScript("MSP/mspHelper.lua"))()
+    assert(rf2.loadScript(rf2.protocol.mspTransport))()
+    assert(rf2.loadScript("MSP/common.lua"))()
+
+    run = assert(rf2.loadScript("ui.lua"))()
 else
     run = assert(loadScript("COMPILE/compile.lua"))()
 end
 
-return { run=run }
+return { run = run }

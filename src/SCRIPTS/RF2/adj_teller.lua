@@ -160,9 +160,9 @@ local function init()
     adjfuncIdChanged = false
     adjfuncValueChanged = false
 
-    if runningInSimulator then
+    if rf2.runningInSimulator then
         adjustmentCollector = sportAdjustmentsCollector:new("Tmp1", "Tmp2")
-    elseif protocol.mspTransport == "MSP/sp.lua" then
+    elseif rf2.protocol.mspTransport == "MSP/sp.lua" then
         adjustmentCollector = sportAdjustmentsCollector:new("5110", "5111")
     else
         adjustmentCollector = crsfAdjustmentsCollector:new()
@@ -170,7 +170,7 @@ local function init()
 
     if adjustmentCollector.initFailedMessage then
         showValue(adjustmentCollector.initFailedMessage)
-        timeExitTool = getTime() + 200
+        timeExitTool = rf2.clock() + 2
         return
     end
 
@@ -184,18 +184,18 @@ local function run()
 
     if timeExitTool then
         -- just show message
-        if getTime() > timeExitTool then return 2 end
+        if rf2.clock() > timeExitTool then return 2 end
         return 0
     end
 
-    if timeLastChange and getTime() - timeLastChange > 100 then
+    if timeLastChange and rf2.clock() - timeLastChange > 1 then
         timeLastChange = nil
 
         if adjfuncIdChanged then
             adjfunction = adjfunctions["id"..currentAdjfuncId]
             if adjfunction ~= nil then
                 for index, value in ipairs(adjfunction.wavs) do
-                    playFile("/SCRIPTS/RF2/SOUNDS/"..value..".wav")
+                    playFile(rf2.baseDir.."SOUNDS/"..value..".wav")
                 end
             end
         end
@@ -223,7 +223,7 @@ local function run()
     end
 
     if invalidate then
-        timeLastChange = getTime()
+        timeLastChange = rf2.clock()
         local adjfunction = adjfunctions["id"..currentAdjfuncId]
         if adjfunction ~= nil then
             showValue(adjfunction.name..": "..currentAdjfuncValue)
