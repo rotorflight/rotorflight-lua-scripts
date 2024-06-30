@@ -18,7 +18,7 @@ local supportedProtocols =
         maxTxBufferSize = 8,
         maxRxBufferSize = 58,
         maxRetries      = 3,
-        saveTimeout     = 2.5,
+        saveTimeout     = 3.0,
         cms             = {},
     },
     ghst =
@@ -28,7 +28,7 @@ local supportedProtocols =
         maxTxBufferSize = 10, -- Tx -> Rx (Push)
         maxRxBufferSize = 6,  -- Rx -> Tx (Pop)
         maxRetries      = 3,
-        saveTimeout     = 2.5,
+        saveTimeout     = 3.0,
         cms             = {},
     }
 }

@@ -20,6 +20,7 @@ local prevUiState
 local pageState = pageStatus.display
 local currentPage = 1
 local currentField = 1
+local saveTS = 0
 local popupMenuActive = 1
 local killEnterBreak = 0
 local pageScrollY = 0
@@ -34,7 +35,6 @@ local globalTextOptions = TEXT_COLOR or 0
 local function invalidatePages()
     Page = nil
     pageState = pageStatus.display
-    saveTS = 0
     collectgarbage()
 end
 
@@ -89,6 +89,7 @@ local mspSaveSettings =
 local function saveSettings()
     if pageState ~= pageStatus.saving then
         pageState = pageStatus.saving
+        saveTS = rf2.clock()
 
         if Page.values then
             local payload = Page.values
@@ -397,7 +398,8 @@ local function run_ui(event)
         drawScreenTitle("Rotorflight "..LUA_VERSION)
     elseif uiState == uiStatus.pages then
         if pageState == pageStatus.saving then
-            if saveTS + rf2.protocol.saveTimeout >= rf2.clock() then
+            if saveTS + rf2.protocol.saveTimeout <= rf2.clock() then
+                --rf2.print("Save timeout!")
                 pageState = pageStatus.display
                 invalidatePages()
             end
