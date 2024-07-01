@@ -12,13 +12,13 @@ local labels = {}
 local fields = {}
 
 fields[#fields + 1] = { t = "Servo",         x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 7, vals = { 1 }, table = { [0] = "ELEVATOR", "CYCL L", "CYCL R", "TAIL" }, postEdit = function(self, page) self.servoChanged(page) end }
-fields[#fields + 1] = { t = "Center",        x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 50, max = 2250, vals = { 2,3 },     id="servoMid" }
-fields[#fields + 1] = { t = "Min",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = -1000, max = 1000, vals = { 4,5 },  id="servoMin" }
-fields[#fields + 1] = { t = "Max",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = -1000, max = 1000, vals = { 6,7 },  id="servoMax" }
-fields[#fields + 1] = { t = "Scale neg",     x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 100, max = 1000, vals = { 8,9 },    id="servoScaleNeg" }
-fields[#fields + 1] = { t = "Scale pos",     x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 100, max = 1000, vals = { 10,11 },  id="servoScalePos" }
-fields[#fields + 1] = { t = "Rate",          x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 50, max = 5000, vals = { 12,13 },   id="servoRate" }
-fields[#fields + 1] = { t = "Speed",         x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 60000, vals = { 14,15 },   id="servoSpeed" }
+fields[#fields + 1] = { t = "Center",        x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 50, max = 2250, vals = { 2,3 },     id = "servoMid" }
+fields[#fields + 1] = { t = "Min",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = -1000, max = 1000, vals = { 4,5 },  id = "servoMin" }
+fields[#fields + 1] = { t = "Max",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = -1000, max = 1000, vals = { 6,7 },  id = "servoMax" }
+fields[#fields + 1] = { t = "Scale neg",     x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 100, max = 1000, vals = { 8,9 },    id = "servoScaleNeg" }
+fields[#fields + 1] = { t = "Scale pos",     x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 100, max = 1000, vals = { 10,11 },  id = "servoScalePos" }
+fields[#fields + 1] = { t = "Rate",          x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 50, max = 5000, vals = { 12,13 },   id = "servoRate" }
+fields[#fields + 1] = { t = "Speed",         x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 60000, vals = { 14,15 },   id = "servoSpeed" }
 
 return {
     read        = 120, -- MSP_SERVO_CONFIGURATIONS
