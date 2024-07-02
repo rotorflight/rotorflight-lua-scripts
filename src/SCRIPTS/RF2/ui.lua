@@ -26,8 +26,7 @@ local killEnterBreak = 0
 local pageScrollY = 0
 local mainMenuScrollY = 0
 local PageFiles, Page, init, popupMenu
-local scrollTS = 0
-local speedMultiplier = 1
+local scrollSpeedTS = 0
 
 local backgroundFill = TEXT_BGCOLOR or ERASE
 local foregroundColor = LINE_COLOR or SOLID
@@ -433,17 +432,16 @@ local function run_ui(event)
                 return 0
             end
         elseif pageState == pageStatus.editing then
+            local scrollSpeedMultiplier = 1
             if event == EVT_VIRTUAL_INC or event == EVT_VIRTUAL_INC_REPT or event == EVT_VIRTUAL_DEC or event == EVT_VIRTUAL_DEC_REPT then
-                scrollSpeed = rf2.clock() - scrollTS
-                rf2.print(scrollSpeed)
+                local scrollSpeed = rf2.clock() - scrollSpeedTS
+                --rf2.print(scrollSpeed)
                 if scrollSpeed < 0.075 then
-                    speedMultiplier = 10
+                    scrollSpeedMultiplier = 10
                 elseif scrollSpeed < 0.15 then
-                    speedMultiplier = 5
-                else
-                    speedMultiplier = 1
+                    scrollSpeedMultiplier = 5
                 end
-                scrollTS = rf2.clock()
+                scrollSpeedTS = rf2.clock()
             end
             if event == EVT_VIRTUAL_EXIT or event == EVT_VIRTUAL_ENTER then
                 if Page.fields[currentField].postEdit then
@@ -451,9 +449,9 @@ local function run_ui(event)
                 end
                 pageState = pageStatus.display
             elseif event == EVT_VIRTUAL_INC or event == EVT_VIRTUAL_INC_REPT then
-                incValue(1 * speedMultiplier)
+                incValue(1 * scrollSpeedMultiplier)
             elseif event == EVT_VIRTUAL_DEC or event == EVT_VIRTUAL_DEC_REPT then
-                incValue(-1 * speedMultiplier)
+                incValue(-1 * scrollSpeedMultiplier)
             end
         end
         if not Page then
