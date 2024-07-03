@@ -13,6 +13,8 @@ local pageStatus =
     display = 1,
     editing = 2,
     saving  = 3,
+    eepromWrite = 4,
+    rebooting = 5,
 }
 
 local uiState = uiStatus.init
@@ -40,6 +42,7 @@ local function invalidatePages()
 end
 
 local function rebootFc()
+    --rf2.print("Attempting to reboot the FC...")
     pageState = pageStatus.rebooting
     rf2.mspQueue:add({
         command = 68, -- MSP_REBOOT
@@ -56,8 +59,9 @@ local mspEepromWrite =
     processReply = function(self, buf)
         if Page.reboot then
             rebootFc()
+        else
+            invalidatePages()
         end
-        invalidatePages()
     end,
     simulatorResponse = {}
 }
@@ -335,6 +339,7 @@ local function drawPopupMenu()
 end
 
 local function run_ui(event)
+    --rf2.print("uiState: "..uiState.." pageState: "..pageState)
     if popupMenu then
         drawPopupMenu()
         if event == EVT_VIRTUAL_EXIT then
@@ -467,8 +472,15 @@ local function run_ui(event)
         end
         lcd.clear()
         drawScreen()
-        if pageState == pageStatus.saving then
-            local saveMsg = "Saving..."
+        if pageState == pageStatus.saving or pageState == pageStatus.eepromWrite or pageState == pageStatus.rebooting then
+            local saveMsg = ""
+            if pageState == pageStatus.saving then
+                saveMsg = "Saving..."
+            elseif pageState == pageStatus.eepromWrite then
+                saveMsg = "Updating..."
+            elseif pageState == pageStatus.rebooting then
+                saveMsg = "Rebooting..."
+            end
             lcd.drawFilledRectangle(rf2.radio.SaveBox.x,rf2.radio.SaveBox.y,rf2.radio.SaveBox.w,rf2.radio.SaveBox.h,backgroundFill)
             lcd.drawRectangle(rf2.radio.SaveBox.x,rf2.radio.SaveBox.y,rf2.radio.SaveBox.w,rf2.radio.SaveBox.h,SOLID)
             lcd.drawText(rf2.radio.SaveBox.x+rf2.radio.SaveBox.x_offset,rf2.radio.SaveBox.y+rf2.radio.SaveBox.h_offset,saveMsg,DBLSIZE + globalTextOptions)
