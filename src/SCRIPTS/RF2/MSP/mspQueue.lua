@@ -78,6 +78,7 @@ function MspQueueController:processQueue()
     end
 
     if cmd then rf2.print("Received cmd: "..tostring(cmd)) end
+    if err then rf2.print("  err: "..tostring(err)) end
 
     if (cmd == self.currentMessage.command and not err) or (self.currentMessage.command == 68 and self.retryCount == 2) then -- 68 = MSP_REBOOT
         --rf2.print("Received: {" .. joinTableItems(buf, ", ") .. "}")
@@ -87,6 +88,7 @@ function MspQueueController:processQueue()
         self.currentMessage = nil
     elseif self.retryCount > self.maxRetries then
         self.currentMessage = nil
+        rf2.invalidatePages() -- HACK, introduces another dependency on rf2. A user defined function might be better.
     end
 end
 

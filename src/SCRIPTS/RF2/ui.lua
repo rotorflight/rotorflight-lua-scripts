@@ -35,7 +35,7 @@ local foregroundColor = LINE_COLOR or SOLID
 
 local globalTextOptions = TEXT_COLOR or 0
 
-local function invalidatePages()
+rf2.invalidatePages = function ()
     Page = nil
     pageState = pageStatus.display
     collectgarbage()
@@ -47,7 +47,7 @@ local function rebootFc()
     rf2.mspQueue:add({
         command = 68, -- MSP_REBOOT
         processReply = function(self, buf)
-            invalidatePages()
+            rf2.invalidatePages()
         end,
         simulatorResponse = {}
     })
@@ -60,7 +60,7 @@ local mspEepromWrite =
         if Page.reboot then
             rebootFc()
         else
-            invalidatePages()
+            rf2.invalidatePages()
         end
     end,
     simulatorResponse = {}
@@ -80,7 +80,7 @@ rf2.settingsSaved = function()
         end
     elseif pageState ~= pageStatus.eepromWrite then
         -- If we're not already trying to write to eeprom from a previous save, then we're done.
-        invalidatePages()
+        rf2.invalidatePages()
     end
 end
 
@@ -146,7 +146,7 @@ end
 local function confirm(page)
     prevUiState = uiState
     uiState = uiStatus.confirm
-    invalidatePages()
+    rf2.invalidatePages()
     currentField = 1
     Page = assert(rf2.loadScript(page))()
     collectgarbage()
@@ -157,7 +157,7 @@ local function createPopupMenu()
     popupMenu = {}
     if uiState == uiStatus.pages then
         popupMenu[#popupMenu + 1] = { t = "Save Page", f = saveSettings }
-        popupMenu[#popupMenu + 1] = { t = "Reload", f = invalidatePages }
+        popupMenu[#popupMenu + 1] = { t = "Reload", f = rf2.invalidatePages }
     end
     popupMenu[#popupMenu + 1] = { t = "Reboot", f = rebootFc }
     popupMenu[#popupMenu + 1] = { t = "Acc Cal", f = function() confirm("CONFIRM/acc_cal.lua") end }
@@ -200,7 +200,7 @@ end
 local function incPage(inc)
     currentPage = incMax(currentPage, inc, #PageFiles)
     currentField = 1
-    invalidatePages()
+    rf2.invalidatePages()
 end
 
 local function incField(inc)
@@ -366,7 +366,7 @@ local function run_ui(event)
         end
         init = nil
         PageFiles = assert(rf2.loadScript("pages.lua"))()
-        invalidatePages()
+        rf2.invalidatePages()
         uiState = prevUiState or uiStatus.mainMenu
         prevUiState = nil
     elseif uiState == uiStatus.mainMenu then
@@ -407,7 +407,7 @@ local function run_ui(event)
             if saveTS + rf2.protocol.saveTimeout <= rf2.clock() then
                 --rf2.print("Save timeout!")
                 pageState = pageStatus.display
-                invalidatePages()
+                rf2.invalidatePages()
             end
         elseif pageState == pageStatus.display then
             if event == EVT_VIRTUAL_PREV_PAGE then
@@ -431,7 +431,7 @@ local function run_ui(event)
                 killEnterBreak = 1
                 createPopupMenu()
             elseif event == EVT_VIRTUAL_EXIT then
-                invalidatePages()
+                rf2.invalidatePages()
                 currentField = 1
                 uiState = uiStatus.mainMenu
                 return 0
@@ -491,9 +491,9 @@ local function run_ui(event)
         if event == EVT_VIRTUAL_ENTER then
             uiState = uiStatus.init
             init = Page.init
-            invalidatePages()
+            rf2.invalidatePages()
         elseif event == EVT_VIRTUAL_EXIT then
-            invalidatePages()
+            rf2.invalidatePages()
             uiState = prevUiState
             prevUiState = nil
         end
