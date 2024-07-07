@@ -12,8 +12,6 @@ PageFiles[#PageFiles + 1] = { title = "Servos", script = "servos.lua" }
 PageFiles[#PageFiles + 1] = { title = "Mixer", script = "mixer.lua" }
 PageFiles[#PageFiles + 1] = { title = "Filters", script = "filters.lua" }
 PageFiles[#PageFiles + 1] = { title = "Accelerometer trim", script = "accelerometer.lua" }
-PageFiles[#PageFiles + 1] = { title = "HWPL5 - Basic", script = "HWPL5/esc_basic.lua" }
-PageFiles[#PageFiles + 1] = { title = "HWPL5 - Advanced", script = "HWPL5/esc_advanced.lua" }
-PageFiles[#PageFiles + 1] = { title = "HWPL5 - Other", script = "HWPL5/esc_other.lua" }
+PageFiles[#PageFiles + 1] = { title = "Hobbywing Platinum V5", script = "esc_hwpl5.lua" }
 
 return PageFiles

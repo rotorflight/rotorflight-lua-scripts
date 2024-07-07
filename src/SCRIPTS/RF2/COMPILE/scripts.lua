@@ -12,6 +12,7 @@ local scripts = {
     "/SCRIPTS/RF2/MSP/sp.lua",
     "/SCRIPTS/RF2/PAGES/accelerometer.lua",
     "/SCRIPTS/RF2/PAGES/copy_profiles.lua",
+    "/SCRIPTS/RF2/PAGES/esc_hwpl5.lua",
     "/SCRIPTS/RF2/PAGES/filters.lua",
     "/SCRIPTS/RF2/PAGES/governor.lua",
     "/SCRIPTS/RF2/PAGES/pids.lua",
