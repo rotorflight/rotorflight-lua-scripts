@@ -97,6 +97,9 @@ local function saveSettings()
         saveTS = rf2.clock()
 
         if Page.values then
+            if Page.preSave then
+                payload = Page.preSave(Page)
+            end
             local payload = Page.values
             mspSaveSettings.command = Page.write
             mspSaveSettings.payload = payload
