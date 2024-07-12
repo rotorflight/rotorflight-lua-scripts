@@ -117,7 +117,10 @@ local mspLoadSettings =
         rf2.print("Page is processing reply for cmd "..tostring(self.command).." len buf: "..#buf.." expected: "..Page.minBytes)
         Page.values = buf
         if Page.postRead then
-            Page.postRead(Page)
+            if Page.postRead(Page) == -1 then
+                Page.values = nil
+                return
+             end
         end
         rf2.dataBindFields()
         if Page.postLoad then

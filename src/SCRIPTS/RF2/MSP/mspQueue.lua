@@ -79,6 +79,11 @@ function MspQueueController:processQueue()
 
     if cmd then rf2.print("Received cmd: "..tostring(cmd)) end
 
+    -- if cmd == 217 then   -- MSP_ESC_PARAMETERS
+    --     buf = self.currentMessage.simulatorResponse
+    --     err = nil
+    -- end
+
     if (cmd == self.currentMessage.command and not err) or (self.currentMessage.command == 68 and self.retryCount == 2) then -- 68 = MSP_REBOOT
         --rf2.print("Received: {" .. joinTableItems(buf, ", ") .. "}")
         if self.currentMessage.processReply then

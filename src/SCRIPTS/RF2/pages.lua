@@ -13,5 +13,6 @@ PageFiles[#PageFiles + 1] = { title = "Mixer", script = "mixer.lua" }
 PageFiles[#PageFiles + 1] = { title = "Filters", script = "filters.lua" }
 PageFiles[#PageFiles + 1] = { title = "Accelerometer trim", script = "accelerometer.lua" }
 PageFiles[#PageFiles + 1] = { title = "Hobbywing Platinum V5", script = "esc_hwpl5.lua" }
+PageFiles[#PageFiles + 1] = { title = "Scorpion Tribunus", script = "esc_scorp.lua" }
 
 return PageFiles
