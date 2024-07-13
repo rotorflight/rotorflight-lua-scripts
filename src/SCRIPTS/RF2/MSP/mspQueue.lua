@@ -56,6 +56,7 @@ function MspQueueController:processQueue()
     if not rf2.runningInSimulator then
         if self.lastTimeCommandSent == 0 or self.lastTimeCommandSent + 0.5 < rf2.clock() then
             if self.currentMessage.payload then
+                --rf2.log("Sending  cmd "..self.currentMessage.command..": {" .. joinTableItems(self.currentMessage.payload, ", ") .. "}")
                 rf2.protocol.mspWrite(self.currentMessage.command, self.currentMessage.payload)
             else
                 rf2.protocol.mspWrite(self.currentMessage.command, {})
@@ -85,7 +86,7 @@ function MspQueueController:processQueue()
     -- end
 
     if (cmd == self.currentMessage.command and not err) or (self.currentMessage.command == 68 and self.retryCount == 2) then -- 68 = MSP_REBOOT
-        --rf2.print("Received: {" .. joinTableItems(buf, ", ") .. "}")
+        --rf2.log("Received cmd "..cmd..": {" .. joinTableItems(buf, ", ") .. "}")
         if self.currentMessage.processReply then
             self.currentMessage:processReply(buf)
         end

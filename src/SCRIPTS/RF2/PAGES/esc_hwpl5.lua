@@ -138,11 +138,11 @@ return {
 
         -- HW ver
         l = self.labels[2]
-        l.t = getText(self.values, 2+17, 16)
+        l.t = "HW: "..getText(self.values, 2+17, 16)
 
         -- FW ver
         l = self.labels[3]
-        l.t = getText(self.values, 2+1, 16)
+        l.t = "FW:"..getText(self.values, 2+1, 16)
 
         -- BEC offset
         local f = self.fields[3]
