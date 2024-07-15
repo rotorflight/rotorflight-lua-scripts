@@ -79,6 +79,7 @@ function MspQueueController:processQueue()
     end
 
     if cmd then rf2.print("Received cmd: "..tostring(cmd)) end
+    if err then rf2.print("  ERROR flag set!") end
 
     -- if cmd == 217 then   -- MSP_ESC_PARAMETERS
     --     buf = self.currentMessage.simulatorResponse
