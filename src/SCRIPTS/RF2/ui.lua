@@ -1,4 +1,4 @@
-local LUA_VERSION = "2.0.1 - 240701"
+local LUA_VERSION = "2.1.0 - 240715"
 
 local uiStatus =
 {
@@ -29,13 +29,14 @@ local pageScrollY = 0
 local mainMenuScrollY = 0
 local PageFiles, Page, init, popupMenu
 local scrollSpeedTS = 0
+local displayMessage
 
 local backgroundFill = TEXT_BGCOLOR or ERASE
 local foregroundColor = LINE_COLOR or SOLID
 
 local globalTextOptions = TEXT_COLOR or 0
 
-rf2.invalidatePages = function ()
+invalidatePages = function ()
     Page = nil
     pageState = pageStatus.display
     collectgarbage()
@@ -47,7 +48,7 @@ local function rebootFc()
     rf2.mspQueue:add({
         command = 68, -- MSP_REBOOT
         processReply = function(self, buf)
-            rf2.invalidatePages()
+            invalidatePages()
         end,
         simulatorResponse = {}
     })
@@ -60,7 +61,7 @@ local mspEepromWrite =
         if Page.reboot then
             rebootFc()
         else
-            rf2.invalidatePages()
+            invalidatePages()
         end
     end,
     simulatorResponse = {}
@@ -80,7 +81,7 @@ rf2.settingsSaved = function()
         end
     elseif pageState ~= pageStatus.eepromWrite then
         -- If we're not already trying to write to eeprom from a previous save, then we're done.
-        rf2.invalidatePages()
+        invalidatePages()
     end
 end
 
@@ -102,6 +103,12 @@ local function saveSettings()
             mspSaveSettings.payload = payload
             mspSaveSettings.simulatorResponse = {}
             rf2.mspQueue:add(mspSaveSettings)
+            rf2.mspQueue.errorHandler = function()
+                displayMessage = {
+                    title = "Save error",
+                    text = "Make sure your heli\nis disarmed."
+                }
+            end
         elseif type(Page.write) == "function" then
             Page.write(Page)
         end
@@ -146,7 +153,7 @@ end
 local function confirm(page)
     prevUiState = uiState
     uiState = uiStatus.confirm
-    rf2.invalidatePages()
+    invalidatePages()
     currentField = 1
     Page = assert(rf2.loadScript(page))()
     collectgarbage()
@@ -157,7 +164,7 @@ local function createPopupMenu()
     popupMenu = {}
     if uiState == uiStatus.pages then
         popupMenu[#popupMenu + 1] = { t = "Save Page", f = saveSettings }
-        popupMenu[#popupMenu + 1] = { t = "Reload", f = rf2.invalidatePages }
+        popupMenu[#popupMenu + 1] = { t = "Reload", f = invalidatePages }
     end
     popupMenu[#popupMenu + 1] = { t = "Reboot", f = rebootFc }
     popupMenu[#popupMenu + 1] = { t = "Acc Cal", f = function() confirm("CONFIRM/acc_cal.lua") end }
@@ -200,7 +207,7 @@ end
 local function incPage(inc)
     currentPage = incMax(currentPage, inc, #PageFiles)
     currentField = 1
-    rf2.invalidatePages()
+    invalidatePages()
 end
 
 local function incField(inc)
@@ -233,10 +240,23 @@ local function getLineSpacing()
 end
 
 local function drawTextMultiline(x, y, text, options)
-    local lines = {}
     for str in string.gmatch(text, "([^\n]+)") do
         lcd.drawText(x, y, str, options)
         y = y + getLineSpacing()
+    end
+end
+
+local function drawMessage(title, message)
+    if rf2.radio.highRes then
+        lcd.drawFilledRectangle(50, 40, LCD_W - 100, LCD_H - 80, TITLE_BGCOLOR)
+        lcd.drawText(60, 45, title, MENU_TITLE_COLOR)
+        lcd.drawFilledRectangle(50, 70, LCD_W - 100, LCD_H - 100, backgroundFill)
+        lcd.drawRectangle(50, 40, LCD_W - 100, LCD_H - 80, SOLID)
+        drawTextMultiline(70, 80, message)
+    else
+        lcd.drawFilledRectangle(0, 0, LCD_W, 10, FORCE)
+        lcd.drawText(1, 1, title, INVERS)
+        drawTextMultiline(5, 5 + getLineSpacing(), message)
     end
 end
 
@@ -340,7 +360,14 @@ end
 
 local function run_ui(event)
     --rf2.print("uiState: "..uiState.." pageState: "..pageState)
-    if popupMenu then
+    if displayMessage then
+        lcd.clear()
+        drawMessage(displayMessage.title, displayMessage.text)
+        if event == EVT_VIRTUAL_EXIT or event == EVT_VIRTUAL_ENTER then
+            displayMessage = nil
+            invalidatePages()
+        end
+    elseif popupMenu then
         drawPopupMenu()
         if event == EVT_VIRTUAL_EXIT then
             popupMenu = nil
@@ -366,7 +393,7 @@ local function run_ui(event)
         end
         init = nil
         PageFiles = assert(rf2.loadScript("pages.lua"))()
-        rf2.invalidatePages()
+        invalidatePages()
         uiState = prevUiState or uiStatus.mainMenu
         prevUiState = nil
     elseif uiState == uiStatus.mainMenu then
@@ -407,7 +434,7 @@ local function run_ui(event)
             if saveTS + rf2.protocol.saveTimeout <= rf2.clock() then
                 --rf2.print("Save timeout!")
                 pageState = pageStatus.display
-                rf2.invalidatePages()
+                invalidatePages()
             end
         elseif pageState == pageStatus.display then
             if event == EVT_VIRTUAL_PREV_PAGE then
@@ -431,7 +458,7 @@ local function run_ui(event)
                 killEnterBreak = 1
                 createPopupMenu()
             elseif event == EVT_VIRTUAL_EXIT then
-                rf2.invalidatePages()
+                invalidatePages()
                 currentField = 1
                 uiState = uiStatus.mainMenu
                 return 0
@@ -442,9 +469,9 @@ local function run_ui(event)
                 local scrollSpeed = rf2.clock() - scrollSpeedTS
                 --rf2.print(scrollSpeed)
                 if scrollSpeed < 0.075 then
-                    scrollSpeedMultiplier = 10
-                elseif scrollSpeed < 0.15 then
                     scrollSpeedMultiplier = 5
+                --elseif scrollSpeed < 0.15 then
+                --    scrollSpeedMultiplier = 5
                 end
                 scrollSpeedTS = rf2.clock()
             end
@@ -491,9 +518,9 @@ local function run_ui(event)
         if event == EVT_VIRTUAL_ENTER then
             uiState = uiStatus.init
             init = Page.init
-            rf2.invalidatePages()
+            invalidatePages()
         elseif event == EVT_VIRTUAL_EXIT then
-            rf2.invalidatePages()
+            invalidatePages()
             uiState = prevUiState
             prevUiState = nil
         end
