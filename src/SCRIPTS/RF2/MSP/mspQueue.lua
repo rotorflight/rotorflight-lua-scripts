@@ -9,6 +9,7 @@ function MspQueueController.new()
     self.lastTimeCommandSent = 0
     self.retryCount = 0
     self.maxRetries = 3
+    self.errorHandler = nil
     return self
 end
 
@@ -78,6 +79,7 @@ function MspQueueController:processQueue()
     end
 
     if cmd then rf2.print("Received cmd: "..tostring(cmd)) end
+    if err then rf2.print("  err: "..tostring(err)) end
 
     if (cmd == self.currentMessage.command and not err) or (self.currentMessage.command == 68 and self.retryCount == 2) then -- 68 = MSP_REBOOT
         --rf2.print("Received: {" .. joinTableItems(buf, ", ") .. "}")
@@ -86,6 +88,11 @@ function MspQueueController:processQueue()
         end
         self.currentMessage = nil
     elseif self.retryCount > self.maxRetries then
+        rf2.print("Max retries reached, aborting queue")
+        self.messageQueue = {}
+        if self.errorHandler then
+            self.errorHandler(self.currentMessage)
+        end
         self.currentMessage = nil
     end
 end
