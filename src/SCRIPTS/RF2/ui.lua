@@ -36,7 +36,7 @@ local foregroundColor = LINE_COLOR or SOLID
 
 local globalTextOptions = TEXT_COLOR or 0
 
-invalidatePages = function ()
+local function invalidatePages()
     Page = nil
     pageState = pageStatus.display
     collectgarbage()
@@ -470,8 +470,6 @@ local function run_ui(event)
                 --rf2.print(scrollSpeed)
                 if scrollSpeed < 0.075 then
                     scrollSpeedMultiplier = 5
-                --elseif scrollSpeed < 0.15 then
-                --    scrollSpeedMultiplier = 5
                 end
                 scrollSpeedTS = rf2.clock()
             end
