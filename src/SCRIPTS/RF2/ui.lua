@@ -1,4 +1,4 @@
-local LUA_VERSION = "2.0.1 - 240701"
+local LUA_VERSION = "2.1.0 - 240721"
 
 local uiStatus =
 {
@@ -29,6 +29,7 @@ local pageScrollY = 0
 local mainMenuScrollY = 0
 local PageFiles, Page, init, popupMenu
 local scrollSpeedTS = 0
+local displayMessage
 
 local backgroundFill = TEXT_BGCOLOR or ERASE
 local foregroundColor = LINE_COLOR or SOLID
@@ -105,6 +106,12 @@ local function saveSettings()
             mspSaveSettings.payload = payload
             mspSaveSettings.simulatorResponse = {}
             rf2.mspQueue:add(mspSaveSettings)
+            rf2.mspQueue.errorHandler = function()
+                displayMessage = {
+                    title = "Save error",
+                    text = "Make sure your heli\nis disarmed."
+                }
+            end
         elseif type(Page.write) == "function" then
             Page.write(Page)
         end
@@ -241,10 +248,23 @@ local function getLineSpacing()
 end
 
 local function drawTextMultiline(x, y, text, options)
-    local lines = {}
     for str in string.gmatch(text, "([^\n]+)") do
         lcd.drawText(x, y, str, options)
         y = y + getLineSpacing()
+    end
+end
+
+local function drawMessage(title, message)
+    if rf2.radio.highRes then
+        lcd.drawFilledRectangle(50, 40, LCD_W - 100, LCD_H - 80, TITLE_BGCOLOR)
+        lcd.drawText(60, 45, title, MENU_TITLE_COLOR)
+        lcd.drawFilledRectangle(50, 70, LCD_W - 100, LCD_H - 100, backgroundFill)
+        lcd.drawRectangle(50, 40, LCD_W - 100, LCD_H - 80, SOLID)
+        drawTextMultiline(70, 80, message)
+    else
+        lcd.drawFilledRectangle(0, 0, LCD_W, 10, FORCE)
+        lcd.drawText(1, 1, title, INVERS)
+        drawTextMultiline(5, 5 + getLineSpacing(), message)
     end
 end
 
@@ -348,7 +368,14 @@ end
 
 local function run_ui(event)
     --rf2.print("uiState: "..uiState.." pageState: "..pageState)
-    if popupMenu then
+    if displayMessage then
+        lcd.clear()
+        drawMessage(displayMessage.title, displayMessage.text)
+        if event == EVT_VIRTUAL_EXIT or event == EVT_VIRTUAL_ENTER then
+            displayMessage = nil
+            invalidatePages()
+        end
+    elseif popupMenu then
         drawPopupMenu()
         if event == EVT_VIRTUAL_EXIT then
             popupMenu = nil
@@ -450,8 +477,6 @@ local function run_ui(event)
                 local scrollSpeed = rf2.clock() - scrollSpeedTS
                 --rf2.print(scrollSpeed)
                 if scrollSpeed < 0.075 then
-                    scrollSpeedMultiplier = 10
-                elseif scrollSpeed < 0.15 then
                     scrollSpeedMultiplier = 5
                 end
                 scrollSpeedTS = rf2.clock()
