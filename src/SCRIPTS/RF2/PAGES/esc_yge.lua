@@ -159,7 +159,7 @@ local function updateRatio(field, page)
     l.t = string.format("%.2f", v)..":1"
 end
 
-labels[1] = { t = "ESC",                    x = x,          y = inc.y(lineSpacing) }
+labels[1] = { t = "ESC not ready, waiting...", x = x,       y = inc.y(lineSpacing) }
 labels[2] = { t = "---",                    x = x + indent, y = inc.y(lineSpacing) }
 labels[3] = { t = "---",                    x = x + indent, y = inc.y(lineSpacing) }
 
@@ -181,7 +181,6 @@ fields[10] = { t = "Throttle Response",     x = x + indent, y = inc.y(lineSpacin
 fields[11] = { t = "Motor Timing",          x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = #motorTiming, vals = { 2+7, 2+8 }, table=motorTiming }
 fields[12] = { t = "Active Freewheel",      x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = #freewheel, vals = { 2+21, 2+22 }, table = freewheel }
 fields[13] = { t = "F3C Autorotation",      x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1, vals = { 2+53 }, table = offOn }
-
 
 -- Other
 labels[6] = { t = "Governor",               x = x,          y = inc.y(lineSpacing) }
@@ -218,6 +217,7 @@ return {
             self.labels[1].t = "Invalid ESC detected"
             return -1
         end
+        self.readOnly = bit32.band(self.values[2], 0x40) == 0x40
     end,
 
     postLoad = function(self)

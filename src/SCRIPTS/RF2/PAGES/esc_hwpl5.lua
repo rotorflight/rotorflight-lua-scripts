@@ -68,7 +68,7 @@ local brakeType = {
     "Reverse"
 }
 
-labels[1] = { t = "ESC",                x = x,          y = inc.y(lineSpacing) }
+labels[1] = { t = "ESC not ready, waiting...", x = x,   y = inc.y(lineSpacing) }
 labels[2] = { t = "---",                x = x + indent, y = inc.y(lineSpacing) }
 labels[3] = { t = "---",                x = x + indent, y = inc.y(lineSpacing) }
 

@@ -162,7 +162,9 @@ local function createPopupMenu()
     popupMenuActive = 1
     popupMenu = {}
     if uiState == uiStatus.pages then
-        popupMenu[#popupMenu + 1] = { t = "Save Page", f = saveSettings }
+        if not Page.readOnly then
+            popupMenu[#popupMenu + 1] = { t = "Save Page", f = saveSettings }
+        end
         popupMenu[#popupMenu + 1] = { t = "Reload", f = invalidatePages }
     end
     popupMenu[#popupMenu + 1] = { t = "Reboot", f = rebootFc }
