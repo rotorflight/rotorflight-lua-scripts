@@ -21,5 +21,7 @@ rf2 = {
 
     clock = function()
         return getTime() / 100
-    end
+    end,
+
+    apiVersion = nil
 }
