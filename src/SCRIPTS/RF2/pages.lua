@@ -12,8 +12,11 @@ PageFiles[#PageFiles + 1] = { title = "Servos", script = "servos.lua" }
 PageFiles[#PageFiles + 1] = { title = "Mixer", script = "mixer.lua" }
 PageFiles[#PageFiles + 1] = { title = "Filters", script = "filters.lua" }
 PageFiles[#PageFiles + 1] = { title = "Accelerometer trim", script = "accelerometer.lua" }
-PageFiles[#PageFiles + 1] = { title = "ESC - HW Platinum V5", script = "esc_hwpl5.lua" }
-PageFiles[#PageFiles + 1] = { title = "ESC - Scorpion Tribunus", script = "esc_scorp.lua" }
-PageFiles[#PageFiles + 1] = { title = "ESC - YGE", script = "esc_yge.lua" }
+
+if rf2.apiVersion >= 12.07 then
+    PageFiles[#PageFiles + 1] = { title = "ESC - HW Platinum V5", script = "esc_hwpl5.lua" }
+    PageFiles[#PageFiles + 1] = { title = "ESC - Scorpion Tribunus", script = "esc_scorp.lua" }
+    PageFiles[#PageFiles + 1] = { title = "ESC - YGE", script = "esc_yge.lua" }
+end
 
 return PageFiles
