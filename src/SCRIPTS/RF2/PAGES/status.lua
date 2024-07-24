@@ -1,5 +1,6 @@
 local template = assert(rf2.loadScript(rf2.radio.template))()
 local mspStatus = assert(rf2.loadScript("MSP/mspStatus.lua"))()
+local mspDataflash = assert(rf2.loadScript("MSP/mspDataflash.lua"))()
 local margin = template.margin
 local indent = template.indent
 local lineSpacing = template.lineSpacing
@@ -12,10 +13,13 @@ local inc = { x = function(val) x = x + val return x end, y = function(val) y = 
 local labels = {}
 local fields = {}
 local fcStatus = {}
+local dataflashSummary = {}
 
-fields[#fields + 1] = { x = 1000, y = y, min = 0, max = 0 }
-labels[#labels + 1] = { t = "Arming disabled flags", x = x,          y = inc.y(lineSpacing) }
-labels[#labels + 1] = { t = "",                      x = x + indent, y = inc.y(lineSpacing) }
+labels[#labels + 1] = { t = "Dataflash free space",  x = x,              y = inc.y(lineSpacing) }
+labels[#labels + 1] = { t = "",                      x = x + indent,     y = inc.y(lineSpacing) }
+fields[#fields + 1] = { t = "[Erase]",               x = x + indent * 7, y = y }
+labels[#labels + 1] = { t = "Arming disabled flags", x = x,              y = inc.y(lineSpacing) }
+labels[#labels + 1] = { t = "",                      x = x + indent,     y = inc.y(lineSpacing) }
 
 local function armingDisableFlagsToString(flags)
     local t = ""
@@ -53,21 +57,25 @@ local function armingDisableFlagsToString(flags)
     return t
 end
 
-local function setValues()
-    labels[2].t = armingDisableFlagsToString(fcStatus.armingDisableFlags)
+local function getFreeDataflashSpace()
+    if not dataflashSummary.supported then return "N/A" end
+    local freeSpace = dataflashSummary.totalSize - dataflashSummary.usedSize
+    return string.format("%.1f MB", freeSpace / (1024 * 1024))
 end
 
 return {
     read = function(self)
         mspStatus.getStatus(self.onProcessedMspStatus, self)
+        mspDataflash.getDataflashSummary(self.onReceivedDataflashSummary, self)
     end,
     write       = nil,
     reboot      = false,
     eepromWrite = true,
-    title       = "Copy",
+    title       = "Status",
     minBytes    = 3,
     labels      = labels,
     fields      = fields,
+    readOnly    = true,
     timer = function(self)
         if rf2.mspQueue:isProcessed() then
             mspStatus.getStatus(self.onProcessedMspStatus, self)
@@ -75,7 +83,22 @@ return {
     end,
     onProcessedMspStatus = function(self, status)
         fcStatus = status
-        setValues()
+        labels[4].t = armingDisableFlagsToString(fcStatus.armingDisableFlags)
+    end,
+    onClickErase = function(field, self)
+        rf2.print("Clicked!")
+        mspDataflash.eraseDataflash(self.onErasedDataflash, self)
+    end,
+    onErasedDataflash = function(self, _)
+        rf2.print("Dataflash erased!")
+        mspDataflash.getDataflashSummary(self.onReceivedDataflashSummary, self)
+    end,
+    onReceivedDataflashSummary = function(self, summary)
+        dataflashSummary = summary
+        labels[2].t = getFreeDataflashSpace()
+        if dataflashSummary.supported then
+            fields[1].preEdit = self.onClickErase
+        end
         self.isReady = true
     end,
 }
