@@ -260,6 +260,10 @@ local function drawMessage(title, message)
     end
 end
 
+local function fieldIsButton(f)
+    return f.t and not (f.data or f.value)
+end
+
 local function drawScreen()
     local yMinLim = rf2.radio.yMinLimit
     local yMaxLim = rf2.radio.yMaxLimit
@@ -305,7 +309,9 @@ local function drawScreen()
         end
         local y = f.y - pageScrollY
         if y >= 0 and y <= LCD_H then
-            if f.t then
+            if fieldIsButton(f) then
+                val = f.t
+            elseif f.t then
                 lcd.drawText(f.x, y, f.t, textOptions)
             end
             lcd.drawText(f.sp or f.x, y, val, valueOptions)
@@ -449,7 +455,9 @@ local function run_ui(event)
             elseif Page and event == EVT_VIRTUAL_ENTER then
                 local f = Page.fields[currentField]
                 if (Page.isReady or (Page.values and f.vals and Page.values[f.vals[#f.vals]])) and not f.ro then
-                    pageState = pageStatus.editing
+                    if not fieldIsButton(Page.fields[currentField]) then
+                        pageState = pageStatus.editing
+                    end
                     if Page.fields[currentField].preEdit then
                         Page.fields[currentField]:preEdit(Page)
                     end
