@@ -15,6 +15,7 @@ local pageStatus =
     saving  = 3,
     eepromWrite = 4,
     rebooting = 5,
+    waiting = 6
 }
 
 local uiState = uiStatus.init
@@ -30,6 +31,7 @@ local mainMenuScrollY = 0
 local PageFiles, Page, init, popupMenu
 local scrollSpeedTS = 0
 local displayMessage
+local waitMessage
 
 local backgroundFill = TEXT_BGCOLOR or ERASE
 local foregroundColor = LINE_COLOR or SOLID
@@ -40,6 +42,20 @@ local function invalidatePages()
     Page = nil
     pageState = pageStatus.display
     collectgarbage()
+end
+
+rf2.setWaitMessage = function(message)
+    pageState = pageStatus.waiting
+    waitMessage = message
+end
+
+rf2.clearWaitMessage = function()
+    pageState = pageStatus.display
+    waitMessage = nil
+end
+
+rf2.displayMessage = function(title, text)
+    displayMessage = { title = title, text = text }
 end
 
 local function rebootFc()
@@ -66,10 +82,6 @@ local mspEepromWrite =
     end,
     simulatorResponse = {}
 }
-
-local function eepromWrite()
-    rf2.mspQueue:add(mspEepromWrite)
-end
 
 rf2.settingsSaved = function()
     -- check if this page requires writing to eeprom to save (most do)
@@ -104,10 +116,7 @@ local function saveSettings()
             mspSaveSettings.simulatorResponse = {}
             rf2.mspQueue:add(mspSaveSettings)
             rf2.mspQueue.errorHandler = function()
-                displayMessage = {
-                    title = "Save error",
-                    text = "Make sure your heli\nis disarmed."
-                }
+                rf2.displayMessage("Save error", "Make sure your heli\nis disarmed.")
             end
         elseif type(Page.write) == "function" then
             Page.write(Page)
@@ -131,6 +140,8 @@ local mspLoadSettings =
 }
 
 rf2.readPage = function()
+    collectgarbage()
+
     if type(Page.read) == "function" then
         Page.read(Page)
     else
@@ -505,7 +516,7 @@ local function run_ui(event)
         end
         lcd.clear()
         drawScreen()
-        if pageState == pageStatus.saving or pageState == pageStatus.eepromWrite or pageState == pageStatus.rebooting then
+        if pageState == pageStatus.saving or pageState == pageStatus.eepromWrite or pageState == pageStatus.rebooting or pageState == pageStatus.waiting then
             local saveMsg = ""
             if pageState == pageStatus.saving then
                 saveMsg = "Saving..."
@@ -513,6 +524,8 @@ local function run_ui(event)
                 saveMsg = "Updating..."
             elseif pageState == pageStatus.rebooting then
                 saveMsg = "Rebooting..."
+            elseif pageState == pageStatus.waiting then
+                saveMsg = waitMessage
             end
             lcd.drawFilledRectangle(rf2.radio.SaveBox.x,rf2.radio.SaveBox.y,rf2.radio.SaveBox.w,rf2.radio.SaveBox.h,backgroundFill)
             lcd.drawRectangle(rf2.radio.SaveBox.x,rf2.radio.SaveBox.y,rf2.radio.SaveBox.w,rf2.radio.SaveBox.h,SOLID)

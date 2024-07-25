@@ -14,12 +14,13 @@ local labels = {}
 local fields = {}
 local fcStatus = {}
 local dataflashSummary = {}
+local erasingDataflash = false
 
 labels[#labels + 1] = { t = "Dataflash free space",  x = x,              y = inc.y(lineSpacing) }
-labels[#labels + 1] = { t = "",                      x = x + indent,     y = inc.y(lineSpacing) }
+labels[#labels + 1] = { t = "---",                   x = x + indent,     y = inc.y(lineSpacing) }
 fields[#fields + 1] = { t = "[Erase]",               x = x + indent * 7, y = y }
 labels[#labels + 1] = { t = "Arming disabled flags", x = x,              y = inc.y(lineSpacing) }
-labels[#labels + 1] = { t = "",                      x = x + indent,     y = inc.y(lineSpacing) }
+labels[#labels + 1] = { t = "---",                   x = x + indent,     y = inc.y(lineSpacing) }
 
 local function armingDisableFlagsToString(flags)
     local t = ""
@@ -54,6 +55,7 @@ local function armingDisableFlagsToString(flags)
             if i == 25 then t = t .. "Arm Switch" end
         end
     end
+    if t == "" then t = "-" end
     return t
 end
 
@@ -70,31 +72,42 @@ return {
     end,
     write       = nil,
     reboot      = false,
-    eepromWrite = true,
+    eepromWrite = false,
     title       = "Status",
-    minBytes    = 3,
     labels      = labels,
     fields      = fields,
     readOnly    = true,
+
     timer = function(self)
         if rf2.mspQueue:isProcessed() then
             mspStatus.getStatus(self.onProcessedMspStatus, self)
+            if erasingDataflash then
+                mspDataflash.getDataflashSummary(self.onReceivedDataflashSummary, self)
+            end
         end
     end,
+
     onProcessedMspStatus = function(self, status)
         fcStatus = status
         labels[4].t = armingDisableFlagsToString(fcStatus.armingDisableFlags)
     end,
-    onClickErase = function(field, self)
-        rf2.print("Clicked!")
-        mspDataflash.eraseDataflash(self.onErasedDataflash, self)
-    end,
+
     onErasedDataflash = function(self, _)
-        rf2.print("Dataflash erased!")
         mspDataflash.getDataflashSummary(self.onReceivedDataflashSummary, self)
     end,
+
+    onClickErase = function(field, self)
+        erasingDataflash = true
+        rf2.setWaitMessage("Erasing...")
+        mspDataflash.eraseDataflash(self.onErasedDataflash, self)
+    end,
+
     onReceivedDataflashSummary = function(self, summary)
         dataflashSummary = summary
+        if summary.ready then
+            erasingDataflash = false
+            rf2.clearWaitMessage()
+        end
         labels[2].t = getFreeDataflashSpace()
         if dataflashSummary.supported then
             fields[1].preEdit = self.onClickErase
