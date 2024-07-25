@@ -1,6 +1,7 @@
 local template = assert(rf2.loadScript(rf2.radio.template))()
 local mspStatus = assert(rf2.loadScript("MSP/mspStatus.lua"))()
 local mspDataflash = assert(rf2.loadScript("MSP/mspDataflash.lua"))()
+local mspSetProfile = assert(rf2.loadScript("MSP/mspSetProfile.lua"))()
 local margin = template.margin
 local indent = template.indent
 local lineSpacing = template.lineSpacing
@@ -15,12 +16,29 @@ local fields = {}
 local fcStatus = {}
 local dataflashSummary = {}
 local erasingDataflash = false
+local editing = false
+
+local startEditing = function(field, page)
+    editing = true
+end
+
+local endPidEditing = function(field, page)
+    editing = false
+    mspSetProfile.setPidProfile(field.data.value)
+end
+
+local endRateEditing = function(field, page)
+    editing = false
+    mspSetProfile.setRateProfile(field.data.value)
+end
 
 labels[#labels + 1] = { t = "Dataflash free space",  x = x,              y = inc.y(lineSpacing) }
 labels[#labels + 1] = { t = "---",                   x = x + indent,     y = inc.y(lineSpacing) }
 fields[#fields + 1] = { t = "[Erase]",               x = x + indent * 7, y = y }
 labels[#labels + 1] = { t = "Arming disabled flags", x = x,              y = inc.y(lineSpacing) }
 labels[#labels + 1] = { t = "---",                   x = x + indent,     y = inc.y(lineSpacing) }
+fields[#fields + 1] = { t = "Curr PID profile",      x = x,              y = inc.y(lineSpacing), sp = x + sp, data = { value = 0, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = startEditing, postEdit = endPidEditing }
+fields[#fields + 1] = { t = "Curr Rate profile",     x = x,              y = inc.y(lineSpacing), sp = x + sp, data = { value = 0, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = startEditing, postEdit = endRateEditing }
 
 local function armingDisableFlagsToString(flags)
     local t = ""
@@ -80,7 +98,9 @@ return {
 
     timer = function(self)
         if rf2.mspQueue:isProcessed() then
-            mspStatus.getStatus(self.onProcessedMspStatus, self)
+            if not editing then
+                mspStatus.getStatus(self.onProcessedMspStatus, self)
+            end
             if erasingDataflash then
                 mspDataflash.getDataflashSummary(self.onReceivedDataflashSummary, self)
             end
@@ -90,6 +110,8 @@ return {
     onProcessedMspStatus = function(self, status)
         fcStatus = status
         labels[4].t = armingDisableFlagsToString(fcStatus.armingDisableFlags)
+        fields[2].data.value = fcStatus.profile
+        fields[3].data.value = fcStatus.rateProfile
     end,
 
     onErasedDataflash = function(self, _)
