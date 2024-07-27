@@ -465,7 +465,7 @@ local function run_ui(event)
                 incField(1)
             elseif Page and event == EVT_VIRTUAL_ENTER then
                 local f = Page.fields[currentField]
-                if (Page.isReady or (Page.values and f.vals and Page.values[f.vals[#f.vals]])) and not f.ro then
+                if (Page.isReady or (Page.values and f.vals and Page.values[f.vals[#f.vals]])) and not f.readOnly then
                     if not fieldIsButton(Page.fields[currentField]) then
                         pageState = pageStatus.editing
                     end

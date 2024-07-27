@@ -15,7 +15,7 @@ labels[#labels + 1] = { t = "Make sure the craft is level", x = x, y = inc.y(lin
 labels[#labels + 1] = { t = "and stable, then press",       x = x, y = inc.y(lineSpacing) }
 labels[#labels + 1] = { t = "[ENTER] to calibrate, or",     x = x, y = inc.y(lineSpacing) }
 labels[#labels + 1] = { t = "[EXIT] to cancel.",            x = x, y = inc.y(lineSpacing) }
-fields[#fields + 1] = { x = x, y = inc.y(lineSpacing), value = "", ro = true }
+fields[#fields + 1] = { x = x, y = inc.y(lineSpacing), value = "", readOnly = true }
 
 return {
     title  = "Accelerometer",
