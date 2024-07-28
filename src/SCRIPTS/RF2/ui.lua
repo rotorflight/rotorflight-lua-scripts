@@ -1,4 +1,4 @@
-local LUA_VERSION = "2.1.0 - 240721"
+local LUA_VERSION = "2.1.0 - 240728"
 
 local uiStatus =
 {
@@ -272,7 +272,7 @@ local function drawMessage(title, message)
 end
 
 local function fieldIsButton(f)
-    return f.t and not (f.data or f.value)
+    return f.t and string.sub(f.t, 1, 1) == "[" and not (f.data or f.value)
 end
 
 local function drawScreen()
