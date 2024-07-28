@@ -14,6 +14,7 @@ local fields = {}
 local servoConfigs = {}
 local selectedServoIndex = 0
 local updateSelectedServoConfiguration = false
+local overrideAllServos = false
 
 local  function setValues(servoIndex)
     fields[1].value = servoIndex
@@ -46,6 +47,25 @@ local function onPostEditCenter(field, page)
     mspServos.disableServoOverride(selectedServoIndex)
 end
 
+local function onClickOverride(field, page)
+    --rf2.lcdNeedsInvalidate = true
+    if not overrideAllServos then
+        overrideAllServos = true
+        field.t = "[Disable override]"
+    else
+        overrideAllServos = false
+        field.t = "[Override all servos]"
+    end
+
+    for i = 0, #servoConfigs do
+        if overrideAllServos then
+            mspServos.enableServoOverride(i)
+        else
+            mspServos.disableServoOverride(i)
+        end
+    end
+end
+
 fields[1] = { t = "Servo",      x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0,     max = 7,     table = { [0] = "ELEVATOR", "CYCL L", "CYCL R", "TAIL" }, postEdit = onChangeServo }
 fields[2] = { t = "Center",     x = x + indent, y = inc.y(lineSpacing), sp = x + sp, id = "servoMid", preEdit = onPreEditCenter, change = onChangeCenter, postEdit = onPostEditCenter }
 fields[3] = { t = "Min",        x = x + indent, y = inc.y(lineSpacing), sp = x + sp, id = "servoMin" }
@@ -54,6 +74,7 @@ fields[5] = { t = "Scale neg",  x = x + indent, y = inc.y(lineSpacing), sp = x +
 fields[6] = { t = "Scale pos",  x = x + indent, y = inc.y(lineSpacing), sp = x + sp, id = "servoScalePos" }
 fields[7] = { t = "Rate",       x = x + indent, y = inc.y(lineSpacing), sp = x + sp, id = "servoRate" }
 fields[8] = { t = "Speed",      x = x + indent, y = inc.y(lineSpacing), sp = x + sp, id = "servoSpeed" }
+fields[9] = { t = "[Override all servos]", x = x + indent * 2, y = inc.y(lineSpacing), preEdit = onClickOverride }
 
 local function receivedServoConfigurations(page, configs)
     servoConfigs = configs
