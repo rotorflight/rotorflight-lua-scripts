@@ -480,6 +480,10 @@ local function run_ui(event)
                 invalidatePages()
                 currentField = 1
                 uiState = uiStatus.mainMenu
+                if rf2.logfile then
+                    io.close(rf2.logfile)
+                    rf2.logfile = nil
+                end
                 return 0
             end
         elseif pageState == pageStatus.editing then

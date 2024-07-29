@@ -5,9 +5,10 @@ rf2 = {
     loadScript = loadScript,
 
     log = function(str)
-        local f = io.open("/LOGS/rf2.log", 'a')
-        io.write(f, tostring(str) .. "\n")
-        io.close(f)
+        if not rf2.logfile then
+            rf2.logfile = io.open("/LOGS/rf2.log", "a")
+        end
+        io.write(rf2.logfile, string.format("%.2f ", rf2.clock()) .. tostring(str) .. "\n")
     end,
 
     print = function(str)

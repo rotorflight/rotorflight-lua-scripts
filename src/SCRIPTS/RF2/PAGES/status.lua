@@ -130,7 +130,7 @@ return {
 
     onReceivedDataflashSummary = function(self, summary)
         dataflashSummary = summary
-        if summary.ready then
+        if summary.ready and erasingDataflash then
             erasingDataflash = false
             rf2.clearWaitMessage()
         end
