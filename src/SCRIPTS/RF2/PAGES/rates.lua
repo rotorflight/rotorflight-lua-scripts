@@ -13,7 +13,14 @@ local inc = { x = function(val) x = x + val return x end, y = function(val) y = 
 local labels = {}
 local fields = {}
 
-y = yMinLim - tableSpacing.header
+local endRateEditing = function(field, page)
+    mspSetProfile.setRateProfile(field.data.value, function() rf2.reloadPage() end, nil)
+end
+
+fields[#fields + 1] = { t = "Current Rate profile",   x = x,          y = inc.y(lineSpacing), sp = x + sp * 1.17, data = { value = nil, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, postEdit = endRateEditing }
+fields[#fields + 1] = { t = "Rates Type",          x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 5,      vals = { 1 }, table = { [0] = "NONE", "BETAFL", "RACEFL", "KISS", "ACTUAL", "QUICK"}, postEdit = function(self, page) page.updateRatesType(page, true) end }
+
+y = yMinLim + lineSpacing * 1.4
 labels[#labels + 1] = { t = "",      x = x, y = inc.y(tableSpacing.header) }
 labels[#labels + 1] = { t = "",      x = x, y = inc.y(tableSpacing.header) }
 labels[#labels + 1] = { t = "ROLL",  x = x, y = inc.y(tableSpacing.row) }
@@ -22,7 +29,7 @@ labels[#labels + 1] = { t = "YAW",   x = x, y = inc.y(tableSpacing.row) }
 labels[#labels + 1] = { t = "COL",   x = x, y = inc.y(tableSpacing.row) }
 
 x = x + tableSpacing.col
-y = yMinLim - tableSpacing.header
+y = yMinLim + lineSpacing * 1.4
 labels[#labels + 1] = { t = "RC",    x = x, y = inc.y(tableSpacing.header) }
 labels[#labels + 1] = { t = "Rate",  x = x, y = inc.y(tableSpacing.header) }
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 255, vals = { 2 }, scale = 100 }
@@ -31,7 +38,7 @@ fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 255, vals = { 20 }, scale = 100 }
 
 x = x + tableSpacing.col
-y = yMinLim - tableSpacing.header
+y = yMinLim + lineSpacing * 1.4
 labels[#labels + 1] = { t = "Super", x = x, y = inc.y(tableSpacing.header) }
 labels[#labels + 1] = { t = "Rate",  x = x, y = inc.y(tableSpacing.header) }
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 100, vals = { 4 }, scale = 100 }
@@ -40,7 +47,7 @@ fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 255, vals = { 22 }, scale = 100 }
 
 x = x + tableSpacing.col
-y = yMinLim - tableSpacing.header
+y = yMinLim + lineSpacing * 1.4
 labels[#labels + 1] = { t = "RC",    x = x, y = inc.y(tableSpacing.header) }
 labels[#labels + 1] = { t = "Expo",  x = x, y = inc.y(tableSpacing.header) }
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 100, vals = { 3 }, scale = 100 }
@@ -48,16 +55,8 @@ fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 100, vals = { 15 }, scale = 100 }
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 100, vals = { 21 }, scale = 100 }
 
-local endRateEditing = function(field, page)
-    mspSetProfile.setRateProfile(field.data.value, function() rf2.reloadPage() end, nil)
-end
-
 x = margin
 inc.y(lineSpacing*0.4)
-fields[#fields + 1] = { t = "Curr Rate profile",   x = x,          y = inc.y(lineSpacing), sp = x + sp, data = { value = nil, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, postEdit = endRateEditing }
-fields[#fields + 1] = { t = "Rates Type",          x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 5,      vals = { 1 }, table = { [0] = "NONE", "BETAFL", "RACEFL", "KISS", "ACTUAL", "QUICK"}, postEdit = function(self, page) page.updateRatesType(page, true) end }
-inc.y(lineSpacing*0.4)
-
 labels[#labels + 1] = { t = "Roll dynamics",       x = x,          y = inc.y(lineSpacing) }
 fields[#fields + 1] = { t = "Response time",       x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250,   vals = { 5 },                  id = "rateSetupResponse"  }
 fields[#fields + 1] = { t = "Max acceleration",    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 50000, vals = { 6,7 },   scale = 0.1, id = "rateSetupAcceleration" }
@@ -96,12 +95,12 @@ return {
         end
         for i = 1, #ratesTable.fields do
             for k, v in pairs(ratesTable.fields[i]) do
-                self.fields[i][k] = v
+                self.fields[i+2][k] = v
             end
         end
         if applyDefaults and self.ratesType ~= self.getRatesType(self) then
             for i = 1, #ratesTable.defaults do
-                local f = self.fields[i]
+                local f = self.fields[i+2]
                 f.value = ratesTable.defaults[i]
                 for idx=1, #f.vals do
                     self.values[f.vals[idx]] = bit32.rshift(math.floor(f.value*(f.scale or 1) + 0.5), (idx-1)*8)
@@ -109,7 +108,7 @@ return {
             end
         else
             for i = 1, 12 do
-                local f = self.fields[i]
+                local f = self.fields[i+2]
                 f.value = 0
                 for idx=1, #f.vals do
                     local raw_val = self.values[f.vals[idx]] or 0
@@ -126,7 +125,7 @@ return {
         mspStatus.getStatus(self.onProcessedMspStatus, self)
     end,
     onProcessedMspStatus = function(self, status)
-        fields[13].data.value = status.rateProfile
+        fields[1].data.value = status.rateProfile
         self.isReady = true
     end,
 }
