@@ -1,4 +1,6 @@
 local template = assert(rf2.loadScript(rf2.radio.template))()
+local mspSetProfile = assert(rf2.loadScript("MSP/mspSetProfile.lua"))()
+local mspStatus = assert(rf2.loadScript("MSP/mspStatus.lua"))()
 local margin = template.margin
 local indent = template.indent
 local lineSpacing = template.lineSpacing
@@ -46,8 +48,13 @@ fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 100, vals = { 15 }, scale = 100 }
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 100, vals = { 21 }, scale = 100 }
 
+local endRateEditing = function(field, page)
+    mspSetProfile.setRateProfile(field.data.value, function() rf2.reloadPage() end, nil)
+end
+
 x = margin
 inc.y(lineSpacing*0.4)
+fields[#fields + 1] = { t = "Curr Rate profile",   x = x,          y = inc.y(lineSpacing), sp = x + sp, data = { value = nil, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, postEdit = endRateEditing }
 fields[#fields + 1] = { t = "Rates Type",          x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 5,      vals = { 1 }, table = { [0] = "NONE", "BETAFL", "RACEFL", "KISS", "ACTUAL", "QUICK"}, postEdit = function(self, page) page.updateRatesType(page, true) end }
 inc.y(lineSpacing*0.4)
 
@@ -116,5 +123,10 @@ return {
     end,
     postLoad = function(self)
         self.updateRatesType(self)
+        mspStatus.getStatus(self.onProcessedMspStatus, self)
+    end,
+    onProcessedMspStatus = function(self, status)
+        fields[13].data.value = status.rateProfile
+        self.isReady = true
     end,
 }

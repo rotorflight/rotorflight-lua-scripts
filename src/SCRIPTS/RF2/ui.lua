@@ -44,6 +44,8 @@ local function invalidatePages()
     collectgarbage()
 end
 
+rf2.reloadPage = invalidatePages
+
 rf2.setWaitMessage = function(message)
     pageState = pageStatus.waiting
     waitMessage = message
@@ -294,8 +296,8 @@ local function drawScreen()
             lcd.drawText(f.x, y, f.t, textOptions)
         end
     end
-    local val = "---"
     for i=1,#Page.fields do
+        local val = "---"
         local f = Page.fields[i]
         local valueOptions = textOptions
         if i == currentField then
