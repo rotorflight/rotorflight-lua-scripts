@@ -28,14 +28,14 @@ rf2 = {
         if not rf2.oldMemoryUsage then
             collectgarbage()
             rf2.oldMemoryUsage = collectgarbage("count")
-            print(string.format("MEM %s: %d", remark, rf2.oldMemoryUsage*1024))
+            rf2.print(string.format("MEM %s: %d", remark, rf2.oldMemoryUsage*1024))
             return
         end
         collectgarbage()
         local currentMemoryUsage = collectgarbage("count")
         local increment = currentMemoryUsage - rf2.oldMemoryUsage
         if increment ~= 0 then
-            print(string.format("MEM %s: %d (+%d)", remark, currentMemoryUsage*1024, increment*1024))
+            rf2.print(string.format("MEM %s: %d (+%d)", remark, currentMemoryUsage*1024, increment*1024))
         end
         rf2.oldMemoryUsage = currentMemoryUsage
     end,
