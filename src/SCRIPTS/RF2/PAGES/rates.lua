@@ -12,12 +12,18 @@ local y = yMinLim - lineSpacing
 local inc = { x = function(val) x = x + val return x end, y = function(val) y = y + val return y end }
 local labels = {}
 local fields = {}
+local editing = false
+local profileAdjustmentTS = nil
+
+local startEditing = function(field, page)
+    editing = true
+end
 
 local endRateEditing = function(field, page)
     mspSetProfile.setRateProfile(field.data.value, function() rf2.reloadPage() end, nil)
 end
 
-fields[#fields + 1] = { t = "Current Rate profile",   x = x,          y = inc.y(lineSpacing), sp = x + sp * 1.17, data = { value = nil, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, postEdit = endRateEditing }
+fields[#fields + 1] = { t = "Current Rate profile",   x = x,          y = inc.y(lineSpacing), sp = x + sp * 1.17, data = { value = nil, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = startEditing, postEdit = endRateEditing }
 fields[#fields + 1] = { t = "Rates Type",          x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 5,      vals = { 1 }, table = { [0] = "NONE", "BETAFL", "RACEFL", "KISS", "ACTUAL", "QUICK"}, postEdit = function(self, page) page.updateRatesType(page, true) end }
 
 y = yMinLim + lineSpacing * 1.4
@@ -124,8 +130,20 @@ return {
         self.updateRatesType(self)
         mspStatus.getStatus(self.onProcessedMspStatus, self)
     end,
+    timer = function(self)
+        if profileAdjustmentTS and rf2.clock() - profileAdjustmentTS > 0.5 then
+            rf2.reloadPage()
+        elseif rf2.mspQueue:isProcessed() and not editing then
+            mspStatus.getStatus(self.onProcessedMspStatus, self)
+        end
+    end,
     onProcessedMspStatus = function(self, status)
-        fields[1].data.value = status.rateProfile
+        if fields[1].data.value ~= status.rateProfile then
+            if fields[1].data.value and not editing then
+                profileAdjustmentTS = rf2.clock()
+            end
+            fields[1].data.value = status.rateProfile
+        end
         self.isReady = true
     end,
 }
