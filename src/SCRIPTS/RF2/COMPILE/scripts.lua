@@ -1,4 +1,5 @@
 local scripts = {
+    "RF2/ui.lua",
     "FUNCTIONS/rf2bg.lua",
     "RF2/COMPILE/compile.lua",
     "RF2/CONFIRM/acc_cal.lua",
@@ -46,7 +47,6 @@ local scripts = {
     "RF2/rtc.lua",
     "RF2/tool.lua",
     "RF2/ui_init.lua",
-    "RF2/ui.lua",
     "TOOLS/rf2.lua",
 }
 return scripts[...]
