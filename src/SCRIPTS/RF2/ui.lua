@@ -82,6 +82,9 @@ local mspEepromWrite =
             invalidatePages()
         end
     end,
+    errorHandler = function(self)
+        rf2.displayMessage("Save error", "Make sure your heli\nis disarmed.")
+    end,
     simulatorResponse = {}
 }
 
@@ -117,9 +120,6 @@ local function saveSettings()
             mspSaveSettings.payload = payload
             mspSaveSettings.simulatorResponse = {}
             rf2.mspQueue:add(mspSaveSettings)
-            rf2.mspQueue.errorHandler = function()
-                rf2.displayMessage("Save error", "Make sure your heli\nis disarmed.")
-            end
         elseif type(Page.write) == "function" then
             Page.write(Page)
         end
