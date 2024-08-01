@@ -14,6 +14,7 @@ local inc = { x = function(val) x = x + val return x end, y = function(val) y = 
 local labels = {}
 local fields = {}
 local editing = false
+local profileChangedTS = nil
 
 local startEditing = function(field, page)
     editing = true
@@ -86,17 +87,21 @@ return {
     postLoad = function(self)
         mspStatus.getStatus(self.onProcessedMspStatus, self)
     end,
---[[
     timer = function(self)
-        if rf2.mspQueue:isProcessed() then
-            if not editing then
-                mspStatus.getStatus(self.onProcessedMspStatus, self)
-            end
+        if profileChangedTS and rf2.clock() - profileChangedTS > 0.5 then
+            profileChangedTS = nil
+            rf2.reloadPage()
+        elseif rf2.mspQueue:isProcessed() and not editing then
+            mspStatus.getStatus(self.onProcessedMspStatus, self)
         end
     end,
---]]
     onProcessedMspStatus = function(self, status)
-        fields[1].data.value = status.profile
+        if fields[1].data.value ~= status.profile then
+            if fields[1].data.value then
+                profileChangedTS = rf2.clock()
+            end
+            fields[1].data.value = status.profile
+        end
         self.isReady = true
     end,
 }

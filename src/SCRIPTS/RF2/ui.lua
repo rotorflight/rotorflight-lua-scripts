@@ -509,16 +509,16 @@ local function run_ui(event)
                 incValue(-1 * scrollSpeedMultiplier)
             end
         end
+        if Page and Page.timer and (not Page.lastTimeTimerFired or Page.lastTimeTimerFired + 0.5 < rf2.clock()) then
+            Page.lastTimeTimerFired = rf2.clock()
+            Page.timer(Page)
+        end
         if not Page then
             Page = assert(rf2.loadScript("PAGES/"..PageFiles[currentPage].script))()
             collectgarbage()
         end
         if not(Page.values or Page.isReady) and pageState == pageStatus.display then
             requestPage()
-        end
-        if Page and Page.timer and (not Page.lastTimeTimerFired or Page.lastTimeTimerFired + 0.5 < rf2.clock()) then
-            Page.timer(Page)
-            Page.lastTimeTimerFired = rf2.clock()
         end
         lcd.clear()
         drawScreen()
