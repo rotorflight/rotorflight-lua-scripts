@@ -32,8 +32,8 @@ local endRateEditing = function(field, page)
     mspSetProfile.setRateProfile(field.data.value)
 end
 
-fields[#fields + 1] = { t = "Curr PID profile",      x = x,              y = inc.y(lineSpacing), sp = x + sp, data = { value = 0, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = startEditing, postEdit = endPidEditing }
-fields[#fields + 1] = { t = "Curr Rate profile",     x = x,              y = inc.y(lineSpacing), sp = x + sp, data = { value = 0, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = startEditing, postEdit = endRateEditing }
+fields[#fields + 1] = { t = "Curr PID profile",      x = x,              y = inc.y(lineSpacing), sp = x + sp, data = { value = nil, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = startEditing, postEdit = endPidEditing }
+fields[#fields + 1] = { t = "Curr Rate profile",     x = x,              y = inc.y(lineSpacing), sp = x + sp, data = { value = nil, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = startEditing, postEdit = endRateEditing }
 labels[#labels + 1] = { t = "Arming disabled flags", x = x,              y = inc.y(lineSpacing) }
 labels[#labels + 1] = { t = "---",                   x = x + indent,     y = inc.y(lineSpacing) }
 labels[#labels + 1] = { t = "Dataflash free space",  x = x,              y = inc.y(lineSpacing) }
