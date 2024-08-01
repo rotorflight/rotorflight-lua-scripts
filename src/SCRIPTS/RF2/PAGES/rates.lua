@@ -138,8 +138,8 @@ return {
         end
     end,
     onProcessedMspStatus = function(self, status)
-        if fields[1].data.value ~= status.rateProfile then
-            if fields[1].data.value and not editing then
+        if fields[1].data.value ~= status.rateProfile and not editing then
+            if fields[1].data.value then
                 profileAdjustmentTS = rf2.clock()
             end
             fields[1].data.value = status.rateProfile

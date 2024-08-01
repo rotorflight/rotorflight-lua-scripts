@@ -112,8 +112,10 @@ return {
     onProcessedMspStatus = function(self, status)
         fcStatus = status
         labels[2].t = armingDisableFlagsToString(fcStatus.armingDisableFlags)
-        fields[1].data.value = fcStatus.profile
-        fields[2].data.value = fcStatus.rateProfile
+        if not editing then
+            fields[1].data.value = fcStatus.profile
+            fields[2].data.value = fcStatus.rateProfile
+        end
         fields[4].data.value = fcStatus.realTimeLoad
         fields[5].data.value = fcStatus.cpuLoad
     end,
