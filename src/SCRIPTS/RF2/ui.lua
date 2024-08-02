@@ -1,4 +1,4 @@
-local LUA_VERSION = "2.1.0 - 240721"
+local LUA_VERSION = "2.1.0 - 240728"
 
 local uiStatus =
 {
@@ -15,6 +15,7 @@ local pageStatus =
     saving  = 3,
     eepromWrite = 4,
     rebooting = 5,
+    waiting = 6
 }
 
 local uiState = uiStatus.init
@@ -30,6 +31,7 @@ local mainMenuScrollY = 0
 local PageFiles, Page, init, popupMenu
 local scrollSpeedTS = 0
 local displayMessage
+local waitMessage
 
 local backgroundFill = TEXT_BGCOLOR or ERASE
 local foregroundColor = LINE_COLOR or SOLID
@@ -40,6 +42,22 @@ local function invalidatePages()
     Page = nil
     pageState = pageStatus.display
     collectgarbage()
+end
+
+rf2.reloadPage = invalidatePages
+
+rf2.setWaitMessage = function(message)
+    pageState = pageStatus.waiting
+    waitMessage = message
+end
+
+rf2.clearWaitMessage = function()
+    pageState = pageStatus.display
+    waitMessage = nil
+end
+
+rf2.displayMessage = function(title, text)
+    displayMessage = { title = title, text = text }
 end
 
 local function rebootFc()
@@ -64,12 +82,11 @@ local mspEepromWrite =
             invalidatePages()
         end
     end,
+    errorHandler = function(self)
+        rf2.displayMessage("Save error", "Make sure your heli\nis disarmed.")
+    end,
     simulatorResponse = {}
 }
-
-local function eepromWrite()
-    rf2.mspQueue:add(mspEepromWrite)
-end
 
 rf2.settingsSaved = function()
     -- check if this page requires writing to eeprom to save (most do)
@@ -106,12 +123,6 @@ local function saveSettings()
             mspSaveSettings.payload = payload
             mspSaveSettings.simulatorResponse = {}
             rf2.mspQueue:add(mspSaveSettings)
-            rf2.mspQueue.errorHandler = function()
-                displayMessage = {
-                    title = "Save error",
-                    text = "Make sure your heli\nis disarmed."
-                }
-            end
         elseif type(Page.write) == "function" then
             Page.write(Page)
         end
@@ -137,6 +148,8 @@ local mspLoadSettings =
 }
 
 rf2.readPage = function()
+    collectgarbage()
+
     if type(Page.read) == "function" then
         Page.read(Page)
     else
@@ -268,6 +281,10 @@ local function drawMessage(title, message)
     end
 end
 
+local function fieldIsButton(f)
+    return f.t and string.sub(f.t, 1, 1) == "[" and not (f.data or f.value)
+end
+
 local function drawScreen()
     local yMinLim = rf2.radio.yMinLimit
     local yMaxLim = rf2.radio.yMaxLimit
@@ -287,8 +304,8 @@ local function drawScreen()
             lcd.drawText(f.x, y, f.t, textOptions)
         end
     end
-    local val = "---"
     for i=1,#Page.fields do
+        local val = "---"
         local f = Page.fields[i]
         local valueOptions = textOptions
         if i == currentField then
@@ -313,7 +330,9 @@ local function drawScreen()
         end
         local y = f.y - pageScrollY
         if y >= 0 and y <= LCD_H then
-            if f.t then
+            if fieldIsButton(f) then
+                val = f.t
+            elseif f.t then
                 lcd.drawText(f.x, y, f.t, textOptions)
             end
             lcd.drawText(f.sp or f.x, y, val, valueOptions)
@@ -456,8 +475,10 @@ local function run_ui(event)
                 incField(1)
             elseif Page and event == EVT_VIRTUAL_ENTER then
                 local f = Page.fields[currentField]
-                if (Page.isReady or (Page.values and f.vals and Page.values[f.vals[#f.vals]])) and not f.ro then
-                    pageState = pageStatus.editing
+                if (Page.isReady or (Page.values and f.vals and Page.values[f.vals[#f.vals]])) and not f.readOnly then
+                    if not fieldIsButton(Page.fields[currentField]) then
+                        pageState = pageStatus.editing
+                    end
                     if Page.fields[currentField].preEdit then
                         Page.fields[currentField]:preEdit(Page)
                     end
@@ -469,6 +490,10 @@ local function run_ui(event)
                 invalidatePages()
                 currentField = 1
                 uiState = uiStatus.mainMenu
+                if rf2.logfile then
+                    io.close(rf2.logfile)
+                    rf2.logfile = nil
+                end
                 return 0
             end
         elseif pageState == pageStatus.editing then
@@ -492,6 +517,10 @@ local function run_ui(event)
                 incValue(-1 * scrollSpeedMultiplier)
             end
         end
+        if Page and Page.timer and (not Page.lastTimeTimerFired or Page.lastTimeTimerFired + 0.5 < rf2.clock()) then
+            Page.lastTimeTimerFired = rf2.clock()
+            Page.timer(Page)
+        end
         if not Page then
             Page = assert(rf2.loadScript("PAGES/"..PageFiles[currentPage].script))()
             collectgarbage()
@@ -499,13 +528,9 @@ local function run_ui(event)
         if not(Page.values or Page.isReady) and pageState == pageStatus.display then
             requestPage()
         end
-        if Page and Page.timer and (not Page.lastTimeTimerFired or Page.lastTimeTimerFired + 0.5 < rf2.clock()) then
-            Page.timer(Page)
-            Page.lastTimeTimerFired = rf2.clock()
-        end
         lcd.clear()
         drawScreen()
-        if pageState == pageStatus.saving or pageState == pageStatus.eepromWrite or pageState == pageStatus.rebooting then
+        if pageState == pageStatus.saving or pageState == pageStatus.eepromWrite or pageState == pageStatus.rebooting or pageState == pageStatus.waiting then
             local saveMsg = ""
             if pageState == pageStatus.saving then
                 saveMsg = "Saving..."
@@ -513,6 +538,8 @@ local function run_ui(event)
                 saveMsg = "Updating..."
             elseif pageState == pageStatus.rebooting then
                 saveMsg = "Rebooting..."
+            elseif pageState == pageStatus.waiting then
+                saveMsg = waitMessage
             end
             lcd.drawFilledRectangle(rf2.radio.SaveBox.x,rf2.radio.SaveBox.y,rf2.radio.SaveBox.w,rf2.radio.SaveBox.h,backgroundFill)
             lcd.drawRectangle(rf2.radio.SaveBox.x,rf2.radio.SaveBox.y,rf2.radio.SaveBox.w,rf2.radio.SaveBox.h,SOLID)

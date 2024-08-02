@@ -24,9 +24,9 @@ local mspHelper = {
         local offset = buf.offset or 1
         local value = 0
         for i = 0, 3 do
-            value = bit32.bor(value, bit32.lshift(buf[offset + i], 8))
+            value = bit32.bor(value, bit32.lshift(buf[offset + i], i * 8))
         end
-        buf.offset = offset + 2
+        buf.offset = offset + 4
         return value
     end,
     writeU8 = function(buf, value)

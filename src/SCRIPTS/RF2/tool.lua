@@ -16,6 +16,7 @@ if scriptsCompiled then
     run = assert(rf2.loadScript("ui.lua"))()
 else
     run = assert(loadScript("COMPILE/compile.lua"))()
+    collectgarbage()
 end
 
 return { run = run }
