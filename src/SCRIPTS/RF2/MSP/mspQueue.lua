@@ -86,6 +86,7 @@ function MspQueueController:processQueue()
             self.currentMessage:processReply(buf)
         end
         self.currentMessage = nil
+        collectgarbage()
     elseif self.retryCount > self.maxRetries then
         rf2.print("Max retries reached, aborting queue")
         self.messageQueue = {}
@@ -93,6 +94,7 @@ function MspQueueController:processQueue()
             self.currentMessage:errorHandler()
         end
         self.currentMessage = nil
+        collectgarbage()
     end
 end
 
