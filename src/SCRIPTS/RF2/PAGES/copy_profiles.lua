@@ -39,7 +39,7 @@ return {
     end,
     getDestinationPidProfile = function(self)
         local destPidProfile
-        if (fcStatus.profile < fcStatus.numProfiles - 1) then
+        if fcStatus.profile < 5 then
             destPidProfile = fcStatus.profile + 1
         else
             destPidProfile = fcStatus.profile - 1
