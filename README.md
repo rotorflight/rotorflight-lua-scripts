@@ -1,4 +1,4 @@
-# Rotorflight LUA Scripts
+# Rotorflight Lua Scripts
 
 [Rotorflight](https://github.com/rotorflight) is a Flight Control software suite designed for
 single-rotor helicopters. It consists of:
@@ -6,7 +6,7 @@ single-rotor helicopters. It consists of:
 - Rotorflight Flight Controller Firmware
 - Rotorflight Configurator, for flashing and configuring the flight controller
 - Rotorflight Blackbox Explorer, for analyzing blackbox flight logs
-- Rotorflight LUA Scripts, for configuring the flight controller using a transmitter running:
+- Rotorflight Lua Scripts, for configuring the flight controller using a transmitter running:
   - EdgeTX/OpenTX (this repository)
   - Ethos
 
@@ -35,7 +35,7 @@ Rotorflight has many features:
 * Motorised tail support with Tail Torque Assist (TTA, also known as TALY)
 * Remote configuration and tuning with the transmitter
   - With knobs / switches assigned to functions
-  - With LUA scripts on EdgeTX, OpenTX and Ethos
+  - With Lua scripts on EdgeTX, OpenTX and Ethos
 * Extra servo/motor outputs for AUX functions
 * Fully customisable servo/motor mixer
 * Sensors for battery voltage, current, BEC, etc.
@@ -57,7 +57,7 @@ Plus lots of features inherited from Betaflight:
 And many more...
 
 
-## LUA Scripts Requirements
+## Lua Scripts Requirements
 
 - EdgeTX 2.5.0 or OpenTX 2.3.12 or later transmitter firmware
 - A receiver supporting remote configuration:
@@ -91,7 +91,7 @@ SD Card Method
 If you copied the files correctly, you can now go into the *Tools* menu on your transmitter and access the *Rotorflight 2* tool. The first time you run the script, a message 'Compiling...' will appear in the display before the script is started. This is normal and is done to minimise the RAM usage of the script.
 
 ## Usage
-See the [LUA Scripts page](https://www.rotorflight.org/docs/Tutorial-Setup/LUA-Scripts).
+See the [Lua Scripts page](https://www.rotorflight.org/docs/Tutorial-Setup/Lua-Scripts).
 
 ## Background script
 The optional background script `rf2bg.lua` features *Real Time FC Clock synchronization* and the *Adjustment Teller*. 
