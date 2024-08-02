@@ -1,14 +1,16 @@
 local i = 1
+local scripts = assert(loadScript("COMPILE/scripts.lua"))
+
+collectgarbage()
 
 local function compile()
-    local script = assert(loadScript("COMPILE/scripts.lua"))(i)
-    collectgarbage()
+    local script = scripts(i)
     i = i + 1
     if script then
         lcd.clear()
         lcd.drawText(2, 2, "Compiling...", SMLSIZE)
         lcd.drawText(2, 22, script, SMLSIZE)
-        assert(loadScript(script, 'c'))
+        assert(loadScript("/SCRIPTS/"..script, 'c'))
         collectgarbage()
         return 0
     end

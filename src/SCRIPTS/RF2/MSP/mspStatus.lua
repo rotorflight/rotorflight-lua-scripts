@@ -16,9 +16,10 @@ local function getStatus(callback, callbackParam)
             buf.offset = 24
             status.profile = rf2.mspHelper.readU8(buf)
             --rf2.print("Profile: "..tostring(status.profile))
-            status.numProfiles = rf2.mspHelper.readU8(buf)
+            --status.numProfiles = rf2.mspHelper.readU8(buf)
+            buf.offset = 26
             status.rateProfile = rf2.mspHelper.readU8(buf)
-            status.numRateProfiles = rf2.mspHelper.readU8(buf)
+            --status.numRateProfiles = rf2.mspHelper.readU8(buf)
             --status.motorCount = rf2.mspHelper.readU8(buf)
             --rf2.print("Number of motors: "..tostring(status.motorCount))
             --status.servoCount = rf2.mspHelper.readU8(buf)

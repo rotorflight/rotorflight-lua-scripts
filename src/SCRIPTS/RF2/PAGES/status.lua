@@ -32,8 +32,8 @@ local endRateEditing = function(field, page)
     mspSetProfile.setRateProfile(field.data.value)
 end
 
-fields[#fields + 1] = { t = "Curr PID profile",      x = x,              y = inc.y(lineSpacing), sp = x + sp, data = { value = 0, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = startEditing, postEdit = endPidEditing }
-fields[#fields + 1] = { t = "Curr Rate profile",     x = x,              y = inc.y(lineSpacing), sp = x + sp, data = { value = 0, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = startEditing, postEdit = endRateEditing }
+fields[#fields + 1] = { t = "Current PID profile",   x = x,              y = inc.y(lineSpacing), sp = x + sp * 1.17, data = { value = nil, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = startEditing, postEdit = endPidEditing }
+fields[#fields + 1] = { t = "Current Rate profile",  x = x,              y = inc.y(lineSpacing), sp = x + sp * 1.17, data = { value = nil, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = startEditing, postEdit = endRateEditing }
 labels[#labels + 1] = { t = "Arming disabled flags", x = x,              y = inc.y(lineSpacing) }
 labels[#labels + 1] = { t = "---",                   x = x + indent,     y = inc.y(lineSpacing) }
 labels[#labels + 1] = { t = "Dataflash free space",  x = x,              y = inc.y(lineSpacing) }
@@ -112,8 +112,10 @@ return {
     onProcessedMspStatus = function(self, status)
         fcStatus = status
         labels[2].t = armingDisableFlagsToString(fcStatus.armingDisableFlags)
-        fields[1].data.value = fcStatus.profile
-        fields[2].data.value = fcStatus.rateProfile
+        if not editing then
+            fields[1].data.value = fcStatus.profile
+            fields[2].data.value = fcStatus.rateProfile
+        end
         fields[4].data.value = fcStatus.realTimeLoad
         fields[5].data.value = fcStatus.cpuLoad
     end,

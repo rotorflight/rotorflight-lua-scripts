@@ -44,6 +44,8 @@ local function invalidatePages()
     collectgarbage()
 end
 
+rf2.reloadPage = invalidatePages
+
 rf2.setWaitMessage = function(message)
     pageState = pageStatus.waiting
     waitMessage = message
@@ -80,6 +82,9 @@ local mspEepromWrite =
             invalidatePages()
         end
     end,
+    errorHandler = function(self)
+        rf2.displayMessage("Save error", "Make sure your heli\nis disarmed.")
+    end,
     simulatorResponse = {}
 }
 
@@ -115,9 +120,6 @@ local function saveSettings()
             mspSaveSettings.payload = payload
             mspSaveSettings.simulatorResponse = {}
             rf2.mspQueue:add(mspSaveSettings)
-            rf2.mspQueue.errorHandler = function()
-                rf2.displayMessage("Save error", "Make sure your heli\nis disarmed.")
-            end
         elseif type(Page.write) == "function" then
             Page.write(Page)
         end
@@ -294,8 +296,8 @@ local function drawScreen()
             lcd.drawText(f.x, y, f.t, textOptions)
         end
     end
-    local val = "---"
     for i=1,#Page.fields do
+        local val = "---"
         local f = Page.fields[i]
         local valueOptions = textOptions
         if i == currentField then
@@ -507,16 +509,16 @@ local function run_ui(event)
                 incValue(-1 * scrollSpeedMultiplier)
             end
         end
+        if Page and Page.timer and (not Page.lastTimeTimerFired or Page.lastTimeTimerFired + 0.5 < rf2.clock()) then
+            Page.lastTimeTimerFired = rf2.clock()
+            Page.timer(Page)
+        end
         if not Page then
             Page = assert(rf2.loadScript("PAGES/"..PageFiles[currentPage].script))()
             collectgarbage()
         end
         if not(Page.values or Page.isReady) and pageState == pageStatus.display then
             requestPage()
-        end
-        if Page and Page.timer and (not Page.lastTimeTimerFired or Page.lastTimeTimerFired + 0.5 < rf2.clock()) then
-            Page.timer(Page)
-            Page.lastTimeTimerFired = rf2.clock()
         end
         lcd.clear()
         drawScreen()
