@@ -98,17 +98,15 @@ fields[15] = { t = "Brake Type",        x = x + indent, y = inc.y(lineSpacing), 
 fields[16] = { t = "Brake Force %",     x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 100, vals = { 2+75 } }
 
 local function getText(array, start, maxLength)
-    if not table then return "---" end -- OpenTX
-
-    local tt = {}
+    local text = ""
     for i = start, start + maxLength - 1 do
         local v = array[i]
         if v == 0 then
             break
         end
-        table.insert(tt, string.char(v))
+        text = text..string.char(v)
     end
-    return table.concat(tt)
+    return text
 end
 
 return {

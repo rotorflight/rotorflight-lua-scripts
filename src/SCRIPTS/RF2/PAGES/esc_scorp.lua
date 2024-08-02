@@ -82,17 +82,15 @@ fields[15] = { t = "Min Voltage (V)",      x = x + indent, y = inc.y(lineSpacing
 fields[16] = { t = "Max Used (Ah)",        x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 6000,  scale = 100,  mult = 10, vals = { 2+51, 2+52 } }
 
 local function getText(array, start, maxLength)
-    if not table then return "---" end -- OpenTX
-
-    local tt = {}
+    local text = ""
     for i = start, start + maxLength - 1 do
         local v = array[i]
         if v == 0 then
             break
         end
-        table.insert(tt, string.char(v))
+        text = text..string.char(v)
     end
-    return table.concat(tt)
+    return text
 end
 
 local function getUInt(array, vals)
