@@ -24,6 +24,9 @@ rf2 = {
         return getTime() / 100
     end,
 
+    apiVersion = nil,
+
+    --[[
     showMemoryUsage = function (remark)
         if not rf2.oldMemoryUsage then
             collectgarbage()
@@ -39,6 +42,5 @@ rf2 = {
         end
         rf2.oldMemoryUsage = currentMemoryUsage
     end,
-
-    apiVersion = nil
+    --]]
 }
