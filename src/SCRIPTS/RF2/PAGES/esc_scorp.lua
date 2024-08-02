@@ -81,6 +81,12 @@ fields[14] = { t = "Max Current (A)",      x = x + indent, y = inc.y(lineSpacing
 fields[15] = { t = "Min Voltage (V)",      x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 7000,  scale = 100,  mult = 10, vals = { 2+43, 2+44 } }
 fields[16] = { t = "Max Used (Ah)",        x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 6000,  scale = 100,  mult = 10, vals = { 2+51, 2+52 } }
 
+local function rebootEsc(field, page)
+    page.values[2] = 0x80
+    rf2.saveSettings()
+end
+fields[17] = { t = "[Reboot ESC]",         x = x + indent * 3, y = inc.y(lineSpacing * 1.3), preEdit = rebootEsc }
+
 local function getText(array, start, maxLength)
     local text = ""
     for i = start, start + maxLength - 1 do
@@ -120,9 +126,15 @@ return {
             self.labels[1].t = "Invalid ESC detected"
             return -1
         end
+
         -- The 'ability to reboot' flag is only available on Scorpion ESCs. Not used at the moment.
         self.canReboot = bit32.band(self.values[2], 0x80) == 0x80
+        if not self.canReboot then
+            self.fields[17].readOnly = true
+        end
+
         self.values[2] = 0 -- prevent rebooting when saving
+        self.isReady = true
     end,
 
     postLoad = function(self)

@@ -109,7 +109,7 @@ local mspSaveSettings =
     end
 }
 
-local function saveSettings()
+rf2.saveSettings = function()
     if pageState ~= pageStatus.saving then
         pageState = pageStatus.saving
         saveTS = rf2.clock()
