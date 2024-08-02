@@ -217,6 +217,7 @@ return {
             self.labels[1].t = "Invalid ESC detected"
             return -1
         end
+        -- The read-only flag is set when the ESC is connected to an RX pin instead of a TX pin in half-duplex mode. Only supported by YGE.
         self.readOnly = bit32.band(self.values[2], 0x40) == 0x40
     end,
 

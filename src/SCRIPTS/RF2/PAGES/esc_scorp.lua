@@ -120,6 +120,9 @@ return {
             self.labels[1].t = "Invalid ESC detected"
             return -1
         end
+        -- The 'ability to reboot' flag is only available on Scorpion ESCs. Not used at the moment.
+        self.canReboot = bit32.band(self.values[2], 0x80) == 0x80
+        self.values[2] = 0 -- prevent rebooting when saving
     end,
 
     postLoad = function(self)
