@@ -233,46 +233,49 @@ return {
         l = self.labels[3]
         l.t = string.format("FW: %.5f", getUInt(self.values, { 2+25, 2+26, 2+27, 2+28 }) / 100000)
 
-        -- direction
-        -- save flags, changed bit will be applied in pre-save
+        -- load flags (use direction field mapping), changed bit will be applied in pre-save
         local f = self.fields[2]
         self.svFlags = self.values[f.vals[1]]
-        f.value = bit32.extract(f.value, escFlags.spinDirection)
 
-        -- set BEC voltage max (8.4 or 12.3)
+        -- direction (from flags)
+        f.value = bit32.extract(self.svFlags, escFlags.spinDirection)
+
+        -- set BEC voltage max [8.4 or 12.3] (from flags)
         f = self.fields[3]
         f.max = bit32.extract(self.svFlags, escFlags.bec12v) == 0 and 84 or 123
 
         -- motor timing
         local f = self.fields[11]
-        self.svTiming = bit32.lshift(self.values[f.vals[2]], 8) + self.values[f.vals[1]]
-        f.value = motorTimingToUI[self.svTiming] or 0
+        local value = bit32.lshift(self.values[f.vals[2]], 8) + self.values[f.vals[1]]
+        f.value = motorTimingToUI[value] or 0
 
-        -- F3C autorotation
+        -- F3C autorotation (from flags)
         f = self.fields[13]
-        self.svFlags = self.values[f.vals[1]]
-        f.value = bit32.extract(f.value, escFlags.f3cAuto)
+        f.value = bit32.extract(self.svFlags, escFlags.f3cAuto)
 
         -- update gear ratio
         updateRatio(nil, self)
     end,
 
     preSave = function (self)
+        -- F3C autorotation
+        -- apply bits to saved flags
+        local f = self.fields[13]
+        self.svFlags = bit32.replace(self.svFlags, f.value, escFlags.f3cAuto)
+
         -- direction
         -- apply bits to saved flags
         local f = self.fields[2]
-        self.values[f.vals[1]] = bit32.replace(self.svFlags, f.value, escFlags.spinDirection)
+        self.svFlags = bit32.replace(self.svFlags, f.value, escFlags.spinDirection)
+
+        -- save flags (use direction field mapping)
+        self.values[f.vals[1]] = self.svFlags
 
         -- motor timing
         f = self.fields[11]
         local value = motorTimingFromUI[f.value] or 0
         self.values[f.vals[1]] = bit32.band(value, 0xFF)
         self.values[f.vals[2]] = bit32.rshift(value, 8)
-
-        -- F3C autorotation
-        -- apply bits to saved flags
-        local f = self.fields[13]
-        self.values[f.vals[2]] = bit32.replace(self.svFlags, f.value, escFlags.f3cAuto)
 
         return self.values
     end,
