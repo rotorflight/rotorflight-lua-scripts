@@ -132,6 +132,7 @@ end
 local mspLoadSettings =
 {
     processReply = function(self, buf)
+        if not Page then return end -- could happen if one returns to the main menu before processReply
         rf2.print("Page is processing reply for cmd "..tostring(self.command).." len buf: "..#buf.." expected: "..Page.minBytes)
         Page.values = buf
         if Page.postRead then
