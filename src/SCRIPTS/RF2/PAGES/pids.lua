@@ -16,6 +16,28 @@ local fields = {}
 local editing = false
 local profileAdjustmentTS = nil
 
+local startEditing = function(field, page)
+    editing = true
+end
+
+local endPidEditing = function(field, page)
+    mspSetProfile.setPidProfile(field.data.value, function() rf2.reloadPage() end, nil)
+end
+
+local function copyProfile(field, page)
+    local source = page.fields[18].data.value
+    local dest = page.fields[19].data.value
+    if source == dest then return end
+
+    local mspCopyProfile = {
+        command = 183, -- MSP_COPY_PROFILE
+        payload = { 0, dest, source } -- 0 = copy pids
+    }
+
+    rf2.mspQueue:add(mspCopyProfile)
+    rf2.settingsSaved()
+end
+
 x = margin
 local tableStartY = yMinLim - lineSpacing
 y = tableStartY
@@ -65,32 +87,10 @@ fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 1000, vals = { 27,28 } }
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 1000, vals = { 29,30 } }
 
-local startEditing = function(field, page)
-    editing = true
-end
-
-local endPidEditing = function(field, page)
-    mspSetProfile.setPidProfile(field.data.value, function() rf2.reloadPage() end, nil)
-end
-
 x = margin
-fields[18] = { t = "Current PID profile",             x = x,          y = inc.y(lineSpacing * 1.25), sp = x + sp * 1.17, data = { value = nil, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = startEditing, postEdit = endPidEditing }
-fields[19] = { t = "Destination profile",             x = x,          y = inc.y(lineSpacing),       sp = x + sp * 1.17, data = { value = nil, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } } }
-
-local function copyProfile(field, page)
-    local source = page.fields[18].data.value
-    local dest = page.fields[19].data.value
-    if source == dest then return end
-
-    local mspCopyProfile = {
-        command = 183, -- MSP_COPY_PROFILE
-        payload = { 0, dest, source }
-    }
-
-    rf2.mspQueue:add(mspCopyProfile)
-    rf2.settingsSaved()
-end
-
+inc.y(lineSpacing * 0.25)
+fields[18] = { t = "Current PID profile",             x = x,          y = inc.y(lineSpacing), sp = x + sp * 1.17, data = { value = nil, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = startEditing, postEdit = endPidEditing }
+fields[19] = { t = "Destination profile",             x = x,          y = inc.y(lineSpacing), sp = x + sp * 1.17, data = { value = nil, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } } }
 fields[#fields + 1] = { t = "[Copy Current to Dest]", x = x + indent, y = inc.y(lineSpacing), preEdit = copyProfile }
 
 return {
