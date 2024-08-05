@@ -74,7 +74,7 @@ local endPidEditing = function(field, page)
 end
 
 x = margin
-fields[18] = { t = "Current PID profile",             x = x,          y = inc.y(lineSpacing * 1.3), sp = x + sp * 1.17, data = { value = nil, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = startEditing, postEdit = endPidEditing }
+fields[18] = { t = "Current PID profile",             x = x,          y = inc.y(lineSpacing * 1.25), sp = x + sp * 1.17, data = { value = nil, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = startEditing, postEdit = endPidEditing }
 fields[19] = { t = "Destination profile",             x = x,          y = inc.y(lineSpacing),       sp = x + sp * 1.17, data = { value = nil, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } } }
 
 local function copyProfile(field, page)
@@ -109,7 +109,7 @@ return {
     end,
 
     timer = function(self)
-        if profileAdjustmentTS and rf2.clock() - profileAdjustmentTS > 0.5 then
+        if profileAdjustmentTS and rf2.clock() - profileAdjustmentTS > 0.35 then
             rf2.reloadPage()
         elseif rf2.mspQueue:isProcessed() and not editing then
             mspStatus.getStatus(self.onProcessedMspStatus, self)
