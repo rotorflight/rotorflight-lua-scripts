@@ -3,5 +3,5 @@ return {
     indent       = 15,
     lineSpacing  = 22,
     listSpacing  = { line = 20, field = 170 },
-    tableSpacing = { row = 25, col = 60, header = 20 },
+    tableSpacing = { row = 25, col = 60, firstCol= 30, header = 20 },
 }

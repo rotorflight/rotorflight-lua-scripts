@@ -29,11 +29,11 @@ fields[#fields + 1] = { t = "Current PID profile", x = x, y = inc.y(lineSpacing)
 x = margin
 y = yMinLim + lineSpacing * 0.2
 labels[#labels + 1] = { t = "",      x = x, y = inc.y(tableSpacing.header) }
-labels[#labels + 1] = { t = "Ro",     x = x, y = inc.y(tableSpacing.row) }
-labels[#labels + 1] = { t = "Pi",     x = x, y = inc.y(tableSpacing.row) }
-labels[#labels + 1] = { t = "Ya",     x = x, y = inc.y(tableSpacing.row) }
+labels[#labels + 1] = { t = "Roll",  x = x, y = inc.y(tableSpacing.row) }
+labels[#labels + 1] = { t = "Pitch", x = x, y = inc.y(tableSpacing.row) }
+labels[#labels + 1] = { t = "Yaw",   x = x, y = inc.y(tableSpacing.row) }
 
-x = x + tableSpacing.col/2
+x = x + tableSpacing.firstCol
 y = yMinLim + lineSpacing * 0.25
 labels[#labels + 1] = { t = "P",     x = x, y = inc.y(tableSpacing.header) }
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 1000, vals = { 1,2 } }
@@ -49,12 +49,6 @@ fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0
 
 x = x + colSpacing
 y = yMinLim + lineSpacing * 0.25
-labels[#labels + 1] = { t = "O",     x = x, y = inc.y(tableSpacing.header) }
-fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 1000, vals = { 31,32 } }
-fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 1000, vals = { 33,34 } }
-
-x = x + colSpacing
-y = yMinLim + lineSpacing * 0.25
 labels[#labels + 1] = { t = "D",     x = x, y = inc.y(tableSpacing.header) }
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 1000, vals = { 5,6 } }
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 1000, vals = { 13,14 } }
@@ -62,17 +56,37 @@ fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0
 
 x = x + colSpacing
 y = yMinLim + lineSpacing * 0.25
-labels[#labels + 1] = { t = "F",     x = x, y = inc.y(tableSpacing.header) }
+labels[#labels + 1] = { t = "FF",    x = x, y = inc.y(tableSpacing.header) }
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 1000, vals = { 7,8 } }
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 1000, vals = { 15,16 } }
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 1000, vals = { 23,24 } }
 
-x = x + colSpacing
-y = yMinLim + lineSpacing * 0.25
+
+-- ------------------ advance ---------------------------------------------------------------------
+x = margin
+inc.y(lineSpacing*1.5)
+labels[#labels + 1] = { t = "Advance",       x = x,          y = inc.y(lineSpacing) }
+
+local y2 = y
+y = y2
+labels[#labels + 1] = { t = "",      x = x, y = inc.y(tableSpacing.header) }
+labels[#labels + 1] = { t = "Roll",  x = x, y = inc.y(tableSpacing.row) }
+labels[#labels + 1] = { t = "Pitch", x = x, y = inc.y(tableSpacing.row) }
+labels[#labels + 1] = { t = "Yaw",   x = x, y = inc.y(tableSpacing.row) }
+
+x = x + tableSpacing.firstCol
+y = y2
 labels[#labels + 1] = { t = "B",     x = x, y = inc.y(tableSpacing.header) }
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 1000, vals = { 25,26 } }
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 1000, vals = { 27,28 } }
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 1000, vals = { 29,30 } }
+
+x = x + colSpacing
+y = y2
+labels[#labels + 1] = { t = "Offset", x = x, y = inc.y(tableSpacing.header) }
+fields[#fields + 1] = {               x = x, y = inc.y(tableSpacing.row), min = 0, max = 1000, vals = { 31,32 } }
+fields[#fields + 1] = {               x = x, y = inc.y(tableSpacing.row), min = 0, max = 1000, vals = { 33,34 } }
+
 
 return {
     read        = 112, -- MSP_PID_TUNING
