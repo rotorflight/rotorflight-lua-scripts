@@ -109,13 +109,16 @@ local mspSaveSettings =
     end
 }
 
-local function saveSettings()
+rf2.saveSettings = function()
     if pageState ~= pageStatus.saving then
         pageState = pageStatus.saving
         saveTS = rf2.clock()
 
         if Page.values then
             local payload = Page.values
+            if Page.preSave then
+                payload = Page.preSave(Page)
+            end
             mspSaveSettings.command = Page.write
             mspSaveSettings.payload = payload
             mspSaveSettings.simulatorResponse = {}
@@ -133,7 +136,10 @@ local mspLoadSettings =
         rf2.print("Page is processing reply for cmd "..tostring(self.command).." len buf: "..#buf.." expected: "..Page.minBytes)
         Page.values = buf
         if Page.postRead then
-            Page.postRead(Page)
+            if Page.postRead(Page) == -1 then
+                Page.values = nil
+                return
+             end
         end
         rf2.dataBindFields()
         if Page.postLoad then
@@ -177,7 +183,9 @@ local function createPopupMenu()
     popupMenuActive = 1
     popupMenu = {}
     if uiState == uiStatus.pages then
-        popupMenu[#popupMenu + 1] = { t = "Save Page", f = saveSettings }
+        if not Page.readOnly then
+            popupMenu[#popupMenu + 1] = { t = "Save Page", f = saveSettings }
+        end
         popupMenu[#popupMenu + 1] = { t = "Reload", f = invalidatePages }
     end
     popupMenu[#popupMenu + 1] = { t = "Reboot", f = rebootFc }
