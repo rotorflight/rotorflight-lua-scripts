@@ -17,10 +17,10 @@ fields[#fields + 1] = { t = "PID master gain",         x = x, y = inc.y(lineSpac
 fields[#fields + 1] = { t = "P-gain",                  x = x, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 4 },  id = "govPGain" }
 fields[#fields + 1] = { t = "I-gain",                  x = x, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 5 },  id = "govIGain" }
 fields[#fields + 1] = { t = "D-gain",                  x = x, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 6 },  id = "govDGain" }
-fields[#fields + 1] = { t = "F-gain",                  x = x, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 7 },  id = "govFGain" }
+fields[#fields + 1] = { t = "FF-gain",                 x = x, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 7 },  id = "govFGain" }
 fields[#fields + 1] = { t = "Yaw precomp.",            x = x, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 10 }, id = "govYawPrecomp" }
 fields[#fields + 1] = { t = "Cyclic precomp.",         x = x, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 11 }, id = "govCyclicPrecomp" }
-fields[#fields + 1] = { t = "Col. precomp.",           x = x, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 12 }, id = "govCollectivePrecomp" }
+fields[#fields + 1] = { t = "Coll precomp.",           x = x, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 12 }, id = "govCollectivePrecomp" }
 fields[#fields + 1] = { t = "TTA gain",                x = x, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 8 },  id = "govTTAGain" }
 fields[#fields + 1] = { t = "TTA limit",               x = x, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 9 },  id = "govTTALimit" }
 

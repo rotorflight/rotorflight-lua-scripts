@@ -25,8 +25,8 @@ local endPidEditing = function(field, page)
 end
 
 local function copyProfile(field, page)
-    local source = page.fields[18].data.value
-    local dest = page.fields[19].data.value
+    local source = page.fields[16].data.value
+    local dest = page.fields[17].data.value
     if source == dest then return end
 
     local mspCopyProfile = {
@@ -42,11 +42,11 @@ x = margin
 local tableStartY = yMinLim - lineSpacing
 y = tableStartY
 labels[#labels + 1] = { t = "",      x = x, y = inc.y(tableSpacing.header) }
-labels[#labels + 1] = { t = "Ro",     x = x, y = inc.y(tableSpacing.row) }
-labels[#labels + 1] = { t = "Pi",     x = x, y = inc.y(tableSpacing.row) }
-labels[#labels + 1] = { t = "Ya",     x = x, y = inc.y(tableSpacing.row) }
+labels[#labels + 1] = { t = "Roll",  x = x, y = inc.y(tableSpacing.row) }
+labels[#labels + 1] = { t = "Pitch", x = x, y = inc.y(tableSpacing.row) }
+labels[#labels + 1] = { t = "Yaw",   x = x, y = inc.y(tableSpacing.row) }
 
-x = x + tableSpacing.col/2
+x = x + tableSpacing.col
 y = tableStartY
 labels[#labels + 1] = { t = "P",     x = x, y = inc.y(tableSpacing.header) }
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 1000, vals = { 1,2 } }
@@ -62,12 +62,6 @@ fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0
 
 x = x + colSpacing
 y = tableStartY
-labels[#labels + 1] = { t = "O",     x = x, y = inc.y(tableSpacing.header) }
-fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 1000, vals = { 31,32 } }
-fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 1000, vals = { 33,34 } }
-
-x = x + colSpacing
-y = tableStartY
 labels[#labels + 1] = { t = "D",     x = x, y = inc.y(tableSpacing.header) }
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 1000, vals = { 5,6 } }
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 1000, vals = { 13,14 } }
@@ -75,7 +69,7 @@ fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0
 
 x = x + colSpacing
 y = tableStartY
-labels[#labels + 1] = { t = "F",     x = x, y = inc.y(tableSpacing.header) }
+labels[#labels + 1] = { t = "FF",    x = x, y = inc.y(tableSpacing.header) }
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 1000, vals = { 7,8 } }
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 1000, vals = { 15,16 } }
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 1000, vals = { 23,24 } }
@@ -88,10 +82,15 @@ fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0
 fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), min = 0, max = 1000, vals = { 29,30 } }
 
 x = margin
-inc.y(lineSpacing * 0.25)
-fields[18] = { t = "Current PID profile",             x = x,          y = inc.y(lineSpacing), sp = x + sp * 1.17, data = { value = nil, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = startEditing, postEdit = endPidEditing }
-fields[19] = { t = "Destination profile",             x = x,          y = inc.y(lineSpacing), sp = x + sp * 1.17, data = { value = nil, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } } }
+inc.y(lineSpacing * 0.5)
+fields[16] = { t = "Current PID profile",             x = x,          y = inc.y(lineSpacing), sp = x + sp * 1.17, data = { value = nil, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = startEditing, postEdit = endPidEditing }
+fields[17] = { t = "Destination profile",             x = x,          y = inc.y(lineSpacing), sp = x + sp * 1.17, data = { value = nil, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } } }
 fields[#fields + 1] = { t = "[Copy Current to Dest]", x = x + indent, y = inc.y(lineSpacing), preEdit = copyProfile }
+
+inc.y(lineSpacing * 0.5)
+labels[#labels + 1] = { t = "HSI Offset Gain",        x = x,          y = inc.y(lineSpacing) }
+fields[#fields + 1] = { t = "Roll",                   x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000, vals = { 31,32 } }
+fields[#fields + 1] = { t = "Pitch",                  x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000, vals = { 33,34 } }
 
 return {
     read        = 112, -- MSP_PID_TUNING
@@ -117,7 +116,7 @@ return {
     end,
 
     onProcessedMspStatus = function(self, status)
-        local currentField = self.fields[18]
+        local currentField = self.fields[16]
         if currentField.data.value ~= status.profile and not editing then
             if currentField.data.value then
                 profileAdjustmentTS = rf2.clock()
@@ -125,7 +124,7 @@ return {
             currentField.data.value = status.profile
         end
 
-        local destField = self.fields[19]
+        local destField = self.fields[17]
         if not destField.data.value then
             if status.profile < 5 then
                 destField.data.value = status.profile + 1

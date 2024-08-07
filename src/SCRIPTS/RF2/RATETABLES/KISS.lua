@@ -1,5 +1,5 @@
 return {
-    labels = { "", "", "ROLL", "PITCH", "YAW", "COL", "RC", "Rate", "", "Rate", "RC", "Curve" },
+    labels = { "", "", "Roll", "Pitch", "Yaw", "Coll", "RC", "Rate", "", "Rate", "RC", "Curve" },
     fields = {
         { min = 1, max = 255, scale = 100 },
         { min = 1, max = 255, scale = 100 },
