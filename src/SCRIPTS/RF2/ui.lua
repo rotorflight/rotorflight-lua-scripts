@@ -515,6 +515,7 @@ local function run_ui(event)
             Page.timer(Page)
         end
         if not Page then
+            collectgarbage()
             Page = assert(rf2.loadScript("PAGES/"..PageFiles[currentPage].script))()
             collectgarbage()
         end
