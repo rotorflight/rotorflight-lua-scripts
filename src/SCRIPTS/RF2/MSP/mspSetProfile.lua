@@ -4,7 +4,8 @@ local function setPidProfile(profileIndex, callback, callbackParam)
         payload = { profileIndex },
         processReply = function(self, buf)
             if callback then callback(callbackParam) end
-        end
+        end,
+        simulatorResponse = {}
     }
     rf2.mspQueue:add(message)
 end

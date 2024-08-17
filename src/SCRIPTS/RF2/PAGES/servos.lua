@@ -51,10 +51,10 @@ local function onClickOverride(field, page)
     --rf2.lcdNeedsInvalidate = true
     if not overrideAllServos then
         overrideAllServos = true
-        field.t = "[Disable override]"
+        field.t = "[Disable Override]"
     else
         overrideAllServos = false
-        field.t = "[Override all servos]"
+        field.t = "[Override All Servos]"
     end
 
     for i = 0, #servoConfigs do
@@ -66,7 +66,7 @@ local function onClickOverride(field, page)
     end
 end
 
-fields[1] = { t = "Servo",      x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0,     max = 7,     table = { [0] = "ELEVATOR", "CYCL L", "CYCL R", "TAIL" }, postEdit = onChangeServo }
+fields[1] = { t = "Servo",      x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 7, table = { [0] = "ELEVATOR", "CYCL L", "CYCL R", "TAIL", "5", "6", "7", "8" }, postEdit = onChangeServo }
 fields[2] = { t = "Center",     x = x + indent, y = inc.y(lineSpacing), sp = x + sp, id = "servoMid", preEdit = onPreEditCenter, change = onChangeCenter, postEdit = onPostEditCenter }
 fields[3] = { t = "Min",        x = x + indent, y = inc.y(lineSpacing), sp = x + sp, id = "servoMin" }
 fields[4] = { t = "Max",        x = x + indent, y = inc.y(lineSpacing), sp = x + sp, id = "servoMax" }
@@ -74,7 +74,8 @@ fields[5] = { t = "Scale neg",  x = x + indent, y = inc.y(lineSpacing), sp = x +
 fields[6] = { t = "Scale pos",  x = x + indent, y = inc.y(lineSpacing), sp = x + sp, id = "servoScalePos" }
 fields[7] = { t = "Rate",       x = x + indent, y = inc.y(lineSpacing), sp = x + sp, id = "servoRate" }
 fields[8] = { t = "Speed",      x = x + indent, y = inc.y(lineSpacing), sp = x + sp, id = "servoSpeed" }
-fields[9] = { t = "[Override all servos]", x = x + indent * 2, y = inc.y(lineSpacing), preEdit = onClickOverride }
+inc.y(lineSpacing * 0.5)
+fields[9] = { t = "[Override All Servos]", x = x + indent * 2, y = inc.y(lineSpacing), preEdit = onClickOverride }
 
 local function receivedServoConfigurations(page, configs)
     servoConfigs = configs
