@@ -3,7 +3,8 @@ local function setRtc(callback, callbackParam)
         command = 246, -- MSP_SET_RTC
         payload = {},
         processReply = function(self, buf)
-            callback(callbackParam)
+            --rf2.print("RTC set.")
+            if callback then callback(callbackParam) end
         end,
         simulatorResponse = {}
     }
