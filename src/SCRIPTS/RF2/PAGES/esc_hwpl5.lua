@@ -118,6 +118,7 @@ return {
     minBytes    = 81,
     labels      = labels,
     fields      = fields,
+    readOnly    = true,
     simulatorResponse = { 253, 0, 32, 32, 32, 80, 76, 45, 48, 52, 46, 49, 46, 48, 50, 32, 32, 32, 72, 87, 49, 49, 48, 54, 95, 86, 49, 48, 48, 52, 53, 54, 78, 66, 80, 108, 97, 116, 105, 110, 117, 109, 95, 86, 53, 32, 32, 32, 32, 32, 80, 108, 97, 116, 105, 110, 117, 109, 32, 86, 53, 32, 32, 32, 32, 0, 0, 0, 3, 0, 11, 6, 5, 25, 1, 0, 0, 24, 0, 0, 2 },
 
     postRead = function(self)
@@ -150,6 +151,8 @@ return {
         f = self.fields[9]
         f.value = f.value + 4
 
+        -- enable 'Save Page'
+        self.readOnly = false
     end,
 
     preSave = function (self)

@@ -207,6 +207,7 @@ return {
     minBytes    = 66,
     labels      = labels,
     fields      = fields,
+    readOnly    = true,
     simulatorResponse = { 165, 0, 32, 0, 3, 0, 55, 0, 0, 0, 0, 0, 4, 0, 3, 0, 1, 0, 1, 0, 2, 0, 3, 0, 80, 3, 131, 148, 1, 0, 30, 170, 0, 0, 3, 0, 86, 4, 22, 3, 163, 15, 1, 0, 2, 0, 2, 0, 20, 0, 20, 0, 0, 0, 0, 0, 2, 19, 2, 0, 20, 0, 22, 0, 0, 0 },
 
     svFlags     = 0,
@@ -256,6 +257,9 @@ return {
 
         -- update gear ratio
         updateRatio(nil, self)
+
+        -- enable 'Save Page'
+        self.readOnly = false
     end,
 
     preSave = function (self)
