@@ -1,4 +1,4 @@
-local LUA_VERSION = "2.1.0 - 240827"
+local LUA_VERSION = "2.1.0 - 240828"
 
 local uiStatus =
 {
@@ -184,7 +184,7 @@ local function createPopupMenu()
     popupMenu = {}
     if uiState == uiStatus.pages then
         if not Page.readOnly then
-            popupMenu[#popupMenu + 1] = { t = "Save Page", f = saveSettings }
+            popupMenu[#popupMenu + 1] = { t = "Save Page", f = rf2.saveSettings }
         end
         popupMenu[#popupMenu + 1] = { t = "Reload", f = invalidatePages }
     end
