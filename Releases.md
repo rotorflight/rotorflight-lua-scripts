@@ -128,7 +128,7 @@ The official download locations for Rotorflight 2.0.0-RC2 are:
 
 ## Notes
 
-1. There is a new website [www.rotorflight.org](https://www.rotorflight.org/) for Rotorflight-2.
+1. There is a new website [www.rotorflight.org](https://www.rotorflight.org/) for Rotorflight 2.
    The old Wiki in github is deprecated, and is for Rotorflight-1 only.
    Big thanks to the documentation team for setting this up!
 
