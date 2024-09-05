@@ -137,18 +137,19 @@ function crsfAdjustmentsCollector:new()
     local self = setmetatable({}, crsfAdjustmentsCollector)
     self.adjfuncId = 0
     self.adjfuncValue = 0
-    self.flightmodeSensorId = getTelemetryId("FM")
-    if self.flightmodeSensorId == -1 then
-        self.initFailedMessage = "No FM sensor found"
+    self.AdjFId = getTelemetryId("AdjF")
+    self.AdjVId = getTelemetryId("AdjV")
+    if self.AdjFId == -1 then
+        self.initFailedMessage = "No sensor found"
         return self
     end
 
     function self:getAdjfuncIdAndValue()
-        local fm = getValue(self.flightmodeSensorId)
-        local startIndex, _ = string.find(fm, ":")
-        if startIndex and startIndex > 1 then
-            self.adjfuncId = string.sub(fm, 1, startIndex-1)
-            self.adjfuncValue = string.sub(fm, startIndex+1)
+        NewF=getValue(self.AdjFId)
+        NewValue=getValue(self.AdjVId)
+        if NewF ~= 0 and NewValue ~= 0 then
+            self.adjfuncId = NewF
+            self.adjfuncValue = NewValue
         end
         return self.adjfuncId, self.adjfuncValue
     end
