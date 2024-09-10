@@ -40,12 +40,18 @@ local function onReceivedPilotConfig(page, config)
     page.isReady = true
 end
 
+local function pilotConfigReset()
+    -- Reset FM8-GV9, see background.lua
+    model.setGlobalVariable(8, 8, 0)
+end
+
 return {
     read = function(self)
         mspPilotConfig.getPilotConfig(onReceivedPilotConfig, self)
     end,
     write = function(self)
         mspPilotConfig.setPilotConfig(pilotConfig)
+        pilotConfigReset()
         rf2.settingsSaved()
     end,
     title       = "Model",
