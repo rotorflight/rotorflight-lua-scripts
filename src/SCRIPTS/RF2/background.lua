@@ -85,7 +85,7 @@ end
 
 local function run_bg()
     if getRSSI() == 0 and not rf2.runningInSimulator then
-        playTone(800, 20, 0, PLAY_BACKGROUND)
+        --playTone(800, 20, 0, PLAY_BACKGROUND)
         rf2.apiVersion = nil
         timeIsSet = false
         pilotConfigReset()
