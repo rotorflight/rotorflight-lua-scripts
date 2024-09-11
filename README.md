@@ -21,42 +21,6 @@ This version of Rotorflight is also known as **Rotorflight 2** or **RF2**.
 
 Tutorials, documentation, and flight videos can be found on the [Rotorflight website](https://www.rotorflight.org/).
 
-
-## Features
-
-Rotorflight has many features:
-
-* Many receiver protocols: CRSF, S.BUS, F.Port, DSM, IBUS, XBUS, EXBUS, GHOST, CPPM
-* Support for various telemetry protocols: CSRF, S.Port, HoTT, etc.
-* ESC telemetry protocols: BLHeli32, Hobbywing, Scorpion, Kontronik, OMP Hobby, ZTW, APD, YGE
-* Advanced PID control tuned for helicopters
-* Stabilisation modes (6D)
-* Rotor speed governor
-* Motorised tail support with Tail Torque Assist (TTA, also known as TALY)
-* Remote configuration and tuning with the transmitter
-  - With knobs / switches assigned to functions
-  - With Lua scripts on EdgeTX, OpenTX and Ethos
-* Extra servo/motor outputs for AUX functions
-* Fully customisable servo/motor mixer
-* Sensors for battery voltage, current, BEC, etc.
-* Advanced gyro filtering
-  - Dynamic RPM based notch filters
-  - Dynamic notch filters based on FFT
-  - Dynamic LPF
-* High-speed Blackbox logging
-
-Plus lots of features inherited from Betaflight:
-
-* Configuration profiles for changing various tuning parameters
-* Rates profiles for changing the stick feel and agility
-* Multiple ESC protocols: PWM, DSHOT, Multishot, etc.
-* Configurable buzzer sounds
-* Multi-color RGB LEDs
-* GPS support
-
-And many more...
-
-
 ## Lua Scripts Requirements
 
 - EdgeTX 2.5.0 or OpenTX 2.3.12 or later transmitter firmware
@@ -64,6 +28,9 @@ And many more...
   - a FrSky Smartport or F.Port receiver, _or_
   - a Crossfire v2.11 or newer receiver, _or_
   - an ELRS 2.0.1 or newer receiver
+
+> [!IMPORTANT]  
+> If you're using ELRS, make sure to set the baudrate to 921k in the *Hardware* menu of your transmitter.
 
 ## Installation
 
