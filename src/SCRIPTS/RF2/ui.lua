@@ -426,6 +426,7 @@ local function run_ui(event)
         prevUiState = nil
     elseif uiState == uiStatus.mainMenu then
         if event == EVT_VIRTUAL_EXIT then
+            collectgarbage()
             return 2
         elseif event == EVT_VIRTUAL_NEXT then
             incMainMenu(1)
