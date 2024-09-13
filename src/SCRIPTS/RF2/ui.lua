@@ -560,7 +560,7 @@ local function run_ui(event)
             prevUiState = nil
         end
     end
-    if getRSSI() == 0 then
+    if getRSSI() == 0 and not rf2.runningInSimulator then
         lcd.drawText(rf2.radio.NoTelem[1],rf2.radio.NoTelem[2],rf2.radio.NoTelem[3],rf2.radio.NoTelem[4])
     end
 
