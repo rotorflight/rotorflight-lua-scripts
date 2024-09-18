@@ -1,3 +1,5 @@
+-- Note: voice files were made with Balabolka and the Microsoft Zira voice.
+
 local adjustmentCollector
 local timeLastChange = -1
 local timeExitTool
@@ -86,7 +88,11 @@ local adjfunctions = {
     -- cross-coupling
     id61 = { name = "Cross Coup Gain", wavs = { "crossc", "gain" } },
     id62 = { name = "Cross Coup Ratio", wavs = { "crossc", "ratio" } },
-    id63 = { name = "Cross Coup Cutoff", wavs = { "crossc", "cutoff" } }
+    id63 = { name = "Cross Coup Cutoff", wavs = { "crossc", "cutoff" } },
+
+    -- accelerometer
+    id64 = { name = "Accelerometer Pitch Trim", wavs = { "accpitchtrim" } },
+    id65 = { name = "Accelerometer Roll Trim", wavs = { "accrolltrim" } },
 }
 
 local function drawTextMultiline(x, y, text, options)

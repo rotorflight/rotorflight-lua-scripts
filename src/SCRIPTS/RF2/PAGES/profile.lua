@@ -10,7 +10,11 @@ local y = yMinLim - lineSpacing
 local inc = { x = function(val) x = x + val return x end, y = function(val) y = y + val return y end }
 local labels = {}
 local fields = {}
+local profileSwitcher = assert(rf2.loadScript("PAGES/helpers/profileSwitcher.lua"))()
 
+fields[#fields + 1] = { t = "Current PID profile",     x = x,          y = inc.y(lineSpacing), sp = x + sp * 1.17, data = { value = nil, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = profileSwitcher.startPidEditing, postEdit = profileSwitcher.endPidEditing }
+
+inc.y(lineSpacing * 0.25)
 fields[#fields + 1] = { t = "I-term relax type",       x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 2, vals = { 17 }, table = { [0] = "OFF", "RP", "RPY" } }
 fields[#fields + 1] = { t = "Cutoff point R",          x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 100, vals = { 18 } }
 fields[#fields + 1] = { t = "Cutoff point P",          x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 100, vals = { 19 } }
@@ -84,5 +88,14 @@ return {
     minBytes    = 41,
     labels      = labels,
     fields      = fields,
-    simulatorResponse = { 3, 25, 250, 0, 12, 0, 1, 30, 30, 45, 50, 50, 100, 15, 15, 20, 2, 10, 10, 15, 100, 100, 5, 0, 30, 0, 25, 0, 40, 55, 40, 75, 20, 25, 0, 15, 45, 45, 15, 15, 20 },
+    --simulatorResponse = { 3, 25, 250, 0, 12, 0, 1, 30, 30, 45, 50, 50, 100, 15, 15, 20, 2, 10, 10, 15, 100, 100, 5, 0, 30, 0, 25, 0, 40, 55, 40, 75, 20, 25, 0, 15, 45, 45, 15, 15, 20 },
+    profileSwitcher = profileSwitcher,
+
+    postLoad = function(self)
+        self.profileSwitcher.getStatus(self)
+    end,
+
+    timer = function(self)
+        self.profileSwitcher.checkStatus(self)
+    end,
 }

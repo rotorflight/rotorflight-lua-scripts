@@ -10,7 +10,11 @@ local y = yMinLim - lineSpacing
 local inc = { x = function(val) x = x + val return x end, y = function(val) y = y + val return y end }
 local labels = {}
 local fields = {}
+local profileSwitcher = assert(rf2.loadScript("PAGES/helpers/profileSwitcher.lua"))()
 
+fields[#fields + 1] = { t = "Current PID profile",     x = x,          y = inc.y(lineSpacing), sp = x + sp * 1.17, data = { value = nil, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = profileSwitcher.startPidEditing, postEdit = profileSwitcher.endPidEditing }
+
+inc.y(lineSpacing * 0.25)
 fields[#fields + 1] = { t = "Full headspeed",          x = x, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 50000, vals = { 1, 2 }, mult = 10, id = "govHeadspeed"}
 fields[#fields + 1] = { t = "Max throttle",            x = x, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 100, vals = { 13 }, id = "govMaxThrottle" }
 fields[#fields + 1] = { t = "PID master gain",         x = x, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 3 },  id = "govMasterGain" }
@@ -34,4 +38,13 @@ return {
     labels      = labels,
     fields      = fields,
     simulatorResponse = { 208, 7, 100, 10, 125, 5, 20, 0, 20, 10, 40, 100, 100 },
+    profileSwitcher = profileSwitcher,
+
+    postLoad = function(self)
+        self.profileSwitcher.getStatus(self)
+    end,
+
+    timer = function(self)
+        self.profileSwitcher.checkStatus(self)
+    end,
 }

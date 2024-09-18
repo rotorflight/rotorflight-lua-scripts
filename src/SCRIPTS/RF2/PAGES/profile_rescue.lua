@@ -10,7 +10,11 @@ local y = yMinLim - lineSpacing
 local inc = { x = function(val) x = x + val return x end, y = function(val) y = y + val return y end }
 local labels = {}
 local fields = {}
+local profileSwitcher = assert(rf2.loadScript("PAGES/helpers/profileSwitcher.lua"))()
 
+fields[#fields + 1] = { t = "Current PID profile",     x = x,          y = inc.y(lineSpacing), sp = x + sp * 1.17, data = { value = nil, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = profileSwitcher.startPidEditing, postEdit = profileSwitcher.endPidEditing }
+
+inc.y(lineSpacing * 0.25)
 --fields[#fields + 1] = { t = "Enable rescue",     x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 2,     vals = { 1 }, table = { [0] = "Off", "On", "Alt hold" } }
 fields[#fields + 1] = { t = "Enable rescue",         x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1,     vals = { 1 }, table = { [0] = "Off", "On" } }
 
@@ -55,4 +59,13 @@ return {
     labels      = labels,
     fields      = fields,
     simulatorResponse = { 1, 0, 200, 100, 5, 3, 10, 5, 182, 3, 188, 2, 194, 1, 244, 1, 20, 0, 20, 0, 10, 0, 232, 3, 44, 1, 184, 11 },
+    profileSwitcher = profileSwitcher,
+
+    postLoad = function(self)
+        self.profileSwitcher.getStatus(self)
+    end,
+
+    timer = function(self)
+        self.profileSwitcher.checkStatus(self)
+    end,
 }
