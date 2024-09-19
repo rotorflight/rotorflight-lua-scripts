@@ -1,5 +1,6 @@
 local timeIsSet = rf2.runningInSimulator
-local mspApiVersion, mspSetRtc, mspPilotConfig, adjTellerTask
+local nameIsSet = false
+local mspApiVersion, mspSetRtc, mspName, mspPilotConfig, adjTellerTask
 local adjTellerEnabled = true
 local pilotConfigSetMagic = -765
 
@@ -7,6 +8,23 @@ local function onApiVersionReceived(_, version)
     playTone(1600, 300, 0, PLAY_BACKGROUND)
     rf2.apiVersion = version
     mspApiVersion = nil
+    collectgarbage()
+end
+
+local function onModelNameReceived(_, name)
+    playTone(1800, 300, 0, PLAY_BACKGROUND)
+    local info = model.getInfo()
+    info.name = name
+    model.setInfo(info)
+    nameIsSet = true
+    mspName = nil
+    collectgarbage()
+end
+
+local function onRtcSet()
+    playTone(2000, 300, 0, PLAY_BACKGROUND)
+    timeIsSet = true
+    mspSetRtc = nil
     collectgarbage()
 end
 
@@ -57,7 +75,7 @@ local function setParam(paramType, paramValue)
 end
 
 local function onPilotConfigReceived(_, config)
-    playTone(1800, 300, 0, PLAY_BACKGROUND)
+    playTone(2200, 300, 0, PLAY_BACKGROUND)
 
     local paramValue = config.model_param1_value.value
     local paramType = config.model_param1_type.table[config.model_param1_type.value]
@@ -76,22 +94,16 @@ local function onPilotConfigReceived(_, config)
     pilotConfigSet()
 end
 
-local function onRtcSet()
-    playTone(2000, 300, 0, PLAY_BACKGROUND)
-    timeIsSet = true
-    mspSetRtc = nil
-    collectgarbage()
-end
-
 local function run_bg()
     if getRSSI() == 0 and not rf2.runningInSimulator then
         --playTone(800, 20, 0, PLAY_BACKGROUND)
+        rf2.mspQueue:clear()
         rf2.apiVersion = nil
-        timeIsSet = false
+        timeIsSet, nameIsSet = false, false
         pilotConfigReset()
         adjTellerEnabled = true
-        if mspApiVersion or mspPilotConfig or mspSetRtc or adjTellerTask then
-            mspApiVersion, mspPilotConfig, mspSetRtc, adjTellerTask = nil, nil, nil, nil
+        if mspApiVersion or mspName or mspPilotConfig or mspSetRtc or adjTellerTask then
+            mspApiVersion, mspName, mspPilotConfig, mspSetRtc, adjTellerTask = nil, nil, nil, nil, nil
             collectgarbage()
         end
         return 0
@@ -107,10 +119,10 @@ local function run_bg()
         return 0
     end
 
-    if rf2.apiVersion >= 12.07 and not pilotConfigHasBeenSet() then
+    if not nameIsSet then
         if rf2.mspQueue:isProcessed() then
-            mspPilotConfig = mspPilotConfig or assert(rf2.loadScript(rf2.baseDir.."MSP/mspPilotConfig.lua"))()
-            mspPilotConfig.getPilotConfig(onPilotConfigReceived)
+            mspName = mspName or assert(rf2.loadScript(rf2.baseDir.."MSP/mspName.lua"))()
+            mspName.getModelName(onModelNameReceived)
         end
         return 0
     end
@@ -119,6 +131,14 @@ local function run_bg()
         if rf2.mspQueue:isProcessed() then
             mspSetRtc = mspSetRtc or assert(rf2.loadScript(rf2.baseDir.."MSP/mspSetRtc.lua"))()
             mspSetRtc.setRtc(onRtcSet)
+        end
+        return 0
+    end
+
+    if rf2.apiVersion >= 12.07 and not pilotConfigHasBeenSet() then
+        if rf2.mspQueue:isProcessed() then
+            mspPilotConfig = mspPilotConfig or assert(rf2.loadScript(rf2.baseDir.."MSP/mspPilotConfig.lua"))()
+            mspPilotConfig.getPilotConfig(onPilotConfigReceived)
         end
         return 0
     end
