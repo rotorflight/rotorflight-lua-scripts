@@ -6,7 +6,7 @@ function MspQueueController.new()
     local self = setmetatable({}, MspQueueController)
     self.messageQueue = {}
     self.currentMessage = nil
-    self.lastTimeCommandSent = 0
+    self.lastTimeCommandSent = nil
     self.retryCount = 0
     self.maxRetries = 3
     return self
@@ -54,11 +54,12 @@ function MspQueueController:processQueue()
     --rf2.print("retryCount: "..self.retryCount)
 
     if not rf2.runningInSimulator then
-        if self.lastTimeCommandSent == 0 or self.lastTimeCommandSent + 0.5 < rf2.clock() then
+        if not self.lastTimeCommandSent or self.lastTimeCommandSent + 0.5 < rf2.clock() then
             if self.currentMessage.payload then
-                --rf2.log("Sending  cmd "..self.currentMessage.command..": {" .. joinTableItems(self.currentMessage.payload, ", ") .. "}")
+                --rf2.print("Sending  cmd "..self.currentMessage.command..": {" .. joinTableItems(self.currentMessage.payload, ", ") .. "}")
                 rf2.protocol.mspWrite(self.currentMessage.command, self.currentMessage.payload)
             else
+                --rf2.print("Sending  cmd "..self.currentMessage.command)
                 rf2.protocol.mspWrite(self.currentMessage.command, {})
             end
             self.lastTimeCommandSent = rf2.clock()
@@ -78,7 +79,10 @@ function MspQueueController:processQueue()
         err = nil
     end
 
-    if cmd then rf2.print("Received cmd: "..tostring(cmd)) end
+    if cmd then
+        self.lastTimeCommandSent = nil
+        rf2.print("Received cmd: "..tostring(cmd))
+    end
     if err then rf2.print("  ERROR flag set!") end
 
     -- if cmd == 217 then   -- MSP_ESC_PARAMETERS
@@ -95,13 +99,18 @@ function MspQueueController:processQueue()
         collectgarbage()
     elseif self.retryCount > self.maxRetries then
         rf2.print("Max retries reached, aborting queue")
-        self.messageQueue = {}
         if self.currentMessage.errorHandler then
             self.currentMessage:errorHandler()
         end
-        self.currentMessage = nil
+        self:clear()
         collectgarbage()
     end
+end
+
+function MspQueueController:clear()
+    self.messageQueue = {}
+    self.currentMessage = nil
+    mspClearTxBuf()
 end
 
 local function deepCopy(original)
