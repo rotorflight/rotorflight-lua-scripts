@@ -5,14 +5,14 @@ local adjTellerEnabled = true
 local pilotConfigSetMagic = -765
 
 local function onApiVersionReceived(_, version)
-    playTone(1600, 300, 0, PLAY_BACKGROUND)
+    playTone(1600, 100, 0, PLAY_BACKGROUND)
     rf2.apiVersion = version
     mspApiVersion = nil
     collectgarbage()
 end
 
 local function onModelNameReceived(_, name)
-    playTone(1800, 300, 0, PLAY_BACKGROUND)
+    playTone(1800, 100, 0, PLAY_BACKGROUND)
     local info = model.getInfo()
     info.name = name
     model.setInfo(info)
@@ -22,7 +22,7 @@ local function onModelNameReceived(_, name)
 end
 
 local function onRtcSet()
-    playTone(2000, 300, 0, PLAY_BACKGROUND)
+    playTone(2000, 100, 0, PLAY_BACKGROUND)
     timeIsSet = true
     mspSetRtc = nil
     collectgarbage()
@@ -75,7 +75,7 @@ local function setParam(paramType, paramValue)
 end
 
 local function onPilotConfigReceived(_, config)
-    playTone(2200, 300, 0, PLAY_BACKGROUND)
+    playTone(2200, 100, 0, PLAY_BACKGROUND)
 
     local paramValue = config.model_param1_value.value
     local paramType = config.model_param1_type.table[config.model_param1_type.value]
@@ -156,4 +156,9 @@ local function run_bg()
     return 0
 end
 
-return run_bg
+local function run_protected()
+    local status, err = pcall(run_bg)
+    if not status then rf2.print(err) end
+end
+
+return run_protected
