@@ -1,5 +1,6 @@
 local template = assert(rf2.loadScript(rf2.radio.template))()
 local mspPilotConfig = assert(rf2.loadScript("MSP/mspPilotConfig.lua"))()
+local mspName = assert(rf2.loadScript("MSP/mspName.lua"))()
 local margin = template.margin
 local indent = template.indent
 local lineSpacing = template.lineSpacing
@@ -16,6 +17,9 @@ local pilotConfig = {}
 x = margin
 y = yMinLim - tableSpacing.header
 
+labels[1] = { t = "---",                  x = x, y = inc.y(lineSpacing) }
+
+inc.y(lineSpacing * 0.5)
 fields[1] = { t = "Model ID",             x = x, y = inc.y(lineSpacing), sp = x + sp }
 fields[2] = { t = "Param1 type",          x = x, y = inc.y(lineSpacing), sp = x + sp }
 fields[3] = { t = "Param1 value",         x = x, y = inc.y(lineSpacing), sp = x + sp }
@@ -34,6 +38,10 @@ local function setValues()
     fields[7].data = pilotConfig.model_param3_value
 end
 
+local function onReceivedModelName(page, name)
+    labels[1].t = name
+end
+
 local function onReceivedPilotConfig(page, config)
     pilotConfig = config
     setValues()
@@ -47,6 +55,7 @@ end
 
 return {
     read = function(self)
+        mspName.getModelName(onReceivedModelName, self)
         mspPilotConfig.getPilotConfig(onReceivedPilotConfig, self)
     end,
     write = function(self)
