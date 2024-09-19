@@ -13,12 +13,11 @@ local supportedProtocols =
     crsf =
     {
         mspTransport    = "MSP/crsf.lua",
-        cmsTransport    = "CMS/crsf.lua",
         push            = crossfireTelemetryPush,
         maxTxBufferSize = 8,
         maxRxBufferSize = 58,
         maxRetries      = 3,
-        saveTimeout     = 3.0,
+        saveTimeout     = 4.0,
         cms             = {},
     },
     ghst =
@@ -28,7 +27,7 @@ local supportedProtocols =
         maxTxBufferSize = 10, -- Tx -> Rx (Push)
         maxRxBufferSize = 6,  -- Rx -> Tx (Pop)
         maxRetries      = 3,
-        saveTimeout     = 3.0,
+        saveTimeout     = 4.0,
         cms             = {},
     }
 }
