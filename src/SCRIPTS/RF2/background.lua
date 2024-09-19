@@ -75,7 +75,7 @@ local function setParam(paramType, paramValue)
 end
 
 local function onPilotConfigReceived(_, config)
-    playTone(2200, 100, 0, PLAY_BACKGROUND)
+    playTone(2133, 200, 0, PLAY_BACKGROUND)
 
     local paramValue = config.model_param1_value.value
     local paramType = config.model_param1_type.table[config.model_param1_type.value]
