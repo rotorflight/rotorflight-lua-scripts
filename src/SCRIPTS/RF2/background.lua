@@ -74,6 +74,8 @@ local function setParam(paramType, paramValue)
         model.setGlobalVariable(6, 0, paramValue)
     elseif paramType == "GV8" then
         model.setGlobalVariable(7, 0, paramValue)
+    elseif paramType == "GV9" then
+        model.setGlobalVariable(8, 0, paramValue)
     end
 end
 
