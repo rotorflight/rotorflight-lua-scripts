@@ -54,7 +54,7 @@ function MspQueueController:processQueue()
     --rf2.print("retryCount: "..self.retryCount)
 
     if not rf2.runningInSimulator then
-        if not self.lastTimeCommandSent or self.lastTimeCommandSent + 0.5 < rf2.clock() then
+        if not self.lastTimeCommandSent or self.lastTimeCommandSent + 0.8 < rf2.clock() then
             if self.currentMessage.payload then
                 --rf2.print("Sending  cmd "..self.currentMessage.command..": {" .. joinTableItems(self.currentMessage.payload, ", ") .. "}")
                 rf2.protocol.mspWrite(self.currentMessage.command, self.currentMessage.payload)

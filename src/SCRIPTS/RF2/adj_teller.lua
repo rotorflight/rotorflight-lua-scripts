@@ -162,18 +162,18 @@ function crsfAdjustmentsCollector:new()
     end
 
     function self:getAdjfuncIdAndValue()
-        if self.adjfuncIdSensorId and self.adjfuncValueSensorId then
-            local adjfuncId = getValue(self.adjfuncIdSensorId)
-            if adjfuncId ~= 0 then self.adjfuncId = adjfuncId end
-            local adjfuncValue = getValue(self.adjfuncValueSensorId)
-            if adjfuncValue ~= 0 then self.adjfuncValue = adjfuncValue end
-        elseif self.flightmodeSensorId then
+        if self.flightmodeSensorId then
             local fm = getValue(self.flightmodeSensorId)
             local startIndex, _ = string.find(fm, ":")
             if startIndex and startIndex > 1 then
                 self.adjfuncId = string.sub(fm, 1, startIndex-1)
                 self.adjfuncValue = string.sub(fm, startIndex+1)
             end
+        else
+            local adjfuncId = getValue(self.adjfuncIdSensorId)
+            if adjfuncId ~= 0 then self.adjfuncId = adjfuncId end
+            local adjfuncValue = getValue(self.adjfuncValueSensorId)
+            if adjfuncValue ~= 0 then self.adjfuncValue = adjfuncValue end
         end
         return self.adjfuncId, self.adjfuncValue
     end
