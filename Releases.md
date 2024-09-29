@@ -1,3 +1,35 @@
+# 2.1.0-20240929
+
+This is a _development snapshot_ of the Rotorflight 2.1 Lua Scripts for EdgeTX/OpenTX.
+
+## Notes
+
+This version is intended to be used for beta-testing only.
+It is not fully working nor stable, and should not be used by end-users.
+
+For more information, please join the Rotorflight Discord chat.
+
+## Downloads
+
+The download locations are:
+
+- [Rotorflight Configurator](https://github.com/rotorflight/rotorflight-configurator/releases/tag/snapshot/2.1.0-20240929)
+- [Rotorflight Blackbox](https://github.com/rotorflight/rotorflight-blackbox/releases/tag/snapshot/2.1.0-20240929)
+- [Lua Scripts for EdgeTx and OpenTx](https://github.com/rotorflight/rotorflight-lua-scripts/releases/tag/snapshot/2.1.0-20240929)
+- [Lua Scripts for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos/releases/tag/snapshot/2.1.0-20240929)
+
+
+## Changes since 2.1.0 20240828
+
+- Added automatic profile switching to all Profile pages
+- Added _Model on TX_ page, with which you can automatically set model name, timers or global variables on your transmitter. Data is stored on the heli, so you can have different timers for your helis while using just one model on the transmitter. Note: rf2bg.lua should be enabled for this to work.
+- Adjustment Teller: added support for ELRS custom telemetry
+- Adjustment Teller: added support for accelerometer adjustments
+- Improved MSP handling
+
+
+***
+
 # 2.1.0-20240828
 
 This is a _development snapshot_ of the Rotorflight 2.1 Lua Scripts for EdgeTX/OpenTX.
