@@ -30,7 +30,7 @@ jobs:
     - name: Create Snapshot
       run: |
         .github/scripts/extract-release-notes.py "${{ env.GIT_VER }}" Releases.md > Notes.md
-        gh release create ${{ env.GIT_TAG }} --prerelease --notes-file Notes.md --title "Rotorflight LUA Scripts - Snapshot ${{ env.GIT_VER }}" *.zip
+        gh release create ${{ env.GIT_TAG }} --prerelease --notes-file Notes.md --title "Rotorflight Lua Scripts - Snapshot ${{ env.GIT_VER }}" *.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
