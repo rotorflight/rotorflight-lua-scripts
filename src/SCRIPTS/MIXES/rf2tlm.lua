@@ -170,7 +170,7 @@ local RFSensors = {
     -- ESC#1 capacity/consumption
     [0x1043]  = { name="EscC",    unit=UNIT_MAH,                 prec=0,    dec=decU16  },
     -- ESC#1 eRPM
-    [0x1044]  = { name="EscR",    unit=UNIT_RPMS,                prec=0,    dec=decU16  },
+    [0x1044]  = { name="EscR",    unit=UNIT_RPMS,                prec=0,    dec=decU24  },
     -- ESC#1 PWM/Power
     [0x1045]  = { name="EscP",    unit=UNIT_PERCENT,             prec=1,    dec=decU16  },
     -- ESC#1 throttle
@@ -195,7 +195,7 @@ local RFSensors = {
     -- ESC#2 capacity/consumption
     [0x1053]  = { name="Es2C",    unit=UNIT_MAH,                 prec=0,    dec=decU16  },
     -- ESC#2 eRPM
-    [0x1054]  = { name="Es2R",    unit=UNIT_RPMS,                prec=0,    dec=decU16  },
+    [0x1054]  = { name="Es2R",    unit=UNIT_RPMS,                prec=0,    dec=decU24  },
     -- ESC#2 temperature
     [0x1057]  = { name="Es2T",    unit=UNIT_CELSIUS,             prec=0,    dec=decU8   },
     -- ESC#2 Model Id
