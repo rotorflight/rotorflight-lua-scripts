@@ -81,7 +81,7 @@ local function decControl(data, pos)
     y,c,pos = decS12S12(data,pos)
     setTelemetryValue(0x1031, 0, 0, p, UNIT_DEGREE, 2, "CPtc")
     setTelemetryValue(0x1032, 0, 0, r, UNIT_DEGREE, 2, "CRol")
-    setTelemetryValue(0x1033, 0, 0, y, UNIT_DEGREE, 2, "CYaw")
+    setTelemetryValue(0x1033, 0, 0, 3*y, UNIT_DEGREE, 2, "CYaw")
     setTelemetryValue(0x1034, 0, 0, c, UNIT_DEGREE, 2, "CCol")
     return nil, pos
 end
@@ -170,7 +170,7 @@ local RFSensors = {
     -- ESC#1 capacity/consumption
     [0x1043]  = { name="EscC",    unit=UNIT_MAH,                 prec=0,    dec=decU16  },
     -- ESC#1 eRPM
-    [0x1044]  = { name="EscR",    unit=UNIT_RPMS,                prec=0,    dec=decU16  },
+    [0x1044]  = { name="EscR",    unit=UNIT_RPMS,                prec=0,    dec=decU24  },
     -- ESC#1 PWM/Power
     [0x1045]  = { name="EscP",    unit=UNIT_PERCENT,             prec=1,    dec=decU16  },
     -- ESC#1 throttle
@@ -195,7 +195,7 @@ local RFSensors = {
     -- ESC#2 capacity/consumption
     [0x1053]  = { name="Es2C",    unit=UNIT_MAH,                 prec=0,    dec=decU16  },
     -- ESC#2 eRPM
-    [0x1054]  = { name="Es2R",    unit=UNIT_RPMS,                prec=0,    dec=decU16  },
+    [0x1054]  = { name="Es2R",    unit=UNIT_RPMS,                prec=0,    dec=decU24  },
     -- ESC#2 temperature
     [0x1057]  = { name="Es2T",    unit=UNIT_CELSIUS,             prec=0,    dec=decU8   },
     -- ESC#2 Model Id
