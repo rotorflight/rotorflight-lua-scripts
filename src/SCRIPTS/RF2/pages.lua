@@ -21,4 +21,6 @@ if rf2.apiVersion >= 12.07 then
     PageFiles[#PageFiles + 1] = { title = "ESC - YGE", script = "esc_yge.lua" }
 end
 
+PageFiles[#PageFiles + 1] = { title = "Experimental Parameters (Danger!!)", script = "experimental.lua" }
+
 return PageFiles
