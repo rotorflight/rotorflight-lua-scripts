@@ -386,6 +386,14 @@ local function drawPopupMenu()
     end
 end
 
+rf2.loadPageFiles = function(setCurrentPageToLastPage)
+    PageFiles = assert(rf2.loadScript("pages.lua"))()
+    if setCurrentPageToLastPage then
+        currentPage = #PageFiles
+    end
+    collectgarbage()
+end
+
 local function run_ui(event)
     --rf2.print("uiState: "..uiState.." pageState: "..pageState)
     if displayMessage then
@@ -420,7 +428,7 @@ local function run_ui(event)
             return 0
         end
         init = nil
-        PageFiles = assert(rf2.loadScript("pages.lua"))()
+        rf2.loadPageFiles()
         invalidatePages()
         uiState = prevUiState or uiStatus.mainMenu
         prevUiState = nil

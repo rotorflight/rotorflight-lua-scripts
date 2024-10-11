@@ -1,4 +1,5 @@
 local PageFiles = {}
+local settings = assert(rf2.loadScript("PAGES/helpers/settingsHelper.lua"))().loadSettings()
 
 -- Rotorflight pages.
 PageFiles[#PageFiles + 1] = { title = "Status", script = "status.lua" }
@@ -15,12 +16,23 @@ PageFiles[#PageFiles + 1] = { title = "Accelerometer Trim", script = "accelerome
 --PageFiles[#PageFiles + 1] = { title = "Copy profiles", script = "copy_profiles.lua" }
 
 if rf2.apiVersion >= 12.07 then
-    PageFiles[#PageFiles + 1] = { title = "Model on TX", script = "model.lua" }
-    PageFiles[#PageFiles + 1] = { title = "ESC - HW Platinum V5", script = "esc_hwpl5.lua" }
-    PageFiles[#PageFiles + 1] = { title = "ESC - Scorpion Tribunus", script = "esc_scorp.lua" }
-    PageFiles[#PageFiles + 1] = { title = "ESC - YGE", script = "esc_yge.lua" }
-end
+    if settings.showModelOnTx == 1 then
+        PageFiles[#PageFiles + 1] = { title = "Model on TX", script = "model.lua" }
+    end
+    if settings.showExperimental == 1 then
+        PageFiles[#PageFiles + 1] = { title = "Experimental (danger!)", script = "experimental.lua" }
+    end
+    if settings.showPlatinumV5 == 1 then
+        PageFiles[#PageFiles + 1] = { title = "ESC - HW Platinum V5", script = "esc_hwpl5.lua" }
+    end
+    if settings.showTribunus == 1 then
+        PageFiles[#PageFiles + 1] = { title = "ESC - Scorpion Tribunus", script = "esc_scorp.lua" }
+    end
+    if settings.showYge == 1 then
+        PageFiles[#PageFiles + 1] = { title = "ESC - YGE", script = "esc_yge.lua" }
+    end
 
-PageFiles[#PageFiles + 1] = { title = "Experimental Parameters (Danger!!)", script = "experimental.lua" }
+    PageFiles[#PageFiles + 1] = { title = "Settings", script = "settings.lua" }
+end
 
 return PageFiles
