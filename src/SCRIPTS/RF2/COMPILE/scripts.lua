@@ -37,6 +37,7 @@ local scripts = {
     "/SCRIPTS/RF2/PAGES/profile_rescue.lua",
     "/SCRIPTS/RF2/PAGES/rates.lua",
     "/SCRIPTS/RF2/PAGES/servos.lua",
+    "/SCRIPTS/RF2/PAGES/settings.lua",
     "/SCRIPTS/RF2/PAGES/status.lua",
     "/SCRIPTS/RF2/RATETABLES/ACTUAL.lua",
     "/SCRIPTS/RF2/RATETABLES/BETAFL.lua",
