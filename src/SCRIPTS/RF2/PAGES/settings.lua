@@ -21,16 +21,18 @@ fields[1] = { t = "Model on TX",             x = x + indent, y = inc.y(lineSpaci
 fields[2] = { t = "Experimental (!)",        x = x + indent, y = inc.y(lineSpacing), sp = x + sp }
 inc.y(lineSpacing * 0.5)
 labels[2] = { t = "Display ESC Pages",       x = x, y = inc.y(lineSpacing) }
-fields[3] = { t = "HW Platinum V5",          x = x + indent, y = inc.y(lineSpacing), sp = x + sp }
-fields[4] = { t = "Scorpion Tribunus",       x = x + indent, y = inc.y(lineSpacing), sp = x + sp }
-fields[5] = { t = "YGE",                     x = x + indent, y = inc.y(lineSpacing), sp = x + sp }
+fields[3] = { t = "FlyRotor",                x = x + indent, y = inc.y(lineSpacing), sp = x + sp }
+fields[4] = { t = "HW Platinum V5",          x = x + indent, y = inc.y(lineSpacing), sp = x + sp }
+fields[5] = { t = "Scorpion Tribunus",       x = x + indent, y = inc.y(lineSpacing), sp = x + sp }
+fields[6] = { t = "YGE",                     x = x + indent, y = inc.y(lineSpacing), sp = x + sp }
 
 local function setValues()
     fields[1].data = { value = settings.showModelOnTx or 0, min = 0, max = 1, table = { [0] = "Hide", "Show" } }
     fields[2].data = { value = settings.showExperimental or 0, min = 0, max = 1, table = { [0] = "Hide", "Show" } }
-    fields[3].data = { value = settings.showPlatinumV5 or 0, min = 0, max = 1, table = { [0] = "Hide", "Show" } }
-    fields[4].data = { value = settings.showTribunus or 0, min = 0, max = 1, table = { [0] = "Hide", "Show" } }
-    fields[5].data = { value = settings.showYge or 0, min = 0, max = 1, table = { [0] = "Hide", "Show" } }
+    fields[3].data = { value = settings.showFlyRotor or 0, min = 0, max = 1, table = { [0] = "Hide", "Show" } }
+    fields[4].data = { value = settings.showPlatinumV5 or 0, min = 0, max = 1, table = { [0] = "Hide", "Show" } }
+    fields[5].data = { value = settings.showTribunus or 0, min = 0, max = 1, table = { [0] = "Hide", "Show" } }
+    fields[6].data = { value = settings.showYge or 0, min = 0, max = 1, table = { [0] = "Hide", "Show" } }
 end
 
 return {
@@ -41,9 +43,10 @@ return {
     write = function(self)
         settings.showModelOnTx = fields[1].data.value
         settings.showExperimental = fields[2].data.value
-        settings.showPlatinumV5 = fields[3].data.value
-        settings.showTribunus = fields[4].data.value
-        settings.showYge = fields[5].data.value
+        settings.showFlyRotor = fields[3].data.value
+        settings.showPlatinumV5 = fields[4].data.value
+        settings.showTribunus = fields[5].data.value
+        settings.showYge = fields[6].data.value
         settingsHelper.saveSettings(settings)
         rf2.loadPageFiles(true)
         rf2.settingsSaved()

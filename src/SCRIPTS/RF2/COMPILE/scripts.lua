@@ -23,6 +23,7 @@ local scripts = {
     "/SCRIPTS/RF2/PAGES/helpers/settingsHelper.lua",
     "/SCRIPTS/RF2/PAGES/accelerometer.lua",
     "/SCRIPTS/RF2/PAGES/copy_profiles.lua",
+    "/SCRIPTS/RF2/PAGES/esc_flyrotor.lua",
     "/SCRIPTS/RF2/PAGES/esc_hwpl5.lua",
     "/SCRIPTS/RF2/PAGES/esc_scorp.lua",
     "/SCRIPTS/RF2/PAGES/esc_yge.lua",
