@@ -37,11 +37,11 @@ fields[#fields + 1] = { t = "Current rate profile",  x = x,              y = inc
 
 inc.y(lineSpacing * 0.25)
 labels[#labels + 1] = { t = "Arming Disabled Flags", x = x,              y = inc.y(lineSpacing) }
-labels[#labels + 1] = { t = "---",                   x = x + indent,     y = inc.y(lineSpacing) }
+labels[#labels + 1] = { t = "---",                   x = x + indent,     y = inc.y(lineSpacing), bold = false }
 
 inc.y(lineSpacing * 0.25)
 labels[#labels + 1] = { t = "Dataflash Free Space",  x = x,              y = inc.y(lineSpacing) }
-labels[#labels + 1] = { t = "---",                   x = x + indent,     y = inc.y(lineSpacing) }
+labels[#labels + 1] = { t = "---",                   x = x + indent,     y = inc.y(lineSpacing), bold = false }
 fields[#fields + 1] = { t = "[Erase]",               x = x + indent * 7, y = y }
 
 inc.y(lineSpacing * 0.25)
@@ -124,6 +124,7 @@ return {
         end
         fields[4].data.value = fcStatus.realTimeLoad
         fields[5].data.value = fcStatus.cpuLoad
+        rf2.lcdNeedsInvalidate = true
     end,
 
     onErasedDataflash = function(self, _)
@@ -134,6 +135,7 @@ return {
         erasingDataflash = true
         rf2.setWaitMessage("Erasing...")
         mspDataflash.eraseDataflash(self.onErasedDataflash, self)
+        rf2.lcdNeedsInvalidate = true
     end,
 
     onReceivedDataflashSummary = function(self, summary)
@@ -146,6 +148,7 @@ return {
         if dataflashSummary.supported then
             fields[3].preEdit = self.onClickErase
         end
+        rf2.lcdNeedsInvalidate = true
         self.isReady = true
     end,
 }

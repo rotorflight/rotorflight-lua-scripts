@@ -38,8 +38,9 @@ end
 return {
     read = function(self)
         setValues()
+        rf2.lcdNeedsInvalidate = true
         self.isReady = true
-        end,
+    end,
     write = function(self)
         settings.showModelOnTx = fields[1].data.value
         settings.showExperimental = fields[2].data.value

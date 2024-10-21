@@ -24,7 +24,7 @@ fields[#fields + 1] = { t = "Cutoff point Y",          x = x + indent, y = inc.y
 inc.y(lineSpacing * 0.25)
 labels[#labels + 1] = { t = "Main Rotor",              x = x,          y = inc.y(lineSpacing) }
 fields[#fields + 1] = { t = "Coll to pitch gain",      x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 28 } }
-labels[#labels + 1] = { t = "Cross-Coupling",          x = x + indent, y = inc.y(lineSpacing) }
+labels[#labels + 1] = { t = "Cross-Coupling",          x = x + indent, y = inc.y(lineSpacing), bold = false }
 fields[#fields + 1] = { t = "Gain",                    x = x + indent*2, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 34 } }
 fields[#fields + 1] = { t = "Ratio",                   x = x + indent*2, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 200, vals = { 35 } }
 fields[#fields + 1] = { t = "Cutoff",                  x = x + indent*2, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 250, vals = { 36 } }

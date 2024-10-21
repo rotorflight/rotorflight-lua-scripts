@@ -26,6 +26,7 @@ local profileSwitcher = {
                 self.profileAdjustmentTS = rf2.clock()
             end
             currentField.data.value = status.profile
+            rf2.lcdNeedsInvalidate = true
         end
 
         page.isReady = true

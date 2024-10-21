@@ -178,6 +178,7 @@ return {
                 destField.data.value = 4
             end
         end
+        rf2.lcdNeedsInvalidate = true
         self.isReady = true
     end,
 }
