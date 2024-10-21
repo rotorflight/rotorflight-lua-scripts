@@ -11,21 +11,6 @@ local supportedRadios =
             yMinLimit = 12,
             yMaxLimit = 52,
         },
-        cms = {
-            rows = 8,
-            cols = 26,
-            pixelsPerRow = 8,
-            pixelsPerChar = 5,
-            xIndent = 0,
-            yOffset = 0,
-            textSize = SMLSIZE,
-            refresh = {
-                event = EVT_VIRTUAL_ENTER,
-                text = "Refresh: [ENT]",
-                top = 1,
-                left = 64,
-            },
-        },
     },
     ["128x96"]  =
     {
@@ -38,21 +23,6 @@ local supportedRadios =
             yMinLimit = 12,
             yMaxLimit = 84,
         },
-        cms = {
-            rows = 12,
-            cols = 26,
-            pixelsPerRow = 8,
-            pixelsPerChar = 5,
-            xIndent = 0,
-            yOffset = 0,
-            textSize = SMLSIZE,
-            refresh = {
-                event = EVT_VIRTUAL_ENTER,
-                text = "Refresh: [ENT]",
-                top = 1,
-                left = 64,
-            },
-        },
     },
     ["212x64"]  =
     {
@@ -64,21 +34,6 @@ local supportedRadios =
             textSize = SMLSIZE,
             yMinLimit = 12,
             yMaxLimit = 52,
-        },
-        cms = {
-            rows = 8,
-            cols = 32,
-            pixelsPerRow = 8,
-            pixelsPerChar = 6,
-            xIndent = 0,
-            yOffset = 0,
-            textSize = SMLSIZE,
-            refresh = {
-                event = EVT_VIRTUAL_INC,
-                text = "Refresh: [+]",
-                top = 1,
-                left = 156,
-            }
         },
     },
     ["480x272"] =
@@ -93,21 +48,6 @@ local supportedRadios =
             yMinLimit = 35,
             yMaxLimit = 235,
         },
-        cms = {
-            rows = 9,
-            cols = 32,
-            pixelsPerRow = 24,
-            pixelsPerChar = 14,
-            xIndent = 14,
-            yOffset = 32,
-            textSize = MIDSIZE,
-            refresh = {
-                event = EVT_VIRTUAL_ENTER,
-                text = "Refresh: [ENT]",
-                top = 1,
-                left = 300,
-            }
-        },
     },
     ["480x320"] =
     {
@@ -120,21 +60,6 @@ local supportedRadios =
             textSize = 0,
             yMinLimit = 35,
             yMaxLimit = 280,
-        },
-        cms = {
-            rows = 9,
-            cols = 32,
-            pixelsPerRow = 24,
-            pixelsPerChar = 14,
-            xIndent = 14,
-            yOffset = 32,
-            textSize = MIDSIZE,
-            refresh = {
-                event = EVT_VIRTUAL_ENTER,
-                text = "Refresh: [ENT]",
-                top = 1,
-                left = 300,
-            }
         },
     },
     ["320x480"] =
@@ -149,7 +74,6 @@ local supportedRadios =
             yMinLimit = 35,
             yMaxLimit = 435,
         },
-        cms = nil,
     },
 }
 
