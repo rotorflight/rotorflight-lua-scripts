@@ -160,8 +160,8 @@ local function updateRatio(field, page)
 end
 
 labels[1] = { t = "ESC not ready, waiting...", x = x,       y = inc.y(lineSpacing) }
-labels[2] = { t = "---",                    x = x + indent, y = inc.y(lineSpacing) }
-labels[3] = { t = "---",                    x = x + indent, y = inc.y(lineSpacing) }
+labels[2] = { t = "---",                    x = x + indent, y = inc.y(lineSpacing), bold = false }
+labels[3] = { t = "---",                    x = x + indent, y = inc.y(lineSpacing), bold = false }
 
 fields[1] = { t = "ESC Mode",               x = x,          y = inc.y(lineSpacing * 2), sp = x + sp, min = 1, max = #escMode, vals = { 2+3, 2+4 }, table = escMode }
 fields[2] = { t = "Direction",              x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1, vals = { 2+53 }, table = direction }
@@ -191,8 +191,8 @@ labels[7] = { t = "RPM Settings",           x = x,          y = inc.y(lineSpacin
 fields[16] = { t = "Motor Pole Pairs",      x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 100, vals = { 2+41, 2+42 } }
 fields[17] = { t = "Main Teeth",            x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 1800, vals = { 2+45, 2+46 }, change = updateRatio }
 fields[18] = { t = "Pinion Teeth",          x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 255, vals = { 2+43, 2+44 }, change = updateRatio }
-labels[8] =  { t = "Main : Pinion",         x = x + indent, y = inc.y(lineSpacing) }
-labels[9] =  { t = "1 : 1",                 x = x + sp,     y = y }
+labels[8] =  { t = "Main : Pinion",         x = x + indent, y = inc.y(lineSpacing), bold = false }
+labels[9] =  { t = "1 : 1",                 x = x + sp,     y = y, bold = false }
 
 labels[10] = { t = "Throttle Calibration",  x = x,          y = inc.y(lineSpacing) }
 fields[19] = { t = "Stick Zero (us)",       x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 900, max = 1900, vals = { 2+35, 2+36 } }

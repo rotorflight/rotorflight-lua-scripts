@@ -69,8 +69,8 @@ local brakeType = {
 }
 
 labels[1] = { t = "ESC not ready, waiting...", x = x,   y = inc.y(lineSpacing) }
-labels[2] = { t = "---",                x = x + indent, y = inc.y(lineSpacing) }
-labels[3] = { t = "---",                x = x + indent, y = inc.y(lineSpacing) }
+labels[2] = { t = "---",                x = x + indent, y = inc.y(lineSpacing), bold = false }
+labels[3] = { t = "---",                x = x + indent, y = inc.y(lineSpacing), bold = false }
 
 fields[1] = { t = "Flight Mode",        x = x,          y = inc.y(lineSpacing * 2), sp = x + sp, min = 0, max = #flightMode, vals = { 2+64 }, table = flightMode }
 fields[2] = { t = "Rotation",           x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = #rotation, vals = { 2+77 }, table = rotation }

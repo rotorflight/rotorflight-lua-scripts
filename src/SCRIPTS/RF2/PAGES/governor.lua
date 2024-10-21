@@ -53,6 +53,7 @@ end
 local function receivedGovernorConfig(page, config)
     governorConfig = config
     setValues()
+    rf2.lcdNeedsInvalidate = true
     page.isReady = true
 end
 

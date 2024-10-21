@@ -55,6 +55,7 @@ local function onReceivedPilotConfig(page, config)
     pilotConfig = config
     setValues()
     collectgarbage()
+    rf2.lcdNeedsInvalidate = true
     page.isReady = true
 end
 
