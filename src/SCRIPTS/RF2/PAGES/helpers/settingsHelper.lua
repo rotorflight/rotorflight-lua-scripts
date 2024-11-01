@@ -50,7 +50,7 @@ function saveTable(table, filename)
 end
 
 function loadTable(filename)
-    local func, err = loadScript(filename)
+    local func, err = rf2.loadScript(filename)
     if not func then return nil, err end
     return func()
 end
