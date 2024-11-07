@@ -32,15 +32,15 @@ local function onRtcSet()
 end
 
 local function pilotConfigSet()
-    model.setGlobalVariable(8, 7, pilotConfigSetMagic)
+    model.setGlobalVariable(7, 8, pilotConfigSetMagic)
 end
 
 local function pilotConfigReset()
-    model.setGlobalVariable(8, 7, 0)
+    model.setGlobalVariable(7, 8, 0)
 end
 
 local function pilotConfigHasBeenSet()
-    return model.getGlobalVariable(8, 7) == pilotConfigSetMagic
+    return model.getGlobalVariable(7, 8) == pilotConfigSetMagic
 end
 
 local function setTimer(index, paramValue)
