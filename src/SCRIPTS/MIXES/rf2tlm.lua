@@ -109,12 +109,14 @@ local function decAccel(data, pos)
 end
 
 local function decLatLong(data, pos)
+    local UNIT_GPS_LONGITUDE = 43
+    local UNIT_GPS_LATITUDE = 44
     local lat,lon
     lat,pos = decS32(data,pos)
     lon,pos = decS32(data,pos)
     setTelemetryValue(0x1125, 0, 0, 0, UNIT_GPS, 0, "GPS")
-    setTelemetryValue(0x1125, 0, 0, lat, UNIT_GPS_LATITUDE)
-    setTelemetryValue(0x1125, 0, 0, lon, UNIT_GPS_LONGITUDE)
+    setTelemetryValue(0x1125, 0, 0, lat/10, UNIT_GPS_LATITUDE)
+    setTelemetryValue(0x1125, 0, 0, lon/10, UNIT_GPS_LONGITUDE)
     return nil, pos
 end
 
