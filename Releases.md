@@ -1,4 +1,4 @@
-# 2.1.0-RC1
+# 2.1.0-RC2
 
 This is the _second Release Candidate_ of the *Rotorflight 2.1 Lua Scripts for EdgeTX and OpenTX*.
 
