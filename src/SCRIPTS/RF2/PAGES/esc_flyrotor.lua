@@ -51,7 +51,7 @@ fields[#fields + 1] = { t = "Fan control",               x = x + indent, y = inc
 labels[#labels + 1] = { t = "Advanced",                  x = x,          y = inc.y(lineSpacing) }
 fields[#fields + 1] = { t = "Low voltage [V]",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 28, max = 38, scale = 10, default = 30, decimals = 1, vals = {2 + 25} }
 fields[#fields + 1] = { t = "Temperature [C]",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 50, max = 135, default = 125, vals = {2 + 26} }
-fields[#fields + 1] = { t = "Timing angle",              x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 20, default = 10, vals = {2 + 28} }
+fields[#fields + 1] = { t = "Timing angle",              x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 10, default = 5, vals = {2 + 28} }
 fields[#fields + 1] = { t = "Starting torque",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 15, default = 3, vals = {2 + 30} }
 fields[#fields + 1] = { t = "Response speed",            x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 15, default = 5, vals = {2 + 31} }
 fields[#fields + 1] = { t = "Buzzer volume",             x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 5, default = 2, vals = {2 + 32} }
@@ -59,8 +59,8 @@ fields[#fields + 1] = { t = "Current gain",              x = x + indent, y = inc
 
 -- Esc Governor
 labels[#labels + 1] = { t = "Esc Governor",              x = x,          y = inc.y(lineSpacing) }
-fields[#fields + 1] = { t = "Gov P-Gain",                x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 100, default = 45, vals = {2 + 37, 2 + 36} }
-fields[#fields + 1] = { t = "Gov I-Gain",                x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 100, default = 35, vals = {2 + 39, 2 + 38} }
+fields[#fields + 1] = { t = "Gov P-Gain",                x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 100, default = 45, vals = {2 + 37, 2 + 36} }
+fields[#fields + 1] = { t = "Gov I-Gain",                x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 100, default = 35, vals = {2 + 39, 2 + 38} }
 fields[#fields + 1] = { t = "Gov D-Gain",                x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 100, default = 0, vals = {2 + 41, 2 + 40} }
 fields[#fields + 1] = { t = "Motor ERPM Max",            x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000000, default = 100000, mult = 100, vals = {2 + 44, 2 + 43, 2 + 42} }
 
