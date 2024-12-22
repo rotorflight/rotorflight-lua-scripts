@@ -1,3 +1,67 @@
+# 2.1.0-RC2
+
+This is the _second Release Candidate_ of the *Rotorflight 2.1 Lua Scripts for EdgeTX and OpenTX*.
+
+**NOTE:** The final 2.1.0 Lua Scripts will be released _after_ a few release candidates. Please don't use RCs once the final release is out.
+
+## Downloads
+
+The download locations are:
+
+- [Rotorflight Configurator](https://github.com/rotorflight/rotorflight-configurator/releases/tag/release/2.1.0-RC2)
+- [Rotorflight Blackbox](https://github.com/rotorflight/rotorflight-blackbox/releases/tag/release/2.1.0-RC2)
+- [Lua Scripts for EdgeTX and OpenTX](https://github.com/rotorflight/rotorflight-lua-scripts/releases/tag/release/2.1.0-RC2)
+- [Lua Scripts for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos/releases/tag/release/2.1.0-RC2)
+- [Lua Suite for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos-suite/releases/tag/release/2.1.0-RC2)
+
+## Notes
+
+- Rotorflight setup instructions can be found on the RF website [www.rotorflight.org](https://www.rotorflight.org/).
+- RF 2.1 *is* backward compatible with RF 2.0. You *can* load your configuration dump from RF 2.0 into 2.1.
+- If updating from RF1, please setup your helicopter from scratch. Follow the instructions on the website.
+- As always, please double check your configuration on the bench before flying!
+
+## Changes from 2.0.0
+
+- Added support for custom CRSF/ELRS telemetry
+- Added support for 480x320 (Jumper T15)
+- Added automatic profile switching to all *Profile* pages
+- Added a *Status* page which
+  - Shows the currently active PID and rate profile numbers
+  - Shows *Arming Disabled Flags*, if any
+  - Shows the amount of free space on a dataflash, if available. It also offers the option to erase the dataflash.
+  - Shows Real-time and CPU load
+- The *PIDs* and *Rates* pages
+  - Now also show the currently active profile
+  - You can change and copy the currently active profile
+- *Servo* page
+  - Changing the center of a servo now automatically sets servo override for the servo being editted
+  - Added button *Override All Servos*
+- Added *Model on TX* page, with which you can automatically set model name, timers or global variables on your transmitter. Data is stored on the heli, so you can have different timers for your helis while using just one model on the transmitter.
+- *Profile - Governor* page: added *Min throttle*
+- Added *Experimental* page for firmware testing purposes
+- Added page *ESC - FlyRotor*
+- Added page *ESC - HW Platinum V5*
+- Added page *ESC - Scorpion Tribunus*
+- Added page *ESC - YGE*
+- Added *Settings* page for hiding irrelevant pages
+- Changing a value using the scroll wheel will go quicker if you scroll fast
+- If you try to Save while armed a warning will be given
+- Reformatted the *Rescue* page, so the different rescue stages are now more clear
+- Improved accessibility by reordering some pages and fields
+- Improved MSP handling and processing
+- *Adjustment Teller*: added support for accelerometer adjustments
+
+## Changes from 2.1.0-RC1
+
+- *ESC - FlyRotor* page: added governor support
+- *Profile - Governor* page: added *Min throttle*
+- Fix: corrected GPS coordinates in custom telemetry script
+- Fix: use GV8 on flightmode 8 for storing pilotConfigSet
+
+
+***
+
 # 2.1.0-RC1
 
 This is the _first Release Candidate_ of the *Rotorflight 2.1 Lua Scripts for EdgeTX and OpenTX*.
