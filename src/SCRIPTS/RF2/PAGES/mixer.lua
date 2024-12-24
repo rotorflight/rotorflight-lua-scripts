@@ -28,6 +28,45 @@ labels[#labels + 1] = { t = "Motorised Tail",           x = x,          y = inc.
 fields[#fields + 1] = { t = "Motor idle thr%",          x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0,     max = 250,  vals = { 3 }, scale = 10,      id = "mixerTailMotorIdle" }
 fields[#fields + 1] = { t = "Center trim",              x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = -500,  max = 500,  vals = { 4,5 }, scale = 10,    id = "mixerTailRotorCenterTrim" }
 
+local mixerOverride = false
+local function disableMixerOverride(mixerIndex)
+    local message = {
+        command = 191, -- MSP_SET_MIXER_OVERRIDE
+        payload = { mixerIndex }
+    }
+    rf2.mspHelper.writeU16(message.payload, 2501)
+    rf2.mspQueue:add(message)
+end
+
+local function enableMixerOverride(mixerIndex)
+    local message = {
+        command = 191, -- MSP_SET_MIXER_OVERRIDE
+        payload = { mixerIndex }
+    }
+    rf2.mspHelper.writeU16(message.payload, 2502)
+    rf2.mspQueue:add(message)
+end
+local function onClickOverride(field, page)
+    if not mixerOverride then
+        mixerOverride = true
+        field.t = "[Disable Mixer Passthrough]"
+    else
+        mixerOverride = false
+        field.t = "[Mixer Passthrough Override]"
+    end
+
+    for i = 1, 4 do
+        if mixerOverride then
+            enableMixerOverride(i)
+        else
+            disableMixerOverride(i)
+        end
+    end
+end
+
+inc.y(lineSpacing * 0.25)
+fields[#fields + 1] = { t = "[Mixer Passthrough Override]", x = x + indent * 2, y = inc.y(lineSpacing), preEdit = onClickOverride }
+
 return {
     read        = 42, -- MSP_MIXER_CONFIG
     write       = 43, -- MSP_SET_MIXER_CONFIG
@@ -37,5 +76,8 @@ return {
     minBytes    = 19,
     labels      = labels,
     fields      = fields,
+    postLoad    = function(self)
+        self.isReady     = true
+    end,
     simulatorResponse = { 0, 0, 0, 0, 0, 2, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 }
