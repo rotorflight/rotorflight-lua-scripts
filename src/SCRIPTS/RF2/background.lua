@@ -3,6 +3,8 @@ local nameIsSet = false
 local mspApiVersion, mspSetRtc, mspName, mspPilotConfig, adjTellerTask
 local adjTellerEnabled = true
 local pilotConfigSetMagic = -765
+local sensorsDiscoveredTimeout = 0
+
 local settingsHelper = assert(rf2.loadScript(rf2.baseDir.."PAGES/helpers/settingsHelper.lua"))()
 local autoSetName = settingsHelper.loadSettings().autoSetName == 1 or false
 settingsHelper = nil
@@ -99,8 +101,57 @@ local function onPilotConfigReceived(_, config)
     pilotConfigSet()
 end
 
+local function waitForCustomSensorsDiscovery()
+    -- OpenTX and EdgeTX reference sensors by their ID. In order to always have the
+    -- same ID when using custom CRSF/ELRS telemetry, follow this procedure:
+    -- 1. Power off the model
+    -- 2. "Delete all" sensors from the model
+    -- 3. Select "Discover new"
+    -- 4. Power on the model
+    -- 5. Wait for the sensors to be discovered.
+    -- MSP calls during this procedure can interfere with discovering custom sensors.
+    -- waitForCustomSensorsDiscovery facilitates waiting for the sensors to be discovered
+    -- before continuing with MSP calls.
+
+    if not crossfireTelemetryPush() or rf2.runningInSimulator then
+        -- Model does not use CRSF/ELRS
+        return 0
+    end
+
+    local sensorsDiscovered
+    if getFieldInfo ~= nil then
+        -- EdgeTX
+        sensorsDiscovered = getFieldInfo("TPWR") ~= nil
+    else
+        -- OpenTX
+        sensorsDiscovered = getValue("TPWR") ~= nil
+    end
+
+    if not sensorsDiscovered then
+        -- Wait 10 secs for telemetry script to discover sensors before continuing with MSP calls,
+        -- since MSP can interfere with discovering custom sensors
+        sensorsDiscoveredTimeout = rf2.clock() + 10
+    end
+
+    if sensorsDiscoveredTimeout ~= 0 then
+        if rf2.clock() < sensorsDiscoveredTimeout then
+            --rf2.print("Waiting for sensors to be discovered...")
+            return 1 -- wait for sensors to be discovered
+        end
+        sensorsDiscoveredTimeout = 0
+        return 2 -- sensors might just have been discovered
+    end
+
+    return 0
+end
+
 local function run_bg()
-    if getRSSI() == 0 and not rf2.runningInSimulator then
+    local sensorsDiscoveryWaitState = waitForCustomSensorsDiscovery()
+    if sensorsDiscoveryWaitState == 1 then
+        return 0
+    end
+
+    if (sensorsDiscoveryWaitState == 2 or getRSSI() == 0) and not rf2.runningInSimulator then
         --playTone(800, 20, 0, PLAY_BACKGROUND)
         rf2.mspQueue:clear()
         rf2.apiVersion = nil
