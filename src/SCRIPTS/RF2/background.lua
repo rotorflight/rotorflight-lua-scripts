@@ -1,9 +1,11 @@
 local timeIsSet = rf2.runningInSimulator
 local nameIsSet = false
-local mspApiVersion, mspSetRtc, mspName, mspPilotConfig, adjTellerTask
+local mspApiVersion, mspSetRtc, mspName, mspPilotConfig, adjTellerTask, mspTelemetryConfig
 local adjTellerEnabled = true
 local pilotConfigSetMagic = -765
 local sensorsDiscoveredTimeout = 0
+local receivedTelemetryConfig = false
+local crsfCustomTelemetryEnabled = false
 
 local settingsHelper = assert(rf2.loadScript(rf2.baseDir.."PAGES/helpers/settingsHelper.lua"))()
 local autoSetName = settingsHelper.loadSettings().autoSetName == 1 or false
@@ -145,6 +147,13 @@ local function waitForCustomSensorsDiscovery()
     return 0
 end
 
+local function onTelemetryConfigReceived(_, config)
+    crsfCustomTelemetryEnabled = config.crsf_telemetry_mode.value == 1
+    receivedTelemetryConfig = true
+    mspTelemetryConfig = nil
+    collectgarbage()
+end
+
 local function run_bg()
     local sensorsDiscoveryWaitState = waitForCustomSensorsDiscovery()
     if sensorsDiscoveryWaitState == 1 then
@@ -155,11 +164,11 @@ local function run_bg()
         --playTone(800, 20, 0, PLAY_BACKGROUND)
         rf2.mspQueue:clear()
         rf2.apiVersion = nil
-        timeIsSet, nameIsSet = false, false
+        timeIsSet, nameIsSet, receivedTelemetryConfig = false, false, false
         pilotConfigReset()
         adjTellerEnabled = true
-        if mspApiVersion or mspName or mspPilotConfig or mspSetRtc or adjTellerTask then
-            mspApiVersion, mspName, mspPilotConfig, mspSetRtc, adjTellerTask = nil, nil, nil, nil, nil
+        if mspApiVersion or mspName or mspPilotConfig or mspSetRtc or mspTelemetryConfig or adjTellerTask then
+            mspApiVersion, mspName, mspPilotConfig, mspSetRtc, mspTelemetryConfig, adjTellerTask = nil, nil, nil, nil, nil, nil
             collectgarbage()
         end
         return 0
@@ -199,14 +208,19 @@ local function run_bg()
         return 0
     end
 
+    if rf2.apiVersion >= 12.07 and crossfireTelemetryPush() and not receivedTelemetryConfig then
+        if rf2.mspQueue:isProcessed() then
+            mspTelemetryConfig = mspTelemetryConfig or assert(rf2.loadScript(rf2.baseDir.."MSP/mspTelemetryConfig.lua"))()
+            mspTelemetryConfig.getTelemetryConfig(onTelemetryConfigReceived)
+        end
+        return 0
+    end
+
+    rf2.log("crsfCustomTelemetryEnabled:" .. tostring(crsfCustomTelemetryEnabled))
+
     if adjTellerEnabled then
         adjTellerTask = adjTellerTask or assert(rf2.loadScript(rf2.baseDir.."adj_teller.lua"))()
         adjTellerEnabled = adjTellerTask.run()
-        if adjTellerEnabled == 2 then
-            adjTellerTask = nil
-            collectgarbage()
-            return 2
-        end
     end
 
     return 0
