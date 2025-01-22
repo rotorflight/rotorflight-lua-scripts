@@ -1,6 +1,7 @@
 local timeIsSet = rf2.runningInSimulator
 local nameIsSet = false
-local mspApiVersion, mspSetRtc, mspName, mspPilotConfig, adjTellerTask, mspTelemetryConfig
+local mspApiVersion, mspSetRtc, mspName, mspPilotConfig, mspTelemetryConfig
+local adjTellerTask, customTelemetryTask
 local adjTellerEnabled = true
 local pilotConfigSetMagic = -765
 local sensorsDiscoveredTimeout = 0
@@ -138,9 +139,13 @@ local function waitForCustomSensorsDiscovery()
     if sensorsDiscoveredTimeout ~= 0 then
         if rf2.clock() < sensorsDiscoveredTimeout then
             --rf2.print("Waiting for sensors to be discovered...")
+            customTelemetryTask = customTelemetryTask or assert(rf2.loadScript(rf2.baseDir.."rf2tlm.lua"))()
+            customTelemetryTask.run()
             return 1 -- wait for sensors to be discovered
         end
         sensorsDiscoveredTimeout = 0
+        customTelemetryTask = nil
+        collectgarbage()
         return 2 -- sensors might just have been discovered
     end
 
@@ -168,7 +173,7 @@ local function run_bg()
         pilotConfigReset()
         adjTellerEnabled = true
         if mspApiVersion or mspName or mspPilotConfig or mspSetRtc or mspTelemetryConfig or adjTellerTask then
-            mspApiVersion, mspName, mspPilotConfig, mspSetRtc, mspTelemetryConfig, adjTellerTask = nil, nil, nil, nil, nil, nil
+            mspApiVersion, mspName, mspPilotConfig, mspSetRtc, mspTelemetryConfig, adjTellerTask, customTelemetryTask = nil, nil, nil, nil, nil, nil, nil
             collectgarbage()
         end
         return 0
@@ -216,19 +221,25 @@ local function run_bg()
         return 0
     end
 
-    rf2.log("crsfCustomTelemetryEnabled:" .. tostring(crsfCustomTelemetryEnabled))
-
     if adjTellerEnabled then
         adjTellerTask = adjTellerTask or assert(rf2.loadScript(rf2.baseDir.."adj_teller.lua"))()
-        adjTellerEnabled = adjTellerTask.run()
+        adjTellerEnabled = adjTellerTask.run() ~= 2
     end
+
+    if crsfCustomTelemetryEnabled then
+        customTelemetryTask = customTelemetryTask or assert(rf2.loadScript(rf2.baseDir.."rf2tlm.lua"))()
+        customTelemetryTask.run()
+    end
+
+    --rf2.log("adjTellerEnabled:" .. tostring(adjTellerEnabled))
+    --rf2.log("crsfCustomTelemetryEnabled:" .. tostring(crsfCustomTelemetryEnabled))
 
     return 0
 end
 
-local function run_protected()
+local function runProtected()
     local status, err = pcall(run_bg)
     if not status then rf2.print(err) end
 end
 
-return run_protected
+return runProtected
