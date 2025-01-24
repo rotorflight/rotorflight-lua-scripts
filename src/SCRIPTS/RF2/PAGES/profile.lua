@@ -36,8 +36,13 @@ fields[#fields + 1] = { t = "CCW stop gain",           x = x + indent, y = inc.y
 fields[#fields + 1] = { t = "Precomp cutoff",          x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 23 } }
 fields[#fields + 1] = { t = "Cyclic FF gain",          x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 24 } }
 fields[#fields + 1] = { t = "Coll FF gain",            x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 25 } }
-fields[#fields + 1] = { t = "Coll imp FF gain",        x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 26 } }
-fields[#fields + 1] = { t = "Coll imp FF decay",       x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 27 } }
+if rf2.apiVersion >= 12.08 then
+    fields[#fields + 1] = { t = "Inertia gain",        x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 42 } }
+    fields[#fields + 1] = { t = "Inertia cutoff",      x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 43 } }
+else
+    fields[#fields + 1] = { t = "Coll imp FF gain",    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 26 } }
+    fields[#fields + 1] = { t = "Coll imp FF decay",   x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 27 } }
+end
 
 inc.y(lineSpacing * 0.25)
 labels[#labels + 1] = { t = "Acro Trainer",            x = x,          y = inc.y(lineSpacing) }
