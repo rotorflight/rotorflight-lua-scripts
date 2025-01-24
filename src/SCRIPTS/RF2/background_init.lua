@@ -1,38 +1,11 @@
-local timeIsSet = rf2.runningInSimulator
-local nameIsSet = false
-local mspApiVersion, mspSetRtc, mspName, mspPilotConfig, mspTelemetryConfig
-local pilotConfigSetMagic = -765
-local sensorsDiscoveredTimeout = 0
-local receivedTelemetryConfig = false
-local customTelemetryTask
+local initializationDone = false
 local crsfCustomTelemetryEnabled = false
 
 local settingsHelper = assert(rf2.loadScript(rf2.baseDir.."PAGES/helpers/settingsHelper.lua"))()
 local autoSetName = settingsHelper.loadSettings().autoSetName == 1 or false
 settingsHelper = nil
 
-local function onApiVersionReceived(_, version)
-    playTone(1600, 300, 0, PLAY_BACKGROUND)
-    rf2.apiVersion = version
-    mspApiVersion = nil
-    collectgarbage()
-end
-
-local function onModelNameReceived(_, name)
-    local info = model.getInfo()
-    info.name = name
-    model.setInfo(info)
-    nameIsSet = true
-    mspName = nil
-    collectgarbage()
-end
-
-local function onRtcSet()
-    timeIsSet = true
-    mspSetRtc = nil
-    collectgarbage()
-end
-
+local pilotConfigSetMagic = -765
 local function pilotConfigSet()
     model.setGlobalVariable(7, 8, pilotConfigSetMagic)
 end
@@ -94,11 +67,11 @@ local function onPilotConfigReceived(_, config)
     paramType = config.model_param3_type.table[config.model_param3_type.value]
     setParam(paramType, paramValue)
 
-    mspPilotConfig = nil
-    collectgarbage()
     pilotConfigSet()
 end
 
+local sensorsDiscoveredTimeout = 0
+local customTelemetryTask
 local function waitForCustomSensorsDiscovery()
     -- OpenTX and EdgeTX reference sensors by their ID. In order to always have the
     -- same ID when using custom CRSF/ELRS telemetry, follow this procedure:
@@ -144,72 +117,87 @@ local function waitForCustomSensorsDiscovery()
         return 2 -- sensors might just have been discovered
     end
 
+    --rf2.print("Sensors already discovered")
     return 0
 end
 
-local function onTelemetryConfigReceived(_, config)
-    crsfCustomTelemetryEnabled = config.crsf_telemetry_mode.value == 1
-    receivedTelemetryConfig = true
-    mspTelemetryConfig = nil
+local function useApi(apiName)
     collectgarbage()
+    return assert(rf2.loadScript(rf2.baseDir.."MSP/" .. apiName .. ".lua"))()
 end
 
-local function initialize()
+local queueInitialized = false
+local function initializeQueue()
+    rf2.print("Initializing MSP queue")
+
+    rf2.mspQueue.maxRetries = -1       -- retry indefinitely
+
+    useApi("mspApiVersion").getApiVersion(
+        function(_, version)
+            rf2.apiVersion = version
+
+            if autoSetName then
+                useApi("mspName").getModelName(
+                    function(_, name)
+                        local info = model.getInfo()
+                        info.name = name
+                        model.setInfo(info)
+                    end)
+            end
+
+            if rf2.apiVersion >= 12.07 then
+                useApi("mspPilotConfig").getPilotConfig(onPilotConfigReceived)
+
+                if crossfireTelemetryPush() then
+                    useApi("mspTelemetryConfig").getTelemetryConfig(
+                        function(_, config)
+                            crsfCustomTelemetryEnabled = config.crsf_telemetry_mode.value == 1
+                        end)
+                end
+            end
+
+            useApi("mspSetRtc").setRtc(
+                function()
+                    playTone(1600, 300, 0, PLAY_BACKGROUND)
+                    rf2.print("RTC set")
+                    rf2.mspQueue.maxRetries = rf2.protocol.maxRetries
+                    initializationDone = true
+                end)
+        end)
+end
+
+local function initialize(modelIsConnected)
     local sensorsDiscoveryWaitState = waitForCustomSensorsDiscovery()
     if sensorsDiscoveryWaitState == 1 then
         return false
     end
 
+    if not modelIsConnected then
+        return false
+    end
+
+    if not queueInitialized then
+        initializeQueue()
+        queueInitialized = true
+    end
+
     rf2.mspQueue:processQueue()
 
-    if not rf2.apiVersion then
-        if rf2.mspQueue:isProcessed() then
-            mspApiVersion = mspApiVersion or assert(rf2.loadScript(rf2.baseDir.."MSP/mspApiVersion.lua"))()
-            mspApiVersion.getApiVersion(onApiVersionReceived)
-        end
-        return false
-    end
-
-    if autoSetName and not nameIsSet then
-        if rf2.mspQueue:isProcessed() then
-            mspName = mspName or assert(rf2.loadScript(rf2.baseDir.."MSP/mspName.lua"))()
-            mspName.getModelName(onModelNameReceived)
-        end
-        return false
-    end
-
-    if not timeIsSet then
-        if rf2.mspQueue:isProcessed() then
-            mspSetRtc = mspSetRtc or assert(rf2.loadScript(rf2.baseDir.."MSP/mspSetRtc.lua"))()
-            mspSetRtc.setRtc(onRtcSet)
-        end
-        return false
-    end
-
-    if rf2.apiVersion >= 12.07 and not pilotConfigHasBeenSet() then
-        if rf2.mspQueue:isProcessed() then
-            mspPilotConfig = mspPilotConfig or assert(rf2.loadScript(rf2.baseDir.."MSP/mspPilotConfig.lua"))()
-            mspPilotConfig.getPilotConfig(onPilotConfigReceived)
-        end
-        return false
-    end
-
-    if rf2.apiVersion >= 12.07 and crossfireTelemetryPush() and not receivedTelemetryConfig then
-        if rf2.mspQueue:isProcessed() then
-            mspTelemetryConfig = mspTelemetryConfig or assert(rf2.loadScript(rf2.baseDir.."MSP/mspTelemetryConfig.lua"))()
-            mspTelemetryConfig.getTelemetryConfig(onTelemetryConfigReceived)
-        end
-        return false
-    end
-
-    return true
+    return initializationDone
 end
 
-local function run()
-    return {
-        isInitialized = initialize(),
+local function run(modelIsConnected)
+    return
+    {
+        isInitialized = initialize(modelIsConnected),
         crsfCustomTelemetryEnabled = crsfCustomTelemetryEnabled
     }
 end
 
-return { run = run }
+local function reset()
+    rf2.mspQueue:clear()
+    rf2.apiVersion = nil
+    pilotConfigReset()
+end
+
+return { run = run, reset = reset }

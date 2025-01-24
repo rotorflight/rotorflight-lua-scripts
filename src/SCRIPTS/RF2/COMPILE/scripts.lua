@@ -56,6 +56,7 @@ local scripts = {
     "/SCRIPTS/RF2/acc_cal.lua",
     "/SCRIPTS/RF2/adj_teller.lua",
     "/SCRIPTS/RF2/background.lua",
+    "/SCRIPTS/RF2/background_init.lua",
     "/SCRIPTS/RF2/pages.lua",
     "/SCRIPTS/RF2/protocols.lua",
     "/SCRIPTS/RF2/radios.lua",

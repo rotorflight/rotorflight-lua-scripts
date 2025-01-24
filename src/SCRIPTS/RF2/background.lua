@@ -1,53 +1,55 @@
-local adjTellerTask
-local adjTellerEnabled = true
-local customTelemetryTask
-local crsfCustomTelemetryEnabled = false
-local initTask, initResult
-
-local function pilotConfigReset()
-    model.setGlobalVariable(7, 8, 0)
-end
+local initTask = nil
+local adjTellerTask = nil
+local customTelemetryTask = nil
+local isInitialized = false
+local modelIsConnected = false
 
 local function run()
-    if not initResult or not initResult.isInitialized then
+    if rf2.runningInSimulator then
+        modelIsConnected = true
+    elseif getRSSI() > 0 and not modelIsConnected then
+        modelIsConnected = true
+    elseif getRSSI() == 0 and modelIsConnected then
+        if initTask then
+            initTask.reset()
+            initTask = nil
+        end
+        adjTellerTask = nil
+        customTelemetryTask = nil
+        modelIsConnected = false
+        isInitialized = false
+        collectgarbage()
+    end
+
+    if not isInitialized then
         initTask = initTask or assert(rf2.loadScript(rf2.baseDir.."background_init.lua"))()
-        initResult = initTask.run()
-        if not initResult.isInitialized then
+        local initTaskResult = initTask.run(modelIsConnected)
+        if not initTaskResult.isInitialized then
+            --rf2.print("Not initialized yet")
             return 0
         end
-        adjTellerEnabled = true
-        crsfCustomTelemetryEnabled = initResult.crsfCustomTelemetryEnabled
+        if initTaskResult.crsfCustomTelemetryEnabled then
+            customTelemetryTask = assert(rf2.loadScript(rf2.baseDir.."rf2tlm.lua"))()
+        end
+        adjTellerTask = assert(rf2.loadScript(rf2.baseDir.."adj_teller.lua"))()
         initTask = nil
         collectgarbage()
+        isInitialized = true
     end
 
     if getRSSI() == 0 and not rf2.runningInSimulator then
-        rf2.mspQueue:clear()
-        rf2.apiVersion = nil
-        adjTellerTask = nil
-        customTelemetryTask = nil
-        initResult = nil
-        pilotConfigReset()
-        collectgarbage()
         return 0
     end
 
-    if adjTellerEnabled then
-        adjTellerTask = adjTellerTask or assert(rf2.loadScript(rf2.baseDir.."adj_teller.lua"))()
-        adjTellerEnabled = adjTellerTask.run() ~= 2
-        if not adjTellerEnabled then
-            adjTellerTask = nil
-            collectgarbage()
-        end
+    if adjTellerTask and adjTellerTask.run() == 2  then
+        -- no adjustment sensors found
+        adjTellerTask = nil
+        collectgarbage()
     end
 
-    if crsfCustomTelemetryEnabled then
-        customTelemetryTask = customTelemetryTask or assert(rf2.loadScript(rf2.baseDir.."rf2tlm.lua"))()
+    if customTelemetryTask then
         customTelemetryTask.run()
     end
-
-    --rf2.log("adjTellerEnabled:" .. tostring(adjTellerEnabled))
-    --rf2.log("crsfCustomTelemetryEnabled:" .. tostring(crsfCustomTelemetryEnabled))
 
     return 0
 end
