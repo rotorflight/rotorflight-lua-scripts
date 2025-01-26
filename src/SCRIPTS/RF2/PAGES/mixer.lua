@@ -11,6 +11,43 @@ local inc = { x = function(val) x = x + val return x end, y = function(val) y = 
 local labels = {}
 local fields = {}
 
+local mixerOverride = false
+local function disableMixerOverride(mixerIndex)
+    local message = {
+        command = 191, -- MSP_SET_MIXER_OVERRIDE
+        payload = { mixerIndex }
+    }
+    rf2.mspHelper.writeU16(message.payload, 2501)
+    rf2.mspQueue:add(message)
+end
+
+local function enableMixerOverride(mixerIndex)
+    local message = {
+        command = 191, -- MSP_SET_MIXER_OVERRIDE
+        payload = { mixerIndex }
+    }
+    rf2.mspHelper.writeU16(message.payload, 2502)
+    rf2.mspQueue:add(message)
+end
+
+local function onClickOverride(field, page)
+    if not mixerOverride then
+        mixerOverride = true
+        field.t = "[Disable Mixer Passthrough]"
+    else
+        mixerOverride = false
+        field.t = "[Enable Mixer Passthrough]"
+    end
+
+    for i = 1, 4 do
+        if mixerOverride then
+            enableMixerOverride(i)
+        else
+            disableMixerOverride(i)
+        end
+    end
+end
+
 labels[#labels + 1] = { t = "Swashplate",               x = x,          y = inc.y(lineSpacing) }
 fields[#fields + 1] = { t = "Geo correction",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = -125,  max = 125,  vals = { 19 }, scale = 5,      id = "mixerCollectiveGeoCorrection" }
 fields[#fields + 1] = { t = "Total pitch limit",        x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0,     max = 3000, vals = { 10, 11 }, scale = 83.33333333333333, mult = 8.3333333333333, id = "mixerTotalPitchLimit" }
@@ -28,6 +65,9 @@ labels[#labels + 1] = { t = "Motorised Tail",           x = x,          y = inc.
 fields[#fields + 1] = { t = "Motor idle thr%",          x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0,     max = 250,  vals = { 3 }, scale = 10,      id = "mixerTailMotorIdle" }
 fields[#fields + 1] = { t = "Center trim",              x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = -500,  max = 500,  vals = { 4,5 }, scale = 10,    id = "mixerTailRotorCenterTrim" }
 
+inc.y(lineSpacing * 0.5)
+fields[#fields + 1] = { t = "[Enable Mixer Passthrough]", x = x,        y = inc.y(lineSpacing), preEdit = onClickOverride }
+
 return {
     read        = 42, -- MSP_MIXER_CONFIG
     write       = 43, -- MSP_SET_MIXER_CONFIG
@@ -37,5 +77,8 @@ return {
     minBytes    = 19,
     labels      = labels,
     fields      = fields,
+    postLoad    = function(self)
+        self.isReady     = true
+    end,
     simulatorResponse = { 0, 0, 0, 0, 0, 2, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 }
