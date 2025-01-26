@@ -362,8 +362,6 @@ local function crossfirePopAll()
     while crossfirePop() do end
 end
 
-local function background()
-    local ret = pcall(crossfirePopAll)
-end
-
-return { run=background }
+return {
+    run = crossfirePopAll
+}
