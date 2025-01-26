@@ -65,8 +65,10 @@ labels[#labels + 1] = { t = "Motorised Tail",           x = x,          y = inc.
 fields[#fields + 1] = { t = "Motor idle thr%",          x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0,     max = 250,  vals = { 3 }, scale = 10,      id = "mixerTailMotorIdle" }
 fields[#fields + 1] = { t = "Center trim",              x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = -500,  max = 500,  vals = { 4,5 }, scale = 10,    id = "mixerTailRotorCenterTrim" }
 
-inc.y(lineSpacing * 0.5)
-fields[#fields + 1] = { t = "[Enable Mixer Passthrough]", x = x,        y = inc.y(lineSpacing), preEdit = onClickOverride }
+if rf2.apiVersion >= 12.08 then
+    inc.y(lineSpacing * 0.5)
+    fields[#fields + 1] = { t = "[Enable Mixer Passthrough]", x = x,    y = inc.y(lineSpacing), preEdit = onClickOverride }
+end
 
 return {
     read        = 42, -- MSP_MIXER_CONFIG
