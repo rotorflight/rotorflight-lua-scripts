@@ -1,7 +1,0 @@
-name: test
-
-on:
-  push:
-    tags:
-      - 'testing/*'
-      
