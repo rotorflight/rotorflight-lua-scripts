@@ -65,7 +65,8 @@ The optional background script `rf2bg.lua` features *Real Time FC Clock synchron
 - RTC synchronization will send the time of the transmitter to the flight controller. The script will beep if RTC synchronization has been completed. Blackbox logs and files created by the FC will now have the correct timestamp.
 - The *Adjustment Teller* will [tell you](https://www.youtube.com/watch?v=rbMiiWhzhqI) what adjustment you just made. It supports all adjustments except profile adjustments. 
   - S.port/F.port: the telemetry sensors 5110 and 5111 should be available. Discover or add them if they aren't.
-  - CRSF: the telemetry sensor FM should be available. Also do a `set crsf_flight_mode_reuse = ADJFUNC` in the CLI and `save`.  
+  - RF 2.0 CRSF: the telemetry sensor FM should be available. Also do a `set crsf_flight_mode_reuse = ADJFUNC` in the CLI and `save`.
+  - RF 2.1 CRSF with custom CRSF/ELRS telemetry: make sure you include the *Adjustment Function* sensor, else the *Adjustment Teller* won't tell you much. 
 
 The background script can be configured as either a special or global function in EdgeTX/OpenTX. The image below illustrates how to set up the background script as a special function. This configuration ensures that the script runs automatically as soon as the model is selected.
 
