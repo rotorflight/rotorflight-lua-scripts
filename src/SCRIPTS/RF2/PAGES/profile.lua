@@ -38,7 +38,7 @@ fields[#fields + 1] = { t = "Cyclic FF gain",          x = x + indent, y = inc.y
 fields[#fields + 1] = { t = "Coll FF gain",            x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 25 } }
 if rf2.apiVersion >= 12.08 then
     fields[#fields + 1] = { t = "Inertia gain",        x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 42 } }
-    fields[#fields + 1] = { t = "Inertia cutoff",      x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 43 } }
+    fields[#fields + 1] = { t = "Inertia cutoff",      x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 43 }, scale = 10 }
 else
     fields[#fields + 1] = { t = "Coll imp FF gain",    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 26 } }
     fields[#fields + 1] = { t = "Coll imp FF decay",   x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 27 } }
