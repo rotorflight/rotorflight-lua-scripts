@@ -329,6 +329,9 @@ local function drawScreen()
             end
         elseif f.value then
             val = f.value
+            if type(val) == "number" and not f.scale then
+                val = math.floor(val)
+            end
             if f.table and f.table[f.value] then
                 val = f.table[f.value]
             end
