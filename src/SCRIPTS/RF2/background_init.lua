@@ -121,23 +121,18 @@ local function waitForCustomSensorsDiscovery()
     return 0
 end
 
-local function useApi(apiName)
-    collectgarbage()
-    return assert(rf2.loadScript(rf2.baseDir.."MSP/" .. apiName .. ".lua"))()
-end
-
 local queueInitialized = false
 local function initializeQueue()
     rf2.print("Initializing MSP queue")
 
     rf2.mspQueue.maxRetries = -1       -- retry indefinitely
 
-    useApi("mspApiVersion").getApiVersion(
+    rf2.useApi("mspApiVersion").getApiVersion(
         function(_, version)
             rf2.apiVersion = version
 
             if autoSetName then
-                useApi("mspName").getModelName(
+                rf2.useApi("mspName").getModelName(
                     function(_, name)
                         local info = model.getInfo()
                         info.name = name
@@ -146,17 +141,17 @@ local function initializeQueue()
             end
 
             if rf2.apiVersion >= 12.07 then
-                useApi("mspPilotConfig").getPilotConfig(onPilotConfigReceived)
+                rf2.useApi("mspPilotConfig").getPilotConfig(onPilotConfigReceived)
 
                 if crossfireTelemetryPush() then
-                    useApi("mspTelemetryConfig").getTelemetryConfig(
+                    rf2.useApi("mspTelemetryConfig").getTelemetryConfig(
                         function(_, config)
                             crsfCustomTelemetryEnabled = config.crsf_telemetry_mode.value == 1
                         end)
                 end
             end
 
-            useApi("mspSetRtc").setRtc(
+            rf2.useApi("mspSetRtc").setRtc(
                 function()
                     playTone(1600, 300, 0, PLAY_BACKGROUND)
                     rf2.print("RTC set")

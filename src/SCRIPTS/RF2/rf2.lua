@@ -24,6 +24,11 @@ rf2 = {
         end
     end,
 
+    useApi = function(apiName)
+        collectgarbage()
+        return assert(rf2.loadScript(rf2.baseDir.."MSP/" .. apiName .. ".lua"))()
+    end,
+
     clock = function()
         return getTime() / 100
     end,
