@@ -1,25 +1,24 @@
-local function getGovernorProfile(callback, callbackParam)
+local function getGovernorProfile(defaults, callback, callbackParam)
     local message = {
         command = 148, -- MSP_GOVERNOR_PROFILE
         processReply = function(self, buf)
-            local config = {}
             --rf2.print("buf length: "..#buf)
-            config.headspeed = { value = rf2.mspHelper.readU16(buf), min = 0, max = 50000, mult = 10 }
-            config.gain = { value = rf2.mspHelper.readU8(buf), min = 0, max = 250 }
-            config.p_gain = { value = rf2.mspHelper.readU8(buf), min = 0, max = 250 }
-            config.i_gain = { value = rf2.mspHelper.readU8(buf), min = 0, max = 250 }
-            config.d_gain = { value = rf2.mspHelper.readU8(buf), min = 0, max = 250 }
-            config.f_gain = { value = rf2.mspHelper.readU8(buf), min = 0, max = 250 }
-            config.tta_gain = { value = rf2.mspHelper.readU8(buf), min = 0, max = 250 }
-            config.tta_limit = { value = rf2.mspHelper.readU8(buf), min = 0, max = 250 }
-            config.yaw_ff_weight = { value = rf2.mspHelper.readU8(buf), min = 0, max = 250 }
-            config.cyclic_ff_weight = { value = rf2.mspHelper.readU8(buf), min = 0, max = 250 }
-            config.collective_ff_weight = { value = rf2.mspHelper.readU8(buf), min = 0, max = 250 }
-            config.max_throttle = { value = rf2.mspHelper.readU8(buf), min = 0, max = 100 }
+            defaults.headspeed.value = rf2.mspHelper.readU16(buf)
+            defaults.gain.value = rf2.mspHelper.readU8(buf)
+            defaults.p_gain.value = rf2.mspHelper.readU8(buf)
+            defaults.i_gain.value = rf2.mspHelper.readU8(buf)
+            defaults.d_gain.value = rf2.mspHelper.readU8(buf)
+            defaults.f_gain.value = rf2.mspHelper.readU8(buf)
+            defaults.tta_gain.value = rf2.mspHelper.readU8(buf)
+            defaults.tta_limit.value = rf2.mspHelper.readU8(buf)
+            defaults.yaw_ff_weight.value = rf2.mspHelper.readU8(buf)
+            defaults.cyclic_ff_weight.value = rf2.mspHelper.readU8(buf)
+            defaults.collective_ff_weight.value = rf2.mspHelper.readU8(buf)
+            defaults.max_throttle.value = rf2.mspHelper.readU8(buf)
             if rf2.apiVersion >= 12.07 then
-                config.min_throttle = { value = rf2.mspHelper.readU8(buf), min = 0, max = 100 }
+                defaults.min_throttle.value = rf2.mspHelper.readU8(buf)
             end
-            callback(callbackParam, config)
+            callback(callbackParam)
         end,
         simulatorResponse = { 208, 7, 100, 10, 125, 5, 20, 0, 20, 10, 40, 100, 100, 10 }
     }
@@ -50,7 +49,28 @@ local function setGovernorProfile(config)
     rf2.mspQueue:add(message)
 end
 
+local function getDefaults()
+    local defaults = {}
+    defaults.headspeed = { value = nil, min = 0, max = 50000, mult = 10 }
+    defaults.gain = { value = nil, min = 0, max = 250 }
+    defaults.p_gain = { value = nil, min = 0, max = 250 }
+    defaults.i_gain = { value = nil, min = 0, max = 250 }
+    defaults.d_gain = { value = nil, min = 0, max = 250 }
+    defaults.f_gain = { value = nil, min = 0, max = 250 }
+    defaults.tta_gain = { value = nil, min = 0, max = 250 }
+    defaults.tta_limit = { value = nil, min = 0, max = 250 }
+    defaults.yaw_ff_weight = { value = nil, min = 0, max = 250 }
+    defaults.cyclic_ff_weight = { value = nil, min = 0, max = 250 }
+    defaults.collective_ff_weight = { value = nil, min = 0, max = 250 }
+    defaults.max_throttle = { value = nil, min = 0, max = 100 }
+    if rf2.apiVersion >= 12.07 then
+        defaults.min_throttle = { value = nil, min = 0, max = 100 }
+    end
+    return defaults
+end
+
 return {
-    getGovernorProfile = getGovernorProfile,
-    setGovernorProfile = setGovernorProfile
+    read = getGovernorProfile,
+    write = setGovernorProfile,
+    getDefaults = getDefaults
 }
