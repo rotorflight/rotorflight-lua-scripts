@@ -1,22 +1,22 @@
-local function getGovernorProfile(defaults, callback, callbackParam)
+local function getGovernorProfile(data, callback, callbackParam)
     local message = {
         command = 148, -- MSP_GOVERNOR_PROFILE
         processReply = function(self, buf)
             --rf2.print("buf length: "..#buf)
-            defaults.headspeed.value = rf2.mspHelper.readU16(buf)
-            defaults.gain.value = rf2.mspHelper.readU8(buf)
-            defaults.p_gain.value = rf2.mspHelper.readU8(buf)
-            defaults.i_gain.value = rf2.mspHelper.readU8(buf)
-            defaults.d_gain.value = rf2.mspHelper.readU8(buf)
-            defaults.f_gain.value = rf2.mspHelper.readU8(buf)
-            defaults.tta_gain.value = rf2.mspHelper.readU8(buf)
-            defaults.tta_limit.value = rf2.mspHelper.readU8(buf)
-            defaults.yaw_ff_weight.value = rf2.mspHelper.readU8(buf)
-            defaults.cyclic_ff_weight.value = rf2.mspHelper.readU8(buf)
-            defaults.collective_ff_weight.value = rf2.mspHelper.readU8(buf)
-            defaults.max_throttle.value = rf2.mspHelper.readU8(buf)
+            data.headspeed.value = rf2.mspHelper.readU16(buf)
+            data.gain.value = rf2.mspHelper.readU8(buf)
+            data.p_gain.value = rf2.mspHelper.readU8(buf)
+            data.i_gain.value = rf2.mspHelper.readU8(buf)
+            data.d_gain.value = rf2.mspHelper.readU8(buf)
+            data.f_gain.value = rf2.mspHelper.readU8(buf)
+            data.tta_gain.value = rf2.mspHelper.readU8(buf)
+            data.tta_limit.value = rf2.mspHelper.readU8(buf)
+            data.yaw_ff_weight.value = rf2.mspHelper.readU8(buf)
+            data.cyclic_ff_weight.value = rf2.mspHelper.readU8(buf)
+            data.collective_ff_weight.value = rf2.mspHelper.readU8(buf)
+            data.max_throttle.value = rf2.mspHelper.readU8(buf)
             if rf2.apiVersion >= 12.07 then
-                defaults.min_throttle.value = rf2.mspHelper.readU8(buf)
+                data.min_throttle.value = rf2.mspHelper.readU8(buf)
             end
             callback(callbackParam)
         end,
@@ -25,26 +25,26 @@ local function getGovernorProfile(defaults, callback, callbackParam)
     rf2.mspQueue:add(message)
 end
 
-local function setGovernorProfile(config)
+local function setGovernorProfile(data)
     local message = {
         command = 149, -- MSP_SET_GOVERNOR_PROFILE
         payload = {},
         simulatorResponse = {}
     }
-    rf2.mspHelper.writeU16(message.payload, config.headspeed.value)
-    rf2.mspHelper.writeU8(message.payload, config.gain.value)
-    rf2.mspHelper.writeU8(message.payload, config.p_gain.value)
-    rf2.mspHelper.writeU8(message.payload, config.i_gain.value)
-    rf2.mspHelper.writeU8(message.payload, config.d_gain.value)
-    rf2.mspHelper.writeU8(message.payload, config.f_gain.value)
-    rf2.mspHelper.writeU8(message.payload, config.tta_gain.value)
-    rf2.mspHelper.writeU8(message.payload, config.tta_limit.value)
-    rf2.mspHelper.writeU8(message.payload, config.yaw_ff_weight.value)
-    rf2.mspHelper.writeU8(message.payload, config.cyclic_ff_weight.value)
-    rf2.mspHelper.writeU8(message.payload, config.collective_ff_weight.value)
-    rf2.mspHelper.writeU8(message.payload, config.max_throttle.value)
+    rf2.mspHelper.writeU16(message.payload, data.headspeed.value)
+    rf2.mspHelper.writeU8(message.payload, data.gain.value)
+    rf2.mspHelper.writeU8(message.payload, data.p_gain.value)
+    rf2.mspHelper.writeU8(message.payload, data.i_gain.value)
+    rf2.mspHelper.writeU8(message.payload, data.d_gain.value)
+    rf2.mspHelper.writeU8(message.payload, data.f_gain.value)
+    rf2.mspHelper.writeU8(message.payload, data.tta_gain.value)
+    rf2.mspHelper.writeU8(message.payload, data.tta_limit.value)
+    rf2.mspHelper.writeU8(message.payload, data.yaw_ff_weight.value)
+    rf2.mspHelper.writeU8(message.payload, data.cyclic_ff_weight.value)
+    rf2.mspHelper.writeU8(message.payload, data.collective_ff_weight.value)
+    rf2.mspHelper.writeU8(message.payload, data.max_throttle.value)
     if rf2.apiVersion >= 12.07 then
-        rf2.mspHelper.writeU8(message.payload, config.min_throttle.value)
+        rf2.mspHelper.writeU8(message.payload, data.min_throttle.value)
     end
     rf2.mspQueue:add(message)
 end
