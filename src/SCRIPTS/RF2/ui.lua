@@ -318,13 +318,20 @@ local function drawScreen()
         if f.data and f.data.value then
             val = f.data.value
             if type(val) == "number" then
-                val = val / (f.data.scale or 1)
+                if f.data.scale then
+                    val = val / f.data.scale
+                else
+                    val = math.floor(val)
+                end
             end
             if f.data.table and f.data.table[val] then
                 val = f.data.table[val]
             end
         elseif f.value then
             val = f.value
+            if type(val) == "number" and not f.scale then
+                val = math.floor(val)
+            end
             if f.table and f.table[f.value] then
                 val = f.table[f.value]
             end
