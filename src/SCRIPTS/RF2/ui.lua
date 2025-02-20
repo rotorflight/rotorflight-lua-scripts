@@ -83,7 +83,16 @@ local mspEepromWrite =
         end
     end,
     errorHandler = function(self)
-        rf2.displayMessage("Save error", "Make sure your heli\nis disarmed.")
+        if rf2.apiVersion >= 12.08 then
+            if not rf2.saveWarningShown then
+                rf2.displayMessage("Save warning", "Settings will be saved\nafter disarming.")
+                rf2.saveWarningShown = true
+            else
+                invalidatePages()
+            end
+        else
+            rf2.displayMessage("Save error", "Make sure your heli\nis disarmed.")
+        end
     end,
     simulatorResponse = {}
 }
