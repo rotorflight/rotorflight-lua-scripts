@@ -1,3 +1,42 @@
+# 2.1.1
+
+This is the 2.1.1 release of the *Rotorflight Lua Scripts for EdgeTX and OpenTX*.
+
+## Downloads
+
+The download locations are:
+
+- [Rotorflight Configurator](https://github.com/rotorflight/rotorflight-configurator/releases/tag/release/2.1.1)
+- [Rotorflight Blackbox](https://github.com/rotorflight/rotorflight-blackbox/releases/tag/release/2.1.1)
+- [Lua Scripts for EdgeTX and OpenTX](https://github.com/rotorflight/rotorflight-lua-scripts/releases/tag/release/2.1.1)
+- [Lua Scripts for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos/releases/tag/release/2.1.1)
+- [Lua Suite for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos-suite/releases/tag/release/2.1.1)
+
+## Notes
+
+- Rotorflight setup instructions can be found on the Rotorflight website [www.rotorflight.org](https://www.rotorflight.org/).
+- Rotorflight 2.1.1 *is* backward compatible with Rotorflight 2.0. You *can* load your configuration dump from Rotorflight 2.0 into 2.1.1.
+- If updating from Rotorflight 1, please setup your helicopter from scratch. Follow the instructions on the website.
+- As always, please double check your configuration on the bench before flying!
+
+## Changes from 2.1.0
+
+- Removed custom script for running custom CRSF/ELRS telemetry
+- Fixed ordering issue with custom CRSF/ELRS telemetry
+- Fixed issue with displaying integers on EdgeTX 2.11
+
+The rf2tlm script for running custom CRSF/ELRS telemetry has now been incorporated in rf2bg. That means that you can delete the custom script running rf2tlm from your transmitter. Also make sure you've defined and enabled a special function running rf2bg, with *Repeat* set to *On*. If you don't have that, custom telemetry won't work.
+
+To get the custom CRSF/ELRS sensors in the order as defined in the Configurator, follow these steps:
+- Switch off the flight controller and the receiver
+- *Delete all* sensors on the transmitter
+- Select *Discover new* on the transmitter
+- Power on the flight controller and wait till all sensors are populated
+
+
+
+***
+
 # 2.1.0
 
 This is the 2.1.0 release of the *Rotorflight Lua Scripts for EdgeTX and OpenTX*.
