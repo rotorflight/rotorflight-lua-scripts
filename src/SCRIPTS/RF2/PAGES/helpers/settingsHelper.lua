@@ -56,7 +56,7 @@ function loadTable(filename)
 end
 
 local function loadSettings()
-    local settings, loadErr = loadTable(rf2.baseDir .. "settings.lua") or {}
+    local settings, loadErr = loadTable("settings.lua") or {}
     if loadErr then rf2.print(loadErr) end
     return addDirtyTrackingToTable(settings)
 end
