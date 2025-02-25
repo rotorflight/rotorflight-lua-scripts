@@ -21,7 +21,22 @@ local function getTelemetryConfig(callback, callbackParam)
 
             callback(callbackParam, config)
         end,
-        simulatorResponse = { 0, 1, 15, 0, 22, 0, 0, 1, 500, 0, 8, 0, 1, 8, 99, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+        simulatorResponse = {
+            0, -- telemetry_inverted
+            1, -- telemetry_halfduplex
+            15, 0, 22, 0, -- telemetry_sensors
+            0, -- telemetry_pinswap
+            1, -- crsf_telemetry_mode
+            500, 0, -- crsf_telemetry_rate
+            8, 0, -- crsf_telemetry_ratio
+
+            -- crsf_telemetry_sensors
+            60, -- Hspd
+            3,  -- Vbat
+            4,  -- Curr
+            5,
+            0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
     }
     rf2.mspQueue:add(message)
 end

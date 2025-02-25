@@ -15,7 +15,7 @@ local function getModelName(callback, callbackParam)
             local name = getText(buf, 1, #buf)
             callback(callbackParam, name)
         end,
-        simulatorResponse = { 83, 49 }
+        simulatorResponse = {83,97,98,32,71,111,98,108,105,110,32,55,48,48}
     }
     rf2.mspQueue:add(message)
 end
