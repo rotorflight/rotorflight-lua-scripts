@@ -5,9 +5,7 @@ local isInitialized = false
 local modelIsConnected = false
 
 local function run()
-    if rf2.runningInSimulator then
-        modelIsConnected = true
-    elseif getRSSI() > 0 and not modelIsConnected then
+    if getRSSI() > 0 and not modelIsConnected then
         modelIsConnected = true
     elseif getRSSI() == 0 and modelIsConnected then
         if initTask then
@@ -19,25 +17,33 @@ local function run()
         modelIsConnected = false
         isInitialized = false
         collectgarbage()
+    elseif getRSSI() == 0 and not modelIsConnected then
+        rf2.log("bg waiting for rssi")
+        return 0
     end
 
+    -- rf2.log("bg rssi: %s, crossfireTelemetryPush: %s", getRSSI(), crossfireTelemetryPush())
+
     if not isInitialized then
-        initTask = initTask or assert(rf2.loadScript(rf2.baseDir.."background_init.lua"))()
+        rf2.log("bg not initialized, running background_init.lua")
+        initTask = initTask or assert(rf2.loadScript("background_init.lua"))()
         local initTaskResult = initTask.run(modelIsConnected)
         if not initTaskResult.isInitialized then
-            --rf2.print("Not initialized yet")
+            rf2.print("Not initialized yet")
             return 0
         end
+        rf2.log("bg initTaskResult.crsfCustomTelemetryEnabled: %s", initTaskResult.crsfCustomTelemetryEnabled)
         if initTaskResult.crsfCustomTelemetryEnabled then
-            customTelemetryTask = assert(rf2.loadScript(rf2.baseDir.."rf2tlm.lua"))()
+            customTelemetryTask = assert(rf2.loadScript("rf2tlm.lua"))(initTaskResult.crsf_telemetry_sensors)
         end
-        adjTellerTask = assert(rf2.loadScript(rf2.baseDir.."adj_teller.lua"))()
+        adjTellerTask = assert(rf2.loadScript("adj_teller.lua"))()
         initTask = nil
         collectgarbage()
         isInitialized = true
+        rf2.log("bg initialized")
     end
 
-    if getRSSI() == 0 and not rf2.runningInSimulator then
+    if getRSSI() == 0 then
         return 0
     end
 

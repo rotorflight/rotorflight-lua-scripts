@@ -1,7 +1,8 @@
 local initializationDone = false
 local crsfCustomTelemetryEnabled = false
+local crsf_telemetry_sensors = {}
 
-local settingsHelper = assert(rf2.loadScript(rf2.baseDir.."PAGES/helpers/settingsHelper.lua"))()
+local settingsHelper = assert(rf2.loadScript("PAGES/helpers/settingsHelper.lua"))()
 local autoSetName = settingsHelper.loadSettings().autoSetName == 1 or false
 settingsHelper = nil
 
@@ -72,17 +73,7 @@ end
 
 local sensorsDiscoveredTimeout = 0
 local customTelemetryTask
-local function waitForCustomSensorsDiscovery()
-    -- OpenTX and EdgeTX reference sensors by their ID. In order to always have the
-    -- same ID when using custom CRSF/ELRS telemetry, follow this procedure:
-    -- 1. Power off the model
-    -- 2. "Delete all" sensors from the model
-    -- 3. Select "Discover new"
-    -- 4. Power on the model
-    -- 5. Wait for the sensors to be discovered.
-    -- MSP calls during this procedure can interfere with discovering custom sensors.
-    -- waitForCustomSensorsDiscovery facilitates waiting for the sensors to be discovered
-    -- before continuing with MSP calls.
+local function waitForClassicCrsfSensorsDiscovery()
 
     if not crossfireTelemetryPush() or rf2.runningInSimulator then
         -- Model does not use CRSF/ELRS
@@ -107,7 +98,7 @@ local function waitForCustomSensorsDiscovery()
     if sensorsDiscoveredTimeout ~= 0 then
         if rf2.clock() < sensorsDiscoveredTimeout then
             --rf2.print("Waiting for sensors to be discovered...")
-            customTelemetryTask = customTelemetryTask or assert(rf2.loadScript(rf2.baseDir.."rf2tlm.lua"))()
+            customTelemetryTask = customTelemetryTask or assert(rf2.loadScript("rf2tlm.lua"))()
             customTelemetryTask.run()
             return 1 -- wait for sensors to be discovered
         end
@@ -123,7 +114,7 @@ end
 
 local queueInitialized = false
 local function initializeQueue()
-    rf2.print("Initializing MSP queue")
+    rf2.log("Initializing MSP queue")
 
     rf2.mspQueue.maxRetries = -1       -- retry indefinitely
 
@@ -143,12 +134,10 @@ local function initializeQueue()
             if rf2.apiVersion >= 12.07 then
                 rf2.useApi("mspPilotConfig").getPilotConfig(onPilotConfigReceived)
 
-                if crossfireTelemetryPush() then
-                    rf2.useApi("mspTelemetryConfig").getTelemetryConfig(
-                        function(_, config)
-                            crsfCustomTelemetryEnabled = config.crsf_telemetry_mode.value == 1
-                        end)
-                end
+                rf2.useApi("mspTelemetryConfig").getTelemetryConfig(
+                    function(_, config)
+                        crsfCustomTelemetryEnabled = config.crsf_telemetry_mode.value == 1
+                    end)
             end
 
             rf2.useApi("mspSetRtc").setRtc(
@@ -162,7 +151,7 @@ local function initializeQueue()
 end
 
 local function initialize(modelIsConnected)
-    local sensorsDiscoveryWaitState = waitForCustomSensorsDiscovery()
+    local sensorsDiscoveryWaitState = waitForClassicCrsfSensorsDiscovery()
     if sensorsDiscoveryWaitState == 1 then
         return false
     end
@@ -185,7 +174,8 @@ local function run(modelIsConnected)
     return
     {
         isInitialized = initialize(modelIsConnected),
-        crsfCustomTelemetryEnabled = crsfCustomTelemetryEnabled
+        crsfCustomTelemetryEnabled = crsfCustomTelemetryEnabled,
+        crsf_telemetry_sensors = crsf_telemetry_sensors
     }
 end
 
