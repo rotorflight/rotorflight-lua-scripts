@@ -21,42 +21,6 @@ This version of Rotorflight is also known as **Rotorflight 2** or **RF2**.
 
 Tutorials, documentation, and flight videos can be found on the [Rotorflight website](https://www.rotorflight.org/).
 
-
-## Features
-
-Rotorflight has many features:
-
-* Many receiver protocols: CRSF, S.BUS, F.Port, DSM, IBUS, XBUS, EXBUS, GHOST, CPPM
-* Support for various telemetry protocols: CSRF, S.Port, HoTT, etc.
-* ESC telemetry protocols: BLHeli32, Hobbywing, Scorpion, Kontronik, OMP Hobby, ZTW, APD, YGE
-* Advanced PID control tuned for helicopters
-* Stabilisation modes (6D)
-* Rotor speed governor
-* Motorised tail support with Tail Torque Assist (TTA, also known as TALY)
-* Remote configuration and tuning with the transmitter
-  - With knobs / switches assigned to functions
-  - With Lua scripts on EdgeTX, OpenTX and Ethos
-* Extra servo/motor outputs for AUX functions
-* Fully customisable servo/motor mixer
-* Sensors for battery voltage, current, BEC, etc.
-* Advanced gyro filtering
-  - Dynamic RPM based notch filters
-  - Dynamic notch filters based on FFT
-  - Dynamic LPF
-* High-speed Blackbox logging
-
-Plus lots of features inherited from Betaflight:
-
-* Configuration profiles for changing various tuning parameters
-* Rates profiles for changing the stick feel and agility
-* Multiple ESC protocols: PWM, DSHOT, Multishot, etc.
-* Configurable buzzer sounds
-* Multi-color RGB LEDs
-* GPS support
-
-And many more...
-
-
 ## Lua Scripts Requirements
 
 - EdgeTX 2.5.0 or OpenTX 2.3.12 or later transmitter firmware
@@ -64,6 +28,9 @@ And many more...
   - a FrSky Smartport or F.Port receiver, _or_
   - a Crossfire v2.11 or newer receiver, _or_
   - an ELRS 2.0.1 or newer receiver
+
+> [!IMPORTANT]  
+> If you're using ELRS, make sure to set the baudrate to 921k in the *Hardware* menu of your transmitter.
 
 ## Installation
 
@@ -98,7 +65,8 @@ The optional background script `rf2bg.lua` features *Real Time FC Clock synchron
 - RTC synchronization will send the time of the transmitter to the flight controller. The script will beep if RTC synchronization has been completed. Blackbox logs and files created by the FC will now have the correct timestamp.
 - The *Adjustment Teller* will [tell you](https://www.youtube.com/watch?v=rbMiiWhzhqI) what adjustment you just made. It supports all adjustments except profile adjustments. 
   - S.port/F.port: the telemetry sensors 5110 and 5111 should be available. Discover or add them if they aren't.
-  - CRSF: the telemetry sensor FM should be available. Also do a `set crsf_flight_mode_reuse = ADJFUNC` in the CLI and `save`.  
+  - RF 2.0 CRSF: the telemetry sensor FM should be available. Also do a `set crsf_flight_mode_reuse = ADJFUNC` in the CLI and `save`.
+  - RF 2.1 CRSF with custom CRSF/ELRS telemetry: make sure you include the *Adjustment Function* sensor, else the *Adjustment Teller* won't tell you much. 
 
 The background script can be configured as either a special or global function in EdgeTX/OpenTX. The image below illustrates how to set up the background script as a special function. This configuration ensures that the script runs automatically as soon as the model is selected.
 

@@ -1,3 +1,5 @@
+-- Note: voice files were made with Balabolka and the Microsoft Zira voice.
+
 local adjustmentCollector
 local timeLastChange = -1
 local timeExitTool
@@ -86,9 +88,20 @@ local adjfunctions = {
     -- cross-coupling
     id61 = { name = "Cross Coup Gain", wavs = { "crossc", "gain" } },
     id62 = { name = "Cross Coup Ratio", wavs = { "crossc", "ratio" } },
-    id63 = { name = "Cross Coup Cutoff", wavs = { "crossc", "cutoff" } }
+    id63 = { name = "Cross Coup Cutoff", wavs = { "crossc", "cutoff" } },
+
+    -- accelerometer
+    id64 = { name = "Accelerometer Pitch Trim", wavs = { "accpitchtrim" } },
+    id65 = { name = "Accelerometer Roll Trim", wavs = { "accrolltrim" } },
 }
 
+local function drawTextMultiline(x, y, text, options)
+    local lineSpacing = (LCD_W < 320) and 10 or 25
+    for str in string.gmatch(text, "([^\n]+)") do
+        lcd.drawText(x, y, str, options)
+        y = y + lineSpacing
+    end
+end
 
 local function getTelemetryId(name)
     field = getFieldInfo(name)
@@ -101,7 +114,7 @@ end
 
 local function showValue(v)
     lcd.clear()
-    lcd.drawText(1, 1, tostring(v), 0)
+    drawTextMultiline(1, 1, tostring(v), 0)
 end
 
 local sportAdjustmentsCollector = {}
@@ -137,18 +150,30 @@ function crsfAdjustmentsCollector:new()
     local self = setmetatable({}, crsfAdjustmentsCollector)
     self.adjfuncId = 0
     self.adjfuncValue = 0
-    self.flightmodeSensorId = getTelemetryId("FM")
-    if self.flightmodeSensorId == -1 then
-        self.initFailedMessage = "No FM sensor found"
-        return self
+
+    self.adjfuncIdSensorId = getTelemetryId("AdjF")
+    self.adjfuncValueSensorId = getTelemetryId("AdjV")
+    if self.adjfuncIdSensorId == -1 or self.adjfuncValueSensorId == -1 then
+        self.flightmodeSensorId = getTelemetryId("FM")
+        if self.flightmodeSensorId == -1 then
+            self.initFailedMessage = "No sensors found. The\nadjustment teller needs\n- an FM sensor (RF2) or\n- AdjF and AdjV (RF2.1+)"
+            return self
+        end
     end
 
     function self:getAdjfuncIdAndValue()
-        local fm = getValue(self.flightmodeSensorId)
-        local startIndex, _ = string.find(fm, ":")
-        if startIndex and startIndex > 1 then
-            self.adjfuncId = string.sub(fm, 1, startIndex-1)
-            self.adjfuncValue = string.sub(fm, startIndex+1)
+        if self.flightmodeSensorId then
+            local fm = getValue(self.flightmodeSensorId)
+            local startIndex, _ = string.find(fm, ":")
+            if startIndex and startIndex > 1 then
+                self.adjfuncId = string.sub(fm, 1, startIndex-1)
+                self.adjfuncValue = string.sub(fm, startIndex+1)
+            end
+        else
+            local adjfuncId = getValue(self.adjfuncIdSensorId)
+            if adjfuncId ~= 0 then self.adjfuncId = adjfuncId end
+            local adjfuncValue = getValue(self.adjfuncValueSensorId)
+            if adjfuncValue ~= 0 then self.adjfuncValue = adjfuncValue end
         end
         return self.adjfuncId, self.adjfuncValue
     end
@@ -170,7 +195,7 @@ local function init()
 
     if adjustmentCollector.initFailedMessage then
         showValue(adjustmentCollector.initFailedMessage)
-        timeExitTool = rf2.clock() + 2
+        timeExitTool = rf2.clock() + 5
         return
     end
 

@@ -5,7 +5,7 @@ TARGET=${1:-obj}
 rm -fr ${TARGET}
 cp -fr src ${TARGET}
 
-MANIFEST=(`find ${TARGET} -name '*.lua' -type f`)
+MANIFEST=(`find ${TARGET} -name '*.lua' -type f | sort`)
 
 if [ ${#MANIFEST[@]} -eq 0 ]
 then

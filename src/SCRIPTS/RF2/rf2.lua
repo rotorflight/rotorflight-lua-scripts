@@ -5,10 +5,14 @@ rf2 = {
     loadScript = loadScript,
 
     log = function(str)
-        if not rf2.logfile then
-            rf2.logfile = io.open("/LOGS/rf2.log", "a")
+        if rf2.runningInSimulator then
+            print(tostring(str))
+        else
+            if not rf2.logfile then
+                rf2.logfile = io.open("/LOGS/rf2.log", "a")
+            end
+            io.write(rf2.logfile, string.format("%.2f ", rf2.clock()) .. tostring(str) .. "\n")
         end
-        io.write(rf2.logfile, string.format("%.2f ", rf2.clock()) .. tostring(str) .. "\n")
     end,
 
     print = function(str)
@@ -18,6 +22,11 @@ rf2 = {
             --serialWrite(tostring(str).."\r\n") -- 115200 bps
             --rf2.log(str)
         end
+    end,
+
+    useApi = function(apiName)
+        collectgarbage()
+        return assert(rf2.loadScript(rf2.baseDir.."MSP/" .. apiName .. ".lua"))()
     end,
 
     clock = function()

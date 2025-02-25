@@ -1,4 +1,4 @@
-local LUA_VERSION = "2.1.0 - 240728"
+local LUA_VERSION = "2.1.0"
 
 local uiStatus =
 {
@@ -83,7 +83,16 @@ local mspEepromWrite =
         end
     end,
     errorHandler = function(self)
-        rf2.displayMessage("Save error", "Make sure your heli\nis disarmed.")
+        if rf2.apiVersion >= 12.08 then
+            if not rf2.saveWarningShown then
+                rf2.displayMessage("Save warning", "Settings will be saved\nafter disarming.")
+                rf2.saveWarningShown = true
+            else
+                invalidatePages()
+            end
+        else
+            rf2.displayMessage("Save error", "Make sure your heli\nis disarmed.")
+        end
     end,
     simulatorResponse = {}
 }
@@ -109,13 +118,16 @@ local mspSaveSettings =
     end
 }
 
-local function saveSettings()
+rf2.saveSettings = function()
     if pageState ~= pageStatus.saving then
         pageState = pageStatus.saving
         saveTS = rf2.clock()
 
         if Page.values then
             local payload = Page.values
+            if Page.preSave then
+                payload = Page.preSave(Page)
+            end
             mspSaveSettings.command = Page.write
             mspSaveSettings.payload = payload
             mspSaveSettings.simulatorResponse = {}
@@ -133,7 +145,10 @@ local mspLoadSettings =
         rf2.print("Page is processing reply for cmd "..tostring(self.command).." len buf: "..#buf.." expected: "..Page.minBytes)
         Page.values = buf
         if Page.postRead then
-            Page.postRead(Page)
+            if Page.postRead(Page) == -1 then
+                Page.values = nil
+                return
+             end
         end
         rf2.dataBindFields()
         if Page.postLoad then
@@ -177,7 +192,9 @@ local function createPopupMenu()
     popupMenuActive = 1
     popupMenu = {}
     if uiState == uiStatus.pages then
-        popupMenu[#popupMenu + 1] = { t = "Save Page", f = saveSettings }
+        if not Page.readOnly then
+            popupMenu[#popupMenu + 1] = { t = "Save Page", f = rf2.saveSettings }
+        end
         popupMenu[#popupMenu + 1] = { t = "Reload", f = invalidatePages }
     end
     popupMenu[#popupMenu + 1] = { t = "Reboot", f = rebootFc }
@@ -310,13 +327,20 @@ local function drawScreen()
         if f.data and f.data.value then
             val = f.data.value
             if type(val) == "number" then
-                val = val / (f.data.scale or 1)
+                if f.data.scale then
+                    val = val / f.data.scale
+                else
+                    val = math.floor(val)
+                end
             end
             if f.data.table and f.data.table[val] then
                 val = f.data.table[val]
             end
         elseif f.value then
             val = f.value
+            if type(val) == "number" and not f.scale then
+                val = math.floor(val)
+            end
             if f.table and f.table[f.value] then
                 val = f.table[f.value]
             end
@@ -378,6 +402,14 @@ local function drawPopupMenu()
     end
 end
 
+rf2.loadPageFiles = function(setCurrentPageToLastPage)
+    PageFiles = assert(rf2.loadScript("pages.lua"))()
+    if setCurrentPageToLastPage then
+        currentPage = #PageFiles
+    end
+    collectgarbage()
+end
+
 local function run_ui(event)
     --rf2.print("uiState: "..uiState.." pageState: "..pageState)
     if displayMessage then
@@ -412,12 +444,13 @@ local function run_ui(event)
             return 0
         end
         init = nil
-        PageFiles = assert(rf2.loadScript("pages.lua"))()
+        rf2.loadPageFiles()
         invalidatePages()
         uiState = prevUiState or uiStatus.mainMenu
         prevUiState = nil
     elseif uiState == uiStatus.mainMenu then
         if event == EVT_VIRTUAL_EXIT then
+            collectgarbage()
             return 2
         elseif event == EVT_VIRTUAL_NEXT then
             incMainMenu(1)
@@ -552,7 +585,7 @@ local function run_ui(event)
             prevUiState = nil
         end
     end
-    if getRSSI() == 0 then
+    if getRSSI() == 0 and not rf2.runningInSimulator then
         lcd.drawText(rf2.radio.NoTelem[1],rf2.radio.NoTelem[2],rf2.radio.NoTelem[3],rf2.radio.NoTelem[4])
     end
 

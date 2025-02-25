@@ -133,6 +133,7 @@ return {
             end
         end
 
+        rf2.lcdNeedsInvalidate = true
         self.isReady = true
     end,
 }
