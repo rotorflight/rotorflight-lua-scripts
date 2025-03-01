@@ -1,23 +1,6 @@
 # 2.1.1
 
-This is the 2.1.1 release of the *Rotorflight Lua Scripts for EdgeTX and OpenTX*.
-
-## Downloads
-
-The download locations are:
-
-- [Rotorflight Configurator](https://github.com/rotorflight/rotorflight-configurator/releases/tag/release/2.1.1)
-- [Rotorflight Blackbox](https://github.com/rotorflight/rotorflight-blackbox/releases/tag/release/2.1.1)
-- [Lua Scripts for EdgeTX and OpenTX](https://github.com/rotorflight/rotorflight-lua-scripts/releases/tag/release/2.1.1)
-- [Lua Scripts for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos/releases/tag/release/2.1.0)
-- [Lua Suite for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos-suite/releases/tag/release/2.1.1)
-
-## Notes
-
-- Rotorflight setup instructions can be found on the Rotorflight website [www.rotorflight.org](https://www.rotorflight.org/).
-- Rotorflight 2.1.1 *is* backward compatible with Rotorflight 2.0. You *can* load your configuration dump from Rotorflight 2.0 into 2.1.1.
-- If updating from Rotorflight 1, please setup your helicopter from scratch. Follow the instructions on the website.
-- As always, please double check your configuration on the bench before flying!
+This is a maintenance release containing minor bug fixes.
 
 ## Changes from 2.1.0
 
