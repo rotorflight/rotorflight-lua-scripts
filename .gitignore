@@ -49,3 +49,4 @@ luac.out
 tmp
 obj
 .vs/
+.idea/
