@@ -2,7 +2,6 @@ local PageFiles = {}
 local settings = assert(rf2.loadScript("PAGES/helpers/settingsHelper.lua"))().loadSettings()
 
 -- Rotorflight pages.
-PageFiles[#PageFiles + 1] = { title = "ESC - XDFly", script = "esc_xdfly.lua" }
 PageFiles[#PageFiles + 1] = { title = "Status", script = "status.lua" }
 PageFiles[#PageFiles + 1] = { title = "Rates", script = "rates.lua" }
 PageFiles[#PageFiles + 1] = { title = "Profile - PIDs", script = "pids.lua" }
@@ -31,6 +30,9 @@ if rf2.apiVersion >= 12.07 then
     end
     if settings.showTribunus == 1 then
         PageFiles[#PageFiles + 1] = { title = "ESC - Scorpion Tribunus", script = "esc_scorp.lua" }
+    end
+    if settings.showXdfly == 1 then
+        PageFiles[#PageFiles + 1] = { title = "ESC - XDFly", script = "esc_xdfly.lua" }
     end
     if settings.showYge == 1 then
         PageFiles[#PageFiles + 1] = { title = "ESC - YGE", script = "esc_yge.lua" }
