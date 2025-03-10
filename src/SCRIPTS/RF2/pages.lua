@@ -2,6 +2,7 @@ local PageFiles = {}
 local settings = assert(rf2.loadScript("PAGES/helpers/settingsHelper.lua"))().loadSettings()
 
 -- Rotorflight pages.
+PageFiles[#PageFiles + 1] = { title = "ESC - XDFly", script = "esc_xdfly.lua" }
 PageFiles[#PageFiles + 1] = { title = "Status", script = "status.lua" }
 PageFiles[#PageFiles + 1] = { title = "Rates", script = "rates.lua" }
 PageFiles[#PageFiles + 1] = { title = "Profile - PIDs", script = "pids.lua" }
