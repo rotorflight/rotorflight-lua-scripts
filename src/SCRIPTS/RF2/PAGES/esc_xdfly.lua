@@ -15,34 +15,42 @@ local escParameters = mspEsc.getDefaults()
 
 labels[1] = { t = "ESC not ready, waiting...",     x = x,          y = inc.y(lineSpacing) }
 labels[2] = { t = "---",                           x = x + indent, y = inc.y(lineSpacing), bold = false }
+fields[1] = { t = nil, x = 0, y = 0, data = nil, readOnly = true } -- dummy field since ui.lua expects at least one field
 
-labels[#labels + 1] = { t = "Basic",               x = x,          y = inc.y(lineSpacing * 2) }
-fields[#fields + 1] = { t = "LV BEC voltage",      x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = escParameters.lv_bec_voltage }
-fields[#fields + 1] = { t = "HV BEC voltage",      x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = escParameters.hv_bec_voltage }
-fields[#fields + 1] = { t = "Motor direction",     x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = escParameters.motor_direction }
-fields[#fields + 1] = { t = "LED Colour",          x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = escParameters.led_color }
-fields[#fields + 1] = { t = "Smart Fan",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = escParameters.smart_fan }
-
-labels[#labels + 1] = { t = "Advanced",            x = x,          y = inc.y(lineSpacing * 2) }
-fields[#fields + 1] = { t = "Timing",              x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = escParameters.timing }
-fields[#fields + 1] = { t = "Startup Power",       x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = escParameters.startup_power }
-fields[#fields + 1] = { t = "Acceleration",        x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = escParameters.acceleration }
-fields[#fields + 1] = { t = "Brake Type",          x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = escParameters.brake_type }
-fields[#fields + 1] = { t = "Brake Force",         x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = escParameters.brake_force }
-fields[#fields + 1] = { t = "SR Function",         x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = escParameters.sr_function }
-fields[#fields + 1] = { t = "Capacity Correctn",   x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = escParameters.capacity_correction }
-fields[#fields + 1] = { t = "Auto Restart Time",   x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = escParameters.auto_restart_time }
-fields[#fields + 1] = { t = "Cell Cutoff",         x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = escParameters.cell_cutoff }
-
-labels[#labels + 1] = { t = "Governor",            x = x,          y = inc.y(lineSpacing * 2) }
-fields[#fields + 1] = { t = "Mode",                x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = escParameters.governor }
-fields[#fields + 1] = { t = "Gov-P",               x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = escParameters.gov_p }
-fields[#fields + 1] = { t = "Gov-I",               x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = escParameters.gov_i }
-fields[#fields + 1] = { t = "Pole pairs",          x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = escParameters.motor_poles }
+local function addField(text, data)
+    if not data.hidden then
+        fields[#fields + 1] = { t = text, x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = data }
+    end
+end
 
 local function receivedEscParameters(page)
     page.labels[1].t = escParameters.modelName
     page.labels[2].t = escParameters.firmwareVersion
+
+    labels[#labels + 1] = { t = "Basic", x = x, y = inc.y(lineSpacing * 2) }
+    addField("Motor direction", escParameters.motor_direction)
+    addField("LV BEC voltage", escParameters.lv_bec_voltage)
+    addField("HV BEC voltage", escParameters.hv_bec_voltage)
+    addField("Cell cutoff", escParameters.cell_cutoff)
+
+    labels[#labels + 1] = { t = "Governor", x = x, y = inc.y(lineSpacing * 2) }
+    addField("Mode", escParameters.governor)
+    addField("P-gain", escParameters.gov_p)
+    addField("I-gain", escParameters.gov_i)
+    addField("Pole pairs", escParameters.pole_pairs)
+
+    labels[#labels + 1] = { t = "Advanced", x = x, y = inc.y(lineSpacing * 2) }
+    addField("Timing", escParameters.timing)
+    addField("Startup power", escParameters.startup_power)
+    addField("Acceleration", escParameters.acceleration)
+    addField("Brake type", escParameters.brake_type)
+    addField("Brake force", escParameters.brake_force)
+    addField("SR function", escParameters.sr_function)
+    addField("Capacity correction", escParameters.capacity_correction)
+    addField("Auto restart time", escParameters.auto_restart_time)
+    addField("LED color", escParameters.led_color)
+    addField("Smart fan", escParameters.smart_fan)
+
     rf2.lcdNeedsInvalidate = true
     page.isReady = true
 end

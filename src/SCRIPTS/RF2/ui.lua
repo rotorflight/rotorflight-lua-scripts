@@ -296,6 +296,7 @@ local function fieldIsButton(f)
 end
 
 local function drawScreen()
+    if currentField > #Page.fields then currentField = #Page.fields end
     local yMinLim = rf2.radio.yMinLimit
     local yMaxLim = rf2.radio.yMaxLimit
     local currentFieldY = Page.fields[currentField].y
