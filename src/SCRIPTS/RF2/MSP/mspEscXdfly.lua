@@ -36,7 +36,6 @@ local function getEscParameters(data, callback, callbackParam)
             data.esc_command.value = rf2.mspHelper.readU8(buf)
             data.esc_version.value = rf2.mspHelper.readU8(buf)
             data.esc_model.value = rf2.mspHelper.readU8(buf)
-
             data.governor.value = rf2.mspHelper.readU16(buf)
             data.cell_cutoff.value = rf2.mspHelper.readU16(buf)
             data.timing.value = rf2.mspHelper.readU16(buf)
@@ -57,11 +56,12 @@ local function getEscParameters(data, callback, callbackParam)
             data.smart_fan.value = rf2.mspHelper.readU16(buf)
             data.active_fields.value = rf2.mspHelper.readU32(buf)
 
+            -- Derived fields
             data.modelName = getModelName(data.esc_model.value)
             data.firmwareVersion = getFirmwareVersion(data.esc_version.value)
-            local activeFields = data.active_fields.value
 
             -- Set hidden flag if the corresponding activeFields bit is 0
+            local activeFields = data.active_fields.value
             data.governor.hidden = bit32.rshift(activeFields, 1) % 2 == 0
             data.cell_cutoff.hidden = bit32.rshift(activeFields, 2) % 2 == 0
             data.timing.hidden = bit32.rshift(activeFields, 3) % 2 == 0
@@ -92,6 +92,7 @@ local function setEscParameters(data)
     local message = {
         command = 218, -- MSP_SET_ESC_PARAMETERS
         payload = {},
+        postSendDelay = 2, -- A delay is needed since  MSP_SET_ESC_PARAMETERS gets processed asynchronously
         simulatorResponse = {}
     }
     rf2.mspHelper.writeU8(message.payload, data.esc_signature.value)
@@ -122,29 +123,29 @@ end
 
 local function getDefaults()
     local defaults = {
-        esc_signature = { value = nil },
-        esc_command = { value = nil },
-        esc_model = { value = nil },
-        esc_version = { value = nil },
-        governor = { value = nil, table = govMode, max = #govMode },
-        cell_cutoff = { value = nil, table = lowVoltage, max = #lowVoltage },
-        timing = { value = nil, table = timing, max = #timing },
-        lv_bec_voltage = { value = nil, table = becLvVoltage, max = #becLvVoltage },
-        motor_direction = { value = nil, table = motorDirection, max = #motorDirection },
-        gov_p = { value = nil, min = 1, max = 10 },
-        gov_i = { value = nil, min = 1, max = 10 },
-        acceleration = { value = nil, table = accel, max = #accel },
-        auto_restart_time = { value = nil, table = autoRestart, max = #autoRestart },
-        hv_bec_voltage = { value = nil, table = becHvVoltage, max = #becHvVoltage },
-        startup_power = { value = nil, table = startupPower, max = #startupPower },
-        brake_type = { value = nil, table = brakeType, max = #brakeType },
-        brake_force = { value = nil, min = 0, max = 100 },
-        sr_function = { value = nil, table = srFunc, max = #srFunc },
-        capacity_correction = { value = nil, min = -10, max = 10 },
-        pole_pairs = { value = nil, min = 1, max = 30 },
-        led_color = { value = nil, table = ledColor, max = #ledColor },
-        smart_fan = { value = nil, table = fanControl, max = #fanControl },
-        active_fields = { value = nil  }
+        esc_signature = { },
+        esc_command = { },
+        esc_model = { },
+        esc_version = { },
+        governor = { table = govMode, max = #govMode },
+        cell_cutoff = { table = lowVoltage, max = #lowVoltage },
+        timing = { table = timing, max = #timing },
+        lv_bec_voltage = { table = becLvVoltage, max = #becLvVoltage },
+        motor_direction = { table = motorDirection, max = #motorDirection },
+        gov_p = { min = 1, max = 10 },
+        gov_i = { min = 1, max = 10 },
+        acceleration = { table = accel, max = #accel },
+        auto_restart_time = { table = autoRestart, max = #autoRestart },
+        hv_bec_voltage = { table = becHvVoltage, max = #becHvVoltage },
+        startup_power = { table = startupPower, max = #startupPower },
+        brake_type = { table = brakeType, max = #brakeType },
+        brake_force = { min = 0, max = 100 },
+        sr_function = { table = srFunc, max = #srFunc },
+        capacity_correction = { min = -10, max = 10 },
+        pole_pairs = { min = 1, max = 30 },
+        led_color = { table = ledColor, max = #ledColor },
+        smart_fan = { table = fanControl, max = #fanControl },
+        active_fields = {  }
     }
     return defaults
 end
