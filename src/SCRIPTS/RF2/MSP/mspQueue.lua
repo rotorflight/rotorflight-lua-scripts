@@ -81,6 +81,9 @@ function MspQueueController:processQueue()
             self.currentMessage = nil
             return
         end
+        if not self.lastTimeCommandSent or (self.lastTimeCommandSent + retryDelay < rf2.clock()) then
+            self.lastTimeCommandSent = rf2.clock()
+        end
         cmd = self.currentMessage.command
         buf = self.currentMessage.simulatorResponse
         err = nil

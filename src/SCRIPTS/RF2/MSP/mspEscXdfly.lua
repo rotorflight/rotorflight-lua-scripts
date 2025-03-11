@@ -123,10 +123,10 @@ end
 
 local function getDefaults()
     local defaults = {
-        esc_signature = { },
-        esc_command = { },
-        esc_model = { },
-        esc_version = { },
+        esc_signature = {},
+        esc_command = {},
+        esc_model = {},
+        esc_version = {},
         governor = { table = govMode, max = #govMode },
         cell_cutoff = { table = lowVoltage, max = #lowVoltage },
         timing = { table = timing, max = #timing },
@@ -145,7 +145,7 @@ local function getDefaults()
         pole_pairs = { min = 1, max = 30 },
         led_color = { table = ledColor, max = #ledColor },
         smart_fan = { table = fanControl, max = #fanControl },
-        active_fields = {  }
+        active_fields = {}
     }
     return defaults
 end

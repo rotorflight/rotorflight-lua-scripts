@@ -57,7 +57,7 @@ return {
     end,
     title       = "Settings",
     reboot      = false,
-    eepromWrite = true,
+    eepromWrite = false,
     labels      = labels,
     fields      = fields
 }
