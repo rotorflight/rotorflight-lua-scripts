@@ -364,6 +364,7 @@ local function drawScreen()
             elseif f.t then
                 lcd.drawText(f.x, y, f.t, textOptions)
             end
+            val = val .. ((f.data and f.data.unit) or "")
             lcd.drawText(f.sp or f.x, y, val, valueOptions)
         end
     end
