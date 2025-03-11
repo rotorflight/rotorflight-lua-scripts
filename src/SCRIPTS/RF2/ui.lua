@@ -60,6 +60,17 @@ rf2.displayMessage = function(title, text)
     displayMessage = { title = title, text = text }
 end
 
+rf2.storeCurrentField = function()
+    rf2.currentField = currentField
+end
+
+rf2.setCurrentField = function()
+    if rf2.currentField then
+        currentField = rf2.currentField
+        rf2.currentField = nil
+    end
+end
+
 local function rebootFc()
     --rf2.print("Attempting to reboot the FC...")
     pageState = pageStatus.rebooting
@@ -170,7 +181,7 @@ rf2.readPage = function()
 end
 
 local function requestPage()
-    if not Page.reqTS or Page.reqTS + 2 <= rf2.clock() then
+    if not Page.reqTS or Page.reqTS + 5 <= rf2.clock() then
         --rf2.print("Requesting page...")
         Page.reqTS = rf2.clock()
         if Page.read then

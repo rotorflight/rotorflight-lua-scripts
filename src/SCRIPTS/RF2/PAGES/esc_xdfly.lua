@@ -51,6 +51,8 @@ local function receivedEscParameters(page)
     addField("LED color", escParameters.led_color)
     addField("Smart fan", escParameters.smart_fan)
 
+    rf2.setCurrentField()
+
     rf2.lcdNeedsInvalidate = true
     page.isReady = true
 end
@@ -61,11 +63,12 @@ return {
     end,
     write = function(self)
         mspEsc.write(escParameters)
+        rf2.storeCurrentField()
         rf2.settingsSaved()
     end,
     title       = "XDFly Setup",
     reboot      = false,
-    eepromWrite = true,
+    eepromWrite = false,
     labels      = labels,
     fields      = fields,
 }
