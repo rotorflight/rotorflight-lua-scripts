@@ -12,27 +12,29 @@ local inc = { x = function(val) x = x + val return x end, y = function(val) y = 
 local labels = {}
 local fields = {}
 local settings = settingsHelper.loadSettings()
+local hideShow = { [0] = "Hide", "Show" }
 
-x = margin
 y = yMinLim - tableSpacing.header
-
 labels[1] = { t = "Display Various Pages",   x = x, y = inc.y(lineSpacing) }
 fields[1] = { t = "Model on TX",             x = x + indent, y = inc.y(lineSpacing), sp = x + sp }
 fields[2] = { t = "Experimental (!)",        x = x + indent, y = inc.y(lineSpacing), sp = x + sp }
+
 inc.y(lineSpacing * 0.5)
 labels[2] = { t = "Display ESC Pages",       x = x, y = inc.y(lineSpacing) }
 fields[3] = { t = "FlyRotor",                x = x + indent, y = inc.y(lineSpacing), sp = x + sp }
 fields[4] = { t = "HW Platinum V5",          x = x + indent, y = inc.y(lineSpacing), sp = x + sp }
 fields[5] = { t = "Scorpion Tribunus",       x = x + indent, y = inc.y(lineSpacing), sp = x + sp }
-fields[6] = { t = "YGE",                     x = x + indent, y = inc.y(lineSpacing), sp = x + sp }
+fields[6] = { t = "XDFly",                   x = x + indent, y = inc.y(lineSpacing), sp = x + sp }
+fields[7] = { t = "YGE",                     x = x + indent, y = inc.y(lineSpacing), sp = x + sp }
 
 local function setValues()
-    fields[1].data = { value = settings.showModelOnTx or 0, min = 0, max = 1, table = { [0] = "Hide", "Show" } }
-    fields[2].data = { value = settings.showExperimental or 0, min = 0, max = 1, table = { [0] = "Hide", "Show" } }
-    fields[3].data = { value = settings.showFlyRotor or 0, min = 0, max = 1, table = { [0] = "Hide", "Show" } }
-    fields[4].data = { value = settings.showPlatinumV5 or 0, min = 0, max = 1, table = { [0] = "Hide", "Show" } }
-    fields[5].data = { value = settings.showTribunus or 0, min = 0, max = 1, table = { [0] = "Hide", "Show" } }
-    fields[6].data = { value = settings.showYge or 0, min = 0, max = 1, table = { [0] = "Hide", "Show" } }
+    fields[1].data = { value = settings.showModelOnTx or 0, min = 0, max = 1, table = hideShow }
+    fields[2].data = { value = settings.showExperimental or 0, min = 0, max = 1, table = hideShow }
+    fields[3].data = { value = settings.showFlyRotor or 0, min = 0, max = 1, table = hideShow }
+    fields[4].data = { value = settings.showPlatinumV5 or 0, min = 0, max = 1, table = hideShow }
+    fields[5].data = { value = settings.showTribunus or 0, min = 0, max = 1, table = hideShow }
+    fields[6].data = { value = settings.showXdfly or 0, min = 0, max = 1, table = hideShow }
+    fields[7].data = { value = settings.showYge or 0, min = 0, max = 1, table = hideShow }
 end
 
 return {
@@ -47,14 +49,15 @@ return {
         settings.showFlyRotor = fields[3].data.value
         settings.showPlatinumV5 = fields[4].data.value
         settings.showTribunus = fields[5].data.value
-        settings.showYge = fields[6].data.value
+        settings.showXdfly = fields[6].data.value
+        settings.showYge = fields[7].data.value
         settingsHelper.saveSettings(settings)
         rf2.loadPageFiles(true)
         rf2.settingsSaved()
     end,
     title       = "Settings",
     reboot      = false,
-    eepromWrite = true,
+    eepromWrite = false,
     labels      = labels,
     fields      = fields
 }

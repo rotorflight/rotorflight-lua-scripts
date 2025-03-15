@@ -31,6 +31,9 @@ if rf2.apiVersion >= 12.07 then
     if settings.showTribunus == 1 then
         PageFiles[#PageFiles + 1] = { title = "ESC - Scorpion Tribunus", script = "esc_scorp.lua" }
     end
+    if settings.showXdfly == 1 then
+        PageFiles[#PageFiles + 1] = { title = "ESC - XDFly", script = "esc_xdfly.lua" }
+    end
     if settings.showYge == 1 then
         PageFiles[#PageFiles + 1] = { title = "ESC - YGE", script = "esc_yge.lua" }
     end
