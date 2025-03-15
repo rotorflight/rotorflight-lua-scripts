@@ -10,19 +10,29 @@ local y = yMinLim - lineSpacing
 local inc = { x = function(val) x = x + val return x end, y = function(val) y = y + val return y end }
 local labels = {}
 local fields = {}
+local mspAccTrim = rf2.useApi("mspAccTrim")
+local accTrimData = mspAccTrim.getDefaults()
 
-labels[#labels + 1] = { t = "Accelerometer Trim",     x = x,          y = inc.y(lineSpacing) }
-fields[#fields + 1] = { t = "Roll",                   x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = -300, max = 300, vals = { 3, 4 } }
-fields[#fields + 1] = { t = "Pitch",                  x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = -300, max = 300, vals = { 1, 2 } }
+labels[#labels + 1] = { t = "Accelerometer Trim", x = x,          y = inc.y(lineSpacing) }
+fields[#fields + 1] = { t = "Roll",               x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = accTrimData.roll_trim }
+fields[#fields + 1] = { t = "Pitch",              x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = accTrimData.pitch_trim }
+
+local function receivedGovernorProfile(page)
+    rf2.lcdNeedsInvalidate = true
+    page.isReady = true
+end
 
 return {
-    read        = 240, -- MSP_ACC_TRIM
-    write       = 239, -- MSP_SET_ACC_TRIM
+    read = function(self)
+        mspAccTrim.read(accTrimData, receivedGovernorProfile, self)
+    end,
+    write = function(self)
+        mspAccTrim.write(accTrimData)
+        rf2.settingsSaved()
+    end,
     eepromWrite = true,
     reboot      = false,
     title       = "Accelerometer",
-    minBytes    = 4,
     labels      = labels,
-    fields      = fields,
-    simulatorResponse = { 0, 0, 0, 0 },
+    fields      = fields
 }
