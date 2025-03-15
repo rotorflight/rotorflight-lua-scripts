@@ -13,7 +13,6 @@ PageFiles[#PageFiles + 1] = { title = "Mixer", script = "mixer.lua" }
 PageFiles[#PageFiles + 1] = { title = "Gyro Filters", script = "filters.lua" }
 PageFiles[#PageFiles + 1] = { title = "Governor", script = "governor.lua" }
 PageFiles[#PageFiles + 1] = { title = "Accelerometer Trim", script = "accelerometer.lua" }
---PageFiles[#PageFiles + 1] = { title = "Copy profiles", script = "copy_profiles.lua" }
 
 if rf2.apiVersion >= 12.07 then
     if settings.showModelOnTx == 1 then
