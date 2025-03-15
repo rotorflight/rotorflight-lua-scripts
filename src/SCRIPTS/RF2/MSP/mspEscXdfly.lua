@@ -22,6 +22,10 @@ local function getFirmwareVersion(version)
     return string.format("Firmware: %d.%d", bit32.rshift(version, 4), bit32.band(version, 0x0F))
 end
 
+local function bitIsZero(value, bit)
+    return bit32.band(value, bit32.lshift(1, bit)) == 0
+end
+
 local function getEscParameters(data, callback, callbackParam)
     local message = {
         command = 217, -- MSP_ESC_PARAMETERS
@@ -62,24 +66,24 @@ local function getEscParameters(data, callback, callbackParam)
 
             -- Set hidden flag if the corresponding activeFields bit is 0
             local activeFields = data.active_fields.value
-            data.governor.hidden = bit32.rshift(activeFields, 1) % 2 == 0
-            data.cell_cutoff.hidden = bit32.rshift(activeFields, 2) % 2 == 0
-            data.timing.hidden = bit32.rshift(activeFields, 3) % 2 == 0
-            data.lv_bec_voltage.hidden = bit32.rshift(activeFields, 4) % 2 == 0
-            data.motor_direction.hidden = bit32.rshift(activeFields, 5) % 2 == 0
-            data.gov_p.hidden = bit32.rshift(activeFields, 6) % 2 == 0
-            data.gov_i.hidden = bit32.rshift(activeFields, 7) % 2 == 0
-            data.acceleration.hidden = bit32.rshift(activeFields, 8) % 2 == 0
-            data.auto_restart_time.hidden = bit32.rshift(activeFields, 9) % 2 == 0
-            data.hv_bec_voltage.hidden = bit32.rshift(activeFields, 10) % 2 == 0
-            data.startup_power.hidden = bit32.rshift(activeFields, 11) % 2 == 0
-            data.brake_type.hidden = bit32.rshift(activeFields, 12) % 2 == 0
-            data.brake_force.hidden = bit32.rshift(activeFields, 13) % 2 == 0
-            data.sr_function.hidden = bit32.rshift(activeFields, 14) % 2 == 0
-            data.capacity_correction.hidden = bit32.rshift(activeFields, 15) % 2 == 0
-            data.pole_pairs.hidden = bit32.rshift(activeFields, 16) % 2 == 0
-            data.led_color.hidden = bit32.rshift(activeFields, 17) % 2 == 0
-            data.smart_fan.hidden = bit32.rshift(activeFields, 18) % 2 == 0
+            data.governor.hidden = bitIsZero(activeFields, 1)
+            data.cell_cutoff.hidden = bitIsZero(activeFields, 2)
+            data.timing.hidden = bitIsZero(activeFields, 3)
+            data.lv_bec_voltage.hidden = bitIsZero(activeFields, 4)
+            data.motor_direction.hidden = bitIsZero(activeFields, 5)
+            data.gov_p.hidden = bitIsZero(activeFields, 6)
+            data.gov_i.hidden = bitIsZero(activeFields, 7)
+            data.acceleration.hidden = bitIsZero(activeFields, 8)
+            data.auto_restart_time.hidden = bitIsZero(activeFields, 9)
+            data.hv_bec_voltage.hidden = bitIsZero(activeFields, 10)
+            data.startup_power.hidden = bitIsZero(activeFields, 11)
+            data.brake_type.hidden = bitIsZero(activeFields, 12)
+            data.brake_force.hidden = bitIsZero(activeFields, 13)
+            data.sr_function.hidden = bitIsZero(activeFields, 14)
+            data.capacity_correction.hidden = bitIsZero(activeFields, 15)
+            data.pole_pairs.hidden = bitIsZero(activeFields, 16)
+            data.led_color.hidden = bitIsZero(activeFields, 17)
+            data.smart_fan.hidden = bitIsZero(activeFields, 18)
 
             callback(callbackParam)
         end,
