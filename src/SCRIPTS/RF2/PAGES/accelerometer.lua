@@ -17,14 +17,14 @@ labels[#labels + 1] = { t = "Accelerometer Trim", x = x,          y = inc.y(line
 fields[#fields + 1] = { t = "Roll",               x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = accTrimData.roll_trim }
 fields[#fields + 1] = { t = "Pitch",              x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = accTrimData.pitch_trim }
 
-local function receivedGovernorProfile(page)
+local function receivedAccTrimData(page)
     rf2.lcdNeedsInvalidate = true
     page.isReady = true
 end
 
 return {
     read = function(self)
-        mspAccTrim.read(accTrimData, receivedGovernorProfile, self)
+        mspAccTrim.read(accTrimData, receivedAccTrimData, self)
     end,
     write = function(self)
         mspAccTrim.write(accTrimData)
