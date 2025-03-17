@@ -66,13 +66,13 @@ local function getDefaults()
     defaults.gov_autorotation_timeout = { min = 0, max = 100, scale = 10 }
     defaults.gov_autorotation_bailout_time = { min = 0, max = 100, scale = 10 }
     defaults.gov_autorotation_min_entry_time = { min = 0, max = 100, scale = 10 }
-    defaults.gov_handover_throttle = { min = 10, max = 50, unit = "%" }
-    defaults.gov_pwr_filter = { min = 0, max = 250, unit = " Hz" }
-    defaults.gov_rpm_filter = { min = 0, max = 250, unit = " Hz" }
-    defaults.gov_tta_filter = { min = 0, max = 250, unit = " Hz" }
-    defaults.gov_ff_filter = { min = 0, max = 250, unit = " Hz" }
+    defaults.gov_handover_throttle = { min = 10, max = 50, unit = rf2.units.percentage }
+    defaults.gov_pwr_filter = { min = 0, max = 250, unit = rf2.units.herz }
+    defaults.gov_rpm_filter = { min = 0, max = 250, unit = rf2.units.herz }
+    defaults.gov_tta_filter = { min = 0, max = 250, unit = rf2.units.herz }
+    defaults.gov_ff_filter = { min = 0, max = 250, unit = rf2.units.herz }
     if rf2.apiVersion >= 12.08 then
-        defaults.gov_spoolup_min_throttle = { min = 0, max = 50, unit = "%" }
+        defaults.gov_spoolup_min_throttle = { min = 0, max = 50, unit = rf2.units.percentage }
     end
     return defaults
 end

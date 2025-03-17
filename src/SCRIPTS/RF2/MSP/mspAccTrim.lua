@@ -25,8 +25,8 @@ end
 local function getDefaults()
     local defaults = {}
     -- Note: @ is ° on OpenTX
-    defaults.pitch_trim = { min = -300, max = 300, scale = 10, unit = "@" }
-    defaults.roll_trim = { min = -300, max = 300, scale = 10, unit = "@" }
+    defaults.pitch_trim = { min = -300, max = 300, scale = 10, unit = rf2.units.degrees }
+    defaults.roll_trim = { min = -300, max = 300, scale = 10, unit = rf2.units.degrees }
     return defaults
 end
 
