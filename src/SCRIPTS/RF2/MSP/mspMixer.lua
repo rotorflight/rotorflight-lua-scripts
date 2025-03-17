@@ -68,14 +68,35 @@ local function getDefaults()
     defaults.swash_tta_precomp = { min = 0, max = 250, scale = 10 }
     defaults.swash_geo_correction = { min = -125, max = 125, scale = 5, unit = rf2.units.percentage }
     if rf2.apiVersion >= 12.08 then
-        defaults.collective_tilt_correction_pos = { min = -100, max = 100 }
-        defaults.collective_tilt_correction_neg = { min = -100, max = 100 }
+        defaults.collective_tilt_correction_pos = { min = -100, max = 100, unit = rf2.units.percentage }
+        defaults.collective_tilt_correction_neg = { min = -100, max = 100, unit = rf2.units.percentage }
     end
  return defaults
 end
 
+local function disableMixerOverride(mixerIndex)
+    local message = {
+        command = 191, -- MSP_SET_MIXER_OVERRIDE
+        payload = { mixerIndex }
+    }
+    rf2.mspHelper.writeU16(message.payload, 2501)
+    rf2.mspQueue:add(message)
+end
+
+local function enableMixerOverride(mixerIndex)
+    local message = {
+        command = 191, -- MSP_SET_MIXER_OVERRIDE
+        payload = { mixerIndex }
+    }
+    rf2.mspHelper.writeU16(message.payload, 2502)
+    rf2.mspQueue:add(message)
+end
+
+
 return {
     read = getMixerConfig,
     write = setMixerConfig,
-    getDefaults = getDefaults
+    getDefaults = getDefaults,
+    disableOverride = disableMixerOverride,
+    enableOverride = enableMixerOverride
 }
