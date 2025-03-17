@@ -35,6 +35,12 @@ rf2 = {
 
     apiVersion = nil,
 
+    units = {
+        percentage = "%",
+        degrees = "@",
+        herz = " Hz",
+    }
+
     --[[
     showMemoryUsage = function (remark)
         if not rf2.oldMemoryUsage then
