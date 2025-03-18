@@ -16,6 +16,7 @@ local scripts = {
     "/SCRIPTS/RF2/MSP/mspHelper.lua",
     "/SCRIPTS/RF2/MSP/mspMixer.lua",
     "/SCRIPTS/RF2/MSP/mspName.lua",
+    "/SCRIPTS/RF2/MSP/mspPidTuning.lua",
     "/SCRIPTS/RF2/MSP/mspPilotConfig.lua",
     "/SCRIPTS/RF2/MSP/mspQueue.lua",
     "/SCRIPTS/RF2/MSP/mspServos.lua",
