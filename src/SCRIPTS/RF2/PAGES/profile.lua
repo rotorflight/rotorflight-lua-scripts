@@ -11,89 +11,101 @@ local inc = { x = function(val) x = x + val return x end, y = function(val) y = 
 local labels = {}
 local fields = {}
 local profileSwitcher = assert(rf2.loadScript("PAGES/helpers/profileSwitcher.lua"))()
+local mspPidProfile = rf2.useApi("mspPidProfile")
+local pidProfile = mspPidProfile.getDefaults()
 
 fields[#fields + 1] = { t = "Current PID profile",     x = x,          y = inc.y(lineSpacing), sp = x + sp * 1.17, data = { value = nil, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = profileSwitcher.startPidEditing, postEdit = profileSwitcher.endPidEditing }
 
 inc.y(lineSpacing * 0.25)
-fields[#fields + 1] = { t = "I-term relax type",       x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 2, vals = { 17 }, table = { [0] = "OFF", "RP", "RPY" } }
-fields[#fields + 1] = { t = "Cutoff point R",          x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 100, vals = { 18 } }
-fields[#fields + 1] = { t = "Cutoff point P",          x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 100, vals = { 19 } }
-fields[#fields + 1] = { t = "Cutoff point Y",          x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 100, vals = { 20 } }
+fields[#fields + 1] = { t = "I-term relax type",       x = x,          y = inc.y(lineSpacing), sp = x + sp, data = pidProfile.iterm_relax_type }
+fields[#fields + 1] = { t = "Cutoff point R",          x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = pidProfile.iterm_relax_cutoff_roll }
+fields[#fields + 1] = { t = "Cutoff point P",          x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = pidProfile.iterm_relax_cutoff_pitch }
+fields[#fields + 1] = { t = "Cutoff point Y",          x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = pidProfile.iterm_relax_cutoff_yaw }
 -- TODO? toggle 'I-term limits', off = 1000
 
 inc.y(lineSpacing * 0.25)
 labels[#labels + 1] = { t = "Main Rotor",              x = x,          y = inc.y(lineSpacing) }
-fields[#fields + 1] = { t = "Coll to pitch gain",      x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 28 } }
+fields[#fields + 1] = { t = "Coll to pitch gain",      x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = pidProfile.pitch_collective_ff_gain }
 labels[#labels + 1] = { t = "Cross-Coupling",          x = x + indent, y = inc.y(lineSpacing), bold = false }
-fields[#fields + 1] = { t = "Gain",                    x = x + indent*2, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 34 } }
-fields[#fields + 1] = { t = "Ratio",                   x = x + indent*2, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 200, vals = { 35 } }
-fields[#fields + 1] = { t = "Cutoff",                  x = x + indent*2, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 250, vals = { 36 } }
+fields[#fields + 1] = { t = "Gain",                    x = x + indent*2, y = inc.y(lineSpacing), sp = x + sp, data = pidProfile.cyclic_cross_coupling_gain }
+fields[#fields + 1] = { t = "Ratio",                   x = x + indent*2, y = inc.y(lineSpacing), sp = x + sp, data = pidProfile.cyclic_cross_coupling_ratio }
+fields[#fields + 1] = { t = "Cutoff",                  x = x + indent*2, y = inc.y(lineSpacing), sp = x + sp, data = pidProfile.cyclic_cross_coupling_cutoff }
 
 inc.y(lineSpacing * 0.25)
 labels[#labels + 1] = { t = "Tail Rotor",              x = x,          y = inc.y(lineSpacing) }
-fields[#fields + 1] = { t = "CW stop gain",            x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 25, max = 250, vals = { 21 } }
-fields[#fields + 1] = { t = "CCW stop gain",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 25, max = 250, vals = { 22 } }
-fields[#fields + 1] = { t = "Precomp cutoff",          x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 23 } }
-fields[#fields + 1] = { t = "Cyclic FF gain",          x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 24 } }
-fields[#fields + 1] = { t = "Coll FF gain",            x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 25 } }
+fields[#fields + 1] = { t = "CW stop gain",            x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = pidProfile.yaw_cw_stop_gain }
+fields[#fields + 1] = { t = "CCW stop gain",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = pidProfile.yaw_ccw_stop_gain }
+fields[#fields + 1] = { t = "Precomp cutoff",          x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = pidProfile.yaw_precomp_cutoff }
+fields[#fields + 1] = { t = "Cyclic FF gain",          x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = pidProfile.yaw_cyclic_ff_gain }
+fields[#fields + 1] = { t = "Coll FF gain",            x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = pidProfile.yaw_collective_ff_gain }
 if rf2.apiVersion >= 12.08 then
-    fields[#fields + 1] = { t = "Inertia gain",        x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 42 } }
-    fields[#fields + 1] = { t = "Inertia cutoff",      x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 43 }, scale = 10 }
+    fields[#fields + 1] = { t = "Inertia gain",        x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = pidProfile.yaw_inertia_precomp_gain }
+    fields[#fields + 1] = { t = "Inertia cutoff",      x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = pidProfile.yaw_inertia_precomp_cutoff }
 else
-    fields[#fields + 1] = { t = "Coll imp FF gain",    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 26 } }
-    fields[#fields + 1] = { t = "Coll imp FF decay",   x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 27 } }
+    fields[#fields + 1] = { t = "Coll imp FF gain",    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = pidProfile.yaw_collective_dynamic_gain }
+    fields[#fields + 1] = { t = "Coll imp FF decay",   x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = pidProfile.yaw_collective_dynamic_decay }
 end
 
 inc.y(lineSpacing * 0.25)
 labels[#labels + 1] = { t = "Acro Trainer",            x = x,          y = inc.y(lineSpacing) }
-fields[#fields + 1] = { t = "Leveling gain",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 25, max = 255, vals = { 32 } }
-fields[#fields + 1] = { t = "Maximum angle",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 10, max = 80, vals = { 33 } }
+fields[#fields + 1] = { t = "Leveling gain",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = pidProfile.angle_level_strength }
+fields[#fields + 1] = { t = "Maximum angle",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = pidProfile.angle_level_limit }
 labels[#labels + 1] = { t = "Angle Mode",              x = x,          y = inc.y(lineSpacing) }
-fields[#fields + 1] = { t = "Leveling gain",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 200, vals = { 29 } }
-fields[#fields + 1] = { t = "Maximum angle",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 10, max = 90, vals = { 30 } }
+fields[#fields + 1] = { t = "Leveling gain",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = pidProfile.angle_level_strength }
+fields[#fields + 1] = { t = "Maximum angle",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = pidProfile.angle_level_limit }
 labels[#labels + 1] = { t = "Horizon Mode",            x = x,          y = inc.y(lineSpacing) }
-fields[#fields + 1] = { t = "Leveling gain",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 200, vals = { 31 } }
+fields[#fields + 1] = { t = "Leveling gain",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = pidProfile.horizon_level_strength }
 
 inc.y(lineSpacing * 0.25)
-fields[#fields + 1] = { t = "Piro compensation",       x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1, vals = { 7 }, table = { [0] = "OFF", "ON" } }
+fields[#fields + 1] = { t = "Piro compensation",       x = x,          y = inc.y(lineSpacing), sp = x + sp, data = pidProfile.error_rotation }
 labels[#labels + 1] = { t = "Error Decay Ground",      x = x,          y = inc.y(lineSpacing) }
-fields[#fields + 1] = { t = "Time",                    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 2 }, scale = 10 }
+fields[#fields + 1] = { t = "Time",                    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = pidProfile.error_decay_time_ground }
 labels[#labels + 1] = { t = "Error Decay Cyclic",      x = x,          y = inc.y(lineSpacing) }
-fields[#fields + 1] = { t = "Time",                    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 3 }, scale = 10 }
-fields[#fields + 1] = { t = "Limit",                   x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 5 } }
+fields[#fields + 1] = { t = "Time",                    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = pidProfile.error_decay_time_cyclic }
+fields[#fields + 1] = { t = "Limit",                   x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = pidProfile.error_decay_limit_cyclic }
 labels[#labels + 1] = { t = "Error Decay Yaw",         x = x,          y = inc.y(lineSpacing) }
-fields[#fields + 1] = { t = "Time",                    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 4 }, scale = 10 }
-fields[#fields + 1] = { t = "Limit",                   x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 6 } }
+fields[#fields + 1] = { t = "Time",                    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = pidProfile.error_decay_time_yaw }
+fields[#fields + 1] = { t = "Limit",                   x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = pidProfile.error_decay_limit_yaw }
 labels[#labels + 1] = { t = "Error Limit",             x = x,          y = inc.y(lineSpacing) }
-fields[#fields + 1] = { t = "Roll",                    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 180, vals = { 8 } }
-fields[#fields + 1] = { t = "Pitch",                   x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 180, vals = { 9 } }
-fields[#fields + 1] = { t = "Yaw",                     x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 180, vals = { 10 } }
+fields[#fields + 1] = { t = "Roll",                    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = pidProfile.error_limit_roll }
+fields[#fields + 1] = { t = "Pitch",                   x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = pidProfile.error_limit_pitch }
+fields[#fields + 1] = { t = "Yaw",                     x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = pidProfile.error_limit_yaw }
 labels[#labels + 1] = { t = "HSI Offset Limit",        x = x,          y = inc.y(lineSpacing) }
-fields[#fields + 1] = { t = "Roll",                    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 180, vals = { 37 } }
-fields[#fields + 1] = { t = "Pitch",                   x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 180, vals = { 38 } }
+fields[#fields + 1] = { t = "Roll",                    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = pidProfile.offset_limit_roll }
+fields[#fields + 1] = { t = "Pitch",                   x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = pidProfile.offset_limit_pitch }
 
 inc.y(lineSpacing * 0.25)
 labels[#labels + 1] = { t = "PID Controller",          x = x,          y = inc.y(lineSpacing) }
-fields[#fields + 1] = { t = "R bandwidth",             x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 11 } }
-fields[#fields + 1] = { t = "P bandwidth",             x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 12 } }
-fields[#fields + 1] = { t = "Y bandwidth",             x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 13 } }
-fields[#fields + 1] = { t = "R D-term cutoff",         x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 14 } }
-fields[#fields + 1] = { t = "P D-term cutoff",         x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 15 } }
-fields[#fields + 1] = { t = "Y D-term cutoff",         x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 16 } }
-fields[#fields + 1] = { t = "R B-term cutoff",         x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 39 } }
-fields[#fields + 1] = { t = "P B-term cutoff",         x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 40 } }
-fields[#fields + 1] = { t = "Y B-term cutoff",         x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 250, vals = { 41 } }
+fields[#fields + 1] = { t = "R bandwidth",             x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = pidProfile.gyro_cutoff_roll }
+fields[#fields + 1] = { t = "P bandwidth",             x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = pidProfile.gyro_cutoff_pitch }
+fields[#fields + 1] = { t = "Y bandwidth",             x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = pidProfile.gyro_cutoff_yaw }
+fields[#fields + 1] = { t = "R D-term cutoff",         x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = pidProfile.dterm_cutoff_roll }
+fields[#fields + 1] = { t = "P D-term cutoff",         x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = pidProfile.dterm_cutoff_pitch }
+fields[#fields + 1] = { t = "Y D-term cutoff",         x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = pidProfile.dterm_cutoff_yaw }
+fields[#fields + 1] = { t = "R B-term cutoff",         x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = pidProfile.bterm_cutoff_roll }
+fields[#fields + 1] = { t = "P B-term cutoff",         x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = pidProfile.bterm_cutoff_pitch }
+fields[#fields + 1] = { t = "Y B-term cutoff",         x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = pidProfile.bterm_cutoff_yaw }
+
+local function receivedPidProfile(page)
+    rf2.print("receivedPidProfile")
+    rf2.lcdNeedsInvalidate = true
+    page.isReady = true
+end
 
 return {
-    read        = 94, -- MSP_PID_PROFILE
-    write       = 95, -- MSP_SET_PID_PROFILE
+    read = function(self)
+        mspPidProfile.read(pidProfile, receivedPidProfile, self)
+    end,
+    write = function(self)
+        mspPidProfile.write(pidProfile)
+        rf2.settingsSaved()
+    end,
     title       = "Profile - Various",
     reboot      = false,
     eepromWrite = true,
     minBytes    = 41,
     labels      = labels,
     fields      = fields,
-    --simulatorResponse = { 3, 25, 250, 0, 12, 0, 1, 30, 30, 45, 50, 50, 100, 15, 15, 20, 2, 10, 10, 15, 100, 100, 5, 0, 30, 0, 25, 0, 40, 55, 40, 75, 20, 25, 0, 15, 45, 45, 15, 15, 20 },
     profileSwitcher = profileSwitcher,
 
     postLoad = function(self)
