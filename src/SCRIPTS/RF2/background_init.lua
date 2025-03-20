@@ -141,7 +141,7 @@ local function initializeQueue()
             end
 
             if rf2.apiVersion >= 12.07 then
-                rf2.useApi("mspPilotConfig").getPilotConfig(onPilotConfigReceived)
+                rf2.useApi("mspPilotConfig").read(onPilotConfigReceived)
 
                 if crossfireTelemetryPush() then
                     rf2.useApi("mspTelemetryConfig").getTelemetryConfig(

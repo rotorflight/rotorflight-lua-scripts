@@ -39,7 +39,7 @@ local function onReceivedModelName(page, name)
     mspName = nil
 end
 
-local function onReceivedPilotConfig(page)
+local function onReceivedPilotConfig(page, config)
     rf2.lcdNeedsInvalidate = true
     page.isReady = true
 end
@@ -52,7 +52,7 @@ end
 return {
     read = function(self)
         mspName.getModelName(onReceivedModelName, self)
-        mspPilotConfig.read(pilotConfig, onReceivedPilotConfig, self)
+        mspPilotConfig.read(onReceivedPilotConfig, self, pilotConfig)
     end,
     write = function(self)
         mspPilotConfig.write(pilotConfig)

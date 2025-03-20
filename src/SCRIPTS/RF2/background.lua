@@ -26,7 +26,7 @@ local function run()
         local initTaskResult = initTask.run(modelIsConnected)
         if not initTaskResult.isInitialized then
             --rf2.print("Not initialized yet")
-            return 0
+            return
         end
         if initTaskResult.crsfCustomTelemetryEnabled then
             customTelemetryTask = assert(rf2.loadScript(rf2.baseDir.."rf2tlm.lua"))()
@@ -38,7 +38,7 @@ local function run()
     end
 
     if getRSSI() == 0 and not rf2.runningInSimulator then
-        return 0
+        return
     end
 
     if adjTellerTask and adjTellerTask.run() == 2  then
@@ -50,13 +50,12 @@ local function run()
     if customTelemetryTask then
         customTelemetryTask.run()
     end
-
-    return 0
 end
 
 local function runProtected()
     local status, err = pcall(run)
     if not status then rf2.print(err) end
+    return 0
 end
 
 return runProtected
