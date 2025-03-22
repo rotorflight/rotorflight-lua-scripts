@@ -1,3 +1,10 @@
+local function getDefaults()
+    local defaults = {}
+    defaults.pitch_trim = { min = -300, max = 300, scale = 10, unit = rf2.units.degrees }
+    defaults.roll_trim = { min = -300, max = 300, scale = 10, unit = rf2.units.degrees }
+    return defaults
+end
+
 local function getAccTrim(callback, callbackParam, data)
     data = data or getDefaults()
     local message = {
@@ -21,14 +28,6 @@ local function setAccTrim(data)
     rf2.mspHelper.writeU16(message.payload, data.pitch_trim.value)
     rf2.mspHelper.writeU16(message.payload, data.roll_trim.value)
     rf2.mspQueue:add(message)
-end
-
-local function getDefaults()
-    local defaults = {}
-    -- Note: @ is ° on OpenTX
-    defaults.pitch_trim = { min = -300, max = 300, scale = 10, unit = rf2.units.degrees }
-    defaults.roll_trim = { min = -300, max = 300, scale = 10, unit = rf2.units.degrees }
-    return defaults
 end
 
 return {

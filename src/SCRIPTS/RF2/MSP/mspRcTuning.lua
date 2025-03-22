@@ -54,7 +54,7 @@ local function getRateDefaults(data, rates_type)
 end
 
 local function getRcTuning(callback, callbackParam, data)
-    if not data then data = getDefaults() end
+    data = data or getDefaults()
     local message = {
         command = 111, -- MSP_RC_TUNING
         processReply = function(self, buf)

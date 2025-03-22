@@ -26,7 +26,37 @@ local function bitIsZero(value, bit)
     return bit32.band(value, bit32.lshift(1, bit)) == 0
 end
 
-local function getEscParameters(data, callback, callbackParam)
+local function getDefaults()
+    local defaults = {
+        esc_signature = {},
+        esc_command = {},
+        esc_model = {},
+        esc_version = {},
+        governor = { table = govMode, max = #govMode },
+        cell_cutoff = { table = lowVoltage, max = #lowVoltage },
+        timing = { table = timing, max = #timing },
+        lv_bec_voltage = { table = becLvVoltage, max = #becLvVoltage },
+        motor_direction = { table = motorDirection, max = #motorDirection },
+        gov_p = { min = 1, max = 10 },
+        gov_i = { min = 1, max = 10 },
+        acceleration = { table = accel, max = #accel },
+        auto_restart_time = { table = autoRestart, max = #autoRestart },
+        hv_bec_voltage = { table = becHvVoltage, max = #becHvVoltage },
+        startup_power = { table = startupPower, max = #startupPower },
+        brake_type = { table = brakeType, max = #brakeType },
+        brake_force = { min = 0, max = 100, unit = rf2.units.percentage },
+        sr_function = { table = srFunc, max = #srFunc },
+        capacity_correction = { min = -10, max = 10, unit = rf2.units.percentage },
+        pole_pairs = { min = 1, max = 30 },
+        led_color = { table = ledColor, max = #ledColor },
+        smart_fan = { table = fanControl, max = #fanControl },
+        active_fields = {}
+    }
+    return defaults
+end
+
+local function getEscParameters(callback, callbackParam, data)
+    data = data or getDefaults()
     local message = {
         command = 217, -- MSP_ESC_PARAMETERS
         processReply = function(self, buf)
@@ -85,7 +115,7 @@ local function getEscParameters(data, callback, callbackParam)
             data.led_color.hidden = bitIsZero(activeFields, 17)
             data.smart_fan.hidden = bitIsZero(activeFields, 18)
 
-            callback(callbackParam)
+            callback(callbackParam, data)
         end,
         simulatorResponse = { 166, 0, 23, 2, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 4, 0, 3, 0, 2, 0, 1, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 1, 0, 0, 0, 0, 0, 0xEE, 0xFF, 1, 0 }
     }
@@ -123,35 +153,6 @@ local function setEscParameters(data)
     rf2.mspHelper.writeU16(message.payload, data.smart_fan.value)
     rf2.mspHelper.writeU32(message.payload, data.active_fields.value)
     rf2.mspQueue:add(message)
-end
-
-local function getDefaults()
-    local defaults = {
-        esc_signature = {},
-        esc_command = {},
-        esc_model = {},
-        esc_version = {},
-        governor = { table = govMode, max = #govMode },
-        cell_cutoff = { table = lowVoltage, max = #lowVoltage },
-        timing = { table = timing, max = #timing },
-        lv_bec_voltage = { table = becLvVoltage, max = #becLvVoltage },
-        motor_direction = { table = motorDirection, max = #motorDirection },
-        gov_p = { min = 1, max = 10 },
-        gov_i = { min = 1, max = 10 },
-        acceleration = { table = accel, max = #accel },
-        auto_restart_time = { table = autoRestart, max = #autoRestart },
-        hv_bec_voltage = { table = becHvVoltage, max = #becHvVoltage },
-        startup_power = { table = startupPower, max = #startupPower },
-        brake_type = { table = brakeType, max = #brakeType },
-        brake_force = { min = 0, max = 100, unit = rf2.units.percentage },
-        sr_function = { table = srFunc, max = #srFunc },
-        capacity_correction = { min = -10, max = 10, unit = rf2.units.percentage },
-        pole_pairs = { min = 1, max = 30 },
-        led_color = { table = ledColor, max = #ledColor },
-        smart_fan = { table = fanControl, max = #fanControl },
-        active_fields = {}
-    }
-    return defaults
 end
 
 return {

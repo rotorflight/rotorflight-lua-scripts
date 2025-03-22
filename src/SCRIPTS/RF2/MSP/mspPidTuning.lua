@@ -1,4 +1,27 @@
-local function getPidTuning(data, callback, callbackParam)
+local function getDefaults()
+    local defaults = {}
+    defaults.roll_p = { min = 0, max = 1000 }
+    defaults.roll_i = { min = 0, max = 1000 }
+    defaults.roll_d = { min = 0, max = 1000 }
+    defaults.roll_f = { min = 0, max = 1000 }
+    defaults.pitch_p = { min = 0, max = 1000 }
+    defaults.pitch_i = { min = 0, max = 1000 }
+    defaults.pitch_d = { min = 0, max = 1000 }
+    defaults.pitch_f = { min = 0, max = 1000 }
+    defaults.yaw_p = { min = 0, max = 1000 }
+    defaults.yaw_i = { min = 0, max = 1000 }
+    defaults.yaw_d = { min = 0, max = 1000 }
+    defaults.yaw_f = { min = 0, max = 1000 }
+    defaults.roll_b = { min = 0, max = 1000 }
+    defaults.pitch_b = { min = 0, max = 1000 }
+    defaults.yaw_b = { min = 0, max = 1000 }
+    defaults.roll_o = { min = 0, max = 1000 }
+    defaults.pitch_o = { min = 0, max = 1000 }
+    return defaults
+end
+
+local function getPidTuning(callback, callbackParam, data)
+    data = data or getDefaults()
     local message = {
         command = 112, -- MSP_PID_TUNING
         processReply = function(self, buf)
@@ -19,7 +42,7 @@ local function getPidTuning(data, callback, callbackParam)
             data.yaw_b.value = rf2.mspHelper.readU16(buf)
             data.roll_o.value = rf2.mspHelper.readU16(buf)
             data.pitch_o.value = rf2.mspHelper.readU16(buf)
-            callback(callbackParam)
+            callback(callbackParam, data)
         end,
         simulatorResponse = {70, 0, 225, 0, 90, 0, 120, 0, 100, 0, 200, 0, 70, 0, 120, 0, 100, 0, 125, 0, 83, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 0, 25, 0 },
     }
@@ -50,28 +73,6 @@ local function setPidTuning(data)
     rf2.mspHelper.writeU16(message.payload, data.roll_o.value)
     rf2.mspHelper.writeU16(message.payload, data.pitch_o.value)
     rf2.mspQueue:add(message)
-end
-
-local function getDefaults()
-    local defaults = {}
-    defaults.roll_p = { min = 0, max = 1000 }
-    defaults.roll_i = { min = 0, max = 1000 }
-    defaults.roll_d = { min = 0, max = 1000 }
-    defaults.roll_f = { min = 0, max = 1000 }
-    defaults.pitch_p = { min = 0, max = 1000 }
-    defaults.pitch_i = { min = 0, max = 1000 }
-    defaults.pitch_d = { min = 0, max = 1000 }
-    defaults.pitch_f = { min = 0, max = 1000 }
-    defaults.yaw_p = { min = 0, max = 1000 }
-    defaults.yaw_i = { min = 0, max = 1000 }
-    defaults.yaw_d = { min = 0, max = 1000 }
-    defaults.yaw_f = { min = 0, max = 1000 }
-    defaults.roll_b = { min = 0, max = 1000 }
-    defaults.pitch_b = { min = 0, max = 1000 }
-    defaults.yaw_b = { min = 0, max = 1000 }
-    defaults.roll_o = { min = 0, max = 1000 }
-    defaults.pitch_o = { min = 0, max = 1000 }
-    return defaults
 end
 
 return {

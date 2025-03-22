@@ -1,4 +1,28 @@
-local function getGovernorConfig(data, callback, callbackParam)
+local function getDefaults()
+    local defaults = {}
+    defaults.gov_mode = { min = 0, max = 4, table = { [0] = "OFF", "PASSTHROUGH", "STANDARD", "MODE1", "MODE2" } }
+    defaults.gov_startup_time = { min = 0, max = 600, scale = 10 }
+    defaults.gov_spoolup_time = { min = 0, max = 600, scale = 10 }
+    defaults.gov_tracking_time = { min = 0, max = 100, scale = 10 }
+    defaults.gov_recovery_time = { min = 0, max = 100, scale = 10 }
+    defaults.gov_zero_throttle_timeout = { min = 0, max = 100, scale = 10 }
+    defaults.gov_lost_headspeed_timeout = { min = 0, max = 100, scale = 10 }
+    defaults.gov_autorotation_timeout = { min = 0, max = 100, scale = 10 }
+    defaults.gov_autorotation_bailout_time = { min = 0, max = 100, scale = 10 }
+    defaults.gov_autorotation_min_entry_time = { min = 0, max = 100, scale = 10 }
+    defaults.gov_handover_throttle = { min = 10, max = 50, unit = rf2.units.percentage }
+    defaults.gov_pwr_filter = { min = 0, max = 250, unit = rf2.units.herz }
+    defaults.gov_rpm_filter = { min = 0, max = 250, unit = rf2.units.herz }
+    defaults.gov_tta_filter = { min = 0, max = 250, unit = rf2.units.herz }
+    defaults.gov_ff_filter = { min = 0, max = 250, unit = rf2.units.herz }
+    if rf2.apiVersion >= 12.08 then
+        defaults.gov_spoolup_min_throttle = { min = 0, max = 50, unit = rf2.units.percentage }
+    end
+    return defaults
+end
+
+local function getGovernorConfig(callback, callbackParam, data)
+    data = data or getDefaults()
     local message = {
         command = 142, -- MSP_GOVERNOR_CONFIG
         processReply = function(self, buf)
@@ -20,7 +44,7 @@ local function getGovernorConfig(data, callback, callbackParam)
             if rf2.apiVersion >= 12.08 then
                 data.gov_spoolup_min_throttle.value = rf2.mspHelper.readU8(buf)
             end
-            callback(callbackParam)
+            callback(callbackParam, data)
         end,
         simulatorResponse = { 3, 200, 0, 100, 0, 20, 0, 20, 0, 30, 0, 10, 0, 0, 0, 0, 0, 50, 0, 10, 5, 10, 0, 10, 5 }
     }
@@ -52,29 +76,6 @@ local function setGovernorConfig(config)
         rf2.mspHelper.writeU8(message.payload, config.gov_spoolup_min_throttle.value)
     end
 rf2.mspQueue:add(message)
-end
-
-local function getDefaults()
-    local defaults = {}
-    defaults.gov_mode = { min = 0, max = 4, table = { [0] = "OFF", "PASSTHROUGH", "STANDARD", "MODE1", "MODE2" } }
-    defaults.gov_startup_time = { min = 0, max = 600, scale = 10 }
-    defaults.gov_spoolup_time = { min = 0, max = 600, scale = 10 }
-    defaults.gov_tracking_time = { min = 0, max = 100, scale = 10 }
-    defaults.gov_recovery_time = { min = 0, max = 100, scale = 10 }
-    defaults.gov_zero_throttle_timeout = { min = 0, max = 100, scale = 10 }
-    defaults.gov_lost_headspeed_timeout = { min = 0, max = 100, scale = 10 }
-    defaults.gov_autorotation_timeout = { min = 0, max = 100, scale = 10 }
-    defaults.gov_autorotation_bailout_time = { min = 0, max = 100, scale = 10 }
-    defaults.gov_autorotation_min_entry_time = { min = 0, max = 100, scale = 10 }
-    defaults.gov_handover_throttle = { min = 10, max = 50, unit = rf2.units.percentage }
-    defaults.gov_pwr_filter = { min = 0, max = 250, unit = rf2.units.herz }
-    defaults.gov_rpm_filter = { min = 0, max = 250, unit = rf2.units.herz }
-    defaults.gov_tta_filter = { min = 0, max = 250, unit = rf2.units.herz }
-    defaults.gov_ff_filter = { min = 0, max = 250, unit = rf2.units.herz }
-    if rf2.apiVersion >= 12.08 then
-        defaults.gov_spoolup_min_throttle = { min = 0, max = 50, unit = rf2.units.percentage }
-    end
-    return defaults
 end
 
 return {
