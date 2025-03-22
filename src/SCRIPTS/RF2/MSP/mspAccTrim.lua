@@ -1,10 +1,11 @@
-local function getAccTrim(data, callback, callbackParam)
+local function getAccTrim(callback, callbackParam, data)
+    data = data or getDefaults()
     local message = {
         command = 240, -- MSP_ACC_TRIM
         processReply = function(self, buf)
             data.pitch_trim.value = rf2.mspHelper.readS16(buf)
             data.roll_trim.value = rf2.mspHelper.readS16(buf)
-            callback(callbackParam)
+            callback(callbackParam, data)
         end,
         simulatorResponse = { 0, 0, 0, 0 }
     }
