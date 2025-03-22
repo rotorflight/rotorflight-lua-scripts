@@ -7,7 +7,7 @@ local sp = template.listSpacing.field
 local yMinLim = rf2.radio.yMinLimit
 local x = margin
 local y = yMinLim - lineSpacing
-local inc = { x = function(val) x = x + val return x end, y = function(val) y = y + val return y end }
+local function incY(val) y = y + val return y end
 local labels = {}
 local fields = {}
 
@@ -34,35 +34,35 @@ local function getPageValue(page, index)
     return page.values[2 + index]
 end
 
-labels[#labels + 1] = { t = "ESC not ready, waiting...", x = x,          y = inc.y(lineSpacing) }
-labels[#labels + 1] = { t = "---",                       x = x + indent, y = inc.y(lineSpacing), bold = false }
-labels[#labels + 1] = { t = "---",                       x = x + indent, y = inc.y(lineSpacing), bold = false }
+labels[#labels + 1] = { t = "ESC not ready, waiting...", x = x,          y = incY(lineSpacing) }
+labels[#labels + 1] = { t = "---",                       x = x + indent, y = incY(lineSpacing), bold = false }
+labels[#labels + 1] = { t = "---",                       x = x + indent, y = incY(lineSpacing), bold = false }
 
 -- Basic
-labels[#labels + 1] = { t = "Basic",                     x = x,          y = inc.y(lineSpacing) }
-fields[#fields + 1] = { t = "ESC Mode",                  x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = #govMode, vals = {2 + 23}, table = govMode }
-fields[#fields + 1] = { t = "Cell Count [S]",            x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 4, max = 14, vals = {2 + 24} }
-fields[#fields + 1] = { t = "BEC Voltage [V]",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = #becVoltage, vals = {2 + 27}, tableIdxInc = -1, table = becVoltage }
-fields[#fields + 1] = { t = "Motor direction",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = #motorDirection, vals = {2 + 29}, tableIdxInc = -1, table = motorDirection }
-fields[#fields + 1] = { t = "Soft start [S]",            x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 5, max = 55, vals = {2 + 35} }
-fields[#fields + 1] = { t = "Fan control",               x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = #fanControl, vals = {2 + 34}, table = fanControl }
+labels[#labels + 1] = { t = "Basic",                     x = x,          y = incY(lineSpacing) }
+fields[#fields + 1] = { t = "ESC Mode",                  x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 0, max = #govMode, vals = {2 + 23}, table = govMode }
+fields[#fields + 1] = { t = "Cell Count [S]",            x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 4, max = 14, vals = {2 + 24} }
+fields[#fields + 1] = { t = "BEC Voltage [V]",           x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 0, max = #becVoltage, vals = {2 + 27}, tableIdxInc = -1, table = becVoltage }
+fields[#fields + 1] = { t = "Motor direction",           x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 0, max = #motorDirection, vals = {2 + 29}, tableIdxInc = -1, table = motorDirection }
+fields[#fields + 1] = { t = "Soft start [S]",            x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 5, max = 55, vals = {2 + 35} }
+fields[#fields + 1] = { t = "Fan control",               x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 0, max = #fanControl, vals = {2 + 34}, table = fanControl }
 
 -- Advanced
-labels[#labels + 1] = { t = "Advanced",                  x = x,          y = inc.y(lineSpacing) }
-fields[#fields + 1] = { t = "Low voltage [V]",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 28, max = 38, scale = 10, default = 30, decimals = 1, vals = {2 + 25} }
-fields[#fields + 1] = { t = "Temperature [C]",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 50, max = 135, default = 125, vals = {2 + 26} }
-fields[#fields + 1] = { t = "Timing angle",              x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 10, default = 5, vals = {2 + 28} }
-fields[#fields + 1] = { t = "Starting torque",           x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 15, default = 3, vals = {2 + 30} }
-fields[#fields + 1] = { t = "Response speed",            x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 15, default = 5, vals = {2 + 31} }
-fields[#fields + 1] = { t = "Buzzer volume",             x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 5, default = 2, vals = {2 + 32} }
-fields[#fields + 1] = { t = "Current gain",              x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = #currentGain, default = 20, vals = {2 + 33}, table = currentGain }
+labels[#labels + 1] = { t = "Advanced",                  x = x,          y = incY(lineSpacing) }
+fields[#fields + 1] = { t = "Low voltage [V]",           x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 28, max = 38, scale = 10, default = 30, decimals = 1, vals = {2 + 25} }
+fields[#fields + 1] = { t = "Temperature [C]",           x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 50, max = 135, default = 125, vals = {2 + 26} }
+fields[#fields + 1] = { t = "Timing angle",              x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 1, max = 10, default = 5, vals = {2 + 28} }
+fields[#fields + 1] = { t = "Starting torque",           x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 1, max = 15, default = 3, vals = {2 + 30} }
+fields[#fields + 1] = { t = "Response speed",            x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 1, max = 15, default = 5, vals = {2 + 31} }
+fields[#fields + 1] = { t = "Buzzer volume",             x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 1, max = 5, default = 2, vals = {2 + 32} }
+fields[#fields + 1] = { t = "Current gain",              x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 0, max = #currentGain, default = 20, vals = {2 + 33}, table = currentGain }
 
 -- Esc Governor
-labels[#labels + 1] = { t = "Esc Governor",              x = x,          y = inc.y(lineSpacing) }
-fields[#fields + 1] = { t = "Gov P-Gain",                x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 100, default = 45, vals = {2 + 37, 2 + 36} }
-fields[#fields + 1] = { t = "Gov I-Gain",                x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 100, default = 35, vals = {2 + 39, 2 + 38} }
-fields[#fields + 1] = { t = "Gov D-Gain",                x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 100, default = 0, vals = {2 + 41, 2 + 40} }
-fields[#fields + 1] = { t = "Motor ERPM Max",            x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1000000, default = 100000, mult = 100, vals = {2 + 44, 2 + 43, 2 + 42} }
+labels[#labels + 1] = { t = "Esc Governor",              x = x,          y = incY(lineSpacing) }
+fields[#fields + 1] = { t = "Gov P-Gain",                x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 1, max = 100, default = 45, vals = {2 + 37, 2 + 36} }
+fields[#fields + 1] = { t = "Gov I-Gain",                x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 1, max = 100, default = 35, vals = {2 + 39, 2 + 38} }
+fields[#fields + 1] = { t = "Gov D-Gain",                x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 0, max = 100, default = 0, vals = {2 + 41, 2 + 40} }
+fields[#fields + 1] = { t = "Motor ERPM Max",            x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 0, max = 1000000, default = 100000, mult = 100, vals = {2 + 44, 2 + 43, 2 + 42} }
 
 return {
     read        = 217, -- MSP_ESC_PARAMETERS

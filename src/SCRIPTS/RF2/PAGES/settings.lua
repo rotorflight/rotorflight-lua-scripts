@@ -8,24 +8,24 @@ local sp = template.listSpacing.field
 local yMinLim = rf2.radio.yMinLimit
 local x = margin
 local y = yMinLim - lineSpacing
-local inc = { x = function(val) x = x + val return x end, y = function(val) y = y + val return y end }
+local function incY(val) y = y + val return y end
 local labels = {}
 local fields = {}
 local settings = settingsHelper.loadSettings()
 local hideShow = { [0] = "Hide", "Show" }
 
 y = yMinLim - tableSpacing.header
-labels[1] = { t = "Display Various Pages",   x = x, y = inc.y(lineSpacing) }
-fields[1] = { t = "Model on TX",             x = x + indent, y = inc.y(lineSpacing), sp = x + sp }
-fields[2] = { t = "Experimental (!)",        x = x + indent, y = inc.y(lineSpacing), sp = x + sp }
+labels[1] = { t = "Display Various Pages",   x = x, y = incY(lineSpacing) }
+fields[1] = { t = "Model on TX",             x = x + indent, y = incY(lineSpacing), sp = x + sp }
+fields[2] = { t = "Experimental (!)",        x = x + indent, y = incY(lineSpacing), sp = x + sp }
 
-inc.y(lineSpacing * 0.5)
-labels[2] = { t = "Display ESC Pages",       x = x, y = inc.y(lineSpacing) }
-fields[3] = { t = "FlyRotor",                x = x + indent, y = inc.y(lineSpacing), sp = x + sp }
-fields[4] = { t = "HW Platinum V5",          x = x + indent, y = inc.y(lineSpacing), sp = x + sp }
-fields[5] = { t = "Scorpion Tribunus",       x = x + indent, y = inc.y(lineSpacing), sp = x + sp }
-fields[6] = { t = "XDFly",                   x = x + indent, y = inc.y(lineSpacing), sp = x + sp }
-fields[7] = { t = "YGE",                     x = x + indent, y = inc.y(lineSpacing), sp = x + sp }
+incY(lineSpacing * 0.5)
+labels[2] = { t = "Display ESC Pages",       x = x, y = incY(lineSpacing) }
+fields[3] = { t = "FlyRotor",                x = x + indent, y = incY(lineSpacing), sp = x + sp }
+fields[4] = { t = "HW Platinum V5",          x = x + indent, y = incY(lineSpacing), sp = x + sp }
+fields[5] = { t = "Scorpion Tribunus",       x = x + indent, y = incY(lineSpacing), sp = x + sp }
+fields[6] = { t = "XDFly",                   x = x + indent, y = incY(lineSpacing), sp = x + sp }
+fields[7] = { t = "YGE",                     x = x + indent, y = incY(lineSpacing), sp = x + sp }
 
 local function setValues()
     fields[1].data = { value = settings.showModelOnTx or 0, min = 0, max = 1, table = hideShow }

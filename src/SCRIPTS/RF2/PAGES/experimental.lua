@@ -10,12 +10,11 @@ local labels = {}
 local fields = {}
 local mspExperimental = rf2.useApi("mspExperimental")
 local experimental = mspExperimental.getDefaults()
-local total_bytes = 16
 
 x = margin
 y = yMinLim - tableSpacing.header
 labels[#labels + 1] = { t = "Byte",  x = x, y = incY(lineSpacing) }
-for i = 1, total_bytes do
+for i = 1, 16 do
     labels[#labels + 1] = { t = tostring(i),  x = x, y = incY(lineSpacing) }
 end
 
@@ -23,13 +22,13 @@ end
 x = x + tableSpacing.col
 y = yMinLim - tableSpacing.header
 labels[#labels + 1] = { t = "UINT8",  x = x, y = incY(lineSpacing) }
-for i= 1, total_bytes do
+for i= 1, 16 do
     fields[#fields + 1] = { x = x, y = incY(lineSpacing), data = experimental[i] }
 end
 
 -- Draw int8 fields: not supported anymore since data can't have multiple representations
 
-local function receivedExperimental(page)
+local function receivedExperimental(page, _)
     rf2.lcdNeedsInvalidate = true
     page.isReady = true
 end

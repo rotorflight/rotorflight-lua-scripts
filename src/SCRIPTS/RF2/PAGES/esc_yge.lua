@@ -7,7 +7,7 @@ local sp = template.listSpacing.field
 local yMinLim = rf2.radio.yMinLimit
 local x = margin
 local y = yMinLim - lineSpacing
-local inc = { x = function(val) x = x + val return x end, y = function(val) y = y + val return y end }
+local function incY(val) y = y + val return y end
 local labels = {}
 local fields = {}
 
@@ -159,44 +159,44 @@ local function updateRatio(field, page)
     l.t = string.format("%.2f", v)..":1"
 end
 
-labels[1] = { t = "ESC not ready, waiting...", x = x,       y = inc.y(lineSpacing) }
-labels[2] = { t = "---",                    x = x + indent, y = inc.y(lineSpacing), bold = false }
-labels[3] = { t = "---",                    x = x + indent, y = inc.y(lineSpacing), bold = false }
+labels[1] = { t = "ESC not ready, waiting...", x = x,       y = incY(lineSpacing) }
+labels[2] = { t = "---",                    x = x + indent, y = incY(lineSpacing), bold = false }
+labels[3] = { t = "---",                    x = x + indent, y = incY(lineSpacing), bold = false }
 
-fields[1] = { t = "ESC Mode",               x = x,          y = inc.y(lineSpacing * 2), sp = x + sp, min = 1, max = #escMode, vals = { 2+3, 2+4 }, table = escMode }
-fields[2] = { t = "Direction",              x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1, vals = { 2+53 }, table = direction }
-fields[3] = { t = "BEC",                    x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 55, max = 84, vals = { 2+5, 2+6 }, scale = 10 }
+fields[1] = { t = "ESC Mode",               x = x,          y = incY(lineSpacing * 2), sp = x + sp, min = 1, max = #escMode, vals = { 2+3, 2+4 }, table = escMode }
+fields[2] = { t = "Direction",              x = x,          y = incY(lineSpacing), sp = x + sp, min = 0, max = 1, vals = { 2+53 }, table = direction }
+fields[3] = { t = "BEC",                    x = x,          y = incY(lineSpacing), sp = x + sp, min = 55, max = 84, vals = { 2+5, 2+6 }, scale = 10 }
 
-labels[4] = { t = "Protection",             x = x,          y = inc.y(lineSpacing * 2) }
-fields[4] = { t = "Cutoff Handling",        x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = #cuttoff, vals = { 2+17, 2+18 }, table = cuttoff }
-fields[5] = { t = "Cutoff Cell Voltage",    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = #cuttoffVoltage, vals = { 2+19, 2+20 }, table = cuttoffVoltage }
-fields[6] = { t = "Current Limit (A)",      x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 65500, scale = 100, mult = 100, vals = { 2+55, 2+56 } }
+labels[4] = { t = "Protection",             x = x,          y = incY(lineSpacing * 2) }
+fields[4] = { t = "Cutoff Handling",        x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 0, max = #cuttoff, vals = { 2+17, 2+18 }, table = cuttoff }
+fields[5] = { t = "Cutoff Cell Voltage",    x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 0, max = #cuttoffVoltage, vals = { 2+19, 2+20 }, table = cuttoffVoltage }
+fields[6] = { t = "Current Limit (A)",      x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 1, max = 65500, scale = 100, mult = 100, vals = { 2+55, 2+56 } }
 
 -- Advanced
-labels[5] = { t = "Advanced",               x = x,          y = inc.y(lineSpacing) }
-fields[7] = { t = "Min Start Power (%)",    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 26, vals = { 2+47, 2+48 } }
-fields[8] = { t = "Max Start Power (%)",    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 31, vals = { 2+49, 2+50 } }
-fields[9] = { t = "Startup Response",       x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = #startupResponse, vals = { 2+9, 2+10 }, table = startupResponse }
-fields[10] = { t = "Throttle Response",     x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = #throttleResponse, vals = { 2+15, 2+16 }, table = throttleResponse }
-fields[11] = { t = "Motor Timing",          x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = #motorTiming, vals = { 2+7, 2+8 }, table=motorTiming }
-fields[12] = { t = "Active Freewheel",      x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = #freewheel, vals = { 2+21, 2+22 }, table = freewheel }
-fields[13] = { t = "F3C Autorotation",      x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 1, vals = { 2+53 }, table = offOn }
+labels[5] = { t = "Advanced",               x = x,          y = incY(lineSpacing) }
+fields[7] = { t = "Min Start Power (%)",    x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 0, max = 26, vals = { 2+47, 2+48 } }
+fields[8] = { t = "Max Start Power (%)",    x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 0, max = 31, vals = { 2+49, 2+50 } }
+fields[9] = { t = "Startup Response",       x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 0, max = #startupResponse, vals = { 2+9, 2+10 }, table = startupResponse }
+fields[10] = { t = "Throttle Response",     x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 0, max = #throttleResponse, vals = { 2+15, 2+16 }, table = throttleResponse }
+fields[11] = { t = "Motor Timing",          x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 0, max = #motorTiming, vals = { 2+7, 2+8 }, table=motorTiming }
+fields[12] = { t = "Active Freewheel",      x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 0, max = #freewheel, vals = { 2+21, 2+22 }, table = freewheel }
+fields[13] = { t = "F3C Autorotation",      x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 0, max = 1, vals = { 2+53 }, table = offOn }
 
 -- Other
-labels[6] = { t = "Governor",               x = x,          y = inc.y(lineSpacing) }
-fields[14] = { t = "P-Gain",                x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 10, vals = { 2+11, 2+12 } }
-fields[15] = { t = "I-Gain",                x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 10, vals = { 2+13, 2+14 } }
+labels[6] = { t = "Governor",               x = x,          y = incY(lineSpacing) }
+fields[14] = { t = "P-Gain",                x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 1, max = 10, vals = { 2+11, 2+12 } }
+fields[15] = { t = "I-Gain",                x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 1, max = 10, vals = { 2+13, 2+14 } }
 
-labels[7] = { t = "RPM Settings",           x = x,          y = inc.y(lineSpacing) }
-fields[16] = { t = "Motor Pole Pairs",      x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 100, vals = { 2+41, 2+42 } }
-fields[17] = { t = "Main Teeth",            x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 1800, vals = { 2+45, 2+46 }, change = updateRatio }
-fields[18] = { t = "Pinion Teeth",          x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 1, max = 255, vals = { 2+43, 2+44 }, change = updateRatio }
-labels[8] =  { t = "Main : Pinion",         x = x + indent, y = inc.y(lineSpacing), bold = false }
+labels[7] = { t = "RPM Settings",           x = x,          y = incY(lineSpacing) }
+fields[16] = { t = "Motor Pole Pairs",      x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 1, max = 100, vals = { 2+41, 2+42 } }
+fields[17] = { t = "Main Teeth",            x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 1, max = 1800, vals = { 2+45, 2+46 }, change = updateRatio }
+fields[18] = { t = "Pinion Teeth",          x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 1, max = 255, vals = { 2+43, 2+44 }, change = updateRatio }
+labels[8] =  { t = "Main : Pinion",         x = x + indent, y = incY(lineSpacing), bold = false }
 labels[9] =  { t = "1 : 1",                 x = x + sp,     y = y, bold = false }
 
-labels[10] = { t = "Throttle Calibration",  x = x,          y = inc.y(lineSpacing) }
-fields[19] = { t = "Stick Zero (us)",       x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 900, max = 1900, vals = { 2+35, 2+36 } }
-fields[20] = { t = "Stick Range (us)",      x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 600, max = 1500, vals = { 2+37, 2+38 } }
+labels[10] = { t = "Throttle Calibration",  x = x,          y = incY(lineSpacing) }
+fields[19] = { t = "Stick Zero (us)",       x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 900, max = 1900, vals = { 2+35, 2+36 } }
+fields[20] = { t = "Stick Range (us)",      x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 600, max = 1500, vals = { 2+37, 2+38 } }
 
 return {
     read        = 217, -- MSP_ESC_PARAMETERS

@@ -7,7 +7,7 @@ local sp = template.listSpacing.field
 local yMinLim = rf2.radio.yMinLimit
 local x = margin
 local y = yMinLim - lineSpacing
-local inc = { x = function(val) x = x + val return x end, y = function(val) y = y + val return y end }
+local function incY(val) y = y + val return y end
 local labels = {}
 local fields = {}
 
@@ -68,34 +68,34 @@ local brakeType = {
     "Reverse"
 }
 
-labels[1] = { t = "ESC not ready, waiting...", x = x,   y = inc.y(lineSpacing) }
-labels[2] = { t = "---",                x = x + indent, y = inc.y(lineSpacing), bold = false }
-labels[3] = { t = "---",                x = x + indent, y = inc.y(lineSpacing), bold = false }
+labels[1] = { t = "ESC not ready, waiting...", x = x,   y = incY(lineSpacing) }
+labels[2] = { t = "---",                x = x + indent, y = incY(lineSpacing), bold = false }
+labels[3] = { t = "---",                x = x + indent, y = incY(lineSpacing), bold = false }
 
-fields[1] = { t = "Flight Mode",        x = x,          y = inc.y(lineSpacing * 2), sp = x + sp, min = 0, max = #flightMode, vals = { 2+64 }, table = flightMode }
-fields[2] = { t = "Rotation",           x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = #rotation, vals = { 2+77 }, table = rotation }
+fields[1] = { t = "Flight Mode",        x = x,          y = incY(lineSpacing * 2), sp = x + sp, min = 0, max = #flightMode, vals = { 2+64 }, table = flightMode }
+fields[2] = { t = "Rotation",           x = x,          y = incY(lineSpacing), sp = x + sp, min = 0, max = #rotation, vals = { 2+77 }, table = rotation }
 
-labels[4] = { t = "Voltage",            x = x,          y = inc.y(lineSpacing * 2) }
-fields[3] = { t = "BEC Voltage",        x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 54, max = 84, vals = { 2+68 }, scale = 10 }
-fields[4] = { t = "Lipo Cell Count",    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = #lipoCellCount, vals = { 2+65 }, table = lipoCellCount }
-fields[5] = { t = "Volt Cutoff Type",   x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = #cutoffType, vals = { 2+66 }, table = cutoffType }
-fields[6] = { t = "Cuttoff Voltage",    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = #cutoffVoltage, vals = { 2+67 }, table = cutoffVoltage }
+labels[4] = { t = "Voltage",            x = x,          y = incY(lineSpacing * 2) }
+fields[3] = { t = "BEC Voltage",        x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 54, max = 84, vals = { 2+68 }, scale = 10 }
+fields[4] = { t = "Lipo Cell Count",    x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 0, max = #lipoCellCount, vals = { 2+65 }, table = lipoCellCount }
+fields[5] = { t = "Volt Cutoff Type",   x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 0, max = #cutoffType, vals = { 2+66 }, table = cutoffType }
+fields[6] = { t = "Cuttoff Voltage",    x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 0, max = #cutoffVoltage, vals = { 2+67 }, table = cutoffVoltage }
 
-labels[5] = { t = "Governor",           x = x,          y = inc.y(lineSpacing) }
-fields[7] = { t = "P-Gain",             x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 9, vals = { 2+70 } }
-fields[8] = { t = "I-Gain",             x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 9, vals = { 2+71 } }
+labels[5] = { t = "Governor",           x = x,          y = incY(lineSpacing) }
+fields[7] = { t = "P-Gain",             x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 0, max = 9, vals = { 2+70 } }
+fields[8] = { t = "I-Gain",             x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 0, max = 9, vals = { 2+71 } }
 
-labels[6] = { t = "Soft Start",         x = x,          y = inc.y(lineSpacing) }
-fields[9] = { t = "Startup Time",       x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 4, max = 25, vals = { 2+69 } }
-fields[10] = { t = "Restart Time",      x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = #restartTime, vals = { 2+73 }, table = restartTime }
-fields[11] = { t = "Auto Restart",      x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 90, vals = { 2+72 } }
+labels[6] = { t = "Soft Start",         x = x,          y = incY(lineSpacing) }
+fields[9] = { t = "Startup Time",       x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 4, max = 25, vals = { 2+69 } }
+fields[10] = { t = "Restart Time",      x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 0, max = #restartTime, vals = { 2+73 }, table = restartTime }
+fields[11] = { t = "Auto Restart",      x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 0, max = 90, vals = { 2+72 } }
 
-labels[7] = { t = "Motor",              x = x,          y = inc.y(lineSpacing) }
-fields[12] = { t = "Timing",            x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 30, vals = { 2+76 } }
-fields[13] = { t = "Startup Power",     x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = #startupPower, vals = { 2+79 }, table = startupPower }
-fields[14] = { t = "Active Freewheel",  x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = #enabledDisabled, vals = { 2+78 }, table = enabledDisabled }
-fields[15] = { t = "Brake Type",        x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = #brakeType, vals = { 2+74 }, table = brakeType }
-fields[16] = { t = "Brake Force %",     x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 100, vals = { 2+75 } }
+labels[7] = { t = "Motor",              x = x,          y = incY(lineSpacing) }
+fields[12] = { t = "Timing",            x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 0, max = 30, vals = { 2+76 } }
+fields[13] = { t = "Startup Power",     x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 0, max = #startupPower, vals = { 2+79 }, table = startupPower }
+fields[14] = { t = "Active Freewheel",  x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 0, max = #enabledDisabled, vals = { 2+78 }, table = enabledDisabled }
+fields[15] = { t = "Brake Type",        x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 0, max = #brakeType, vals = { 2+74 }, table = brakeType }
+fields[16] = { t = "Brake Force %",     x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 0, max = 100, vals = { 2+75 } }
 
 local function getText(array, start, maxLength)
     local text = ""

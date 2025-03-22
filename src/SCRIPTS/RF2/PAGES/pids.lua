@@ -11,7 +11,7 @@ template = nil
 local yMinLim = rf2.radio.yMinLimit
 local x = margin
 local y = yMinLim - lineSpacing
-local inc = { x = function(val) x = x + val return x end, y = function(val) y = y + val return y end }
+local function incY(val) y = y + val return y end
 local labels = {}
 local fields = {}
 local editing = false
@@ -44,65 +44,65 @@ end
 x = margin
 local tableStartY = yMinLim - lineSpacing
 y = tableStartY
-labels[#labels + 1] = { t = "",      x = x, y = inc.y(tableSpacing.header) }
-labels[#labels + 1] = { t = "Roll",  x = x, y = inc.y(tableSpacing.row) }
-labels[#labels + 1] = { t = "Pitch", x = x, y = inc.y(tableSpacing.row) }
-labels[#labels + 1] = { t = "Yaw",   x = x, y = inc.y(tableSpacing.row) }
+labels[#labels + 1] = { t = "",      x = x, y = incY(tableSpacing.header) }
+labels[#labels + 1] = { t = "Roll",  x = x, y = incY(tableSpacing.row) }
+labels[#labels + 1] = { t = "Pitch", x = x, y = incY(tableSpacing.row) }
+labels[#labels + 1] = { t = "Yaw",   x = x, y = incY(tableSpacing.row) }
 
 x = x + tableSpacing.col
 y = tableStartY
-labels[#labels + 1] = { t = "P",     x = x, y = inc.y(tableSpacing.header) }
-fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), data = pids.roll_p }
-fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), data = pids.pitch_p }
-fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), data = pids.yaw_p }
+labels[#labels + 1] = { t = "P",     x = x, y = incY(tableSpacing.header) }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.roll_p }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.pitch_p }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.yaw_p }
 
 x = x + colSpacing
 y = tableStartY
-labels[#labels + 1] = { t = "I",     x = x, y = inc.y(tableSpacing.header) }
-fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), data = pids.roll_i }
-fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), data = pids.pitch_i }
-fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), data = pids.yaw_i }
+labels[#labels + 1] = { t = "I",     x = x, y = incY(tableSpacing.header) }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.roll_i }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.pitch_i }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.yaw_i }
 
 x = x + colSpacing
 y = tableStartY
-labels[#labels + 1] = { t = "D",     x = x, y = inc.y(tableSpacing.header) }
-fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), data = pids.roll_d }
-fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), data = pids.pitch_d }
-fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), data = pids.yaw_d }
+labels[#labels + 1] = { t = "D",     x = x, y = incY(tableSpacing.header) }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.roll_d }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.pitch_d }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.yaw_d }
 
 x = x + colSpacing
 y = tableStartY
-labels[#labels + 1] = { t = "FF",    x = x, y = inc.y(tableSpacing.header) }
-fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), data = pids.roll_f }
-fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), data = pids.pitch_f }
-fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), data = pids.yaw_f }
+labels[#labels + 1] = { t = "FF",    x = x, y = incY(tableSpacing.header) }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.roll_f }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.pitch_f }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.yaw_f }
 
 x = x + colSpacing
 y = tableStartY
-labels[#labels + 1] = { t = "B",     x = x, y = inc.y(tableSpacing.header) }
-fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), data = pids.roll_b }
-fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), data = pids.pitch_b }
-fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), data = pids.yaw_b }
+labels[#labels + 1] = { t = "B",     x = x, y = incY(tableSpacing.header) }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.roll_b }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.pitch_b }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.yaw_b }
 
 x = margin
-inc.y(lineSpacing * 0.5)
-fields[16] = { t = "Current PID profile",             x = x,          y = inc.y(lineSpacing), sp = x + sp * 1.17, data = { value = nil, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = startEditing, postEdit = endPidEditing }
-fields[17] = { t = "Destination profile",             x = x,          y = inc.y(lineSpacing), sp = x + sp * 1.17, data = { value = nil, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } } }
-fields[#fields + 1] = { t = "[Copy Current to Dest]", x = x + indent, y = inc.y(lineSpacing), preEdit = copyProfile }
+incY(lineSpacing * 0.5)
+fields[16] = { t = "Current PID profile",             x = x,          y = incY(lineSpacing), sp = x + sp * 1.17, data = { value = nil, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = startEditing, postEdit = endPidEditing }
+fields[17] = { t = "Destination profile",             x = x,          y = incY(lineSpacing), sp = x + sp * 1.17, data = { value = nil, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } } }
+fields[#fields + 1] = { t = "[Copy Current to Dest]", x = x + indent, y = incY(lineSpacing), preEdit = copyProfile }
 
-inc.y(lineSpacing * 0.5)
-labels[#labels + 1] = { t = "HSI Offset Gain",        x = x,          y = inc.y(lineSpacing) }
-fields[#fields + 1] = { t = "Roll",                   x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = pids.roll_o }
-fields[#fields + 1] = { t = "Pitch",                  x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = pids.pitch_o }
+incY(lineSpacing * 0.5)
+labels[#labels + 1] = { t = "HSI Offset Gain",        x = x,          y = incY(lineSpacing) }
+fields[#fields + 1] = { t = "Roll",                   x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pids.roll_o }
+fields[#fields + 1] = { t = "Pitch",                  x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pids.pitch_o }
 
-local function receivedPidTuning(page)
+local function receivedPidTuning(page, data)
     rf2.lcdNeedsInvalidate = true
     page.isReady = true
 end
 
 return {
     read = function(self)
-        rf2.useApi("mspPidTuning").read(pids, receivedPidTuning, self)
+        rf2.useApi("mspPidTuning").read(receivedPidTuning, self, pids)
     end,
     write = function(self)
         rf2.useApi("mspPidTuning").write(pids)

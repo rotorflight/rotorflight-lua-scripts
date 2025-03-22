@@ -7,7 +7,7 @@ local sp = template.listSpacing.field
 local yMinLim = rf2.radio.yMinLimit
 local x = margin
 local y = yMinLim - lineSpacing
-local inc = { x = function(val) x = x + val return x end, y = function(val) y = y + val return y end }
+local function incY(val) y = y + val return y end
 local labels = {}
 local fields = {}
 
@@ -47,45 +47,45 @@ local onOff = {
     "Off"
 }
 
-labels[1] = { t = "ESC not ready, waiting...", x = x,      y = inc.y(lineSpacing) }
-labels[2] = { t = "  Please power cycle",      x = x + indent, y = inc.y(lineSpacing), bold = false }
-labels[3] = { t = "     your ESC now.",        x = x + indent, y = inc.y(lineSpacing), bold = false }
+labels[1] = { t = "ESC not ready, waiting...", x = x,      y = incY(lineSpacing) }
+labels[2] = { t = "  Please power cycle",      x = x + indent, y = incY(lineSpacing), bold = false }
+labels[3] = { t = "     your ESC now.",        x = x + indent, y = incY(lineSpacing), bold = false }
 
 --- Basic
-fields[1] = { t = "Flight Mode",           x = x,          y = inc.y(lineSpacing * 2), sp = x + sp, min = 0, max = #flightMode, vals = { 2+33, 2+34 }, table = flightMode }
-fields[2] = { t = "Rotation",              x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = #rotation, vals = { 2+37, 2+38 }, table = rotation }
-fields[3] = { t = "Telemetry Protocol",    x = x ,         y = inc.y(lineSpacing), sp = x + sp, min = 0, max = #teleProtocol, vals = { 2+39, 2+40 }, table = teleProtocol }
-fields[4] = { t = "Startup Sound",         x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = #onOff, vals = { 2+53, 2+54 }, table = onOff }
-fields[5] = { t = "BEC Voltage",           x = x,          y = inc.y(lineSpacing), sp = x + sp, min = 0, max = #becVoltage, vals = { 2+35, 2+36 }, table = becVoltage }
+fields[1] = { t = "Flight Mode",           x = x,          y = incY(lineSpacing * 2), sp = x + sp, min = 0, max = #flightMode, vals = { 2+33, 2+34 }, table = flightMode }
+fields[2] = { t = "Rotation",              x = x,          y = incY(lineSpacing), sp = x + sp, min = 0, max = #rotation, vals = { 2+37, 2+38 }, table = rotation }
+fields[3] = { t = "Telemetry Protocol",    x = x ,         y = incY(lineSpacing), sp = x + sp, min = 0, max = #teleProtocol, vals = { 2+39, 2+40 }, table = teleProtocol }
+fields[4] = { t = "Startup Sound",         x = x,          y = incY(lineSpacing), sp = x + sp, min = 0, max = #onOff, vals = { 2+53, 2+54 }, table = onOff }
+fields[5] = { t = "BEC Voltage",           x = x,          y = incY(lineSpacing), sp = x + sp, min = 0, max = #becVoltage, vals = { 2+35, 2+36 }, table = becVoltage }
 
-labels[4] = { t = "Governor",              x = x,          y = inc.y(lineSpacing * 2) }
-fields[6] = { t = "P-Gain",                x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 30,  max = 180, scale = 100, vals = { 2+67, 2+68, 2+69, 2+70 } }
-fields[7] = { t = "I-Gain",                x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 150, max = 250, scale = 100, vals = { 2+71, 2+72, 2+73, 2+74 } }
+labels[4] = { t = "Governor",              x = x,          y = incY(lineSpacing * 2) }
+fields[6] = { t = "P-Gain",                x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 30,  max = 180, scale = 100, vals = { 2+67, 2+68, 2+69, 2+70 } }
+fields[7] = { t = "I-Gain",                x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 150, max = 250, scale = 100, vals = { 2+71, 2+72, 2+73, 2+74 } }
 
 -- Advanced
-labels[5] = { t = "Soft Start",            x = x,          y = inc.y(lineSpacing) }
-fields[8] = { t = "Start Time (s)",        x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 60000,  scale = 1000, mult = 100, vals = { 2+61, 2+62 } }
-fields[9] = { t = "Runup Time (s)",        x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 60000,  scale = 1000, mult = 100, vals = { 2+63, 2+64 } }
-fields[10] = { t = "Bailout (s)",          x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 100000, scale = 1000, mult = 100, vals = { 2+65, 2+66 } }
+labels[5] = { t = "Soft Start",            x = x,          y = incY(lineSpacing) }
+fields[8] = { t = "Start Time (s)",        x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 0, max = 60000,  scale = 1000, mult = 100, vals = { 2+61, 2+62 } }
+fields[9] = { t = "Runup Time (s)",        x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 0, max = 60000,  scale = 1000, mult = 100, vals = { 2+63, 2+64 } }
+fields[10] = { t = "Bailout (s)",          x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 0, max = 100000, scale = 1000, mult = 100, vals = { 2+65, 2+66 } }
 
 -- dont appear to be populated
--- fields[#fields + 1] = { t = "Stick Zero (us)",        x = x + indent, y = inc.y(lineSpacing * 2), sp = x + sp, vals = { 79, 80, 81, 82 } }
--- fields[#fields + 1] = { t = "Stick Max (us)",         x = x + indent, y = inc.y(lineSpacing), sp = x + sp, vals = { 75, 76, 77, 78 } }
+-- fields[#fields + 1] = { t = "Stick Zero (us)",        x = x + indent, y = incY(lineSpacing * 2), sp = x + sp, vals = { 79, 80, 81, 82 } }
+-- fields[#fields + 1] = { t = "Stick Max (us)",         x = x + indent, y = incY(lineSpacing), sp = x + sp, vals = { 75, 76, 77, 78 } }
 
 -- Protection
-labels[6] = { t = "Protection",            x = x,          y = inc.y(lineSpacing) }
-fields[11] = { t = "Protection Delay (s)", x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 5000,  scale = 1000, mult = 100, vals = { 2+41, 2+42 } }
-fields[12] = { t = "Cutoff Handling (%)",  x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 10000, scale = 100,  mult = 100, vals = { 2+49, 2+50 } }
-fields[13] = { t = "Max Temp (C)",         x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 40000, scale = 100,  mult = 100, vals = { 2+45, 2+46 } }
-fields[14] = { t = "Max Current (A)",      x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 30000, scale = 100,  mult = 100, vals = { 2+47, 2+48 } }
-fields[15] = { t = "Min Voltage (V)",      x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 7000,  scale = 100,  mult = 10, vals = { 2+43, 2+44 } }
-fields[16] = { t = "Max Used (Ah)",        x = x + indent, y = inc.y(lineSpacing), sp = x + sp, min = 0, max = 6000,  scale = 100,  mult = 10, vals = { 2+51, 2+52 } }
+labels[6] = { t = "Protection",            x = x,          y = incY(lineSpacing) }
+fields[11] = { t = "Protection Delay (s)", x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 0, max = 5000,  scale = 1000, mult = 100, vals = { 2+41, 2+42 } }
+fields[12] = { t = "Cutoff Handling (%)",  x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 0, max = 10000, scale = 100,  mult = 100, vals = { 2+49, 2+50 } }
+fields[13] = { t = "Max Temp (C)",         x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 0, max = 40000, scale = 100,  mult = 100, vals = { 2+45, 2+46 } }
+fields[14] = { t = "Max Current (A)",      x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 0, max = 30000, scale = 100,  mult = 100, vals = { 2+47, 2+48 } }
+fields[15] = { t = "Min Voltage (V)",      x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 0, max = 7000,  scale = 100,  mult = 10, vals = { 2+43, 2+44 } }
+fields[16] = { t = "Max Used (Ah)",        x = x + indent, y = incY(lineSpacing), sp = x + sp, min = 0, max = 6000,  scale = 100,  mult = 10, vals = { 2+51, 2+52 } }
 
 local function rebootEsc(field, page)
     page.values[2] = 0x80
     rf2.saveSettings()
 end
-fields[17] = { t = "[Reboot ESC]",         x = x + indent * 3, y = inc.y(lineSpacing * 1.3), preEdit = rebootEsc }
+fields[17] = { t = "[Reboot ESC]",         x = x + indent * 3, y = incY(lineSpacing * 1.3), preEdit = rebootEsc }
 
 local function getText(array, start, maxLength)
     local text = ""

@@ -10,7 +10,7 @@ local sp = template.listSpacing.field
 local yMinLim = rf2.radio.yMinLimit
 local x = margin
 local y = yMinLim - lineSpacing
-local inc = { x = function(val) x = x + val return x end, y = function(val) y = y + val return y end }
+local function incY(val) y = y + val return y end
 local labels = {}
 local fields = {}
 local fcStatus = {}
@@ -32,21 +32,21 @@ local endRateEditing = function(field, page)
     mspSetProfile.setRateProfile(field.data.value)
 end
 
-fields[#fields + 1] = { t = "Current PID profile",   x = x,              y = inc.y(lineSpacing), sp = x + sp * 1.17, data = { value = nil, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = startEditing, postEdit = endPidEditing }
-fields[#fields + 1] = { t = "Current rate profile",  x = x,              y = inc.y(lineSpacing), sp = x + sp * 1.17, data = { value = nil, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = startEditing, postEdit = endRateEditing }
+fields[#fields + 1] = { t = "Current PID profile",   x = x,              y = incY(lineSpacing), sp = x + sp * 1.17, data = { value = nil, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = startEditing, postEdit = endPidEditing }
+fields[#fields + 1] = { t = "Current rate profile",  x = x,              y = incY(lineSpacing), sp = x + sp * 1.17, data = { value = nil, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = startEditing, postEdit = endRateEditing }
 
-inc.y(lineSpacing * 0.25)
-labels[#labels + 1] = { t = "Arming Disabled Flags", x = x,              y = inc.y(lineSpacing) }
-labels[#labels + 1] = { t = "---",                   x = x + indent,     y = inc.y(lineSpacing), bold = false }
+incY(lineSpacing * 0.25)
+labels[#labels + 1] = { t = "Arming Disabled Flags", x = x,              y = incY(lineSpacing) }
+labels[#labels + 1] = { t = "---",                   x = x + indent,     y = incY(lineSpacing), bold = false }
 
-inc.y(lineSpacing * 0.25)
-labels[#labels + 1] = { t = "Dataflash Free Space",  x = x,              y = inc.y(lineSpacing) }
-labels[#labels + 1] = { t = "---",                   x = x + indent,     y = inc.y(lineSpacing), bold = false }
+incY(lineSpacing * 0.25)
+labels[#labels + 1] = { t = "Dataflash Free Space",  x = x,              y = incY(lineSpacing) }
+labels[#labels + 1] = { t = "---",                   x = x + indent,     y = incY(lineSpacing), bold = false }
 fields[#fields + 1] = { t = "[Erase]",               x = x + indent * 7, y = y }
 
-inc.y(lineSpacing * 0.25)
-fields[#fields + 1] = { t = "Real-time load",        x = x,              y = inc.y(lineSpacing), sp = x + sp, data = { value = 0, scale = 10 }, readOnly = true }
-fields[#fields + 1] = { t = "CPU load",              x = x,              y = inc.y(lineSpacing), sp = x + sp, data = { value = 0, scale = 10 }, readOnly = true }
+incY(lineSpacing * 0.25)
+fields[#fields + 1] = { t = "Real-time load",        x = x,              y = incY(lineSpacing), sp = x + sp, data = { value = 0, scale = 10 }, readOnly = true }
+fields[#fields + 1] = { t = "CPU load",              x = x,              y = incY(lineSpacing), sp = x + sp, data = { value = 0, scale = 10 }, readOnly = true }
 
 local function armingDisableFlagsToString(flags)
     local t = ""

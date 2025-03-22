@@ -14,7 +14,7 @@ template = nil
 local yMinLim = rf2.radio.yMinLimit
 local x = margin
 local y = yMinLim - lineSpacing
-local inc = { x = function(val) x = x + val return x end, y = function(val) y = y + val return y end }
+local function incY(val) y = y + val return y end
 local labels = {}
 local fields = {}
 --rf2.showMemoryUsage("before useApi(mspRcTuning)")
@@ -53,67 +53,65 @@ local function buildForm()
     labels = {}
     fields = {}
 
-    labels[#labels + 1] = { t = "",      x = x, y = inc.y(tableSpacing.header) }
-    labels[#labels + 1] = { t = "",      x = x, y = inc.y(tableSpacing.header) }
-    labels[#labels + 1] = { t = "Roll",  x = x, y = inc.y(tableSpacing.row) }
-    labels[#labels + 1] = { t = "Pitch", x = x, y = inc.y(tableSpacing.row) }
-    labels[#labels + 1] = { t = "Yaw",   x = x, y = inc.y(tableSpacing.row) }
-    labels[#labels + 1] = { t = "Coll",  x = x, y = inc.y(tableSpacing.row) }
+    labels[#labels + 1] = { t = "",      x = x, y = incY(tableSpacing.header) }
+    labels[#labels + 1] = { t = "",      x = x, y = incY(tableSpacing.header) }
+    labels[#labels + 1] = { t = "Roll",  x = x, y = incY(tableSpacing.row) }
+    labels[#labels + 1] = { t = "Pitch", x = x, y = incY(tableSpacing.row) }
+    labels[#labels + 1] = { t = "Yaw",   x = x, y = incY(tableSpacing.row) }
+    labels[#labels + 1] = { t = "Coll",  x = x, y = incY(tableSpacing.row) }
 
     x = x + tableSpacing.col
     y = tableStartY
-    labels[#labels + 1] = { t = rcTuning.columnHeaders[1],      x = x, y = inc.y(tableSpacing.header) }
-    labels[#labels + 1] = { t = rcTuning.columnHeaders[2],      x = x, y = inc.y(tableSpacing.header) }
-    fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), data = rcTuning.roll_rcRates }
-    fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), data = rcTuning.pitch_rcRates }
-    fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), data = rcTuning.yaw_rcRates }
-    fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), data = rcTuning.collective_rcRates }
+    labels[#labels + 1] = { t = rcTuning.columnHeaders[1], x = x, y = incY(tableSpacing.header) }
+    labels[#labels + 1] = { t = rcTuning.columnHeaders[2], x = x, y = incY(tableSpacing.header) }
+    fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = rcTuning.roll_rcRates }
+    fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = rcTuning.pitch_rcRates }
+    fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = rcTuning.yaw_rcRates }
+    fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = rcTuning.collective_rcRates }
 
     x = x + tableSpacing.col
     y = tableStartY
-    labels[#labels + 1] = { t = rcTuning.columnHeaders[3],      x = x, y = inc.y(tableSpacing.header) }
-    labels[#labels + 1] = { t = rcTuning.columnHeaders[4],      x = x, y = inc.y(tableSpacing.header) }
-    fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), data = rcTuning.roll_rates }
-    fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), data = rcTuning.pitch_rates }
-    fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), data = rcTuning.yaw_rates }
-    fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), data = rcTuning.collective_rates }
+    labels[#labels + 1] = { t = rcTuning.columnHeaders[3], x = x, y = incY(tableSpacing.header) }
+    labels[#labels + 1] = { t = rcTuning.columnHeaders[4], x = x, y = incY(tableSpacing.header) }
+    fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = rcTuning.roll_rates }
+    fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = rcTuning.pitch_rates }
+    fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = rcTuning.yaw_rates }
+    fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = rcTuning.collective_rates }
 
     x = x + tableSpacing.col
     y = tableStartY
-    labels[#labels + 1] = { t = rcTuning.columnHeaders[5],      x = x, y = inc.y(tableSpacing.header) }
-    labels[#labels + 1] = { t = rcTuning.columnHeaders[6],      x = x, y = inc.y(tableSpacing.header) }
-    fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), data = rcTuning.roll_rcExpo }
-    fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), data = rcTuning.pitch_rcExpo }
-    fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), data = rcTuning.yaw_rcExpo }
-    fields[#fields + 1] = {              x = x, y = inc.y(tableSpacing.row), data = rcTuning.collective_rcExpo }
+    labels[#labels + 1] = { t = rcTuning.columnHeaders[5], x = x, y = incY(tableSpacing.header) }
+    labels[#labels + 1] = { t = rcTuning.columnHeaders[6], x = x, y = incY(tableSpacing.header) }
+    fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = rcTuning.roll_rcExpo }
+    fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = rcTuning.pitch_rcExpo }
+    fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = rcTuning.yaw_rcExpo }
+    fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = rcTuning.collective_rcExpo }
 
     x = margin
-    inc.y(lineSpacing * 0.5)
-    fields[13] = { t = "Rates type",                   x = x,          y = inc.y(lineSpacing), sp = x + sp, data = rcTuning.rates_type, postEdit = function(self, page) page.updateRatesType(page) end }
+    incY(lineSpacing * 0.5)
+    fields[13] = { t = "Rates type",                      x = x,          y = incY(lineSpacing), sp = x + sp, data = rcTuning.rates_type, postEdit = function(self, page) page.updateRatesType(page) end }
 
-    inc.y(lineSpacing * 0.5)
-    fields[14] = { t = "Current rate profile",         x = x,          y = inc.y(lineSpacing), sp = x + sp * 1.17, data = { min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = startEditing, postEdit = endRateEditing }
-    fields[15] = { t = "Destination profile",          x = x,          y = inc.y(lineSpacing), sp = x + sp * 1.17, data = { min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } } }
-    fields[#fields + 1] = { t = "[Copy Current to Dest]", x = x + indent, y = inc.y(lineSpacing), preEdit = copyProfile }
-
+    incY(lineSpacing * 0.5)
+    fields[14] = { t = "Current rate profile",            x = x,          y = incY(lineSpacing), sp = x + sp * 1.17, data = { min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = startEditing, postEdit = endRateEditing }
+    fields[15] = { t = "Destination profile",             x = x,          y = incY(lineSpacing), sp = x + sp * 1.17, data = { min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } } }
+    fields[#fields + 1] = { t = "[Copy Current to Dest]", x = x + indent, y = incY(lineSpacing), preEdit = copyProfile }
 
     --rf2.showMemoryUsage("Roll dynamics")
     local responseTime = "Response time"
     local maxAcceleration = "Max acceleration"
-    inc.y(lineSpacing * 0.5)
-    labels[#labels + 1] = { t = "Roll Dynamics",       x = x,          y = inc.y(lineSpacing) }
-    fields[#fields + 1] = { t = responseTime,       x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = rcTuning.roll_response_time }
-    fields[#fields + 1] = { t = maxAcceleration,    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = rcTuning.roll_accel_limit }
-    labels[#labels + 1] = { t = "Pitch Dynamics",      x = x,          y = inc.y(lineSpacing) }
-    fields[#fields + 1] = { t = responseTime,       x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = rcTuning.pitch_response_time }
-    fields[#fields + 1] = { t = maxAcceleration,    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = rcTuning.pitch_accel_limit }
-    labels[#labels + 1] = { t = "Yaw Dynamics",        x = x,          y = inc.y(lineSpacing) }
-    fields[#fields + 1] = { t = responseTime,       x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = rcTuning.yaw_response_time }
-    fields[#fields + 1] = { t = maxAcceleration,    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = rcTuning.yaw_accel_limit }
-    labels[#labels + 1] = { t = "Collective Dynamics", x = x,          y = inc.y(lineSpacing) }
-    fields[#fields + 1] = { t = responseTime,       x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = rcTuning.collective_response_time }
-    fields[#fields + 1] = { t = maxAcceleration,    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = rcTuning.collective_accel_limit }
-
+    incY(lineSpacing * 0.5)
+    labels[#labels + 1] = { t = "Roll Dynamics",       x = x,          y = incY(lineSpacing) }
+    fields[#fields + 1] = { t = responseTime,          x = x + indent, y = incY(lineSpacing), sp = x + sp, data = rcTuning.roll_response_time }
+    fields[#fields + 1] = { t = maxAcceleration,       x = x + indent, y = incY(lineSpacing), sp = x + sp, data = rcTuning.roll_accel_limit }
+    labels[#labels + 1] = { t = "Pitch Dynamics",      x = x,          y = incY(lineSpacing) }
+    fields[#fields + 1] = { t = responseTime,          x = x + indent, y = incY(lineSpacing), sp = x + sp, data = rcTuning.pitch_response_time }
+    fields[#fields + 1] = { t = maxAcceleration,       x = x + indent, y = incY(lineSpacing), sp = x + sp, data = rcTuning.pitch_accel_limit }
+    labels[#labels + 1] = { t = "Yaw Dynamics",        x = x,          y = incY(lineSpacing) }
+    fields[#fields + 1] = { t = responseTime,          x = x + indent, y = incY(lineSpacing), sp = x + sp, data = rcTuning.yaw_response_time }
+    fields[#fields + 1] = { t = maxAcceleration,       x = x + indent, y = incY(lineSpacing), sp = x + sp, data = rcTuning.yaw_accel_limit }
+    labels[#labels + 1] = { t = "Collective Dynamics", x = x,          y = incY(lineSpacing) }
+    fields[#fields + 1] = { t = responseTime,          x = x + indent, y = incY(lineSpacing), sp = x + sp, data = rcTuning.collective_response_time }
+    fields[#fields + 1] = { t = maxAcceleration,       x = x + indent, y = incY(lineSpacing), sp = x + sp, data = rcTuning.collective_accel_limit }
     --rf2.showMemoryUsage("after buildform")
 end
 
