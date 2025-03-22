@@ -1,45 +1,48 @@
 local template = assert(rf2.loadScript(rf2.radio.template))()
 local margin = template.margin
-local indent = template.indent
 local lineSpacing = template.lineSpacing
 local tableSpacing = template.tableSpacing
-local sp = template.listSpacing.field
 local yMinLim = rf2.radio.yMinLimit
 local x = margin
 local y = yMinLim - lineSpacing
-local inc = { x = function(val) x = x + val return x end, y = function(val) y = y + val return y end }
+local function incY(val) y = y + val return y end
 local labels = {}
 local fields = {}
+local mspExperimental = rf2.useApi("mspExperimental")
+local experimental = mspExperimental.getDefaults()
 local total_bytes = 16
 
 x = margin
 y = yMinLim - tableSpacing.header
-labels[#labels + 1] = { t = "Byte",  x = x, y = inc.y(lineSpacing) }
-for i=0, total_bytes - 1 do
-    labels[#labels + 1] = { t = tostring(i),  x = x, y = inc.y(lineSpacing) }
+labels[#labels + 1] = { t = "Byte",  x = x, y = incY(lineSpacing) }
+for i = 1, total_bytes do
+    labels[#labels + 1] = { t = tostring(i),  x = x, y = incY(lineSpacing) }
 end
 
 -- Draw uint8 fields
 x = x + tableSpacing.col
 y = yMinLim - tableSpacing.header
-labels[#labels + 1] = { t = "UINT8",  x = x, y = inc.y(lineSpacing) }
-for i=0, total_bytes - 1 do
-    fields[#fields + 1] = { x = x, y = inc.y(lineSpacing), min = 0, max = 255, vals = { i + 1 } }
+labels[#labels + 1] = { t = "UINT8",  x = x, y = incY(lineSpacing) }
+for i= 1, total_bytes do
+    fields[#fields + 1] = { x = x, y = incY(lineSpacing), data = experimental[i] }
 end
 
--- Draw int8 fields
-x = x + tableSpacing.col
-y = yMinLim - tableSpacing.header
-labels[#labels + 1] = { t = "INT8",  x = x, y = inc.y(lineSpacing) }
-for i=0, total_bytes - 1 do
-    fields[#fields + 1] = { x = x, y = inc.y(lineSpacing), min = -128, max = 127, vals = { i + 1 } }
+-- Draw int8 fields: not supported anymore since data can't have multiple representations
+
+local function receivedExperimental(page)
+    rf2.lcdNeedsInvalidate = true
+    page.isReady = true
 end
 
 return {
-    read =  158, -- MSP_EXPERIMENTAL
-    write = 159, -- MSP_SET_EXPERIMENTAL
+    read = function(self)
+        mspExperimental.read(receivedExperimental, self, experimental)
+    end,
+    write = function(self)
+        mspExperimental.write(experimental)
+        rf2.settingsSaved()
+    end,
     title       = "Experimental",
-    minBytes    = 0,
     eepromWrite = true,
     labels      = labels,
     fields      = fields
