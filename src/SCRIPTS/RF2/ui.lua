@@ -153,7 +153,7 @@ local mspLoadSettings =
 {
     processReply = function(self, buf)
         if not Page then return end -- could happen if one returns to the main menu before processReply
-        rf2.print("Page is processing reply for cmd "..tostring(self.command).." len buf: "..#buf.." expected: "..Page.minBytes)
+        --rf2.print("Page is processing reply for cmd "..tostring(self.command).." len buf: "..#buf.." expected: "..Page.minBytes)
         Page.values = buf
         if Page.postRead then
             if Page.postRead(Page) == -1 then
@@ -562,7 +562,9 @@ local function run_ui(event)
         end
         if not Page then
             collectgarbage()
+            --rf2.showMemoryUsage("before loading page")
             Page = assert(rf2.loadScript("PAGES/"..PageFiles[currentPage].script))()
+            --rf2.showMemoryUsage("after loading page")
             collectgarbage()
         end
         if not(Page.values or Page.isReady) and pageState == pageStatus.display then

@@ -40,7 +40,6 @@ fields[#fields + 1] = { t = "Min Frequency",            x = x + indent, y = inc.
 fields[#fields + 1] = { t = "Max Frequency",            x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = filterConfig.dyn_notch_max_hz,         id = "gyroDynamicNotchMaxHz"}
 
 local function receivedFilterConfig(page)
-    rf2.print("gyro_lpf1_static_hz: "..filterConfig.gyro_lpf1_static_hz.value)
     rf2.lcdNeedsInvalidate = true
     page.isReady = true
 end

@@ -28,7 +28,7 @@ local function eraseDataflash(callback, callbackParam)
         command = 72, -- MSP_DATAFLASH_ERASE
         processReply = function(self, buf)
             local summary = {}
-            rf2.print("buf length: "..#buf)
+            --rf2.print("buf length: "..#buf)
             callback(callbackParam, summary)
         end,
         simulatorResponse = { }

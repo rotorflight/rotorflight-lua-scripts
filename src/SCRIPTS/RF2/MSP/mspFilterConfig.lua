@@ -1,5 +1,4 @@
 local function getFilterConfig(data, callback, callbackParam)
-    rf2.print("getFilterConfig, rf2.apiversion: "..rf2.apiVersion)
     local message = {
         command = 92, -- MSP_FILTER_CONFIG
         processReply = function(self, buf)

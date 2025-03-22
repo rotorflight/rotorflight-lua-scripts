@@ -7,6 +7,7 @@ local lineSpacing = template.lineSpacing
 local tableSpacing = template.tableSpacing
 local colSpacing = tableSpacing.col * 0.65
 local sp = template.listSpacing.field
+template = nil
 local yMinLim = rf2.radio.yMinLimit
 local x = margin
 local y = yMinLim - lineSpacing
@@ -15,8 +16,8 @@ local labels = {}
 local fields = {}
 local editing = false
 local profileAdjustmentTS = nil
-local mspPidTuning = rf2.useApi("mspPidTuning")
-local pids = mspPidTuning.getDefaults()
+local pids = rf2.useApi("mspPidTuning").getDefaults()
+collectgarbage()
 
 local startEditing = function(field, page)
     editing = true
@@ -101,10 +102,10 @@ end
 
 return {
     read = function(self)
-        mspPidTuning.read(pids, receivedPidTuning, self)
+        rf2.useApi("mspPidTuning").read(pids, receivedPidTuning, self)
     end,
     write = function(self)
-        mspPidTuning.write(pids)
+        rf2.useApi("mspPidTuning").write(pids)
         rf2.settingsSaved()
     end,
     title       = "PIDs",

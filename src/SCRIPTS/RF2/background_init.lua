@@ -123,7 +123,7 @@ end
 
 local queueInitialized = false
 local function initializeQueue()
-    rf2.print("Initializing MSP queue")
+    --rf2.print("Initializing MSP queue")
 
     rf2.mspQueue.maxRetries = -1       -- retry indefinitely
 
@@ -154,7 +154,7 @@ local function initializeQueue()
             rf2.useApi("mspSetRtc").setRtc(
                 function()
                     playTone(1600, 300, 0, PLAY_BACKGROUND)
-                    rf2.print("RTC set")
+                    --rf2.print("RTC set")
                     rf2.mspQueue.maxRetries = rf2.protocol.maxRetries
                     initializationDone = true
                 end)

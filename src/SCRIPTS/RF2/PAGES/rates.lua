@@ -1,19 +1,26 @@
+--rf2.showMemoryUsage(">>>>> PAGE LOAD <<<<<<")
 local template = assert(rf2.loadScript(rf2.radio.template))()
+--rf2.showMemoryUsage("after template")
 local mspSetProfile = assert(rf2.loadScript("MSP/mspSetProfile.lua"))()
+--rf2.showMemoryUsage("after mspSetProfile")
 local mspStatus = assert(rf2.loadScript("MSP/mspStatus.lua"))()
+--rf2.showMemoryUsage("after mspStatus")
 local margin = template.margin
 local indent = template.indent
 local lineSpacing = template.lineSpacing
 local tableSpacing = template.tableSpacing
 local sp = template.listSpacing.field
+template = nil
 local yMinLim = rf2.radio.yMinLimit
 local x = margin
 local y = yMinLim - lineSpacing
 local inc = { x = function(val) x = x + val return x end, y = function(val) y = y + val return y end }
 local labels = {}
 local fields = {}
-local mspRcTuning = rf2.useApi("mspRcTuning")
-local rcTuning = mspRcTuning.getDefaults()
+--rf2.showMemoryUsage("before useApi(mspRcTuning)")
+local rcTuning = rf2.useApi("mspRcTuning").getDefaults()
+--rf2.showMemoryUsage("after getDefaults")
+collectgarbage()
 local editing = false
 local profileAdjustmentTS = nil
 
@@ -40,10 +47,12 @@ local function copyProfile(field, page)
 end
 
 local function buildForm()
+    --rf2.showMemoryUsage("before buildform")
     local tableStartY = yMinLim - lineSpacing
     y = tableStartY
     labels = {}
     fields = {}
+
     labels[#labels + 1] = { t = "",      x = x, y = inc.y(tableSpacing.header) }
     labels[#labels + 1] = { t = "",      x = x, y = inc.y(tableSpacing.header) }
     labels[#labels + 1] = { t = "Roll",  x = x, y = inc.y(tableSpacing.row) }
@@ -80,26 +89,32 @@ local function buildForm()
 
     x = margin
     inc.y(lineSpacing * 0.5)
-    fields[13] = { t = "Rates type",                   x = x,          y = inc.y(lineSpacing), sp = x + sp, data = rcTuning.rates_type, postEdit = function(self, page) page.updateRatesType(page, true) end }
+    fields[13] = { t = "Rates type",                   x = x,          y = inc.y(lineSpacing), sp = x + sp, data = rcTuning.rates_type, postEdit = function(self, page) page.updateRatesType(page) end }
 
     inc.y(lineSpacing * 0.5)
     fields[14] = { t = "Current rate profile",         x = x,          y = inc.y(lineSpacing), sp = x + sp * 1.17, data = { min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = startEditing, postEdit = endRateEditing }
     fields[15] = { t = "Destination profile",          x = x,          y = inc.y(lineSpacing), sp = x + sp * 1.17, data = { min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } } }
     fields[#fields + 1] = { t = "[Copy Current to Dest]", x = x + indent, y = inc.y(lineSpacing), preEdit = copyProfile }
 
+
+    --rf2.showMemoryUsage("Roll dynamics")
+    local responseTime = "Response time"
+    local maxAcceleration = "Max acceleration"
     inc.y(lineSpacing * 0.5)
     labels[#labels + 1] = { t = "Roll Dynamics",       x = x,          y = inc.y(lineSpacing) }
-    fields[#fields + 1] = { t = "Response time",       x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = rcTuning.roll_response_time }
-    fields[#fields + 1] = { t = "Max acceleration",    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = rcTuning.roll_accel_limit }
+    fields[#fields + 1] = { t = responseTime,       x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = rcTuning.roll_response_time }
+    fields[#fields + 1] = { t = maxAcceleration,    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = rcTuning.roll_accel_limit }
     labels[#labels + 1] = { t = "Pitch Dynamics",      x = x,          y = inc.y(lineSpacing) }
-    fields[#fields + 1] = { t = "Response time",       x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = rcTuning.pitch_response_time }
-    fields[#fields + 1] = { t = "Max acceleration",    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = rcTuning.pitch_accel_limit }
+    fields[#fields + 1] = { t = responseTime,       x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = rcTuning.pitch_response_time }
+    fields[#fields + 1] = { t = maxAcceleration,    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = rcTuning.pitch_accel_limit }
     labels[#labels + 1] = { t = "Yaw Dynamics",        x = x,          y = inc.y(lineSpacing) }
-    fields[#fields + 1] = { t = "Response time",       x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = rcTuning.yaw_response_time }
-    fields[#fields + 1] = { t = "Max acceleration",    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = rcTuning.yaw_accel_limit }
+    fields[#fields + 1] = { t = responseTime,       x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = rcTuning.yaw_response_time }
+    fields[#fields + 1] = { t = maxAcceleration,    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = rcTuning.yaw_accel_limit }
     labels[#labels + 1] = { t = "Collective Dynamics", x = x,          y = inc.y(lineSpacing) }
-    fields[#fields + 1] = { t = "Response time",       x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = rcTuning.collective_response_time }
-    fields[#fields + 1] = { t = "Max acceleration",    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = rcTuning.collective_accel_limit }
+    fields[#fields + 1] = { t = responseTime,       x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = rcTuning.collective_response_time }
+    fields[#fields + 1] = { t = maxAcceleration,    x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = rcTuning.collective_accel_limit }
+
+    --rf2.showMemoryUsage("after buildform")
 end
 
 buildForm()
@@ -123,10 +138,10 @@ end
 
 return {
     read = function(self)
-        mspRcTuning.read(receivedRcTuning, self, rcTuning)
+        rf2.useApi("mspRcTuning").read(receivedRcTuning, self, rcTuning)
     end,
     write = function(self)
-        mspRcTuning.write(rcTuning)
+        rf2.useApi("mspRcTuning").write(rcTuning)
         rf2.settingsSaved()
     end,
     title       = "Rates",
@@ -136,7 +151,7 @@ return {
     fields      = fields,
 
     updateRatesType = function(self, applyDefaults)
-        mspRcTuning.getRateDefaults(rcTuning, rcTuning.rates_type.value)
+        rf2.useApi("mspRcTuning").getRateDefaults(rcTuning, rcTuning.rates_type.value)
         rebuildForm(self)
     end,
 

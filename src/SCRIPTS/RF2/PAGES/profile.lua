@@ -4,6 +4,7 @@ local indent = template.indent
 local lineSpacing = template.lineSpacing
 local tableSpacing = template.tableSpacing
 local sp = template.listSpacing.field
+template = nil
 local yMinLim = rf2.radio.yMinLimit
 local x = margin
 local y = yMinLim - lineSpacing
@@ -11,8 +12,8 @@ local inc = { x = function(val) x = x + val return x end, y = function(val) y = 
 local labels = {}
 local fields = {}
 local profileSwitcher = assert(rf2.loadScript("PAGES/helpers/profileSwitcher.lua"))()
-local mspPidProfile = rf2.useApi("mspPidProfile")
-local pidProfile = mspPidProfile.getDefaults()
+local pidProfile = rf2.useApi("mspPidProfile").getDefaults()
+collectgarbage()
 
 fields[#fields + 1] = { t = "Current PID profile",     x = x,          y = inc.y(lineSpacing), sp = x + sp * 1.17, data = { value = nil, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = profileSwitcher.startPidEditing, postEdit = profileSwitcher.endPidEditing }
 
@@ -87,17 +88,16 @@ fields[#fields + 1] = { t = "P B-term cutoff",         x = x + indent, y = inc.y
 fields[#fields + 1] = { t = "Y B-term cutoff",         x = x + indent, y = inc.y(lineSpacing), sp = x + sp, data = pidProfile.bterm_cutoff_yaw }
 
 local function receivedPidProfile(page)
-    rf2.print("receivedPidProfile")
     rf2.lcdNeedsInvalidate = true
     page.isReady = true
 end
 
 return {
     read = function(self)
-        mspPidProfile.read(pidProfile, receivedPidProfile, self)
+        rf2.useApi("mspPidProfile").read(pidProfile, receivedPidProfile, self)
     end,
     write = function(self)
-        mspPidProfile.write(pidProfile)
+        rf2.useApi("mspPidProfile").write(pidProfile)
         rf2.settingsSaved()
     end,
     title       = "Profile - Various",

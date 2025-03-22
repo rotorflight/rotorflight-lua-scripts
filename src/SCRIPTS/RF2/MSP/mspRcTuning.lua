@@ -45,7 +45,7 @@ end
 local function getRateDefaults(data, rates_type)
     data.rates_type = { value = rates_type, min = 0, max = 5, table = { [0] = "NONE", "BETAFL", "RACEFL", "KISS", "ACTUAL", "QUICK"} }
     local rateName = data.rates_type.table[rates_type]
-    rf2.print("rateName: " .. rateName)
+    --rf2.print("rateName: " .. rateName)
     local setRateDefaults = assert(loadScript("/SCRIPTS/RF2/MSP/RATES/" .. rateName .. ".lua"))()
     setRateDefaults(data)
     setRateDefaults = nil
