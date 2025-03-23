@@ -14,7 +14,20 @@ local function setRateProfile(profileIndex, callback, callbackParam)
     setPidProfile(profileIndex + 128, callback, callbackParam)
 end
 
+local function setBatteryProfile(profileIndex, callback, callbackParam)
+    local message = {
+        command = 244, -- MSP_SELECT_BATTERY
+        payload = { profileIndex },
+        processReply = function(self, buf)
+            if callback then callback(callbackParam) end
+        end,
+        simulatorResponse = {}
+    }
+    rf2.mspQueue:add(message)
+end
+
 return {
     setPidProfile = setPidProfile,
-    setRateProfile = setRateProfile
+    setRateProfile = setRateProfile,
+    setBatteryProfile = setBatteryProfile
 }
