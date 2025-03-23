@@ -21,6 +21,15 @@ local mspHelper = {
         buf.offset = offset + 4
         return value
     end,
+    readText = function(buf, length)
+        local offset = buf.offset or 1
+        local text = ""
+        for i = 0, length - 1 do
+            text = text..string.char(buf[offset + i])
+        end
+        buf.offset = offset + length
+        return text
+    end,
     writeU8 = function(buf, value)
         local byte1 = bit32.band(value,  0xFF)
         buf[#buf + 1] = byte1
@@ -34,7 +43,12 @@ local mspHelper = {
         for i = 0, 3 do
             buf[#buf + 1] = bit32.band(bit32.rshift(value, i * 8), 0xFF)
         end
-    end
+    end,
+    writeText = function(buf, text)
+        for i = 1, #text do
+            buf[#buf + 1] = string.byte(text, i)
+        end
+    end,
 }
 
 mspHelper.readS8 = function(buf)
