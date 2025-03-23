@@ -11,24 +11,24 @@ local y = yMinLim - lineSpacing
 local function incY(val) y = y + val return y end
 local labels = {}
 local fields = {}
-local mspAccTrim = rf2.useApi("mspAccTrim")
-local accTrimData = mspAccTrim.getDefaults()
+local mspAccTrim = "mspAccTrim"
+local data = rf2.useApi(mspAccTrim).getDefaults()
 
 labels[#labels + 1] = { t = "Accelerometer Trim", x = x,          y = incY(lineSpacing) }
-fields[#fields + 1] = { t = "Roll",               x = x + indent, y = incY(lineSpacing), sp = x + sp, data = accTrimData.roll_trim }
-fields[#fields + 1] = { t = "Pitch",              x = x + indent, y = incY(lineSpacing), sp = x + sp, data = accTrimData.pitch_trim }
+fields[#fields + 1] = { t = "Roll",               x = x + indent, y = incY(lineSpacing), sp = x + sp, data = data.roll_trim }
+fields[#fields + 1] = { t = "Pitch",              x = x + indent, y = incY(lineSpacing), sp = x + sp, data = data.pitch_trim }
 
-local function receivedAccTrimData(page, data)
+local function receivedData(page, data)
     rf2.lcdNeedsInvalidate = true
     page.isReady = true
 end
 
 return {
     read = function(self)
-        mspAccTrim.read(receivedAccTrimData, self, accTrimData)
+        rf2.useApi(mspAccTrim).read(receivedData, self, data)
     end,
     write = function(self)
-        mspAccTrim.write(accTrimData)
+        rf2.useApi(mspAccTrim).write(data)
         rf2.settingsSaved()
     end,
     eepromWrite = true,
