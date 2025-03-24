@@ -1,26 +1,3 @@
-local escTypes = {
-    [848]  = "YGE 35 LVT BEC",
-    [1616] = "YGE 65 LVT BEC",
-    [2128] = "YGE 85 LVT BEC",
-    [2384] = "YGE 95 LVT BEC",
-    [4944] = "YGE 135 LVT BEC",
-    [2304] = "YGE 90 HVT Opto",
-    [4608] = "YGE 120 HVT Opto",
-    [5712] = "YGE 165 HVT",
-    [8272] = "YGE 205 HVT",
-    [8273] = "YGE 205 HVT BEC",
-    [4177] = "YGE Aureus 105",
-    [4179] = "YGE Aureus 105v2",
-    [5025] = "YGE Aureus 135",
-    [5027] = "YGE Aureus 135v2",
-    [5457] = "YGE Saphir 155",
-    [5459] = "YGE Saphir 155v2",
-    [4689] = "YGE Saphir 125",
-    [4928] = "YGE Opto 135",
-    [9552] = "YGE Opto 255",
-    [16464]= "YGE Opto 405",
-}
-
 local escFlags = {
     spinDirection = 0,
     f3cAuto = 1,
@@ -154,6 +131,33 @@ local function mapMotorTimingToUI(value)
     return motorTimingToUI[value] or 0
 end
 
+local function getEscTypeName(value)
+    local escTypes = {
+        [848]  = "YGE 35 LVT BEC",
+        [1616] = "YGE 65 LVT BEC",
+        [2128] = "YGE 85 LVT BEC",
+        [2384] = "YGE 95 LVT BEC",
+        [4944] = "YGE 135 LVT BEC",
+        [2304] = "YGE 90 HVT Opto",
+        [4608] = "YGE 120 HVT Opto",
+        [5712] = "YGE 165 HVT",
+        [8272] = "YGE 205 HVT",
+        [8273] = "YGE 205 HVT BEC",
+        [4177] = "YGE Aureus 105",
+        [4179] = "YGE Aureus 105v2",
+        [5025] = "YGE Aureus 135",
+        [5027] = "YGE Aureus 135v2",
+        [5457] = "YGE Saphir 155",
+        [5459] = "YGE Saphir 155v2",
+        [4689] = "YGE Saphir 125",
+        [4928] = "YGE Opto 135",
+        [9552] = "YGE Opto 255",
+        [16464]= "YGE Opto 405",
+    }
+
+    return escTypes[value] or "YGE ESC (" .. value .. ")"
+end
+
 local function getEscParameters(callback, callbackParam, data)
     data = data or getDefaults()
     local message = {
@@ -197,7 +201,7 @@ local function getEscParameters(callback, callbackParam, data)
             data.unknown7 = rf2.mspHelper.readU32(buf)
 
             -- derived fields
-            data.escTypeName = escTypes[data.esc_type] or "YGE ESC (" .. data.esc_type .. ")"
+            data.escTypeName = getEscTypeName(data.esc_type)
             data.direction.value = bit32.extract(data.flags, escFlags.spinDirection)
             data.f3c_autorotation.value = bit32.extract(data.flags, escFlags.f3cAuto)
             data.bec_voltage.max = bit32.extract(data.flags, escFlags.bec12v) == 0 and 84 or 123
@@ -266,8 +270,8 @@ local function setEscParameters(data)
     }
 
     -- Update flags
-    data.flags = bit32.replace(data.flags, data.f3c_autorotation.value, escFlags.f3cAuto)
     data.flags = bit32.replace(data.flags, data.direction.value, escFlags.spinDirection)
+    data.flags = bit32.replace(data.flags, data.f3c_autorotation.value, escFlags.f3cAuto)
 
     rf2.mspHelper.writeU8(message.payload, data.esc_signature)
     rf2.mspHelper.writeU8(message.payload, data.command)
