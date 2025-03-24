@@ -60,7 +60,6 @@ local function getEscParameters(callback, callbackParam, data)
     local message = {
         command = 217, -- MSP_ESC_PARAMETERS
         processReply = function(self, buf)
-            --rf2.print("buf length: "..#buf)
             local signature = rf2.mspHelper.readU8(buf)
             if signature ~= 166 then
                 rf2.print("warning: Invalid ESC signature: " .. signature)
