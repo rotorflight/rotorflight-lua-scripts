@@ -39,6 +39,7 @@ rf2 = {
         percentage = "%",
         degrees = del and "°" or "@", -- OpenTX uses @
         herz = " Hz",
+        seconds = " s",
     },
 
     --[[
