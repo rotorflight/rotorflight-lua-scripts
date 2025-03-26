@@ -305,6 +305,8 @@ local RFSensors = {
     [0x1212]  = { name="RTE#",    unit=UNIT_RAW,                 prec=0,    dec=decU8   },
     -- Current LED profile
     [0x1213]  = { name="LED#",    unit=UNIT_RAW,                 prec=0,    dec=decU8   },
+    -- Current Battery profile
+    [0x1214]  = { name="BAT#",    unit=UNIT_RAW,                 prec=0,    dec=decU8   },
 
     -- Adjustment function
     [0x1220]  = { name="ADJ",     unit=UNIT_RAW,                 prec=0,    dec=decAdjFunc },
