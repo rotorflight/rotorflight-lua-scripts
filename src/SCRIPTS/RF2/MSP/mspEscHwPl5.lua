@@ -89,7 +89,7 @@ local function getEscParameters(callback, callbackParam, data)
         processReply = function(self, buf)
             data.esc_signature.value = rf2.mspHelper.readU8(buf)
             if data.esc_signature.value ~= 253 then
-                rf2.print("warning: Invalid ESC signature: " .. tostring(data.esc_signature))
+                --rf2.print("warning: Invalid ESC signature: " .. tostring(data.esc_signature))
                 return
             end
             data.command.value = rf2.mspHelper.readU8(buf)

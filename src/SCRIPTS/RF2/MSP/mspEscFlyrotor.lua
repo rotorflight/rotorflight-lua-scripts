@@ -3,7 +3,6 @@ local govMode = { [0] = "Ext Governor", "Esc Governor" }
 local becVoltage = { [0] = "Disable", "7.5V", "8.0V", "8.5V", "12.0V" }
 local motorDirection = { [0] = "CW", "CCW" }
 local fanControl = { [0] = "Automatic", "Always On" }
-local currentGain = { [0] = "-20", "-19", "-18", "-17", "-16", "-15", "-14", "-13", "-12", "-11", "-10", "-9", "-8", "-7", "-6", "-5", "-4", "-3", "-2", "-1", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20" }
 local throttleProtocols = { [0] = "PWM", "DSHOT", "Serial Port" }
 local telemetryProtocols = { [0] = "FLYROTOR", "SBUS2" }
 local ledColors = { [0] = "CUSTOM", "BLACK", "RED", "GREEN", "BLUE", "YELLOW", "MAGENTA", "CYAN", "WHITE", "ORANGE", "GRAY", "MAROON", "DARK_GREEN", "NAVY", "PURPLE", "TEAL", "SILVER", "PINK", "GOLD", "BROWN", "LIGHT_BLUE", "FL_PINK", "FL_ORANGE", "FL_LIME", "FL_MINT", "FL_CYAN", "FL_PURPLE", "FL_HOT_PINK", "FL_LIGHT_YELLOW", "FL_AQUAMARINE", "FL_GOLD", "FL_DEEP_PINK", "FL_NEON_GREEN", "FL_ORANGE_RED" }
@@ -34,7 +33,7 @@ local function getDefaults()
         starting_torque = { min = 1, max = 15 },
         response_speed = { min = 1, max = 15 },
         buzzer_volume = { min = 1, max = 5 },
-        current_gain = { min = 0, max = #currentGain, table = currentGain },
+        current_gain = { min = -20, max = 20 },
         fan_control = { min = 0, max = #fanControl, table = fanControl },
         soft_start = { min = 5, max = 55, unit = rf2.units.seconds },
         p_gain = { min = 1, max = 100 },
@@ -68,7 +67,7 @@ local function getEscParameters(callback, callbackParam, data)
         processReply = function(self, buf)
             local signature = rf2.mspHelper.readU8(buf)
             if signature ~= 115 then
-                rf2.print("warning: Invalid ESC signature: " .. signature)
+                --rf2.print("warning: Invalid ESC signature: " .. signature)
                 return
             end
             data.esc_signature = signature
@@ -95,7 +94,7 @@ local function getEscParameters(callback, callbackParam, data)
             data.starting_torque.value = rf2.mspHelper.readU8(buf)
             data.response_speed.value = rf2.mspHelper.readU8(buf)
             data.buzzer_volume.value = rf2.mspHelper.readU8(buf)
-            data.current_gain.value = rf2.mspHelper.readU8(buf)
+            data.current_gain.value = rf2.mspHelper.readU8(buf) - 20
             data.fan_control.value = rf2.mspHelper.readU8(buf)
             data.soft_start.value = rf2.mspHelper.readU8(buf)
             data.p_gain.value = getUInt(buf, 2)
@@ -189,7 +188,7 @@ local function setEscParameters(data)
     rf2.mspHelper.writeU8(message.payload, data.starting_torque.value)
     rf2.mspHelper.writeU8(message.payload, data.response_speed.value)
     rf2.mspHelper.writeU8(message.payload, data.buzzer_volume.value)
-    rf2.mspHelper.writeU8(message.payload, data.current_gain.value)
+    rf2.mspHelper.writeU8(message.payload, data.current_gain.value + 20)
     rf2.mspHelper.writeU8(message.payload, data.fan_control.value)
     rf2.mspHelper.writeU8(message.payload, data.soft_start.value)
     setUInt(message.payload, data.p_gain.value, 2)
