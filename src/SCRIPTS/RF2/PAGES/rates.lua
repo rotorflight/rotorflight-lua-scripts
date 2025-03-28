@@ -153,10 +153,6 @@ return {
         rebuildForm(self)
     end,
 
-    postLoad = function(self)
-        mspStatus.getStatus(self.onProcessedMspStatus, self)
-    end,
-
     timer = function(self)
         if profileAdjustmentTS and rf2.clock() - profileAdjustmentTS > 0.35 then
             rf2.reloadPage()

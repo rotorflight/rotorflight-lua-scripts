@@ -107,10 +107,6 @@ return {
     fields      = fields,
     profileSwitcher = profileSwitcher,
 
-    postLoad = function(self)
-        self.profileSwitcher.getStatus(self)
-    end,
-
     timer = function(self)
         self.profileSwitcher.checkStatus(self)
     end,

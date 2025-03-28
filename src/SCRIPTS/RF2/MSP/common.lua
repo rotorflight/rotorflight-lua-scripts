@@ -114,7 +114,7 @@ local function mspReceivedReply(payload)
     mspStarted = false
     -- check CRC
     if mspRxCRC ~= payload[idx] and version == 0 then
-		rf2.print("  mspReceivedReply:  payload checksum incorrect, message failed!")
+		--rf2.print("  mspReceivedReply:  payload checksum incorrect, message failed!")
         --rf2.print("    Calculated mspRxCRC:  0x"..string.format("%X", mspRxCRC))
         --rf2.print("    CRC from payload:     0x"..string.format("%X", payload[idx]))
         return nil
