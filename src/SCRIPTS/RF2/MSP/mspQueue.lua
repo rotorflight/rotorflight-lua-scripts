@@ -16,7 +16,7 @@ function MspQueueController:isProcessed()
     return not self.currentMessage and #self.messageQueue == 0
 end
 
---[[
+--[
 function joinTableItems(table, delimiter)
     if table == nil or #table == 0 then return "" end
     delimiter = delimiter or ""
@@ -76,6 +76,7 @@ function MspQueueController:processQueue()
         mspProcessTxQ()
         cmd, buf, err = mspPollReply()
     else
+        rf2.print("Sending  cmd "..self.currentMessage.command..": {" .. joinTableItems(self.currentMessage.payload, ", ") .. "}")
         if not self.currentMessage.simulatorResponse then
             --rf2.print("No simulator response for command "..tostring(self.currentMessage.command))
             self.currentMessage = nil

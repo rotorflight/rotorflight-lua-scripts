@@ -72,7 +72,6 @@ local function getEscParameters(callback, callbackParam, data)
                 rf2.print("warning: Invalid ESC signature: " .. signature)
                 return
             end
-            data.buf = buf
             data.esc_signature = signature
             data.command = rf2.mspHelper.readU8(buf)
             data.esc_type_name = rf2.mspHelper.readText(buf, 32)
