@@ -40,6 +40,8 @@ rf2 = {
         degrees = del and "°" or "@", -- OpenTX uses @
         herz = " Hz",
         seconds = " s",
+        volt = "V",
+        celsius = " C"
     },
 
     --[[
