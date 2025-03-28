@@ -17,7 +17,7 @@ local updateSelectedServoConfiguration = false
 local overrideAllServos = false
 
 local  function setValues(servoIndex)
-    fields[1].value = servoIndex
+    fields[1].data.value = servoIndex
     fields[2].data = servoConfigs[servoIndex].mid
     fields[3].data = servoConfigs[servoIndex].min
     fields[4].data = servoConfigs[servoIndex].max
@@ -30,7 +30,7 @@ end
 -- Field event functions
 
 local function onChangeServo(field, page)
-    selectedServoIndex = field.value
+    selectedServoIndex = field.data.value
     rf2.lastChangedServo = selectedServoIndex
     setValues(selectedServoIndex)
 end
@@ -66,7 +66,7 @@ local function onClickOverride(field, page)
     end
 end
 
-fields[1] = { t = "Servo",      x = x,          y = incY(lineSpacing), sp = x + sp, min = 0, max = 7, table = { [0] = "ELEVATOR", "CYCL L", "CYCL R", "TAIL", "5", "6", "7", "8" }, postEdit = onChangeServo }
+fields[1] = { t = "Servo",      x = x,          y = incY(lineSpacing), sp = x + sp, data = { min = 0, max = 7, table = { [0] = "ELEVATOR", "CYCL L", "CYCL R", "TAIL", "5", "6", "7", "8" } }, postEdit = onChangeServo }
 fields[2] = { t = "Center",     x = x + indent, y = incY(lineSpacing), sp = x + sp, id = "servoMid", preEdit = onPreEditCenter, change = onChangeCenter, postEdit = onPostEditCenter }
 fields[3] = { t = "Min",        x = x + indent, y = incY(lineSpacing), sp = x + sp, id = "servoMin" }
 fields[4] = { t = "Max",        x = x + indent, y = incY(lineSpacing), sp = x + sp, id = "servoMax" }
@@ -81,7 +81,7 @@ local function receivedServoConfigurations(page, configs)
     servoConfigs = configs
     selectedServoIndex = rf2.lastChangedServo or 0
     setValues(selectedServoIndex)
-    page.fields[1].max = #configs
+    page.fields[1].data.max = #configs
     rf2.lcdNeedsInvalidate = true
     page.isReady = true
 end
