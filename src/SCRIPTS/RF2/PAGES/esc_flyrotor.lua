@@ -13,20 +13,6 @@ local fields = {}
 local mspEscFlyrotor = "mspEscFlyrotor"
 local escParameters = rf2.useApi(mspEscFlyrotor).getDefaults()
 
-function getUInt(page, vals)
-    local v = 0
-    for idx = 1, #vals do
-        local raw_val = page.values[vals[idx] + 2] or 0
-        raw_val = bit32.lshift(raw_val, (idx-1)*8)
-        v = bit32.bor(v, raw_val)
-    end
-    return v
-end
-
-local function getPageValue(page, index)
-    return page.values[2 + index]
-end
-
 labels[#labels + 1] = { t = "ESC not ready, waiting...", x = x,          y = incY(lineSpacing) }
 labels[#labels + 1] = { t = "---",                       x = x + indent, y = incY(lineSpacing), bold = false }
 labels[#labels + 1] = { t = "---",                       x = x + indent, y = incY(lineSpacing), bold = false }
