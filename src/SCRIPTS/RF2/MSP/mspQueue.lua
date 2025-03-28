@@ -105,7 +105,7 @@ function MspQueueController:processQueue()
         if self.currentMessage.postSendDelay then return end
         self:handleReply()
     elseif self.maxRetries >= 0 and self.retryCount > self.maxRetries then
-        rf2.print("Max retries reached, aborting queue")
+        rf2.print("Max retries reached(%s), aborting queue", self.maxRetries)
         if self.currentMessage.errorHandler then
             self.currentMessage:errorHandler()
         end
