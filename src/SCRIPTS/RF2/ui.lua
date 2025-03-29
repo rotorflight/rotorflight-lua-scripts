@@ -110,7 +110,8 @@ rf2.settingsSaved = function()
                     else
                         rf2.displayMessage("Save error", "Make sure your heli\nis disarmed.")
                     end
-                end
+                end,
+                simulatorResponse = {}
             }
             rf2.mspQueue:add(mspEepromWrite)
         end

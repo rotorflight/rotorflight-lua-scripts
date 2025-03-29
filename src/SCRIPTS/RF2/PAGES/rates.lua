@@ -1,8 +1,6 @@
 --rf2.showMemoryUsage(">>>>> PAGE LOAD <<<<<<")
 local template = assert(rf2.loadScript(rf2.radio.template))()
 --rf2.showMemoryUsage("after template")
-local mspSetProfile = assert(rf2.loadScript("MSP/mspSetProfile.lua"))()
---rf2.showMemoryUsage("after mspSetProfile")
 local mspStatus = assert(rf2.loadScript("MSP/mspStatus.lua"))()
 --rf2.showMemoryUsage("after mspStatus")
 local margin = template.margin
@@ -17,7 +15,6 @@ local y = yMinLim - lineSpacing
 local function incY(val) y = y + val return y end
 local labels = {}
 local fields = {}
---rf2.showMemoryUsage("before useApi(mspRcTuning)")
 local rcTuning = rf2.useApi("mspRcTuning").getDefaults()
 --rf2.showMemoryUsage("after getDefaults")
 collectgarbage()
@@ -29,7 +26,7 @@ local startEditing = function(field, page)
 end
 
 local endRateEditing = function(field, page)
-    mspSetProfile.setRateProfile(field.data.value, function() rf2.reloadPage() end, nil)
+    rf2.useApi("mspSetProfile").setRateProfile(field.data.value, function() rf2.reloadPage() end, nil)
 end
 
 local function copyProfile(field, page)
@@ -95,23 +92,6 @@ local function buildForm()
     fields[14] = { t = "Current rate profile",            x = x,          y = incY(lineSpacing), sp = x + sp * 1.17, data = { min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = startEditing, postEdit = endRateEditing }
     fields[15] = { t = "Destination profile",             x = x,          y = incY(lineSpacing), sp = x + sp * 1.17, data = { min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } } }
     fields[#fields + 1] = { t = "[Copy Current to Dest]", x = x + indent, y = incY(lineSpacing), preEdit = copyProfile }
-
-    --rf2.showMemoryUsage("Roll dynamics")
-    local responseTime = "Response time"
-    local maxAcceleration = "Max acceleration"
-    incY(lineSpacing * 0.5)
-    labels[#labels + 1] = { t = "Roll Dynamics",       x = x,          y = incY(lineSpacing) }
-    fields[#fields + 1] = { t = responseTime,          x = x + indent, y = incY(lineSpacing), sp = x + sp, data = rcTuning.roll_response_time }
-    fields[#fields + 1] = { t = maxAcceleration,       x = x + indent, y = incY(lineSpacing), sp = x + sp, data = rcTuning.roll_accel_limit }
-    labels[#labels + 1] = { t = "Pitch Dynamics",      x = x,          y = incY(lineSpacing) }
-    fields[#fields + 1] = { t = responseTime,          x = x + indent, y = incY(lineSpacing), sp = x + sp, data = rcTuning.pitch_response_time }
-    fields[#fields + 1] = { t = maxAcceleration,       x = x + indent, y = incY(lineSpacing), sp = x + sp, data = rcTuning.pitch_accel_limit }
-    labels[#labels + 1] = { t = "Yaw Dynamics",        x = x,          y = incY(lineSpacing) }
-    fields[#fields + 1] = { t = responseTime,          x = x + indent, y = incY(lineSpacing), sp = x + sp, data = rcTuning.yaw_response_time }
-    fields[#fields + 1] = { t = maxAcceleration,       x = x + indent, y = incY(lineSpacing), sp = x + sp, data = rcTuning.yaw_accel_limit }
-    labels[#labels + 1] = { t = "Collective Dynamics", x = x,          y = incY(lineSpacing) }
-    fields[#fields + 1] = { t = responseTime,          x = x + indent, y = incY(lineSpacing), sp = x + sp, data = rcTuning.collective_response_time }
-    fields[#fields + 1] = { t = maxAcceleration,       x = x + indent, y = incY(lineSpacing), sp = x + sp, data = rcTuning.collective_accel_limit }
     --rf2.showMemoryUsage("after buildform")
 end
 

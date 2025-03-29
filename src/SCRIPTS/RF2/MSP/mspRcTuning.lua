@@ -35,6 +35,9 @@ local function getDefaults()
         defaults.yaw_setpoint_boost_cutoff = { min = 0, max = 250 }
         defaults.collective_setpoint_boost_gain = { min = 0, max = 250 }
         defaults.collective_setpoint_boost_cutoff = { min = 0, max = 250 }
+        defaults.yaw_dynamic_ceiling_gain = { min = 0, max = 250 }
+        defaults.yaw_dynamic_deadband_gain = { min = 0, max = 250 }
+        defaults.yaw_dynamic_deadband_filter = { min = 0, max = 250, scale = 10 }
     end
 
     defaults.columnHeaders = { "", "", "", "", "", "" }
@@ -90,10 +93,13 @@ local function getRcTuning(callback, callbackParam, data)
                 data.yaw_setpoint_boost_cutoff.value = rf2.mspHelper.readU8(buf)
                 data.collective_setpoint_boost_gain.value = rf2.mspHelper.readU8(buf)
                 data.collective_setpoint_boost_cutoff.value = rf2.mspHelper.readU8(buf)
+                data.yaw_dynamic_ceiling_gain.value = rf2.mspHelper.readU8(buf)
+                data.yaw_dynamic_deadband_gain.value = rf2.mspHelper.readU8(buf)
+                data.yaw_dynamic_deadband_filter.value = rf2.mspHelper.readU8(buf)
             end
             callback(callbackParam, data)
         end,
-        simulatorResponse = { 4, 18, 25, 32, 20, 0, 0, 18, 25, 32, 20, 0, 0, 32, 50, 45, 10, 0, 0, 56, 0, 56, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+        simulatorResponse = { 4, 18, 25, 32, 20, 0, 0, 18, 25, 32, 20, 0, 0, 32, 50, 45, 10, 0, 0, 56, 0, 56, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 30, 30, 60 },
     }
     rf2.mspQueue:add(message)
 end
@@ -134,6 +140,9 @@ local function setRcTuning(data)
         rf2.mspHelper.writeU8(message.payload, data.yaw_setpoint_boost_cutoff.value)
         rf2.mspHelper.writeU8(message.payload, data.collective_setpoint_boost_gain.value)
         rf2.mspHelper.writeU8(message.payload, data.collective_setpoint_boost_cutoff.value)
+        rf2.mspHelper.writeU8(message.payload, data.yaw_dynamic_ceiling_gain.value)
+        rf2.mspHelper.writeU8(message.payload, data.yaw_dynamic_deadband_gain.value)
+        rf2.mspHelper.writeU8(message.payload, data.yaw_dynamic_deadband_filter.value)
     end
     rf2.mspQueue:add(message)
 end
