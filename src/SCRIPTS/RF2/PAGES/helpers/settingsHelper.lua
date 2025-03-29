@@ -57,7 +57,7 @@ end
 
 local function loadSettings()
     local settings, loadErr = loadTable(rf2.baseDir .. "settings.lua") or {}
-    if loadErr then rf2.print(loadErr) end
+    --if loadErr then rf2.print(loadErr) end
     return addDirtyTrackingToTable(settings)
 end
 
@@ -65,7 +65,7 @@ local function saveSettings(settings)
     if settings:isDirty() then
         local originalTable = getmetatable(settings).__index or settings
         local saveErr = saveTable(originalTable, rf2.baseDir .."settings.lua")
-        if saveErr then rf2.print(saveErr) end
+        --if saveErr then rf2.print(saveErr) end
     end
 end
 

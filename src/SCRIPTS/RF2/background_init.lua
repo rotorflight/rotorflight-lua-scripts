@@ -123,7 +123,7 @@ end
 
 local queueInitialized = false
 local function initializeQueue()
-    rf2.print("Initializing MSP queue")
+    --rf2.print("Initializing MSP queue")
 
     rf2.mspQueue.maxRetries = -1       -- retry indefinitely
 
@@ -141,7 +141,7 @@ local function initializeQueue()
             end
 
             if rf2.apiVersion >= 12.07 then
-                rf2.useApi("mspPilotConfig").getPilotConfig(onPilotConfigReceived)
+                rf2.useApi("mspPilotConfig").read(onPilotConfigReceived)
 
                 if crossfireTelemetryPush() then
                     rf2.useApi("mspTelemetryConfig").getTelemetryConfig(
@@ -154,7 +154,7 @@ local function initializeQueue()
             rf2.useApi("mspSetRtc").setRtc(
                 function()
                     playTone(1600, 300, 0, PLAY_BACKGROUND)
-                    rf2.print("RTC set")
+                    --rf2.print("RTC set")
                     rf2.mspQueue.maxRetries = rf2.protocol.maxRetries
                     initializationDone = true
                 end)

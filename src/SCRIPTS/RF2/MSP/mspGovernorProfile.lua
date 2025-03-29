@@ -1,4 +1,25 @@
-local function getGovernorProfile(data, callback, callbackParam)
+local function getDefaults()
+    local defaults = {}
+    defaults.headspeed = { value = nil, min = 0, max = 50000, mult = 10 }
+    defaults.gain = { value = nil, min = 0, max = 250 }
+    defaults.p_gain = { value = nil, min = 0, max = 250 }
+    defaults.i_gain = { value = nil, min = 0, max = 250 }
+    defaults.d_gain = { value = nil, min = 0, max = 250 }
+    defaults.f_gain = { value = nil, min = 0, max = 250 }
+    defaults.tta_gain = { value = nil, min = 0, max = 250 }
+    defaults.tta_limit = { value = nil, min = 0, max = 250 }
+    defaults.yaw_ff_weight = { value = nil, min = 0, max = 250 }
+    defaults.cyclic_ff_weight = { value = nil, min = 0, max = 250 }
+    defaults.collective_ff_weight = { value = nil, min = 0, max = 250 }
+    defaults.max_throttle = { value = nil, min = 0, max = 100 }
+    if rf2.apiVersion >= 12.07 then
+        defaults.min_throttle = { value = nil, min = 0, max = 100 }
+    end
+    return defaults
+end
+
+local function getGovernorProfile(callback, callbackParam, data)
+    data = data or getDefaults()
     local message = {
         command = 148, -- MSP_GOVERNOR_PROFILE
         processReply = function(self, buf)
@@ -18,7 +39,7 @@ local function getGovernorProfile(data, callback, callbackParam)
             if rf2.apiVersion >= 12.07 then
                 data.min_throttle.value = rf2.mspHelper.readU8(buf)
             end
-            callback(callbackParam)
+            callback(callbackParam, data)
         end,
         simulatorResponse = { 208, 7, 100, 10, 125, 5, 20, 0, 20, 10, 40, 100, 100, 10 }
     }
@@ -47,26 +68,6 @@ local function setGovernorProfile(data)
         rf2.mspHelper.writeU8(message.payload, data.min_throttle.value)
     end
     rf2.mspQueue:add(message)
-end
-
-local function getDefaults()
-    local defaults = {}
-    defaults.headspeed = { value = nil, min = 0, max = 50000, mult = 10 }
-    defaults.gain = { value = nil, min = 0, max = 250 }
-    defaults.p_gain = { value = nil, min = 0, max = 250 }
-    defaults.i_gain = { value = nil, min = 0, max = 250 }
-    defaults.d_gain = { value = nil, min = 0, max = 250 }
-    defaults.f_gain = { value = nil, min = 0, max = 250 }
-    defaults.tta_gain = { value = nil, min = 0, max = 250 }
-    defaults.tta_limit = { value = nil, min = 0, max = 250 }
-    defaults.yaw_ff_weight = { value = nil, min = 0, max = 250 }
-    defaults.cyclic_ff_weight = { value = nil, min = 0, max = 250 }
-    defaults.collective_ff_weight = { value = nil, min = 0, max = 250 }
-    defaults.max_throttle = { value = nil, min = 0, max = 100 }
-    if rf2.apiVersion >= 12.07 then
-        defaults.min_throttle = { value = nil, min = 0, max = 100 }
-    end
-    return defaults
 end
 
 return {

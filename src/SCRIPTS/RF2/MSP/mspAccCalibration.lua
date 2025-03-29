@@ -3,7 +3,7 @@ local function calibrate(callback, callbackParam)
     {
         command = 205, -- MSP_ACC_CALIBRATION
         processReply = function(self, buf)
-            rf2.print("Accelerometer calibrated.")
+            --rf2.print("Accelerometer calibrated.")
             if callback then callback(callbackParam) end
         end,
         simulatorResponse = {}
