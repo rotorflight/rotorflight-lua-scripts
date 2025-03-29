@@ -1,5 +1,4 @@
 local template = assert(rf2.loadScript(rf2.radio.template))()
-local mspSetProfile = rf2.useApi("mspSetProfile")
 local mspStatus = rf2.useApi("mspStatus")
 local margin = template.margin
 local indent = template.indent
@@ -24,7 +23,7 @@ local startEditing = function(field, page)
 end
 
 local endPidEditing = function(field, page)
-    mspSetProfile.setPidProfile(field.data.value, function() rf2.reloadPage() end, nil)
+    rf2.useApi("mspSetProfile").setPidProfile(field.data.value, function() rf2.reloadPage() end, nil)
 end
 
 local function copyProfile(field, page)
