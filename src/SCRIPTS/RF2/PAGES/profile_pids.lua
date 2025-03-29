@@ -108,7 +108,7 @@ return {
         rf2.useApi("mspPidTuning").write(pids)
         rf2.settingsSaved()
     end,
-    title       = "PIDs",
+    title       = "PID Gains",
     reboot      = false,
     eepromWrite = true,
     labels      = labels,

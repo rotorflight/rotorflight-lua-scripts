@@ -292,7 +292,7 @@ local function drawScreen()
             lcd.drawText(f.sp or f.x, y, val, valueOptions)
         end
     end
-    drawScreenTitle("Rotorflight / "..Page.title)
+    drawScreenTitle(Page.title)
 end
 
 local function incValue(inc)

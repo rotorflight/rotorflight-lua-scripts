@@ -4,8 +4,9 @@ local settings = assert(rf2.loadScript("PAGES/helpers/settingsHelper.lua"))().lo
 -- Rotorflight pages.
 PageFiles[#PageFiles + 1] = { title = "Status", script = "status.lua" }
 PageFiles[#PageFiles + 1] = { title = "Rates", script = "rates.lua" }
-PageFiles[#PageFiles + 1] = { title = "Profile - PIDs", script = "pids.lua" }
-PageFiles[#PageFiles + 1] = { title = "Profile - Various", script = "profile.lua" }
+PageFiles[#PageFiles + 1] = { title = "PID Gains", script = "profile_pids.lua" }
+PageFiles[#PageFiles + 1] = { title = "PID Controller", script = "profile_pidcon.lua" }
+PageFiles[#PageFiles + 1] = { title = "Profile - Various", script = "profile_various.lua" }
 PageFiles[#PageFiles + 1] = { title = "Profile - Rescue", script = "profile_rescue.lua" }
 PageFiles[#PageFiles + 1] = { title = "Profile - Governor", script = "profile_governor.lua" }
 PageFiles[#PageFiles + 1] = { title = "Servos", script = "servos.lua" }

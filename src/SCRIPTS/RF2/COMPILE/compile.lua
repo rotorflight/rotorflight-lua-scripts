@@ -1,4 +1,5 @@
 -- ui.lua is quite big and compiling it later might throw an 'out of memory' error
+collectgarbage()
 assert(loadScript("ui.lua", 'c'))
 
 local i = 1
