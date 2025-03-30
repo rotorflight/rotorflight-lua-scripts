@@ -35,6 +35,10 @@ rf2 = {
 
     apiVersion = nil,
 
+    isEdgeTx = function()
+        return del ~= nil
+    end,
+
     units = {
         percentage = "%",
         degrees = del and "°" or "@", -- OpenTX uses @
