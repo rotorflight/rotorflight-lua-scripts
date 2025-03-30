@@ -85,7 +85,7 @@ return {
         rf2.useApi("mspRcTuning").write(rcTuning)
         rf2.settingsSaved()
     end,
-    title       = "Rate dynamics",
+    title       = "Rate Dynamics",
     reboot      = false,
     eepromWrite = true,
     labels      = labels,
