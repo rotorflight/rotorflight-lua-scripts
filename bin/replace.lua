@@ -1,7 +1,7 @@
 -- This script will replace keys with indexes, in order to minimize memory usage.
 
 local mspRcTuningReplacements = {
-    files = { "MSP/mspRcTuning.lua", "MSP/RATES/ACTUAL.lua", "MSP/RATES/BETAFL.lua", "MSP/RATES/KISS.lua", "MSP/RATES/NONE.lua", "MSP/RATES/QUICK.lua", "MSP/RATES/RACEFL.lua", "PAGES/rates.lua" },
+    files = { "MSP/mspRcTuning.lua", "MSP/RATES/ACTUAL.lua", "MSP/RATES/BETAFL.lua", "MSP/RATES/KISS.lua", "MSP/RATES/NONE.lua", "MSP/RATES/QUICK.lua", "MSP/RATES/RACEFL.lua", "PAGES/rates.lua", "PAGES/rate_dynamics.lua" },
 
     { ".roll_rcRates", "[0]" },
     { ".roll_rcExpo", "[1]" },
@@ -36,12 +36,15 @@ local mspRcTuningReplacements = {
     { ".yaw_setpoint_boost_cutoff", "[25]" },
     { ".collective_setpoint_boost_gain", "[26]" },
     { ".collective_setpoint_boost_cutoff", "[27]" },
+    { ".yaw_dynamic_ceiling_gain", "[28]" },
+    { ".yaw_dynamic_deadband_gain", "[29]" },
+    { ".yaw_dynamic_deadband_filter", "[30]" },
 
     { "simulatorResponse = {", "--simulatorResponse = {"}
 }
 
 local mspPidTuningReplacements = {
-    files = { "MSP/mspPidTuning.lua", "PAGES/pids.lua" },
+    files = { "MSP/mspPidTuning.lua", "PAGES/profile_pids.lua" },
 
     { ".roll_p", "[0]" },
     { ".roll_i", "[1]" },
@@ -64,7 +67,7 @@ local mspPidTuningReplacements = {
 }
 
 local mspPidProfileReplacements = {
-    files = { "MSP/mspPidProfile.lua", "PAGES/profile.lua" },
+    files = { "MSP/mspPidProfile.lua", "PAGES/profile_various.lua", "PAGES/profile_pidcon.lua" },
 
     { ".pid_mode", "[0]" },
     { ".error_decay_time_ground", "[1]" },
