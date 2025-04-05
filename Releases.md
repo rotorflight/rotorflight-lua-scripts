@@ -1,6 +1,8 @@
 # 2.2.0-RC1
 
-This is the 2.2.0 release of the *Rotorflight Lua Scripts for EdgeTX and OpenTX*.
+This is the *first Release Candidate* of the *Rotorflight Lua Scripts for EdgeTX and OpenTX* for RF 2.2.0.
+
+**NOTE:** The final 2.2.0 version will be released after a few release candidates. Please don't use RCs once the final release is out.
 
 ## Downloads
 
@@ -14,10 +16,16 @@ The download locations are:
 
 ## Notes
 
-- Rotorflight setup instructions can be found on the Rotorflight website [www.rotorflight.org](https://www.rotorflight.org/).
-- Rotorflight 2.2 *is* backward compatible with Rotorflight 2.0 and 2.1. You *can* load your configuration dump from Rotorflight 2.0 or 2.1 into 2.2.
-- If updating from Rotorflight 1, please setup your helicopter from scratch. Follow the instructions on the website.
-- As always, please double check your configuration on the bench before flying.
+Rotorflight setup instructions can be found on the Rotorflight website [www.rotorflight.org](https://www.rotorflight.org/).
+
+## rf2bg
+
+The `rf2bg` background script will do a couple of things:
+- Set the clock on the flight controller, so your log files have the correct timestamp.
+- Enable CRSF/ELRS custom telemetry, if the model is configured to use that.
+- Tell you what adjustment you just made, if any.
+
+If you want to use any of these features, make sure you've defined and enabled a special function running `rf2bg`, with *Repeat* set to *On*.
 
 ## Changes from 2.1.0
 
