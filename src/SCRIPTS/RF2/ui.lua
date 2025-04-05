@@ -245,7 +245,7 @@ local function drawScreen()
     local yMaxLim = rf2.radio.yMaxLimit
     local currentFieldY = Page.fields[currentField].y
     local textOptions = rf2.radio.textSize + globalTextOptions
-    local boldTextOptions = rf2.isEdgeTx() and (BOLD + TEXT_COLOR) or textOptions
+    local boldTextOptions = (rf2.isEdgeTx() and TEXT_COLOR and BOLD + TEXT_COLOR) or textOptions
     if currentFieldY <= Page.fields[1].y then
         pageScrollY = 0
     elseif currentFieldY - pageScrollY <= yMinLim then
