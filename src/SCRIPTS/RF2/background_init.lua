@@ -3,6 +3,7 @@ local crsfCustomTelemetryEnabled = false
 
 local settingsHelper = assert(rf2.loadScript(rf2.baseDir.."PAGES/helpers/settingsHelper.lua"))()
 local autoSetName = settingsHelper.loadSettings().autoSetName == 1 or false
+local fallbackModelName = "ROTORFLIGHT"
 settingsHelper = nil
 
 local pilotConfigSetMagic = -765
@@ -135,7 +136,11 @@ local function initializeQueue()
                 rf2.useApi("mspName").getModelName(
                     function(_, name)
                         local info = model.getInfo()
-                        info.name = name
+                        if name and #name > 0 then
+                            info.name = name
+                        else
+                            info.name = fallbackModelName
+                        end
                         model.setInfo(info)
                     end)
             end
@@ -168,6 +173,12 @@ local function initialize(modelIsConnected)
     end
 
     if not modelIsConnected then
+        if autoSetName then
+            local info = model.getInfo()
+            info.name = fallbackModelName
+            model.setInfo(info)
+        end
+
         return false
     end
 
