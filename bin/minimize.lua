@@ -1,7 +1,18 @@
 -- This script will replace keys with indexes, in order to minimize memory usage.
+print("Minimizing script memory usage...")
 
 local mspRcTuningReplacements = {
-    files = { "MSP/mspRcTuning.lua", "MSP/RATES/ACTUAL.lua", "MSP/RATES/BETAFL.lua", "MSP/RATES/KISS.lua", "MSP/RATES/NONE.lua", "MSP/RATES/QUICK.lua", "MSP/RATES/RACEFL.lua", "PAGES/rates.lua", "PAGES/rate_dynamics.lua" },
+    files = {
+        "SCRIPTS/RF2/MSP/mspRcTuning.lua",
+        "SCRIPTS/RF2/MSP/RATES/ACTUAL.lua",
+        "SCRIPTS/RF2/MSP/RATES/BETAFL.lua",
+        "SCRIPTS/RF2/MSP/RATES/KISS.lua",
+        "SCRIPTS/RF2/MSP/RATES/NONE.lua",
+        "SCRIPTS/RF2/MSP/RATES/QUICK.lua",
+        "SCRIPTS/RF2/MSP/RATES/RACEFL.lua",
+        "SCRIPTS/RF2/PAGES/rates.lua",
+        "SCRIPTS/RF2/PAGES/rate_dynamics.lua"
+    },
 
     { ".roll_rcRates", "[0]" },
     { ".roll_rcExpo", "[1]" },
@@ -44,7 +55,7 @@ local mspRcTuningReplacements = {
 }
 
 local mspPidTuningReplacements = {
-    files = { "MSP/mspPidTuning.lua", "PAGES/profile_pids.lua" },
+    files = { "SCRIPTS/RF2/MSP/mspPidTuning.lua", "SCRIPTS/RF2/PAGES/profile_pids.lua" },
 
     { ".roll_p", "[0]" },
     { ".roll_i", "[1]" },
@@ -67,7 +78,7 @@ local mspPidTuningReplacements = {
 }
 
 local mspPidProfileReplacements = {
-    files = { "MSP/mspPidProfile.lua", "PAGES/profile_various.lua", "PAGES/profile_pidcon.lua" },
+    files = { "SCRIPTS/RF2/MSP/mspPidProfile.lua", "SCRIPTS/RF2/PAGES/profile_various.lua", "SCRIPTS/RF2/PAGES/profile_pidcon.lua" },
 
     { ".pid_mode", "[0]" },
     { ".error_decay_time_ground", "[1]" },
@@ -117,11 +128,10 @@ local mspPidProfileReplacements = {
 
 function replace(r)
     for _, filename in ipairs(r.files) do
-        print("Opening ".. "../src/SCRIPTS/RF2/"..filename)
-        local input_file = io.open("../src/SCRIPTS/RF2/"..filename, "r")
+        --print("Opening " .. filename)
+        local input_file = io.open(filename, "r")
         if input_file then
-            --local temp_file = io.open(filename .. ".tmp", "w") -- Temporary file to store changes
-            local temp_file = io.open(filename, "w") -- Temporary file to store changes
+            local temp_file = io.open(filename .. ".tmp", "w") -- Temporary file to store changes
 
             for line in input_file:lines() do
                 local new_line = line
@@ -135,8 +145,8 @@ function replace(r)
             temp_file:close()
 
             -- Replace original file with the updated file
-            --os.remove(filename)
-            --os.rename(filename .. ".tmp", filename)
+            os.remove(filename)
+            os.rename(filename .. ".tmp", filename)
 
             print("Updated " .. filename)
         else
