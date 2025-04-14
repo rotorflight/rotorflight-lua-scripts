@@ -478,6 +478,7 @@ local function run_ui(event)
             Page.timer(Page)
         end
         if not Page then
+            rf2.mspQueue:clear()
             collectgarbage()
             --rf2.showMemoryUsage("before loading page")
             Page = assert(rf2.loadScript("PAGES/"..PageFiles[currentPage].script))()
