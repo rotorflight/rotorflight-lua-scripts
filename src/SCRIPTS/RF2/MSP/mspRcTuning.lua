@@ -99,7 +99,30 @@ local function getRcTuning(callback, callbackParam, data)
             end
             callback(callbackParam, data)
         end,
-        simulatorResponse = { 4, 18, 25, 32, 20, 0, 0, 18, 25, 32, 20, 0, 0, 32, 50, 45, 10, 0, 0, 56, 0, 56, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 30, 30, 60 },
+        simulatorResponse = {
+             4,     -- Rate Type (e.g., NONE, BETAFL, RACEFL, etc.)
+            18,     -- roll_rcRates
+            25,     -- roll_rcExpo
+            32,     -- roll_rates
+            20,     -- roll_response_time
+            0,0,    -- roll_accel_limit
+            18,     -- pitch_rcRates
+            25,     -- pitch_rcExpo
+            32,     -- pitch_rates
+            20,     -- pitch_response_time
+            0, 0,   -- pitch_accel_limit
+            32,     -- yaw_rcRates
+            50,     -- yaw_rcExpo
+            45,     -- yaw_rates
+            10,     -- yaw_response_time
+            0, 0,   -- yaw_accel_limit
+            56,     -- collective_rcRates
+            0,      -- collective_rcExpo
+            56,     -- collective_rates
+            20,     -- collective_response_time
+            0, 0,   -- collective_accel_limit
+            0, 0, 0, 0, 0, 0, 0, 0, 30, 30, 60
+        },
     }
     rf2.mspQueue:add(message)
 end
