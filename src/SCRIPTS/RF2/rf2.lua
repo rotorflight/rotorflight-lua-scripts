@@ -17,7 +17,7 @@ rf2 = {
 
     print = function(str)
         if rf2.runningInSimulator then
-            print(tostring(str))
+            print("RF2: " .. tostring(str))
         else
             --serialWrite(tostring(str).."\r\n") -- 115200 bps
             --rf2.log(str)
@@ -35,8 +35,21 @@ rf2 = {
 
     apiVersion = nil,
 
+    isEdgeTx = function()
+        return del ~= nil
+    end,
+
+    units = {
+        percentage = "%",
+        degrees = del and "°" or "@", -- OpenTX uses @
+        herz = " Hz",
+        seconds = " s",
+        volt = "V",
+        celsius = " C"
+    },
+
     --[[
-    showMemoryUsage = function (remark)
+    showMemoryUsage = function(remark)
         if not rf2.oldMemoryUsage then
             collectgarbage()
             rf2.oldMemoryUsage = collectgarbage("count")
