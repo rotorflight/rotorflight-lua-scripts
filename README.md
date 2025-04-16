@@ -69,7 +69,7 @@ The optional background script `rf2bg.lua` features *Real Time FC Clock synchron
   - RF 2.1+ with CRSF/ELRS custom telemetry: make sure you include the *Adjustment Function* sensor, else the *Adjustment Teller* won't tell you much.
 - *CRSF/ELRS custom telemetry* enables all available Rotorflight telemetry sensors when using ELRS.
 
-The background script can be configured as either a special or global function in EdgeTX/OpenTX. 
+The background script can be configured as either a special or global function in EdgeTX/OpenTX.
 
 In OpenTX, configure your special function as follows to run the script automatically as soon as the model is selected ('ON').
 
@@ -77,7 +77,7 @@ In OpenTX, configure your special function as follows to run the script automati
 
 On EdgeTX, make also sure to set repeat to *On*:
 
-![EdgeTX script setup](https://github.com/user-attachments/assets/eca5d127-bc46-4b27-9653-fb62c2a6d4d2)
+![EdgeTX script setup](https://raw.githubusercontent.com/rotorflight/rotorflight-lua-scripts/master/docs/assets/images/background_script_edgetx.png)
 
 ## Building from source on Linux
 
