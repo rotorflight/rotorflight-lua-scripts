@@ -19,7 +19,7 @@ rf2 = {
     end,
 
     print = function(fmt, ...)
-        local str = string.format("RF2: " .. fmt, ...)
+        local str = string.format("[rf2] " .. fmt, ...)
         if rf2.runningInSimulator then
             print(str)
         elseif rf2.enable_serial_debug==true then
@@ -45,7 +45,6 @@ rf2 = {
     end,
 
     apiVersion = nil,
-    mspQueue = {},
 
     isEdgeTx = function()
         return del ~= nil
@@ -59,6 +58,8 @@ rf2 = {
         volt = "V",
         celsius = " C"
     },
+
+    mspQueue = {},
 
     --[[
     showMemoryUsage = function(remark)

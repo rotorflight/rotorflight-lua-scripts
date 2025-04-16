@@ -249,7 +249,7 @@ local RFSensors_by_pos = {}
 local RFSensors_by_sid = {}
 
 for pos, sensor in pairs(RFSensors3) do
-    rf2.log("RFSensors: %d. %s: %s", sensor.id, sensor.sid, sensor.name)
+    -- rf2.log("RFSensors: %d. %s: %s", sensor.id, sensor.sid, sensor.name)
     RFSensors_by_pos[sensor.id] = sensor
     if sensor.sid ~= nil then
         RFSensors_by_sid[sensor.sid] = sensor
@@ -349,7 +349,7 @@ local function handleCrsfTelem()
     -- all sensors deleted, waiting for discover all CRSF
     rf2.log("CRSF sensors defined, but not the RF2 sensors yet")
     local num_sensors = #crsf_telemetry_sensors
-    rf2.log('bg rf2ltm mspTelemetryConfig: num_sensors: %s', num_sensors);
+    -- rf2.log('bg rf2ltm mspTelemetryConfig: num_sensors: %s', num_sensors);
 
     for i = 1, num_sensors do
         local spos = crsf_telemetry_sensors[i]
@@ -359,16 +359,16 @@ local function handleCrsfTelem()
                 rf2.log("%d. bg rf2ltm: sid: %d, sensor is nil ", i, spos)
                 break
             end
-            rf2.log("rf2ltm: crsf_telemetry_sensors[%d]. sensor_pos_by_msp:%s --> sid:%d, name: %s", i, spos, sensor.sid, sensor.name)
-            rf2.log("%d. setTelemetryValue(sid, 0, 0, val, %s, %s, %s)", i, sensor.unit, sensor.prec, sensor.name)
+            -- rf2.log("rf2ltm: crsf_telemetry_sensors[%d]. sensor_pos_by_msp:%s --> sid:%d, name: %s", i, spos, sensor.sid, sensor.name)
+            -- rf2.log("%d. setTelemetryValue(sid, 0, 0, val, %s, %s, %s)", i, sensor.unit, sensor.prec, sensor.name)
             setTelemetryValue(sensor.sid, 0, 0, 0, sensor.unit, sensor.prec, sensor.name)
         end
     end
 
-    rf2.log('bg rf2ltm defining  *Cnt & *Skp')
+    -- rf2.log('bg rf2ltm defining  *Cnt & *Skp')
     setTelemetryValue(0xEE01, 0, 0, telemetryFrameCount, UNIT_RAW, 0, "*Cnt")
     setTelemetryValue(0xEE02, 0, 0, telemetryFrameSkip, UNIT_RAW, 0, "*Skp")
-    rf2.log('bg rf2ltm sensor definition done.')
+    -- rf2.log('bg rf2ltm sensor definition done.')
 end
 
 return {

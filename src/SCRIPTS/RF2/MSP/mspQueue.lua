@@ -72,13 +72,14 @@ function MspQueueController:processQueue()
             self.lastTimeCommandSent = rf2.clock()
             self.retryCount = self.retryCount + 1
         end
+        -- rf2.print("[msp][cmd:%s] cmd still processing", self.currentMessage.command)
 
         mspProcessTxQ()
         cmd, buf, err = mspPollReply()
     else
         --rf2.print("Sending  cmd "..self.currentMessage.command..": {" .. joinTableItems(self.currentMessage.payload, ", ") .. "}")
         if not self.currentMessage.simulatorResponse then
-            --rf2.print("No simulator response for command "..tostring(self.currentMessage.command))
+            --rf2.print("No simulator response for command: %s", self.currentMessage.command)
             self.currentMessage = nil
             return
         end
@@ -108,7 +109,7 @@ function MspQueueController:processQueue()
         if self.currentMessage.postSendDelay then return end
         self:handleReply()
     elseif self.maxRetries >= 0 and self.retryCount > self.maxRetries then
-        --rf2.print("Max retries reached(%s), aborting queue", self.maxRetries)
+        --rf2.print("Max retries reached (%s), aborting queue", self.maxRetries)
         if self.currentMessage.errorHandler then
             self.currentMessage:errorHandler()
         end
@@ -151,7 +152,7 @@ end
 
 function MspQueueController:add(message, copy)
     if copy then message = deepCopy(message) end
-    --rf2.print("Queueing command "..message.command.." at position "..#self.messageQueue + 1)
+    --rf2.print("[msp][cmd:%s] Queueing command (at position %s)", message.command, #self.messageQueue + 1)
     self.messageQueue[#self.messageQueue + 1] =  message
     return self
 end

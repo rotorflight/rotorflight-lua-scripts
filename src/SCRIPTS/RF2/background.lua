@@ -56,12 +56,14 @@ local function run()
     if customTelemetryTask then
         customTelemetryTask.run()
     end
+
+    return 0
 end
 
 local function runProtected()
     local status, err = pcall(run)
     --if not status then rf2.print(err) end
-    return 0
+    return isInitialized
 end
 
 return runProtected

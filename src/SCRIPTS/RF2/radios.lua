@@ -80,4 +80,4 @@ local supportedRadios =
 local resolution = LCD_W.."x"..LCD_H
 local radio = assert(supportedRadios[resolution], resolution.." not supported")
 
-return radio
+return radio.msp
