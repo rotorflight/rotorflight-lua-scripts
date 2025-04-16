@@ -1,5 +1,4 @@
 local profileSwitcher = {
-    mspSetProfile = assert(rf2.loadScript("MSP/mspSetProfile.lua"))(),
     mspStatus = assert(rf2.loadScript("MSP/mspStatus.lua"))(),
     editing = false,
     profileAdjustmentTS = nil,
@@ -33,13 +32,11 @@ local profileSwitcher = {
     end,
 
     startPidEditing = function(field, page)
-        local self = page.profileSwitcher
-        self.editing = true
+        page.profileSwitcher.editing = true
     end,
 
     endPidEditing = function(field, page)
-        local self = page.profileSwitcher
-        self.mspSetProfile.setPidProfile(field.data.value, function() rf2.reloadPage() end, nil)
+        rf2.useApi("mspSetProfile").setPidProfile(field.data.value, function() rf2.reloadPage() end, nil)
     end
 }
 

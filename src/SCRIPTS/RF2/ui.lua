@@ -1,4 +1,4 @@
-local LUA_VERSION = "2.1.0"
+local LUA_VERSION = "2.2.0-RC1"
 
 local uiStatus =
 {
@@ -60,6 +60,17 @@ rf2.displayMessage = function(title, text)
     displayMessage = { title = title, text = text }
 end
 
+rf2.storeCurrentField = function()
+    rf2.currentField = currentField
+end
+
+rf2.setCurrentField = function()
+    if rf2.currentField then
+        currentField = rf2.currentField
+        rf2.currentField = nil
+    end
+end
+
 local function rebootFc()
     --rf2.print("Attempting to reboot the FC...")
     pageState = pageStatus.rebooting
@@ -72,37 +83,36 @@ local function rebootFc()
     })
 end
 
-local mspEepromWrite =
-{
-    command = 250, -- MSP_EEPROM_WRITE, fails when armed
-    processReply = function(self, buf)
-        if Page.reboot then
-            rebootFc()
-        else
-            invalidatePages()
-        end
-    end,
-    errorHandler = function(self)
-        if rf2.apiVersion >= 12.08 then
-            if not rf2.saveWarningShown then
-                rf2.displayMessage("Save warning", "Settings will be saved\nafter disarming.")
-                rf2.saveWarningShown = true
-            else
-                invalidatePages()
-            end
-        else
-            rf2.displayMessage("Save error", "Make sure your heli\nis disarmed.")
-        end
-    end,
-    simulatorResponse = {}
-}
-
 rf2.settingsSaved = function()
     -- check if this page requires writing to eeprom to save (most do)
     if Page and Page.eepromWrite then
         -- don't write again if we're already responding to earlier page.write()s
         if pageState ~= pageStatus.eepromWrite then
             pageState = pageStatus.eepromWrite
+            local mspEepromWrite =
+            {
+                command = 250, -- MSP_EEPROM_WRITE, fails when armed
+                processReply = function(self, buf)
+                    if Page.reboot then
+                        rebootFc()
+                    else
+                        invalidatePages()
+                    end
+                end,
+                errorHandler = function(self)
+                    if rf2.apiVersion >= 12.08 then
+                        if not rf2.saveWarningShown then
+                            rf2.displayMessage("Save warning", "Settings will be saved\nafter disarming.")
+                            rf2.saveWarningShown = true
+                        else
+                            invalidatePages()
+                        end
+                    else
+                        rf2.displayMessage("Save error", "Make sure your heli\nis disarmed.")
+                    end
+                end,
+                simulatorResponse = {}
+            }
             rf2.mspQueue:add(mspEepromWrite)
         end
     elseif pageState ~= pageStatus.eepromWrite then
@@ -111,66 +121,21 @@ rf2.settingsSaved = function()
     end
 end
 
-local mspSaveSettings =
-{
-    processReply = function(self, buf)
-        rf2.settingsSaved()
-    end
-}
-
 rf2.saveSettings = function()
     if pageState ~= pageStatus.saving then
         pageState = pageStatus.saving
         saveTS = rf2.clock()
-
-        if Page.values then
-            local payload = Page.values
-            if Page.preSave then
-                payload = Page.preSave(Page)
-            end
-            mspSaveSettings.command = Page.write
-            mspSaveSettings.payload = payload
-            mspSaveSettings.simulatorResponse = {}
-            rf2.mspQueue:add(mspSaveSettings)
-        elseif type(Page.write) == "function" then
-            Page.write(Page)
-        end
+        Page.write(Page)
     end
 end
-
-local mspLoadSettings =
-{
-    processReply = function(self, buf)
-        if not Page then return end -- could happen if one returns to the main menu before processReply
-        rf2.print("Page is processing reply for cmd "..tostring(self.command).." len buf: "..#buf.." expected: "..Page.minBytes)
-        Page.values = buf
-        if Page.postRead then
-            if Page.postRead(Page) == -1 then
-                Page.values = nil
-                return
-             end
-        end
-        rf2.dataBindFields()
-        if Page.postLoad then
-            Page.postLoad(Page)
-        end
-    end
-}
 
 rf2.readPage = function()
     collectgarbage()
-
-    if type(Page.read) == "function" then
-        Page.read(Page)
-    else
-        mspLoadSettings.command = Page.read
-        mspLoadSettings.simulatorResponse = Page.simulatorResponse
-        rf2.mspQueue:add(mspLoadSettings)
-    end
+    Page.read(Page)
 end
 
 local function requestPage()
-    if not Page.reqTS or Page.reqTS + 2 <= rf2.clock() then
+    if not Page.reqTS or Page.reqTS + 5 <= rf2.clock() then
         --rf2.print("Requesting page...")
         Page.reqTS = rf2.clock()
         if Page.read then
@@ -199,27 +164,6 @@ local function createPopupMenu()
     end
     popupMenu[#popupMenu + 1] = { t = "Reboot", f = rebootFc }
     popupMenu[#popupMenu + 1] = { t = "Acc Cal", f = function() confirm("CONFIRM/acc_cal.lua") end }
-end
-
-rf2.dataBindFields = function()
-    for i=1,#Page.fields do
-        if #Page.values >= Page.minBytes then
-            local f = Page.fields[i]
-            if f.vals then
-                f.value = 0
-                for idx=1, #f.vals do
-                    local raw_val = Page.values[f.vals[idx]] or 0
-                    raw_val = bit32.lshift(raw_val, (idx-1)*8)
-                    f.value = bit32.bor(f.value, raw_val)
-                end
-                local bits = #f.vals * 8
-                if f.min and f.min < 0 and bit32.btest(f.value, bit32.lshift(1, bits - 1)) then
-                    f.value = f.value - (2 ^ bits)
-                end
-                f.value = f.value/(f.scale or 1)
-            end
-        end
-    end
 end
 
 local function incMax(val, inc, base)
@@ -292,14 +236,16 @@ local function drawMessage(title, message)
 end
 
 local function fieldIsButton(f)
-    return f.t and string.sub(f.t, 1, 1) == "[" and not (f.data or f.value)
+    return f.t and string.sub(f.t, 1, 1) == "[" and not f.data
 end
 
 local function drawScreen()
+    if currentField > #Page.fields then currentField = #Page.fields end
     local yMinLim = rf2.radio.yMinLimit
     local yMaxLim = rf2.radio.yMaxLimit
     local currentFieldY = Page.fields[currentField].y
     local textOptions = rf2.radio.textSize + globalTextOptions
+    local boldTextOptions = (rf2.isEdgeTx() and TEXT_COLOR and BOLD + TEXT_COLOR) or textOptions
     if currentFieldY <= Page.fields[1].y then
         pageScrollY = 0
     elseif currentFieldY - pageScrollY <= yMinLim then
@@ -311,7 +257,7 @@ local function drawScreen()
         local f = Page.labels[i]
         local y = f.y - pageScrollY
         if y >= 0 and y <= LCD_H then
-            lcd.drawText(f.x, y, f.t, textOptions)
+            lcd.drawText(f.x, y, f.t, (not (f.bold == false)) and boldTextOptions or textOptions)
         end
     end
     for i=1,#Page.fields do
@@ -329,20 +275,13 @@ local function drawScreen()
             if type(val) == "number" then
                 if f.data.scale then
                     val = val / f.data.scale
-                else
+                end
+                if (f.data.scale or 1) <= 1 then
                     val = math.floor(val)
                 end
             end
             if f.data.table and f.data.table[val] then
                 val = f.data.table[val]
-            end
-        elseif f.value then
-            val = f.value
-            if type(val) == "number" and not f.scale then
-                val = math.floor(val)
-            end
-            if f.table and f.table[f.value] then
-                val = f.table[f.value]
             end
         end
         local y = f.y - pageScrollY
@@ -352,10 +291,11 @@ local function drawScreen()
             elseif f.t then
                 lcd.drawText(f.x, y, f.t, textOptions)
             end
+            val = val .. ((f.data and f.data.unit) or "")
             lcd.drawText(f.sp or f.x, y, val, valueOptions)
         end
     end
-    drawScreenTitle("Rotorflight / "..Page.title)
+    drawScreenTitle(Page.title)
 end
 
 local function incValue(inc)
@@ -365,16 +305,6 @@ local function incValue(inc)
         local mult = f.data.mult or 1
         f.data.value = clipValue(f.data.value + inc*mult, (f.data.min or 0), (f.data.max or 255))
         f.data.value = math.floor(f.data.value/mult + 0.5)*mult
-    else
-        local scale = f.scale or 1
-        local mult = f.mult or 1
-        f.value = clipValue(f.value + inc*mult/scale, (f.min or 0)/scale, (f.max or 255)/scale)
-        f.value = math.floor(f.value*scale/mult + 0.5)*mult/scale
-        if Page.values then
-            for idx=1, #f.vals do
-                Page.values[f.vals[idx]] = bit32.rshift(math.floor(f.value*scale + 0.5), (idx-1)*8)
-            end
-        end
     end
     if f.change then
         f:change(Page)
@@ -501,7 +431,7 @@ local function run_ui(event)
                 incField(1)
             elseif Page and event == EVT_VIRTUAL_ENTER then
                 local f = Page.fields[currentField]
-                if (Page.isReady or (Page.values and f.vals and Page.values[f.vals[#f.vals]])) and not f.readOnly then
+                if Page.isReady and not f.readOnly then
                     if not fieldIsButton(Page.fields[currentField]) then
                         pageState = pageStatus.editing
                     end
@@ -548,11 +478,14 @@ local function run_ui(event)
             Page.timer(Page)
         end
         if not Page then
+            rf2.mspQueue:clear()
             collectgarbage()
+            --rf2.showMemoryUsage("before loading page")
             Page = assert(rf2.loadScript("PAGES/"..PageFiles[currentPage].script))()
+            --rf2.showMemoryUsage("after loading page")
             collectgarbage()
         end
-        if not(Page.values or Page.isReady) and pageState == pageStatus.display then
+        if not Page.isReady and pageState == pageStatus.display then
             requestPage()
         end
         lcd.clear()

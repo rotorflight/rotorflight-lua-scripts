@@ -5,6 +5,8 @@ local function getStatus(callback, callbackParam)
             local status = {}
             --status.pidCycleTime = rf2.mspHelper.readU16(buf)
             --status.gyroCycleTime = rf2.mspHelper.readU16(buf)
+            buf.offset = 7
+            status.flightModeFlags = rf2.mspHelper.readU32(buf)
             buf.offset = 12
             status.realTimeLoad = rf2.mspHelper.readU16(buf)
             --rf2.print("Real-time load: "..tostring(status.realTimeLoad))

@@ -29,7 +29,7 @@ local function run()
         initTask = initTask or assert(rf2.loadScript("background_init.lua"))()
         local initTaskResult = initTask.run(modelIsConnected)
         if not initTaskResult.isInitialized then
-            rf2.print("Not initialized yet")
+            --rf2.print("Not initialized yet")
             return 0
         end
         rf2.log("bg initTaskResult.crsfCustomTelemetryEnabled: %s", initTaskResult.crsfCustomTelemetryEnabled)
@@ -56,13 +56,12 @@ local function run()
     if customTelemetryTask then
         customTelemetryTask.run()
     end
-
-    return 0
 end
 
 local function runProtected()
     local status, err = pcall(run)
-    if not status then rf2.print(err) end
+    --if not status then rf2.print(err) end
+    return 0
 end
 
 return runProtected

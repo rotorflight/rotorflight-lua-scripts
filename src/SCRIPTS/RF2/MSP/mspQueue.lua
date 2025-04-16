@@ -50,11 +50,18 @@ function MspQueueController:processQueue()
         self.retryCount = 0
     end
 
+    if self.currentMessage.postSendDelay and self.currentMessage.buf then
+        if self.lastTimeCommandSent + self.currentMessage.postSendDelay > rf2.clock() then return end
+        self:handleReply()
+        return
+    end
+
     local cmd, buf, err
     --rf2.print("retryCount: "..self.retryCount)
 
+    local retryDelay = 0.8 + (self.currentMessage.postSendDelay or 0)
     if not rf2.runningInSimulator then
-        if not self.lastTimeCommandSent or self.lastTimeCommandSent + 0.8 < rf2.clock() then
+        if not self.lastTimeCommandSent or (self.lastTimeCommandSent + retryDelay < rf2.clock()) then
             if self.currentMessage.payload then
                 --rf2.print("Sending  cmd "..self.currentMessage.command..": {" .. joinTableItems(self.currentMessage.payload, ", ") .. "}")
                 rf2.protocol.mspWrite(self.currentMessage.command, self.currentMessage.payload)
@@ -69,21 +76,26 @@ function MspQueueController:processQueue()
         mspProcessTxQ()
         cmd, buf, err = mspPollReply()
     else
+        --rf2.print("Sending  cmd "..self.currentMessage.command..": {" .. joinTableItems(self.currentMessage.payload, ", ") .. "}")
         if not self.currentMessage.simulatorResponse then
-            rf2.print("No simulator response for command "..tostring(self.currentMessage.command))
+            --rf2.print("No simulator response for command "..tostring(self.currentMessage.command))
             self.currentMessage = nil
             return
+        end
+        if not self.lastTimeCommandSent or (self.lastTimeCommandSent + retryDelay < rf2.clock()) then
+            self.lastTimeCommandSent = rf2.clock()
         end
         cmd = self.currentMessage.command
         buf = self.currentMessage.simulatorResponse
         err = nil
     end
 
-    if cmd then
-        self.lastTimeCommandSent = nil
-        rf2.print("Received cmd: "..tostring(cmd))
-    end
-    if err then rf2.print("  ERROR flag set!") end
+    --if cmd then
+    --    rf2.print("Received cmd: "..tostring(cmd))
+    --end
+    --if err then
+    --    rf2.print("  ERROR flag set!")
+    --end
 
     -- if cmd == 217 then   -- MSP_ESC_PARAMETERS
     --     buf = self.currentMessage.simulatorResponse
@@ -92,25 +104,35 @@ function MspQueueController:processQueue()
 
     if (cmd == self.currentMessage.command and not err) or (self.currentMessage.command == 68 and self.retryCount == 2) then -- 68 = MSP_REBOOT
         --rf2.log("Received cmd "..cmd..": {" .. joinTableItems(buf, ", ") .. "}")
-        if self.currentMessage.processReply then
-            self.currentMessage:processReply(buf)
-        end
-        self.currentMessage = nil
-        collectgarbage()
+        self.currentMessage.buf = buf
+        if self.currentMessage.postSendDelay then return end
+        self:handleReply()
     elseif self.maxRetries >= 0 and self.retryCount > self.maxRetries then
-        rf2.print("Max retries reached(%s), aborting queue", self.maxRetries)
+        --rf2.print("Max retries reached(%s), aborting queue", self.maxRetries)
         if self.currentMessage.errorHandler then
             self.currentMessage:errorHandler()
         end
         self:clear()
-        collectgarbage()
     end
 end
+
+function MspQueueController:handleReply()
+    --rf2.print("Length of buf: "..tostring(#self.currentMessage.buf))
+    if self.currentMessage.processReply then
+        self.currentMessage:processReply(self.currentMessage.buf)
+    end
+    self.currentMessage = nil
+    self.lastTimeCommandSent = nil
+    collectgarbage()
+end
+
 
 function MspQueueController:clear()
     self.messageQueue = {}
     self.currentMessage = nil
+    self.lastTimeCommandSent = nil
     mspClearTxBuf()
+    collectgarbage()
 end
 
 local function deepCopy(original)
@@ -127,9 +149,9 @@ local function deepCopy(original)
     return copy
 end
 
-function MspQueueController:add(message)
-    message = deepCopy(message)
-    rf2.print("Queueing command "..message.command.." at position "..#self.messageQueue + 1)
+function MspQueueController:add(message, copy)
+    if copy then message = deepCopy(message) end
+    --rf2.print("Queueing command "..message.command.." at position "..#self.messageQueue + 1)
     self.messageQueue[#self.messageQueue + 1] =  message
     return self
 end

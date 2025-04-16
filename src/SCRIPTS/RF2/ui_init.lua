@@ -1,4 +1,4 @@
-local mspApiVersion = assert(rf2.loadScript("MSP/mspApiVersion.lua"))()
+local mspApiVersion = rf2.useApi("mspApiVersion")
 local returnTable = { f = nil, t = "" }
 local apiVersion
 local lastRunTS
