@@ -1,9 +1,10 @@
 -- ui.lua is quite big and compiling it later might throw an 'out of memory' error
 collectgarbage()
-assert(loadScript("ui.lua", 'c'))
+local baseDir = "/SCRIPTS/RF2/"
+assert(loadScript(baseDir.."ui.lua", 'c'))
 
 local i = 1
-local scripts = assert(loadScript("COMPILE/scripts.lua"))
+local scripts = assert(loadScript(baseDir.."COMPILE/scripts.lua"))
 collectgarbage()
 
 local function deleteOrTruncateFile(filepath)
@@ -38,10 +39,10 @@ local function compile()
         collectgarbage()
         return 0
     end
-    local file = io.open("COMPILE/scripts_compiled.lua", 'w')
+    local file = io.open(baseDir.."COMPILE/scripts_compiled.lua", 'w')
     io.write(file, "return true")
     io.close(file)
-    assert(loadScript("COMPILE/scripts_compiled.lua", 'c'))
+    assert(loadScript(baseDir.."COMPILE/scripts_compiled.lua", 'c'))
     return 1
 end
 

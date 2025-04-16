@@ -1,18 +1,27 @@
 local mspHelper = {
-    readU8 = function(buf)
+    readU8 = function(buf, offset)
+        if offset ~= nil then
+            buf.offset = offset
+        end
         local offset = buf.offset or 1
         local value = buf[offset]
         buf.offset = offset + 1
         return value
     end,
-    readU16 = function(buf)
+    readU16 = function(buf, offset)
+        if offset ~= nil then
+            buf.offset = offset
+        end
         local offset = buf.offset or 1
         local value = buf[offset]
         value = bit32.bor(value, bit32.lshift(buf[offset + 1], 8))
         buf.offset = offset + 2
         return value
     end,
-    readU32 = function(buf)
+    readU32 = function(buf, offset)
+        if offset ~= nil then
+            buf.offset = offset
+        end
         local offset = buf.offset or 1
         local value = 0
         for i = 0, 3 do

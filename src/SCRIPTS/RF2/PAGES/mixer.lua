@@ -50,7 +50,7 @@ fields[#fields + 1] = { t = "Coll. trim",               x = x + indent, y = incY
 
 incY(lineSpacing * 0.25)
 labels[#labels + 1] = { t = "Motorised Tail",           x = x,          y = incY(lineSpacing) }
-fields[#fields + 1] = { t = "Motor idle thrott",        x = x + indent, y = incY(lineSpacing), sp = x + sp, data = mixerConfig.tail_motor_idle,       id = "mixerTailMotorIdle" }
+fields[#fields + 1] = { t = "Motor idle thr%",          x = x + indent, y = incY(lineSpacing), sp = x + sp, data = mixerConfig.tail_motor_idle,       id = "mixerTailMotorIdle" }
 fields[#fields + 1] = { t = "Center trim",              x = x + indent, y = incY(lineSpacing), sp = x + sp, data = mixerConfig.tail_center_trim,      id = "mixerTailRotorCenterTrim" }
 
 if rf2.apiVersion >= 12.08 then

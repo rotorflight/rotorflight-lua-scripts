@@ -18,7 +18,12 @@ local function getDataflashSummary(callback, callbackParam)
 
             callback(callbackParam, summary)
         end,
-        simulatorResponse = { 3, 1,0,0,0, 0,4,0,0, 0,3,0,0 }
+        simulatorResponse = {
+            0x03,                   -- Flags: 3 (binary 00000011, indicating ready and supported)
+            0x01,0x00,0x00,0x00,    -- Sectors: 1 (little-endian, 32-bit integer)
+            0x00,0x00,0x40,0x06,    -- Total size: 100 MB (104857600 bytes, little-endian, 32-bit integer)
+            0x00, 0x00, 0x00, 0x05  -- Used size: 80% of total size (83886080 bytes, little-endian, 32-bit integer)
+        }
     }
     rf2.mspQueue:add(message)
 end

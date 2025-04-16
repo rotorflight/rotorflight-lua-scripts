@@ -32,7 +32,7 @@ local supportedProtocols =
 local function getProtocol()
     if supportedProtocols.smartPort.push() ~= nil then
         return supportedProtocols.smartPort
-    elseif supportedProtocols.crsf.push() ~= nil then
+    elseif supportedProtocols.crsf.push() ~= nil or rf2.runningInSimulator then
         return supportedProtocols.crsf
     elseif supportedProtocols.ghst.push() ~= nil then
         return supportedProtocols.ghst

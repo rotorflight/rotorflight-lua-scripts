@@ -53,14 +53,14 @@ local function armingDisableFlagsToString(flags)
     for i = 0, 25 do
         if bit32.band(flags, bit32.lshift(1, i)) ~= 0 then
             if t ~= "" then t = t .. ", " end
-            if i == 0 then t = t .. "No Gyro" end
+            if i == 0 then t = t .. "Gyro not found" end
             if i == 1 then t = t .. "Fail Safe" end
             if i == 2 then t = t .. "RX Fail Safe" end
             if i == 3 then t = t .. "Bad RX Recovery" end
             if i == 4 then t = t .. "Box Fail Safe" end
             if i == 5 then t = t .. "Governor" end
             --if i == 6 then t = t .. "Crash Detected" end
-            if i == 7 then t = t .. "Throttle" end
+            if i == 7 then t = t .. "Throttle not in idle" end
             if i == 8 then t = t .. "Angle" end
             if i == 9 then t = t .. "Boot Grace Time" end
             if i == 10 then t = t .. "No Pre Arm" end
