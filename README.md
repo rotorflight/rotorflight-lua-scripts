@@ -29,8 +29,8 @@ Tutorials, documentation, and flight videos can be found on the [Rotorflight web
   - a Crossfire v2.11 or newer receiver, _or_
   - an ELRS 2.0.1 or newer receiver
 
-> [!IMPORTANT]  
-> If you're using ELRS, make sure to set the baudrate to 921k in the *Hardware* menu of your transmitter.
+> [!IMPORTANT]
+> If you're using ELRS, make sure to set the baudrate to 921k or higher in the *Hardware* menu of your transmitter.
 
 ## Installation
 
@@ -61,17 +61,23 @@ If you copied the files correctly, you can now go into the *Tools* menu on your 
 See the [Lua Scripts page](https://www.rotorflight.org/docs/Tutorial-Setup/Lua-Scripts).
 
 ## Background script
-The optional background script `rf2bg.lua` features *Real Time FC Clock synchronization* and the *Adjustment Teller*. 
+The optional background script `rf2bg.lua` features *Real Time FC Clock synchronization*, the *Adjustment Teller* and *CRSF/ELRS custom telemetry*.
 - RTC synchronization will send the time of the transmitter to the flight controller. The script will beep if RTC synchronization has been completed. Blackbox logs and files created by the FC will now have the correct timestamp.
-- The *Adjustment Teller* will [tell you](https://www.youtube.com/watch?v=rbMiiWhzhqI) what adjustment you just made. It supports all adjustments except profile adjustments. 
+- The *Adjustment Teller* will [tell you](https://www.youtube.com/watch?v=rbMiiWhzhqI) what adjustment you just made. It supports all adjustments except profile adjustments.
   - S.port/F.port: the telemetry sensors 5110 and 5111 should be available. Discover or add them if they aren't.
   - RF 2.0 CRSF: the telemetry sensor FM should be available. Also do a `set crsf_flight_mode_reuse = ADJFUNC` in the CLI and `save`.
-  - RF 2.1 CRSF with custom CRSF/ELRS telemetry: make sure you include the *Adjustment Function* sensor, else the *Adjustment Teller* won't tell you much. 
+  - RF 2.1+ with CRSF/ELRS custom telemetry: make sure you include the *Adjustment Function* sensor, else the *Adjustment Teller* won't tell you much.
+- *CRSF/ELRS custom telemetry* enables all available Rotorflight telemetry sensors when using ELRS.
 
-The background script can be configured as either a special or global function in EdgeTX/OpenTX. The image below illustrates how to set up the background script as a special function. This configuration ensures that the script runs automatically as soon as the model is selected.
+The background script can be configured as either a special or global function in EdgeTX/OpenTX. 
 
-![Background script setup](https://github.com/rotorflight/rotorflight-lua-scripts/assets/34315684/d91c69e3-1bcf-48ce-92bf-4cb9f6e9322e)
+In OpenTX, configure your special function as follows to run the script automatically as soon as the model is selected ('ON').
 
+![OpenTX script setup](https://github.com/rotorflight/rotorflight-lua-scripts/assets/34315684/d91c69e3-1bcf-48ce-92bf-4cb9f6e9322e)
+
+On EdgeTX, make also sure to set repeat to *On*:
+
+![EdgeTX script setup](https://github.com/user-attachments/assets/eca5d127-bc46-4b27-9653-fb62c2a6d4d2)
 
 ## Building from source on Linux
 
