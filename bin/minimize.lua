@@ -186,7 +186,7 @@ local mspPidProfileReplacements = {
     { ".yaw_inertia_precomp_cutoff", "[42]" },
 }
 
-function replace(r)
+local function replace(r)
     for _, filename in ipairs(r.files) do
         --print("Opening " .. filename)
         local input_file = io.open(filename, "r")

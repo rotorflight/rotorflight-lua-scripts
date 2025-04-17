@@ -50,7 +50,7 @@ local function getDefaults()
     }
 end
 
-function getUInt(buf, length)
+local function getUInt(buf, length)
     local offset = buf.offset or 1
     local v = 0
     for i = 0, length - 1 do
@@ -153,7 +153,7 @@ local function getEscParameters(callback, callbackParam, data)
     rf2.mspQueue:add(message)
 end
 
-function setUInt(buf, v, length)
+local function setUInt(buf, v, length)
     for i = 0, length - 1 do
         buf[#buf + 1] = bit32.band(bit32.rshift(v, (length - 1 - i) * 8), 0xFF)
     end
