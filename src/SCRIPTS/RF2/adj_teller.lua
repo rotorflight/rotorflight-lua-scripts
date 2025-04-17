@@ -104,7 +104,7 @@ local function drawTextMultiline(x, y, text, options)
 end
 
 local function getTelemetryId(name)
-    field = getFieldInfo(name)
+    local field = getFieldInfo(name)
     if field then
       return field.id
     else
@@ -217,7 +217,7 @@ local function run()
         timeLastChange = nil
 
         if adjfuncIdChanged then
-            adjfunction = adjfunctions["id"..currentAdjfuncId]
+            local adjfunction = adjfunctions["id"..currentAdjfuncId]
             if adjfunction ~= nil then
                 for index, value in ipairs(adjfunction.wavs) do
                     playFile(rf2.baseDir.."SOUNDS/"..value..".wav")

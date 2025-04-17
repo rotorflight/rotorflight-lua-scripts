@@ -155,7 +155,7 @@ local function getEscTypeName(value)
         [16464]= "YGE Opto 405",
     }
 
-    return escTypes[value] or "YGE ESC (" .. value .. ")"
+    return escTypes[value] or ("YGE ESC (" .. value .. ")")
 end
 
 local function getEscParameters(callback, callbackParam, data)
