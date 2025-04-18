@@ -1,19 +1,19 @@
 local function getDefaults()
     local defaults = {}
-    defaults.headspeed = { value = nil, min = 0, max = 50000, mult = 10 }
+    defaults.headspeed = { value = nil, min = 0, max = 50000, mult = 10, unit = rf2.units.rpm }
     defaults.gain = { value = nil, min = 0, max = 250 }
     defaults.p_gain = { value = nil, min = 0, max = 250 }
     defaults.i_gain = { value = nil, min = 0, max = 250 }
     defaults.d_gain = { value = nil, min = 0, max = 250 }
     defaults.f_gain = { value = nil, min = 0, max = 250 }
     defaults.tta_gain = { value = nil, min = 0, max = 250 }
-    defaults.tta_limit = { value = nil, min = 0, max = 250 }
+    defaults.tta_limit = { value = nil, min = 0, max = 250, unit = rf2.units.percentage }
     defaults.yaw_ff_weight = { value = nil, min = 0, max = 250 }
     defaults.cyclic_ff_weight = { value = nil, min = 0, max = 250 }
     defaults.collective_ff_weight = { value = nil, min = 0, max = 250 }
-    defaults.max_throttle = { value = nil, min = 0, max = 100 }
+    defaults.max_throttle = { value = nil, min = 0, max = 100, unit = rf2.units.percentage }
     if rf2.apiVersion >= 12.07 then
-        defaults.min_throttle = { value = nil, min = 0, max = 100 }
+        defaults.min_throttle = { value = nil, min = 0, max = 100, unit = rf2.units.percentage }
     end
     return defaults
 end

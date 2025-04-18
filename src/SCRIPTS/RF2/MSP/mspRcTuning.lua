@@ -28,16 +28,16 @@ local function getDefaults()
 
     if rf2.apiVersion >= 12.08 then
         defaults.roll_setpoint_boost_gain = { min = 0, max = 250 }
-        defaults.roll_setpoint_boost_cutoff = { min = 0, max = 250 }
+        defaults.roll_setpoint_boost_cutoff = { min = 0, max = 250, unit = rf2.units.herz }
         defaults.pitch_setpoint_boost_gain = { min = 0, max = 250 }
-        defaults.pitch_setpoint_boost_cutoff = { min = 0, max = 250 }
+        defaults.pitch_setpoint_boost_cutoff = { min = 0, max = 250, unit = rf2.units.herz }
         defaults.yaw_setpoint_boost_gain = { min = 0, max = 250 }
-        defaults.yaw_setpoint_boost_cutoff = { min = 0, max = 250 }
+        defaults.yaw_setpoint_boost_cutoff = { min = 0, max = 250, unit = rf2.units.herz }
         defaults.collective_setpoint_boost_gain = { min = 0, max = 250 }
-        defaults.collective_setpoint_boost_cutoff = { min = 0, max = 250 }
+        defaults.collective_setpoint_boost_cutoff = { min = 0, max = 250, unit = rf2.units.herz }
         defaults.yaw_dynamic_ceiling_gain = { min = 0, max = 250 }
         defaults.yaw_dynamic_deadband_gain = { min = 0, max = 250 }
-        defaults.yaw_dynamic_deadband_filter = { min = 0, max = 250, scale = 10 }
+        defaults.yaw_dynamic_deadband_filter = { min = 0, max = 250, scale = 10, unit = rf2.units.herz }
     end
 
     defaults.columnHeaders = { "", "", "", "", "", "" }

@@ -17,15 +17,15 @@ local cutoffType = {
 
 local cutoffVoltage = {
     [0] = "Disabled",
-    "2.8", "2.9", "3.0", "3.1", "3.2", "3.3", "3.4", "3.5", "3.6", "3.7", "3.8",
+    "2.8V", "2.9V", "3.0V", "3.1V", "3.2V", "3.3V", "3.4V", "3.5V", "3.6V", "3.7V", "3.8V",
 }
 
 local restartTime = {
-    [0] = "1s",
-    "1.5s",
-    "2s",
-    "2.5s",
-    "3s",
+    [0] = "1 s",
+    "1.5 s",
+    "2 s",
+    "2.5 s",
+    "3 s",
 }
 
 local rotation = {
@@ -67,11 +67,11 @@ local function getDefaults()
         lipo_cell_count = { min = 0, max = #lipoCellCount, table = lipoCellCount },
         cutoff_type = { min = 0, max = #cutoffType, table = cutoffType },
         cutoff_voltage = { min = 0, max = #cutoffVoltage, table = cutoffVoltage },
-        bec_voltage = { min = 54, max = 84, scale = 10 },
-        startup_time = { min = 4, max = 25 },
+        bec_voltage = { min = 54, max = 84, scale = 10, unit = rf2.units.volt },
+        startup_time = { min = 4, max = 25, unit = rf2.units.seconds },
         gov_p_gain = { min = 0, max = 9 },
         gov_i_gain = { min = 0, max = 9 },
-        auto_restart = { min = 0, max= 90 },
+        auto_restart = { min = 0, max = 90, unit = rf2.units.seconds },
         restart_time = { min = 0, max = #restartTime, table = restartTime },
         brake_type = { min = 0, max = #brakeType, table = brakeType },
         brake_force = { min = 0, max = 100, unit = rf2.units.percentage },

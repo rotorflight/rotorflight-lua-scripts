@@ -2,24 +2,24 @@
 local function getDefaults()
     local gyroFilterType = { [0] = "NONE", "1ST", "2ND" }
     local defaults = {}
-    defaults.gyro_hardware_lpf = {} --1
-    defaults.gyro_lpf1_type = { min = 0, max = #gyroFilterType, table = gyroFilterType } -- 2
-    defaults.gyro_lpf1_static_hz = { min = 0, max = 4000 } -- 3,4
-    defaults.gyro_lpf2_type = { min = 0, max = #gyroFilterType, table = gyroFilterType } -- 5
-    defaults.gyro_lpf2_static_hz = { min = 0, max = 4000 } -- 6,7
-    defaults.gyro_soft_notch_hz_1 = { min = 0, max = 4000 } -- 8,9
-    defaults.gyro_soft_notch_cutoff_1 = { min = 0, max = 4000 } -- 10,11
-    defaults.gyro_soft_notch_hz_2 = { min = 0, max = 4000 } --12,13
-    defaults.gyro_soft_notch_cutoff_2 = { min = 0, max = 4000 } --14,15
-    defaults.gyro_lpf1_dyn_min_hz = { min = 0, max = 1000 } -- 16,17
-    defaults.gyro_lpf1_dyn_max_hz = { min = 0, max = 1000 } -- 18,19
-    defaults.dyn_notch_count = { min = 0, max = 8 } -- 20
-    defaults.dyn_notch_q = { min = 10, max = 100, scale = 10 } -- 21
-    defaults.dyn_notch_min_hz = { min = 10, max = 200 } -- 22,23
-    defaults.dyn_notch_max_hz = { min = 100, max = 500 } -- 24,25
+    defaults.gyro_hardware_lpf = {}
+    defaults.gyro_lpf1_type = { min = 0, max = #gyroFilterType, table = gyroFilterType }
+    defaults.gyro_lpf1_static_hz = { min = 0, max = 4000, unit = rf2.units.herz }
+    defaults.gyro_lpf2_type = { min = 0, max = #gyroFilterType, table = gyroFilterType }
+    defaults.gyro_lpf2_static_hz = { min = 0, max = 4000, unit = rf2.units.herz }
+    defaults.gyro_soft_notch_hz_1 = { min = 0, max = 4000, unit = rf2.units.herz }
+    defaults.gyro_soft_notch_cutoff_1 = { min = 0, max = 4000, unit = rf2.units.herz }
+    defaults.gyro_soft_notch_hz_2 = { min = 0, max = 4000, unit = rf2.units.herz }
+    defaults.gyro_soft_notch_cutoff_2 = { min = 0, max = 4000, unit = rf2.units.herz }
+    defaults.gyro_lpf1_dyn_min_hz = { min = 0, max = 1000, unit = rf2.units.herz }
+    defaults.gyro_lpf1_dyn_max_hz = { min = 0, max = 1000, unit = rf2.units.herz }
+    defaults.dyn_notch_count = { min = 0, max = 8 }
+    defaults.dyn_notch_q = { min = 10, max = 100, scale = 10 }
+    defaults.dyn_notch_min_hz = { min = 10, max = 200, unit = rf2.units.herz }
+    defaults.dyn_notch_max_hz = { min = 100, max = 500, unit = rf2.units.herz }
     if rf2.apiVersion >= 12.08 then
         defaults.preset = { min = 0, max = 3 }
-        defaults.min_hz = { min = 1, max = 100 }
+        defaults.min_hz = { min = 1, max = 100, unit = rf2.units.herz }
     end
     return defaults
 end

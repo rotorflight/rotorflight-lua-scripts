@@ -4,19 +4,19 @@ local function getDefaults()
     defaults.flip_mode = { value = nil, min = 0, max = 1, table = { [0] = "No Flip", "Flip" } }
     defaults.flip_gain = { value = nil, min = 5, max = 250 }
     defaults.level_gain = { value = nil, min = 5, max = 250 }
-    defaults.pull_up_time = { value = nil, min = 0, max = 250, scale = 10 }
-    defaults.climb_time = { value = nil, min = 0, max = 250, scale = 10 }
-    defaults.flip_time = { value = nil, min = 0, max = 250, scale = 10 }
-    defaults.exit_time = { value = nil, min = 0, max = 250, scale = 10 }
-    defaults.pull_up_collective = { value = nil, min = 0, max = 1000, mult = 10, scale = 10 }
-    defaults.climb_collective = { value = nil, min = 0, max = 1000, mult = 10, scale = 10 }
-    defaults.hover_collective = { value = nil, min = 0, max = 1000, mult = 10, scale = 10 }
+    defaults.pull_up_time = { value = nil, min = 0, max = 250, scale = 10, unit = rf2.units.seconds }
+    defaults.climb_time = { value = nil, min = 0, max = 250, scale = 10, unit = rf2.units.seconds }
+    defaults.flip_time = { value = nil, min = 0, max = 250, scale = 10, unit = rf2.units.seconds }
+    defaults.exit_time = { value = nil, min = 0, max = 250, scale = 10, unit = rf2.units.seconds }
+    defaults.pull_up_collective = { value = nil, min = 0, max = 1000, mult = 10, scale = 10, unit = rf2.units.percentage }
+    defaults.climb_collective = { value = nil, min = 0, max = 1000, mult = 10, scale = 10, unit = rf2.units.percentage }
+    defaults.hover_collective = { value = nil, min = 0, max = 1000, mult = 10, scale = 10, unit = rf2.units.percentage }
     defaults.hover_altitude = { value = nil, min = 0, max = 10000, mult = 10, scale = 100 }
     defaults.alt_p_gain = { value = nil, min = 0, max = 10000 }
     defaults.alt_i_gain = { value = nil, min = 0, max = 10000 }
     defaults.alt_d_gain = { value = nil, min = 0, max = 10000 }
-    defaults.max_collective = { value = nil, min = 1, max = 1000, mult = 10, scale = 10 }
-    defaults.max_setpoint_rate = { value = nil, min = 1, max = 1000, mult = 10 }
+    defaults.max_collective = { value = nil, min = 1, max = 1000, mult = 10, scale = 10, unit = rf2.units.percentage }
+    defaults.max_setpoint_rate = { value = nil, min = 1, max = 1000, mult = 10, unit = rf2.units.degreesPerSecond }
     defaults.max_setpoint_accel = { value = nil, min = 1, max = 10000, mult = 10 }
     return defaults
 end

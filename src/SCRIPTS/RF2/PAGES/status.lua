@@ -45,8 +45,8 @@ labels[#labels + 1] = { t = "---",                   x = x + indent,     y = inc
 fields[#fields + 1] = { t = "[Erase]",               x = x + indent * 7, y = y }
 
 incY(lineSpacing * 0.25)
-fields[#fields + 1] = { t = "Real-time load",        x = x,              y = incY(lineSpacing), sp = x + sp, data = { value = 0, scale = 10 }, readOnly = true }
-fields[#fields + 1] = { t = "CPU load",              x = x,              y = incY(lineSpacing), sp = x + sp, data = { value = 0, scale = 10 }, readOnly = true }
+fields[#fields + 1] = { t = "Real-time load",        x = x,              y = incY(lineSpacing), sp = x + sp, data = { value = 0, scale = 10, unit = rf2.units.percentage }, readOnly = true }
+fields[#fields + 1] = { t = "CPU load",              x = x,              y = incY(lineSpacing), sp = x + sp, data = { value = 0, scale = 10, unit = rf2.units.percentage }, readOnly = true }
 
 local function armingDisableFlagsToString(flags)
     local t = ""

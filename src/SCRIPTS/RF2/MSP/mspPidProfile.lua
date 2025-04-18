@@ -1,28 +1,28 @@
 local function getDefaults()
     local data = {}
     data.pid_mode = { min = 0, max = 250 }
-    data.error_decay_time_ground = { min = 0, max = 250, scale = 10 }
-    data.error_decay_time_cyclic = { min = 0, max = 250, scale = 10 }
-    data.error_decay_time_yaw = { min = 0, max = 250, scale = 10 }
-    data.error_decay_limit_cyclic = { min = 0, max = 250 }
-    data.error_decay_limit_yaw = { min = 0, max = 250 }
+    data.error_decay_time_ground = { min = 0, max = 250, scale = 10, unit = rf2.units.seconds }
+    data.error_decay_time_cyclic = { min = 0, max = 250, scale = 10, unit = rf2.units.seconds }
+    data.error_decay_time_yaw = { min = 0, max = 250, scale = 10, unit = rf2.units.seconds }
+    data.error_decay_limit_cyclic = { min = 0, max = 250, unit = rf2.units.degreesPerSecond }
+    data.error_decay_limit_yaw = { min = 0, max = 250, unit = rf2.units.degreesPerSecond }
     data.error_rotation = { min = 0, max = 1, table = { [0] = "OFF", "ON" } }
-    data.error_limit_roll = { min = 0, max = 180 }
-    data.error_limit_pitch = { min = 0, max = 180 }
-    data.error_limit_yaw = { min = 0, max = 180 }
-    data.gyro_cutoff_roll = { min = 0, max = 250 }
-    data.gyro_cutoff_pitch = { min = 0, max = 250 }
-    data.gyro_cutoff_yaw = { min = 0, max = 250 }
-    data.dterm_cutoff_roll = { min = 0, max = 250 }
-    data.dterm_cutoff_pitch = { min = 0, max = 250 }
-    data.dterm_cutoff_yaw = { min = 0, max = 250 }
+    data.error_limit_roll = { min = 0, max = 180, unit = rf2.units.degrees }
+    data.error_limit_pitch = { min = 0, max = 180, unit = rf2.units.degrees }
+    data.error_limit_yaw = { min = 0, max = 180, unit = rf2.units.degrees }
+    data.gyro_cutoff_roll = { min = 0, max = 250, unit = rf2.units.herz }
+    data.gyro_cutoff_pitch = { min = 0, max = 250, unit = rf2.units.herz }
+    data.gyro_cutoff_yaw = { min = 0, max = 250, unit = rf2.units.herz }
+    data.dterm_cutoff_roll = { min = 0, max = 250, unit = rf2.units.herz }
+    data.dterm_cutoff_pitch = { min = 0, max = 250, unit = rf2.units.herz }
+    data.dterm_cutoff_yaw = { min = 0, max = 250, unit = rf2.units.herz }
     data.iterm_relax_type = { min = 0, max = 2, table = { [0] = "OFF", "RP", "RPY" } }
-    data.iterm_relax_cutoff_roll = { min = 1, max = 100 }
-    data.iterm_relax_cutoff_pitch = { min = 1, max = 100 }
-    data.iterm_relax_cutoff_yaw = { min = 1, max = 100 }
+    data.iterm_relax_cutoff_roll = { min = 1, max = 100, unit = rf2.units.herz }
+    data.iterm_relax_cutoff_pitch = { min = 1, max = 100, unit = rf2.units.herz }
+    data.iterm_relax_cutoff_yaw = { min = 1, max = 100, unit = rf2.units.herz }
     data.yaw_cw_stop_gain = { min = 25, max = 250 }
     data.yaw_ccw_stop_gain = { min = 25, max = 250 }
-    data.yaw_precomp_cutoff = { min = 0, max = 250 }
+    data.yaw_precomp_cutoff = { min = 0, max = 250, unit = rf2.units.herz }
     data.yaw_cyclic_ff_gain = { min = 0, max = 250 }
     data.yaw_collective_ff_gain = { min = 0, max = 250 }
     if rf2.apiVersion < 12.08 then
@@ -31,21 +31,21 @@ local function getDefaults()
     end
     data.pitch_collective_ff_gain = { min = 0, max = 250 }
     data.angle_level_strength = { min = 25, max = 255 }
-    data.angle_level_limit = { min = 10, max = 80 }
+    data.angle_level_limit = { min = 10, max = 90, unit = rf2.units.degrees }
     data.horizon_level_strength = { min = 0, max = 200 }
     data.trainer_gain = { min = 0, max = 250 }
-    data.trainer_angle_limit = { min = 0, max = 250 }
+    data.trainer_angle_limit = { min = 10, max = 80, unit = rf2.units.degrees }
     data.cyclic_cross_coupling_gain =  { min = 0, max = 250 }
-    data.cyclic_cross_coupling_ratio =  { min = 0, max = 200 }
-    data.cyclic_cross_coupling_cutoff =  { min = 1, max = 250 }
-    data.offset_limit_roll = { min = 0, max = 180 }
-    data.offset_limit_pitch = { min = 0, max = 180 }
-    data.bterm_cutoff_roll = { min = 0, max = 250 }
-    data.bterm_cutoff_pitch = { min = 0, max = 250 }
-    data.bterm_cutoff_yaw = { min = 0, max = 250 }
+    data.cyclic_cross_coupling_ratio =  { min = 0, max = 200, unit = rf2.units.percentage }
+    data.cyclic_cross_coupling_cutoff =  { min = 1, max = 250, unit = rf2.units.herz }
+    data.offset_limit_roll = { min = 0, max = 180, unit = rf2.units.degrees }
+    data.offset_limit_pitch = { min = 0, max = 180, unit = rf2.units.degrees }
+    data.bterm_cutoff_roll = { min = 0, max = 250, unit = rf2.units.herz }
+    data.bterm_cutoff_pitch = { min = 0, max = 250, unit = rf2.units.herz }
+    data.bterm_cutoff_yaw = { min = 0, max = 250, unit = rf2.units.herz }
     if rf2.apiVersion >= 12.08 then
         data.yaw_inertia_precomp_gain = { min = 0, max = 250 }
-        data.yaw_inertia_precomp_cutoff = { min = 0, max = 250, scale = 10 }
+        data.yaw_inertia_precomp_cutoff = { min = 0, max = 250, scale = 10, unit = rf2.units.herz }
     end
     return data
 end

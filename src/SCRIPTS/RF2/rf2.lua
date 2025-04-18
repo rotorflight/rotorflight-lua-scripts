@@ -42,10 +42,13 @@ rf2 = {
     units = {
         percentage = "%",
         degrees = del and "°" or "@", -- OpenTX uses @
+        degreesPerSecond = (del and "°" or "@") .. "/s",
         herz = " Hz",
         seconds = " s",
+        milliseconds = " ms",
         volt = "V",
-        celsius = " C"
+        celsius = " C",
+        rpm = " RPM"
     },
 
     --[[
