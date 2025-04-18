@@ -7,7 +7,7 @@ local function getTelemetryConfig(callback, callbackParam)
             local offOnTable = { [0] = "OFF", "ON" }
             config.telemetry_inverted = { value = rf2.mspHelper.readU8(buf), min = 0, max = 1, table = offOnTable }
             config.telemetry_halfduplex = { value = rf2.mspHelper.readU8(buf), min = 0, max = 1, table = offOnTable }
-            config.telemetry_sensors = { value = rf2.mspHelper.readU32(buf), min }
+            config.telemetry_sensors = { value = rf2.mspHelper.readU32(buf) }
             if rf2.apiVersion >= 12.07 then
                 config.telemetry_pinswap = { value = rf2.mspHelper.readU8(buf), min = 0, max = 1, table = offOnTable }
                 config.crsf_telemetry_mode = { value = rf2.mspHelper.readU8(buf), min = 0, max = 1, table = { [0] = "NATIVE", "CUSTOM" } }

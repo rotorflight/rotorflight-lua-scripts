@@ -13,6 +13,10 @@ then
     exit 1
 fi
 
+cd ${TARGET}
+lua ../bin/minimize.lua
+cd ..
+
 SCRIPTS=${TARGET}/SCRIPTS/RF2/COMPILE/scripts.lua
 
 rm -f ${SCRIPTS}

@@ -1,4 +1,4 @@
-function addDirtyTrackingToTable(originalTable)
+local function addDirtyTrackingToTable(originalTable)
     local proxyTable = {}
     local dirty = false
     function proxyTable:resetDirtyFlag() dirty = false end
@@ -20,7 +20,7 @@ function addDirtyTrackingToTable(originalTable)
     return proxyTable
 end
 
-function saveTable(table, filename)
+local function saveTable(table, filename)
     local file, err = io.open(filename, "w")
     if not file then return err end
 
@@ -49,7 +49,7 @@ function saveTable(table, filename)
     return nil
 end
 
-function loadTable(filename)
+local function loadTable(filename)
     local func, err = rf2.loadScript(filename)
     if not func then return nil, err end
     return func()

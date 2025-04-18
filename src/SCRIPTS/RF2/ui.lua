@@ -1,4 +1,4 @@
-local LUA_VERSION = "2.2.0-RC1"
+local LUA_VERSION = "2.2.0-RC3"
 
 local uiStatus =
 {
@@ -245,7 +245,7 @@ local function drawScreen()
     local yMaxLim = rf2.radio.yMaxLimit
     local currentFieldY = Page.fields[currentField].y
     local textOptions = rf2.radio.textSize + globalTextOptions
-    local boldTextOptions = rf2.isEdgeTx() and (BOLD + TEXT_COLOR) or textOptions
+    local boldTextOptions = (rf2.isEdgeTx() and TEXT_COLOR and BOLD + TEXT_COLOR) or textOptions
     if currentFieldY <= Page.fields[1].y then
         pageScrollY = 0
     elseif currentFieldY - pageScrollY <= yMinLim then
@@ -275,7 +275,8 @@ local function drawScreen()
             if type(val) == "number" then
                 if f.data.scale then
                     val = val / f.data.scale
-                else
+                end
+                if (f.data.scale or 1) <= 1 then
                     val = math.floor(val)
                 end
             end
@@ -477,6 +478,7 @@ local function run_ui(event)
             Page.timer(Page)
         end
         if not Page then
+            rf2.mspQueue:clear()
             collectgarbage()
             --rf2.showMemoryUsage("before loading page")
             Page = assert(rf2.loadScript("PAGES/"..PageFiles[currentPage].script))()

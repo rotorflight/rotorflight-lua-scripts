@@ -12,8 +12,8 @@ local function getServoConfigurations(callback, callbackParam)
                 config.max = { value = rf2.mspHelper.readS16(buf), min = -1000, max = 1000 }
                 config.scaleNeg = { value = rf2.mspHelper.readU16(buf), min = 100, max = 1000 }
                 config.scalePos = { value = rf2.mspHelper.readU16(buf), min = 100, max = 1000 }
-                config.rate = { value = rf2.mspHelper.readU16(buf), min = 50, max = 5000 }
-                config.speed = { value = rf2.mspHelper.readU16(buf), min = 0, max = 60000 }
+                config.rate = { value = rf2.mspHelper.readU16(buf), min = 50, max = 5000, unit = rf2.units.herz }
+                config.speed = { value = rf2.mspHelper.readU16(buf), min = 0, max = 60000, unit = rf2.units.milliseconds }
                 config.flags = { value = rf2.mspHelper.readU16(buf), min = 0, max = 3 }
                 configs[i] = config
             end

@@ -1,3 +1,12 @@
+local function getDefaults()
+    local defaults = {}
+    defaults.length = 0
+    for i = 1, 16 do
+        defaults[i] = { min = 0, max = 255 }
+    end
+    return defaults
+end
+
 local function getExperimental(callback, callbackParam, data)
     data = data or getDefaults()
     local message = {
@@ -23,15 +32,6 @@ local function setExperimental(data)
         rf2.mspHelper.writeU8(message.payload, data[i].value)
     end
     rf2.mspQueue:add(message)
-end
-
-local function getDefaults()
-    local defaults = {}
-    defaults.length = 0
-    for i = 1, 16 do
-        defaults[i] = { min = 0, max = 255 }
-    end
-    return defaults
 end
 
 return {
