@@ -1,4 +1,4 @@
-local LUA_VERSION = "2.2.0-RC1"
+local LUA_VERSION = "2.2.0-RC3"
 
 local uiStatus =
 {

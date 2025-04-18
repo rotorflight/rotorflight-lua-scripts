@@ -9,7 +9,7 @@ This is the *Third Release Candidate* of the *Rotorflight Lua Scripts for EdgeTX
 The download locations are:
 
 - [Rotorflight Configurator](https://github.com/rotorflight/rotorflight-configurator/releases/tag/release/2.2.0-RC3)
-- [Rotorflight Blackbox](https://github.com/rotorflight/rotorflight-blackbox/releases/tag/release/2.2.0-RC1)
+- [Rotorflight Blackbox](https://github.com/rotorflight/rotorflight-blackbox/releases/tag/release/2.2.0-RC3)
 - [Lua Scripts for EdgeTX and OpenTX](https://github.com/rotorflight/rotorflight-lua-scripts/releases/tag/release/2.2.0-RC3)
 - [Lua Scripts for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos/releases/tag/release/2.2.0-RC3)
 - [Lua Suite for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos-suite/releases/tag/release/2.2.0-RC3)
@@ -32,6 +32,7 @@ If you want to use any of these features, make sure you've defined and enabled a
 - Added page *Rate Dynamics*
 - Added page *PID Controller Settings*
 - Added new RF 2.2 settings to existing pages
+- Added units to most settings
 - Reduced memory usage
 
 
