@@ -73,8 +73,8 @@ function MspQueueController:processQueue()
             self.retryCount = self.retryCount + 1
         end
 
-        mspProcessTxQ()
-        cmd, buf, err = mspPollReply()
+        rf2.mspCommon.mspProcessTxQ()
+        cmd, buf, err = rf2.mspCommon.mspPollReply()
     else
         --rf2.print("Sending  cmd "..self.currentMessage.command..": {" .. joinTableItems(self.currentMessage.payload, ", ") .. "}")
         if not self.currentMessage.simulatorResponse then
@@ -97,10 +97,10 @@ function MspQueueController:processQueue()
     --    rf2.print("  ERROR flag set!")
     --end
 
-    -- if cmd == 217 then   -- MSP_ESC_PARAMETERS
+    --if cmd == 217 then   -- MSP_ESC_PARAMETERS
     --     buf = self.currentMessage.simulatorResponse
     --     err = nil
-    -- end
+    --end
 
     if (cmd == self.currentMessage.command and not err) or (self.currentMessage.command == 68 and self.retryCount == 2) then -- 68 = MSP_REBOOT
         --rf2.log("Received cmd "..cmd..": {" .. joinTableItems(buf, ", ") .. "}")
@@ -126,12 +126,11 @@ function MspQueueController:handleReply()
     collectgarbage()
 end
 
-
 function MspQueueController:clear()
     self.messageQueue = {}
     self.currentMessage = nil
     self.lastTimeCommandSent = nil
-    mspClearTxBuf()
+    rf2.mspCommon.mspClearTxBuf()
     collectgarbage()
 end
 

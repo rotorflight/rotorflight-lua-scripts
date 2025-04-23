@@ -16,11 +16,11 @@ rf2.protocol.mspSend = function(payload)
 end
 
 rf2.protocol.mspRead = function(cmd)
-    return mspSendRequest(cmd, {})
+    return rf2.mspCommon.mspSendRequest(cmd, {})
 end
 
 rf2.protocol.mspWrite = function(cmd, payload)
-    return mspSendRequest(cmd, payload)
+    return rf2.mspCommon.mspSendRequest(cmd, payload)
 end
 
 -- Discards duplicate data from lua input buffer

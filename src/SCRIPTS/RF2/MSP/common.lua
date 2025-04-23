@@ -16,7 +16,9 @@ local mspTxBuf = {}
 local mspTxIdx = 1
 local mspTxCRC = 0
 
-function mspProcessTxQ()
+local common = {}
+
+function common.mspProcessTxQ()
     if (#(mspTxBuf) == 0) then
         return false
     end
@@ -50,7 +52,7 @@ function mspProcessTxQ()
     return true
 end
 
-function mspSendRequest(cmd, payload)
+function common.mspSendRequest(cmd, payload)
     --rf2.print("Sending cmd "..cmd)
     -- busy
     if #(mspTxBuf) ~= 0 or not cmd then
@@ -63,7 +65,7 @@ function mspSendRequest(cmd, payload)
         mspTxBuf[i+2] = bit32.band(payload[i],0xFF)
     end
     mspLastReq = cmd
-    return mspProcessTxQ()
+    return common.mspProcessTxQ()
 end
 
 local function mspReceivedReply(payload)
@@ -123,7 +125,7 @@ local function mspReceivedReply(payload)
     return true
 end
 
-function mspPollReply()
+function common.mspPollReply()
     local startTime = rf2.clock()
     while (rf2.clock() - startTime < 0.05) do
         local mspData = rf2.protocol.mspPoll()
@@ -134,6 +136,8 @@ function mspPollReply()
     end
 end
 
-function mspClearTxBuf()
+function common.mspClearTxBuf()
     mspTxBuf = {}
 end
+
+return common

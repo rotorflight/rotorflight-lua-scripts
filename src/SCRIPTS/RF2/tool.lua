@@ -18,7 +18,7 @@ if scriptsCompiled then
     --rf2.showMemoryUsage("MSP helper loaded")
     assert(rf2.loadScript(rf2.protocol.mspTransport))()
     --rf2.showMemoryUsage("mspTransport loaded")
-    assert(rf2.loadScript("MSP/common.lua"))()
+    rf2.mspCommon = assert(rf2.loadScript("MSP/common.lua"))()
     --rf2.showMemoryUsage("common loaded")
 
     run = assert(rf2.loadScript("ui.lua"))()

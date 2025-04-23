@@ -19,12 +19,12 @@ end
 
 rf2.protocol.mspRead = function(cmd)
     crsfMspCmd = CRSF_FRAMETYPE_MSP_REQ
-    return mspSendRequest(cmd, {})
+    return rf2.mspCommon.mspSendRequest(cmd, {})
 end
 
 rf2.protocol.mspWrite = function(cmd, payload)
     crsfMspCmd = CRSF_FRAMETYPE_MSP_WRITE
-    return mspSendRequest(cmd, payload)
+    return rf2.mspCommon.mspSendRequest(cmd, payload)
 end
 
 rf2.protocol.mspPoll = function()
