@@ -37,7 +37,7 @@ local function getDefaults()
     data.trainer_angle_limit = { min = 10, max = 80, unit = rf2.units.degrees }
     data.cyclic_cross_coupling_gain =  { min = 0, max = 250 }
     data.cyclic_cross_coupling_ratio =  { min = 0, max = 200, unit = rf2.units.percentage }
-    data.cyclic_cross_coupling_cutoff =  { min = 1, max = 250, unit = rf2.units.herz }
+    data.cyclic_cross_coupling_cutoff =  { min = 1, max = 250, scale = 10, unit = rf2.units.herz }
     data.offset_limit_roll = { min = 0, max = 180, unit = rf2.units.degrees }
     data.offset_limit_pitch = { min = 0, max = 180, unit = rf2.units.degrees }
     data.bterm_cutoff_roll = { min = 0, max = 250, unit = rf2.units.herz }

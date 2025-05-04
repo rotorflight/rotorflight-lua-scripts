@@ -39,6 +39,6 @@ local function getProtocol()
     end
 end
 
-local protocol = assert(getProtocol(), "Telemetry protocol not supported!")
+local protocol = assert(getProtocol(), "Telemetry protocol\nnot supported!")
 
 return protocol
