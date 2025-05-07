@@ -1,6 +1,6 @@
-# 2.2.0-RC3
+# 2.2.0-RC4
 
-This is the *Third Release Candidate* of the *Rotorflight Lua Scripts for EdgeTX and OpenTX* for RF 2.2.0.
+This is the *Fourth Release Candidate* of the *Rotorflight Lua Scripts for EdgeTX and OpenTX* for RF 2.2.0.
 
 **NOTE:** The final 2.2.0 version will be released after a few release candidates. Please don't use RCs once the final release is out.
 
@@ -8,11 +8,11 @@ This is the *Third Release Candidate* of the *Rotorflight Lua Scripts for EdgeTX
 
 The download locations are:
 
-- [Rotorflight Configurator](https://github.com/rotorflight/rotorflight-configurator/releases/tag/release/2.2.0-RC3)
-- [Rotorflight Blackbox](https://github.com/rotorflight/rotorflight-blackbox/releases/tag/release/2.2.0-RC3)
-- [Lua Scripts for EdgeTX and OpenTX](https://github.com/rotorflight/rotorflight-lua-scripts/releases/tag/release/2.2.0-RC3)
-- [Lua Scripts for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos/releases/tag/release/2.2.0-RC3)
-- [Lua Suite for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos-suite/releases/tag/release/2.2.0-RC3)
+- [Rotorflight Configurator](https://github.com/rotorflight/rotorflight-configurator/releases/tag/release/2.2.0-RC4)
+- [Rotorflight Blackbox](https://github.com/rotorflight/rotorflight-blackbox/releases/tag/release/2.2.0-RC4)
+- [Lua Scripts for EdgeTX and OpenTX](https://github.com/rotorflight/rotorflight-lua-scripts/releases/tag/release/2.2.0-RC4)
+- [Lua Scripts for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos/releases/tag/release/2.2.0-RC4)
+- [Lua Suite for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos-suite/releases/tag/release/2.2.0-RC4)
 
 ## Notes
 
@@ -34,7 +34,7 @@ If you want to use any of these features, make sure you've defined and enabled a
 - Added new RF 2.2 settings to existing pages
 - Added units to most settings
 - Reduced memory usage
-
+- Various minor fixes
 
 
 ***
