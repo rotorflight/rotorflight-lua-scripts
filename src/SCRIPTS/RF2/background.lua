@@ -3,13 +3,20 @@ local adjTellerTask = nil
 local customTelemetryTask = nil
 local isInitialized = false
 local modelIsConnected = false
+local lastTimeRssi = nil
 
 local function run()
     if rf2.runningInSimulator then
         modelIsConnected = true
-    elseif getRSSI() > 0 and not modelIsConnected then
+    elseif getRSSI() > 0 then
+        lastTimeRssi = rf2.clock()
         modelIsConnected = true
     elseif getRSSI() == 0 and modelIsConnected then
+        if lastTimeRssi and rf2.clock() - lastTimeRssi < 10 then
+            -- Do not re-initialise if the RSSI is 0 for less than 10 seconds.
+            -- This is also a work-around for https://github.com/ExpressLRS/ExpressLRS/issues/3207 (AUX channel bug in ELRS TX < 3.5.5)
+            return
+        end
         if initTask then
             initTask.reset()
             initTask = nil
