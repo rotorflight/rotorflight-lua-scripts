@@ -9,6 +9,10 @@ local settingsHelper = assert(rf2.loadScript(rf2.baseDir.."PAGES/helpers/setting
 local useAdjustmentTeller = settingsHelper.loadSettings().useAdjustmentTeller == 1 or false
 settingsHelper = nil
 
+local function pilotConfigReset()
+    model.setGlobalVariable(7, 8, 0)
+end
+
 local function run()
     if rf2.runningInSimulator then
         modelIsConnected = true
@@ -28,6 +32,7 @@ local function run()
         adjTellerTask = nil
         customTelemetryTask = nil
         modelIsConnected = false
+        pilotConfigReset()
         isInitialized = false
         collectgarbage()
     end

@@ -149,7 +149,9 @@ local function initializeQueue()
             end
 
             if rf2.apiVersion >= 12.07 then
-                rf2.useApi("mspPilotConfig").read(onPilotConfigReceived)
+                if not pilotConfigHasBeenSet() then
+                    rf2.useApi("mspPilotConfig").read(onPilotConfigReceived)
+                end
 
                 if crossfireTelemetryPush() then
                     rf2.useApi("mspTelemetryConfig").getTelemetryConfig(
@@ -204,7 +206,6 @@ end
 local function reset()
     rf2.mspQueue:clear()
     rf2.apiVersion = nil
-    pilotConfigReset()
 end
 
 return { run = run, reset = reset }
