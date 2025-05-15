@@ -5,6 +5,10 @@ local isInitialized = false
 local modelIsConnected = false
 local lastTimeRssi = nil
 
+local settingsHelper = assert(rf2.loadScript(rf2.baseDir.."PAGES/helpers/settingsHelper.lua"))()
+local useAdjustmentTeller = settingsHelper.loadSettings().useAdjustmentTeller == 1 or false
+settingsHelper = nil
+
 local function run()
     if rf2.runningInSimulator then
         modelIsConnected = true
@@ -38,7 +42,9 @@ local function run()
         if initTaskResult.crsfCustomTelemetryEnabled then
             customTelemetryTask = assert(rf2.loadScript(rf2.baseDir.."rf2tlm.lua"))()
         end
-        adjTellerTask = assert(rf2.loadScript(rf2.baseDir.."adj_teller.lua"))()
+        if useAdjustmentTeller then
+            adjTellerTask = assert(rf2.loadScript(rf2.baseDir.."adj_teller.lua"))()
+        end
         initTask = nil
         collectgarbage()
         isInitialized = true
