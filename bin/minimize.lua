@@ -3,18 +3,28 @@ print("Minimizing script memory usage...")
 -- Step 1:
 -- - Remove 'id = "xxx"' entries from fields table in the page files.
 -- - Remove 'simulatorResponse = {...}' entries in MSP files.
+-- - Remove double spaces in ui.lua to make it compile on some b&w radios.
 
 local genericReplacements = {
     {
+        -- Remove id = "xxx" from the fields table in page files. This id is not used by the official Rotorflight scripts.
         files = "/SCRIPTS/RF2/PAGES/",
         match = "^%s-fields%[",
         replace = ",%s-id = \"(.-)\"",
         replacement = ""
     },
     {
+        -- Remove simulatorResponse = {...} from MSP APIs, since they are not used outside of the simulator.
         files = "/SCRIPTS/RF2/MSP/",
         match = "simulatorResponse = {(.-)}",
         replace = "simulatorResponse = {(.-)},?",
+        replacement = ""
+    },
+    {
+        -- ui.lua is the biggest file (~18K) and can't be compiled on some b&w radios without making it smaller. This is done by removing all double spaces.
+        files = "/SCRIPTS/RF2/ui.lua",
+        match = "  ",
+        replace = "  ",
         replacement = ""
     }
 }
