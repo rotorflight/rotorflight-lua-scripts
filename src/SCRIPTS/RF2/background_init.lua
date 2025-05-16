@@ -3,6 +3,7 @@ local crsfCustomTelemetryEnabled = false
 
 local settingsHelper = assert(rf2.loadScript(rf2.baseDir.."PAGES/helpers/settingsHelper.lua"))()
 local autoSetName = settingsHelper.loadSettings().autoSetName == 1 or false
+local useAdjustmentTeller = settingsHelper.loadSettings().useAdjustmentTeller == 1 or false
 settingsHelper = nil
 
 local pilotConfigSetMagic = -765
@@ -208,4 +209,4 @@ local function reset()
     rf2.apiVersion = nil
 end
 
-return { run = run, reset = reset }
+return { run = run, reset = reset, useAdjustmentTeller = useAdjustmentTeller }

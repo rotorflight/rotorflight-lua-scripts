@@ -5,10 +5,6 @@ local isInitialized = false
 local modelIsConnected = false
 local lastTimeRssi = nil
 
-local settingsHelper = assert(rf2.loadScript(rf2.baseDir.."PAGES/helpers/settingsHelper.lua"))()
-local useAdjustmentTeller = settingsHelper.loadSettings().useAdjustmentTeller == 1 or false
-settingsHelper = nil
-
 local function pilotConfigReset()
     model.setGlobalVariable(7, 8, 0)
 end
@@ -19,22 +15,24 @@ local function run()
     elseif getRSSI() > 0 then
         lastTimeRssi = rf2.clock()
         modelIsConnected = true
-    elseif getRSSI() == 0 and modelIsConnected then
-        if lastTimeRssi and rf2.clock() - lastTimeRssi < 10 then
-            -- Do not re-initialise if the RSSI is 0 for less than 10 seconds.
+    elseif getRSSI() == 0 then
+        if lastTimeRssi and rf2.clock() - lastTimeRssi < 5 then
+            -- Do not re-initialise if the RSSI is 0 for less than 5 seconds.
             -- This is also a work-around for https://github.com/ExpressLRS/ExpressLRS/issues/3207 (AUX channel bug in ELRS TX < 3.5.5)
             return
         end
-        if initTask then
-            initTask.reset()
-            initTask = nil
-        end
-        adjTellerTask = nil
-        customTelemetryTask = nil
-        modelIsConnected = false
         pilotConfigReset()
-        isInitialized = false
-        collectgarbage()
+        if modelIsConnected then
+            if initTask then
+                initTask.reset()
+                initTask = nil
+            end
+            adjTellerTask = nil
+            customTelemetryTask = nil
+            modelIsConnected = false
+            isInitialized = false
+            collectgarbage()
+        end
     end
 
     if not isInitialized then
@@ -47,7 +45,7 @@ local function run()
         if initTaskResult.crsfCustomTelemetryEnabled then
             customTelemetryTask = assert(rf2.loadScript(rf2.baseDir.."rf2tlm.lua"))()
         end
-        if useAdjustmentTeller then
+        if initTask.useAdjustmentTeller then
             adjTellerTask = assert(rf2.loadScript(rf2.baseDir.."adj_teller.lua"))()
         end
         initTask = nil
