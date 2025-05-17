@@ -343,9 +343,9 @@ rf2.loadPageFiles = function(setCurrentPageToLastPage)
 end
 
 local function run_ui(event)
-    if event and event ~= 0 then
-        rf2.print("uiState: " .. uiState .. " pageState: " .. pageState .. " Event: " .. string.format("0x%X", event))
-    end
+    -- if event and event ~= 0 then
+    --     rf2.print("uiState: " .. uiState .. " pageState: " .. pageState .. " Event: " .. string.format("0x%X", event))
+    -- end
 
     if displayMessage then
         lcd.clear()
