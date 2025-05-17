@@ -35,9 +35,7 @@ rf2 = {
 
     apiVersion = nil,
 
-    isEdgeTx = function()
-        return del ~= nil
-    end,
+    isEdgeTx = select(6, getVersion()) == "EdgeTX",
 
     units = {
         percentage = "%",
@@ -50,6 +48,9 @@ rf2 = {
         celsius = " C",
         rpm = " RPM"
     },
+
+    -- Color radios on EdgeTX >= 2.11 do not send EVT_VIRTUAL_ENTER anymore after EVT_VIRTUAL_ENTER_LONG
+    useKillEnterBreak = not(lcd.setColor and select(3, getVersion()) >= 2 and select(4, getVersion()) >= 11),
 
     --[[
     showMemoryUsage = function(remark)
@@ -66,6 +67,36 @@ rf2 = {
             rf2.print(string.format("MEM %s: %d (+%d)", remark, currentMemoryUsage*1024, increment*1024))
         end
         rf2.oldMemoryUsage = currentMemoryUsage
+    end,
+
+    printGlobals = function(maxDepth)
+        local seen = {}
+
+        local function dumpTable(tbl, indent, depth)
+            if seen[tbl] or depth > maxDepth then
+                rf2.print(indent .. "*already visited or max depth*")
+                return
+            end
+            seen[tbl] = true
+
+            for k, v in pairs(tbl) do
+                local keyStr = tostring(k)
+                local vType = type(v)
+                if vType == "table" then
+                    rf2.print(indent .. keyStr .. " = {")
+                    dumpTable(v, indent .. "  ", depth + 1)
+                    rf2.print(indent .. "}")
+                else
+                    rf2.print(indent .. keyStr .. " = " .. tostring(v))
+                end
+            end
+        end
+
+        dumpTable(_G, "", 0)
+    end,
+
+    isInteger = function(n)
+        return type(n) == "number" and n == math.floor(n)
     end,
     --]]
 }
