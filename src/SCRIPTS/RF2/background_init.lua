@@ -3,6 +3,7 @@ local crsfCustomTelemetryEnabled = false
 
 local settingsHelper = assert(rf2.loadScript(rf2.baseDir.."PAGES/helpers/settingsHelper.lua"))()
 local autoSetName = settingsHelper.loadSettings().autoSetName == 1 or false
+local useAdjustmentTeller = settingsHelper.loadSettings().useAdjustmentTeller == 1 or false
 settingsHelper = nil
 
 local pilotConfigSetMagic = -765
@@ -149,7 +150,9 @@ local function initializeQueue()
             end
 
             if rf2.apiVersion >= 12.07 then
-                rf2.useApi("mspPilotConfig").read(onPilotConfigReceived)
+                if not pilotConfigHasBeenSet() then
+                    rf2.useApi("mspPilotConfig").read(onPilotConfigReceived)
+                end
 
                 if crossfireTelemetryPush() then
                     rf2.useApi("mspTelemetryConfig").getTelemetryConfig(
@@ -204,7 +207,6 @@ end
 local function reset()
     rf2.mspQueue:clear()
     rf2.apiVersion = nil
-    pilotConfigReset()
 end
 
-return { run = run, reset = reset }
+return { run = run, reset = reset, useAdjustmentTeller = useAdjustmentTeller }

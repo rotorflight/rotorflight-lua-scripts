@@ -13,6 +13,7 @@ local labels = {}
 local fields = {}
 local settings = settingsHelper.loadSettings()
 local hideShow = { [0] = "Hide", "Show" }
+local offOn = { [0] = "Off", "On" }
 
 y = yMinLim - tableSpacing.header
 labels[1] = { t = "Display Various Pages",   x = x, y = incY(lineSpacing) }
@@ -27,6 +28,10 @@ fields[5] = { t = "Scorpion Tribunus",       x = x + indent, y = incY(lineSpacin
 fields[6] = { t = "XDFly",                   x = x + indent, y = incY(lineSpacing), sp = x + sp }
 fields[7] = { t = "YGE",                     x = x + indent, y = incY(lineSpacing), sp = x + sp }
 
+incY(lineSpacing * 0.5)
+labels[3] = { t = "Rf2bg Options",           x = x, y = incY(lineSpacing) }
+fields[8] = { t = "Adjustment Teller",       x = x + indent, y = incY(lineSpacing), sp = x + sp }
+
 local function setValues()
     fields[1].data = { value = settings.showModelOnTx or 0, min = 0, max = 1, table = hideShow }
     fields[2].data = { value = settings.showExperimental or 0, min = 0, max = 1, table = hideShow }
@@ -35,6 +40,7 @@ local function setValues()
     fields[5].data = { value = settings.showTribunus or 0, min = 0, max = 1, table = hideShow }
     fields[6].data = { value = settings.showXdfly or 0, min = 0, max = 1, table = hideShow }
     fields[7].data = { value = settings.showYge or 0, min = 0, max = 1, table = hideShow }
+    fields[8].data = { value = settings.useAdjustmentTeller or 0, min = 0, max = 1, table = offOn }
 end
 
 return {
@@ -51,6 +57,7 @@ return {
         settings.showTribunus = fields[5].data.value
         settings.showXdfly = fields[6].data.value
         settings.showYge = fields[7].data.value
+        settings.useAdjustmentTeller = fields[8].data.value
         settingsHelper.saveSettings(settings)
         rf2.loadPageFiles(true)
         rf2.settingsSaved()

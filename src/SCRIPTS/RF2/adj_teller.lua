@@ -10,6 +10,8 @@ local currentAdjfuncValue
 
 
 local adjfunctions = {
+    -- see src/main/fc/rc_adjustments.h
+
     -- rates
     id5 =  { name = "Pitch Rate", wavs = { "pitch", "rate" } },
     id6 =  { name = "Roll Rate", wavs = { "roll", "rate" } },
@@ -93,6 +95,24 @@ local adjfunctions = {
     -- accelerometer
     id64 = { name = "Accelerometer Pitch Trim", wavs = { "accpitchtrim" } },
     id65 = { name = "Accelerometer Roll Trim", wavs = { "accrolltrim" } },
+
+    -- Yaw Inertia precomp
+    id66 = { name = "Yaw Inertia Precomp Gain", wavs = { "ya-in-pr-ga" } },
+    id67 = { name = "Yaw Inertia Precomp Cutoff", wavs = { "ya-in-pr-cu" } },
+
+    -- Setpoint boost
+    id68 = { name = "Pitch Setpoint Boost Gain", wavs = { "pi-se-bo-ga" } },
+    id69 = { name = "Roll Setpoint Boost Gain", wavs = { "ro-se-bo-ga" } },
+    id70 = { name = "Yaw Setpoint Boost Gain", wavs = { "ya-se-bo-ga" } },
+    id71 = { name = "Collective Setpoint Boost Gain", wavs = { "co-se-bo-ga" } },
+
+    -- Yaw dynamic deadband
+    id72 = { name = "Yaw Dynamic Ceiling Gain", wavs = { "ya-dy-ce-ga" } },
+    id73 = { name = "Yaw Dynamic Deadband Gain", wavs = { "ya-dy-de-ga" } },
+    id74 = { name = "Yaw Dynamic Deadband Filter", wavs = { "ya-dy-de-fi" } },
+
+    -- Precomp cutoff
+    id75 = { name = "Yaw Precomp Cutoff", wavs = { "ya-pr-cu" } },
 }
 
 local function drawTextMultiline(x, y, text, options)

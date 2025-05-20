@@ -247,7 +247,7 @@ local function drawScreen()
     local yMaxLim = rf2.radio.yMaxLimit
     local currentFieldY = Page.fields[currentField].y
     local textOptions = rf2.radio.textSize + globalTextOptions
-    local boldTextOptions = (rf2.isEdgeTx() and TEXT_COLOR and BOLD + TEXT_COLOR) or textOptions
+    local boldTextOptions = (rf2.isEdgeTx and TEXT_COLOR and BOLD + TEXT_COLOR) or textOptions
     if currentFieldY <= Page.fields[1].y then
         pageScrollY = 0
     elseif currentFieldY - pageScrollY <= yMinLim then
@@ -343,7 +343,10 @@ rf2.loadPageFiles = function(setCurrentPageToLastPage)
 end
 
 local function run_ui(event)
-    --rf2.print("uiState: "..uiState.." pageState: "..pageState)
+    -- if event and event ~= 0 then
+    --     rf2.print("uiState: " .. uiState .. " pageState: " .. pageState .. " Event: " .. string.format("0x%X", event))
+    -- end
+
     if displayMessage then
         lcd.clear()
         drawMessage(displayMessage.title, displayMessage.text)
@@ -391,7 +394,7 @@ local function run_ui(event)
         elseif event == EVT_VIRTUAL_ENTER then
             uiState = uiStatus.pages
         elseif event == EVT_VIRTUAL_ENTER_LONG then
-            killEnterBreak = 1
+            if rf2.useKillEnterBreak then killEnterBreak = 1 end
             createPopupMenu()
         end
         lcd.clear()
@@ -442,7 +445,7 @@ local function run_ui(event)
                     end
                 end
             elseif event == EVT_VIRTUAL_ENTER_LONG then
-                killEnterBreak = 1
+                if rf2.useKillEnterBreak then killEnterBreak = 1 end
                 createPopupMenu()
             elseif event == EVT_VIRTUAL_EXIT then
                 invalidatePages()
