@@ -51,37 +51,37 @@ labels[#labels + 1] = { t = "Yaw",   x = x, y = incY(tableSpacing.row) }
 x = x + tableSpacing.col
 y = tableStartY
 labels[#labels + 1] = { t = "P",     x = x, y = incY(tableSpacing.header) }
-fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.roll_p }
-fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.pitch_p }
-fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.yaw_p }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), w = 50, data = pids.roll_p }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), w = 50, data = pids.pitch_p }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), w = 50, data = pids.yaw_p }
 
 x = x + colSpacing
 y = tableStartY
 labels[#labels + 1] = { t = "I",     x = x, y = incY(tableSpacing.header) }
-fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.roll_i }
-fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.pitch_i }
-fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.yaw_i }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), w = 50, data = pids.roll_i }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), w = 50, data = pids.pitch_i }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), w = 50, data = pids.yaw_i }
 
 x = x + colSpacing
 y = tableStartY
 labels[#labels + 1] = { t = "D",     x = x, y = incY(tableSpacing.header) }
-fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.roll_d }
-fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.pitch_d }
-fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.yaw_d }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), w = 50, data = pids.roll_d }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), w = 50, data = pids.pitch_d }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), w = 50, data = pids.yaw_d }
 
 x = x + colSpacing
 y = tableStartY
 labels[#labels + 1] = { t = "FF",    x = x, y = incY(tableSpacing.header) }
-fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.roll_f }
-fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.pitch_f }
-fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.yaw_f }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), w = 50, data = pids.roll_f }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), w = 50, data = pids.pitch_f }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), w = 50, data = pids.yaw_f }
 
 x = x + colSpacing
 y = tableStartY
 labels[#labels + 1] = { t = "B",     x = x, y = incY(tableSpacing.header) }
-fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.roll_b }
-fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.pitch_b }
-fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.yaw_b }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), w = 50, data = pids.roll_b }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), w = 50, data = pids.pitch_b }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), w = 50, data = pids.yaw_b }
 
 x = margin
 incY(lineSpacing * 0.5)

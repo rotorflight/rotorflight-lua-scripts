@@ -72,14 +72,16 @@ local scripts = {
     "/SCRIPTS/RF2/adj_teller.lua",
     "/SCRIPTS/RF2/background.lua",
     "/SCRIPTS/RF2/background_init.lua",
+    "/SCRIPTS/RF2/lvglHelper.lua",
     "/SCRIPTS/RF2/pages.lua",
     "/SCRIPTS/RF2/protocols.lua",
     "/SCRIPTS/RF2/radios.lua",
     "/SCRIPTS/RF2/rf2.lua",
     "/SCRIPTS/RF2/rf2tlm.lua",
     "/SCRIPTS/RF2/tool.lua",
-    "/SCRIPTS/RF2/ui.lua",
     "/SCRIPTS/RF2/ui_init.lua",
+    "/SCRIPTS/RF2/ui_lcd.lua",
+    "/SCRIPTS/RF2/ui_lvgl.lua",
     "/SCRIPTS/TOOLS/rf2.lua",
 }
 return scripts[...]

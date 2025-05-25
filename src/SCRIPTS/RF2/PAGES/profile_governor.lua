@@ -16,7 +16,7 @@ local governorProfile = rf2.useApi("mspGovernorProfile").getDefaults()
 fields[#fields + 1] = { t = "Current PID profile", x = x, y = incY(lineSpacing), sp = x + sp * 1.17, data = { value = nil, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = profileSwitcher.startPidEditing, postEdit = profileSwitcher.endPidEditing }
 
 incY(lineSpacing * 0.25)
-fields[#fields + 1] = { t = "Full headspeed",      x = x, y = incY(lineSpacing), sp = x + sp, data = governorProfile.headspeed,            id = "govHeadspeed"}
+fields[#fields + 1] = { t = "Full headspeed",      x = x, y = incY(lineSpacing), sp = x + sp, data = governorProfile.headspeed,            w = 100, id = "govHeadspeed"}
 fields[#fields + 1] = { t = "Max throttle",        x = x, y = incY(lineSpacing), sp = x + sp, data = governorProfile.max_throttle,         id = "govMaxThrottle" }
 if rf2.apiVersion >= 12.07 then
     fields[#fields + 1] = { t = "Min throttle",    x = x, y = incY(lineSpacing), sp = x + sp, data = governorProfile.min_throttle,         id = "govMinThrottle" }

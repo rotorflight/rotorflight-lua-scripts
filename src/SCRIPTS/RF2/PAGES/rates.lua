@@ -130,6 +130,7 @@ return {
     updateRatesType = function(self, applyDefaults)
         rf2.useApi("mspRcTuning").getRateDefaults(rcTuning, rcTuning.rates_type.value)
         rebuildForm(self)
+        rf2.onPageReady(self)
     end,
 
     timer = function(self)

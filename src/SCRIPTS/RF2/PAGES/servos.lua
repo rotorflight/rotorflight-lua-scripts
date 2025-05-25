@@ -33,6 +33,7 @@ local function onChangeServo(field, page)
     selectedServoIndex = field.data.value
     rf2.lastChangedServo = selectedServoIndex
     setValues(selectedServoIndex)
+    rf2.onPageReady(page)
 end
 
 local function onPreEditCenter(field, page)

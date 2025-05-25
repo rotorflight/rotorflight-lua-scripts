@@ -1,0 +1,350 @@
+local lvglHelper = rf2.useScript("lvglHelper")
+
+local LUA_VERSION = "2.2.0-RC5"
+
+local isInitialized = false
+local exitTool = false
+local sysPressCounter = 0
+local Page = nil
+
+rf2.apiVersion = 12.08 -- TODO
+
+rf2.showMessage = function(title, text)
+    rf2.print(tostring(title) .. " - " .. tostring(text))
+end
+
+rf2.hideMessage = function()
+    rf2.print("Message hidden")
+end
+
+rf2.setWaitMessage = function(message)
+    rf2.print("Wait message: " .. message)
+end
+
+rf2.clearWaitMessage = function()
+    rf2.print("Wait message cleared")
+end
+
+rf2.setCurrentField = function(field)
+    rf2.print("Current field set to: " .. tostring(field))
+end
+
+local function rebootFc()
+    rf2.showMessage(nil, "Rebooting FC...")
+    rf2.mspQueue:add({
+        command = 68, -- MSP_REBOOT
+        processReply = function(self, buf)
+            rf2.hideMessage()
+        end,
+        simulatorResponse = {}
+    })
+    if Page then Page:read() end
+end
+
+rf2.settingsSaved = function()
+    if Page and Page.eepromWrite then
+        local mspEepromWrite =
+        {
+            command = 250, -- MSP_EEPROM_WRITE, fails when armed
+            processReply = function(self, buf)
+                if Page.reboot then
+                    rebootFc()
+                else
+                    Page:read()
+                end
+            end,
+            errorHandler = function(self)
+                if rf2.apiVersion >= 12.08 then
+                    if not rf2.saveWarningShown then
+                        rf2.showMessage("Save warning", "Settings will be saved\nafter disarming.")
+                        rf2.saveWarningShown = true
+                    else
+                        Page:read()
+                    end
+                else
+                    rf2.showMessage("Save error", "Make sure your heli\nis disarmed.")
+                end
+            end,
+            simulatorResponse = {}
+        }
+        rf2.mspQueue:add(mspEepromWrite)
+    end
+end
+
+local function createPopupMenu()
+    local dg = lvgl.dialog({ title = "Menu", close = function() print("Closed") end })
+    local w = 200
+    local x = LCD_W / 2 - w / 2 - 50
+
+    local lyt = {}
+    if Page and not Page.readOnly == true then
+        lyt[#lyt + 1] = {
+            type = "button",
+            text = "Save",
+            x = x,
+            y = 25,
+            w = w,
+            press = function()
+                dg:close()
+                Page:write()
+            end
+        }
+    end
+
+    if Page then
+        lyt[#lyt + 1] = {
+            type = "button",
+            text = "Reload",
+            x = x,
+            y = 75,
+            w = w,
+            press = function()
+                Page:read()
+                dg:close()
+            end
+        }
+    end
+
+    lyt[#lyt + 1] = {
+        type = "button", text = "Reboot", x = x, y = 125, w = w,
+        press = function(self)
+            rebootFc()
+            dg:close()
+        end
+    }
+
+    dg:build(lyt)
+end
+
+rf2.onPageReady = function(page)
+    rf2.print("onPageReady")
+
+    page.isReady = true
+    --rf2.lcdNeedsInvalidate = true
+
+    lvgl.clear()
+
+    local function formatVal(val, field)
+        if field.data.scale then
+            val = val / field.data.scale
+        end
+        if (field.data.scale or 1) <= 1 then
+            val = math.floor(val)
+        end
+
+        return tostring(val) .. ((field.data and field.data.unit) or "")
+    end
+
+    local function fieldIsButton(f)
+        -- TODO: refactor
+        return f.t and string.sub(f.t, 1, 1) == "[" and not f.data
+    end
+
+    local children = {}
+    for i, label in ipairs(page.labels) do
+        --rf2.print("Label: " .. label.t)
+        children[#children + 1] = {
+            type = "label",
+            x = label.x,
+            y = label.y + 3,
+            --text = label.t, -- no updates
+            text = function() return label.t end, -- does update
+            font = (not (label.bold == false)) and BOLD or 0
+        }
+    end
+
+    for i, field in ipairs(page.fields) do
+        if field.t then
+            children[#children + 1] = {
+                type = "label",
+                x = field.x,
+                y = field.y,
+                text = field.t,
+            }
+        end
+
+        if fieldIsButton(field) then
+            children[#children + 1] = {
+                type = "button",
+                x = field.x,
+                y = field.y,
+                w = field.w or 200,
+                text = function() return field.t end,
+                press = function()
+                    if field.preEdit then field.preEdit(field, page) end
+                end,
+            }
+        elseif field.data and field.data.value and type(field.data.value) == "number" then
+            local child
+            if field.readOnly then
+                child = {
+                    type = "label",
+                    x = field.sp or field.x,
+                    y = field.y + 3,
+                    text = function()
+                        return formatVal(field.data.value, field)
+                    end,
+                }
+            elseif field.data.table then
+                local choiceTable = lvglHelper.toChoiceTable(field.data.table, field.data.max + 1)
+                child = {
+                    type = "choice",
+                    --title = "todo",
+                    values = choiceTable.values,
+                    x = field.sp or field.x,
+                    y = field.y,
+                    w = field.w or 100,
+                    get = function() return choiceTable:getChoiceKey(field.data.value) end,
+                    set = function(val)
+                        rf2.print(val)
+                        field.data.value = choiceTable:getOriginalKey(val)
+                        if field.postEdit then
+                            field:postEdit(page)
+                        end
+                    end,
+                }
+            else
+                child = {
+                    type = "numberEdit",
+                    x = field.sp or field.x,
+                    y = field.y,
+                    w = field.w or 75,
+                    get = function() return field.data.value end,
+                    set = function(val)
+                        if field.change then
+                            field:change(val, page)
+                        end
+                        rf2.print(val)
+                        field.data.value = val
+                    end,
+                    display = function(val)
+                        return formatVal(val, field)
+                    end,
+                }
+                if field.data.min then child.min = field.data.min end
+                if field.data.max then child.max = field.data.max end
+            end
+
+            children[#children + 1] = child
+        end
+    end
+
+    for _, child in ipairs(children) do
+        child.x = child.x * 1.75
+        child.y = (child.y - rf2.radio.yMinLimit + 5) * 1.75
+    end
+
+    local lyt = {
+        {
+            type = "page",
+            title = "Rotorflight",
+            subtitle = page.title,
+            icon = "/SCRIPTS/TOOLS/LVGLIMG/smile.png",
+            back = function() rf2.loadPageFiles() end,
+            children = children
+        },
+    }
+
+    lvgl.build(lyt)
+end
+
+local function loadPage(pageScript)
+    Page = assert(rf2.loadScript("PAGES/" .. pageScript, "cd"))()
+
+    Page:read()
+end
+
+rf2.loadPageFiles = function(setCurrentPageToLastPageNotUsed)
+    Page = nil
+    local pageFiles = assert(rf2.loadScript("pages.lua"))()
+
+    lvgl.clear();
+
+    local children = {}
+    local w = (LCD_W - 40) / 3
+    local h = 40
+    local x = LCD_W / 2 - w / 2 - 5
+
+    for i, page in ipairs(pageFiles) do
+        children[#children + 1] = {
+            type = "button",
+            x = 10 + #children % 3 * (w + 10),
+            y = 20 + #children // 3 * (h + 10),
+            w = w,
+            h = h,
+            text = page.title,
+            press = function() loadPage(page.script) end,
+        }
+    end
+
+    local lyt = {
+        {
+            type = "page",
+            title = "Rotorflight " .. LUA_VERSION,
+            subtitle = "Main menu",
+            --icon = "/SCRIPTS/TOOLS/LVGLIMG/smile.png",
+            back = function() exitTool = true end,
+            --flexFlow = lvgl.FLOW_ROW,
+            --flexPad = 10,
+            --w = LCD_W,
+            children = children
+        },
+    }
+
+    lvgl.build(lyt)
+end
+
+local function initialize()
+    rf2.loadPageFiles()
+end
+
+local function run_ui(event, touchState)
+    if not isInitialized then
+        initialize()
+        isInitialized = true
+    end
+
+    if (exitTool) then return 2 end
+
+    --rf2.print(".")
+
+    if event and event ~= 0 then
+        rf2.print(" Event: " .. string.format("0x%X", event))
+    end
+
+    local evttxt
+    if (event == EVT_VIRTUAL_NEXT) or (event == EVT_VIRTUAL_NEXT_PAGE) then
+        evttxt = "NEXT"
+    elseif (event == EVT_VIRTUAL_PREV) or (event == EVT_VIRTUAL_PREV_PAGE) then
+        evttxt = "PREV"
+    elseif (event == EVT_TOUCH_BREAK) or (event == EVT_TOUCH_TAP) then
+        evttxt = "TOUCH " .. touchState.x .. "," .. touchState.y
+    else
+        if event ~= 0 then evttxt = event end
+    end
+    if evttxt then
+        rf2.print("Event: " .. evttxt)
+    end
+
+    if Page and Page.timer and (not Page.lastTimeTimerFired or Page.lastTimeTimerFired + 0.5 < rf2.clock()) then
+        Page.lastTimeTimerFired = rf2.clock()
+        Page.timer(Page)
+    end
+
+    if event and event == 0x60D then -- SYS
+        sysPressCounter = sysPressCounter + 1
+        -- for some reason the tool gets all events twice, so we need to ignore the first one
+        if sysPressCounter == 2 then
+            sysPressCounter = 0
+            rf2.print("Creating popup menu")
+            createPopupMenu()
+            rf2.print("Popup menu created")
+        end
+    end
+
+    rf2.mspQueue:processQueue()
+
+    return 0
+end
+
+return run_ui
