@@ -33,8 +33,7 @@ fields[#fields + 1] = { t = "TTA gain",            x = x, y = incY(lineSpacing),
 fields[#fields + 1] = { t = "TTA limit",           x = x, y = incY(lineSpacing), sp = x + sp, data = governorProfile.tta_limit,            id = "govTTALimit" }
 
 local function receivedGovernorProfile(page, _)
-    rf2.lcdNeedsInvalidate = true
-    page.isReady = true
+    rf2.onPageReady(page)
 end
 
 return {

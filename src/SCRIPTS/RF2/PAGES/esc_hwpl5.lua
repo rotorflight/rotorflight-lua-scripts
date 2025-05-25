@@ -52,8 +52,7 @@ local function receivedEscParameters(page, data)
     end
 
     page.readOnly = false     -- enable 'Save Page'
-    page.isReady = true
-    rf2.lcdNeedsInvalidate = true
+    rf2.onPageReady(page)
 end
 
 return {

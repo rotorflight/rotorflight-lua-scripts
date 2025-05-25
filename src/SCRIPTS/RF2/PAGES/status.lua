@@ -148,7 +148,6 @@ return {
         if dataflashSummary.supported then
             fields[3].preEdit = self.onClickErase
         end
-        rf2.lcdNeedsInvalidate = true
-        self.isReady = true
+        rf2.onPageReady(self)
     end,
 }

@@ -51,8 +51,7 @@ fields[#fields + 1] = { t = "Max collective",      x = x + indent, y = incY(line
 --]]
 
 local function receivedRescueProfile(page, _)
-    rf2.lcdNeedsInvalidate = true
-    page.isReady = true
+    rf2.onPageReady(page)
 end
 
 return {

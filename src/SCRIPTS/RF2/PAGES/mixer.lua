@@ -60,8 +60,7 @@ if rf2.apiVersion >= 12.08 then
 end
 
 local function receivedMixerConfig(page, _)
-    rf2.lcdNeedsInvalidate = true
-    page.isReady = true
+    rf2.onPageReady(page)
 end
 
 return {

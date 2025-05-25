@@ -35,8 +35,7 @@ fields[#fields + 1] = { t = "TTA bandwidth",        x = x, y = incY(lineSpacing)
 fields[#fields + 1] = { t = "Precomp bandwidth",    x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_ff_filter,                 id = "govFFFilterHz" }
 
 local function receivedGovernorConfig(page, _)
-    rf2.lcdNeedsInvalidate = true
-    page.isReady = true
+    rf2.onPageReady(page)
 end
 
 return {

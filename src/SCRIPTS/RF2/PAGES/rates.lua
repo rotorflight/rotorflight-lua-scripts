@@ -110,8 +110,7 @@ end
 
 local function receivedRcTuning(page)
     rebuildForm(page)
-    rf2.lcdNeedsInvalidate = true
-    page.isReady = true
+    rf2.onPageReady(page)
 end
 
 return {

@@ -95,8 +95,7 @@ fields[#fields + 1] = { t = "Roll",                   x = x + indent, y = incY(l
 fields[#fields + 1] = { t = "Pitch",                  x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pids.pitch_o }
 
 local function receivedPidTuning(page, data)
-    rf2.lcdNeedsInvalidate = true
-    page.isReady = true
+    rf2.onPageReady(page)
 end
 
 return {

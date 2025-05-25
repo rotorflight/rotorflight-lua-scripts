@@ -72,8 +72,7 @@ local function receivedEscParameters(page, data)
     -- The read-only flag is set when the ESC is connected to an RX pin instead of a TX pin in half-duplex mode. Only supported by YGE.
     page.readOnly = bit32.band(data.command, 0x40) == 0x40
     updateRatio(nil, page)
-    page.isReady = true
-    rf2.lcdNeedsInvalidate = true
+    rf2.onPageReady(page)
 end
 
 return {

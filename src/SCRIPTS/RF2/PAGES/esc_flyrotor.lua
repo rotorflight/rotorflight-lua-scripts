@@ -65,8 +65,7 @@ local function receivedEscParameters(page, data)
         page.readOnly = bit32.band(data.command, 0x40) == 0x40
     end
 
-    page.isReady = true
-    rf2.lcdNeedsInvalidate = true
+    rf2.onPageReady(page)
 end
 
 return {

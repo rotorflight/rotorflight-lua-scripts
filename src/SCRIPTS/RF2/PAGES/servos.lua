@@ -82,8 +82,7 @@ local function receivedServoConfigurations(page, configs)
     selectedServoIndex = rf2.lastChangedServo or 0
     setValues(selectedServoIndex)
     page.fields[1].data.max = #configs
-    rf2.lcdNeedsInvalidate = true
-    page.isReady = true
+    rf2.onPageReady(page)
 end
 
 return {

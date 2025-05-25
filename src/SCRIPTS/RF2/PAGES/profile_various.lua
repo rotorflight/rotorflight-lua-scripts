@@ -51,8 +51,7 @@ labels[#labels + 1] = { t = "Horizon Mode",            x = x,          y = incY(
 fields[#fields + 1] = { t = "Leveling gain",           x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.horizon_level_strength }
 
 local function receivedPidProfile(page, _)
-    rf2.lcdNeedsInvalidate = true
-    page.isReady = true
+    rf2.onPageReady(page)
 end
 
 return {
