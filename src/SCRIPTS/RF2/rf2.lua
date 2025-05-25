@@ -4,6 +4,19 @@ rf2 = {
 
     loadScript = loadScript,
 
+    useScript = function(scriptName)
+        collectgarbage()
+        return assert(rf2.loadScript(rf2.baseDir .. scriptName .. ".lua"))()
+    end,
+
+    useApi = function(apiName)
+        return rf2.useScript("MSP/" .. apiName)
+    end,
+
+    loadSettings = function()
+        return rf2.useScript("PAGES/helpers/settingsHelper").loadSettings();
+    end,
+
     log = function(str)
         if rf2.runningInSimulator then
             print(tostring(str))
@@ -22,11 +35,6 @@ rf2 = {
             --serialWrite(tostring(str).."\r\n") -- 115200 bps
             --rf2.log(str)
         end
-    end,
-
-    useApi = function(apiName)
-        collectgarbage()
-        return assert(rf2.loadScript(rf2.baseDir.."MSP/" .. apiName .. ".lua"))()
     end,
 
     clock = function()
@@ -52,6 +60,9 @@ rf2 = {
     -- Color radios on EdgeTX >= 2.11 do not send EVT_VIRTUAL_ENTER anymore after EVT_VIRTUAL_ENTER_LONG
     useKillEnterBreak = not(lcd.setColor and select(3, getVersion()) >= 2 and select(4, getVersion()) >= 11),
 
+    -- Use LVGL graphics on color radios with EdgeTX 2.11 or higher
+    canUseLvgl = lcd.setColor and select(3, getVersion()) >= 2 and select(4, getVersion()) >= 11,
+
     --[[
     showMemoryUsage = function(remark)
         if not rf2.oldMemoryUsage then
@@ -69,10 +80,11 @@ rf2 = {
         rf2.oldMemoryUsage = currentMemoryUsage
     end,
 
-    printGlobals = function(maxDepth)
+    dumpTable = function(table, maxDepth)
         local seen = {}
+        maxDepth = maxDepth or 2
 
-        local function dumpTable(tbl, indent, depth)
+        local function dumpTableInternal(tbl, indent, depth)
             if seen[tbl] or depth > maxDepth then
                 rf2.print(indent .. "*already visited or max depth*")
                 return
@@ -84,7 +96,7 @@ rf2 = {
                 local vType = type(v)
                 if vType == "table" then
                     rf2.print(indent .. keyStr .. " = {")
-                    dumpTable(v, indent .. "  ", depth + 1)
+                    dumpTableInternal(v, indent .. "  ", depth + 1)
                     rf2.print(indent .. "}")
                 else
                     rf2.print(indent .. keyStr .. " = " .. tostring(v))
@@ -92,7 +104,11 @@ rf2 = {
             end
         end
 
-        dumpTable(_G, "", 0)
+        dumpTableInternal(table, "", 0)
+    end,
+
+    printGlobals = function(maxDepth)
+        rf2.dumpTable(_G, maxDepth)
     end,
 
     isInteger = function(n)
