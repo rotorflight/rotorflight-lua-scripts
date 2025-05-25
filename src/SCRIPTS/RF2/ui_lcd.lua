@@ -72,6 +72,11 @@ rf2.setCurrentField = function()
     end
 end
 
+rf2.onPageReady = function(page)
+    page.isReady = true
+    rf2.lcdNeedsInvalidate = true
+end
+
 local function rebootFc()
     --rf2.print("Attempting to reboot the FC...")
     pageState = pageStatus.rebooting
