@@ -2,12 +2,24 @@ local lvglHelper = rf2.useScript("lvglHelper")
 
 local LUA_VERSION = "2.2.0-RC5"
 
-local isInitialized = false
-local exitTool = false
+local uiStatus =
+{
+    init        = 1,
+    mainMenu    = 2,
+    pages       = 3,
+    exit        = 5
+}
+
+local ui = {
+    state = uiStatus.init,
+    previousState = nil,
+    wait = {}
+}
+
+local uiInit
+
 local sysPressCounter = 0
 local Page = nil
-
-rf2.apiVersion = 12.08 -- TODO
 
 rf2.showMessage = function(title, text)
     rf2.print(tostring(title) .. " - " .. tostring(text))
@@ -18,27 +30,61 @@ rf2.hideMessage = function()
 end
 
 rf2.setWaitMessage = function(message)
-    rf2.print("Wait message: " .. message)
+    ui.wait.message = message
 end
 
 rf2.clearWaitMessage = function()
-    rf2.print("Wait message cleared")
+    if not ui.wait.message then return end
+    ui.wait.message = nil
+    ui.wait.shown = false
+    ui.previousState = nil -- force redraw of previous ui
+end
+
+local function showWaitMessage()
+    lvgl.clear();
+
+    local lyt = {
+        {
+            type = "page",
+            title = "Rotorflight",
+            subtitle = Page and Page.title or "",
+            --icon = "/SCRIPTS/TOOLS/LVGLIMG/smile.png",
+            back = function() ui.show() end,
+            children = {
+                {
+                    type = "label",
+                    x = 70,
+                    y = 16,
+                    color = BLACK,
+                    font = DBLSIZE,
+                    text = ui.wait.message or ""
+                },
+            },
+        },
+    }
+
+    lvgl.build(lyt)
 end
 
 rf2.setCurrentField = function(field)
-    rf2.print("Current field set to: " .. tostring(field))
+    -- only for compatibility with ui_lcd at the moment
+    --rf2.print("Current field set to: " .. tostring(field))
 end
 
 local function rebootFc()
-    rf2.showMessage(nil, "Rebooting FC...")
+    --rf2.setWaitMessage("Rebooting FC...") -- TODO?
     rf2.mspQueue:add({
         command = 68, -- MSP_REBOOT
         processReply = function(self, buf)
-            rf2.hideMessage()
+            --ui.previousState = nil
         end,
         simulatorResponse = {}
     })
-    if Page then Page:read() end
+    if Page then
+        Page:read()
+    else
+        rf2.loadPageFiles()
+    end
 end
 
 rf2.settingsSaved = function()
@@ -108,8 +154,8 @@ local function createPopupMenu()
     lyt[#lyt + 1] = {
         type = "button", text = "Reboot", x = x, y = 125, w = w,
         press = function(self)
-            rebootFc()
             dg:close()
+            rebootFc()
         end
     }
 
@@ -117,10 +163,7 @@ local function createPopupMenu()
 end
 
 rf2.onPageReady = function(page)
-    rf2.print("onPageReady")
-
     page.isReady = true
-    --rf2.lcdNeedsInvalidate = true
 
     lvgl.clear()
 
@@ -169,7 +212,10 @@ rf2.onPageReady = function(page)
                 x = field.x,
                 y = field.y,
                 w = field.w or 200,
-                text = function() return field.t end,
+                text = function()
+                    local s = string.gsub(field.t, "[%[%]]", "")
+                    return  s
+                end,
                 press = function()
                     if field.preEdit then field.preEdit(field, page) end
                 end,
@@ -246,15 +292,16 @@ rf2.onPageReady = function(page)
     }
 
     lvgl.build(lyt)
+    ui.state = uiStatus.pages
 end
 
 local function loadPage(pageScript)
     Page = assert(rf2.loadScript("PAGES/" .. pageScript, "cd"))()
-
     Page:read()
+    ui.pageScript = pageScript
 end
 
-rf2.loadPageFiles = function(setCurrentPageToLastPageNotUsed)
+rf2.loadPageFiles = function()
     Page = nil
     local pageFiles = assert(rf2.loadScript("pages.lua"))()
 
@@ -283,7 +330,7 @@ rf2.loadPageFiles = function(setCurrentPageToLastPageNotUsed)
             title = "Rotorflight " .. LUA_VERSION,
             subtitle = "Main menu",
             --icon = "/SCRIPTS/TOOLS/LVGLIMG/smile.png",
-            back = function() exitTool = true end,
+            back = function() ui.state = uiStatus.exit end,
             --flexFlow = lvgl.FLOW_ROW,
             --flexPad = 10,
             --w = LCD_W,
@@ -292,21 +339,44 @@ rf2.loadPageFiles = function(setCurrentPageToLastPageNotUsed)
     }
 
     lvgl.build(lyt)
+    ui.state = uiStatus.mainMenu
 end
 
-local function initialize()
-    rf2.loadPageFiles()
+ui.show = function()
+    if ui.wait.message and not ui.wait.shown then
+        rf2.print("Showing wait message: " .. tostring(ui.wait.message))
+        showWaitMessage()
+        ui.wait.shown = true
+    end
+
+    if ui.previousState == ui.state then return end
+    ui.previousState = ui.state
+
+    rf2.print("Loading UI for ui.state" .. tostring(ui.state))
+
+    if ui.state == uiStatus.mainMenu then
+        rf2.loadPageFiles()
+    elseif ui.state == uiStatus.pages and ui.pageScript then
+        loadPage(ui.pageScript)
+    end
 end
 
 local function run_ui(event, touchState)
-    if not isInitialized then
-        initialize()
-        isInitialized = true
+    ui.show()
+
+    if ui.state == uiStatus.init then
+        uiInit = uiInit or assert(rf2.loadScript("ui_init.lua"))()
+        local gotApiVersion = uiInit.f()
+        rf2.setWaitMessage(uiInit.t)
+        if not gotApiVersion then return 0 end
+        rf2.clearWaitMessage()
+        uiInit = nil
+        ui.state = uiStatus.mainMenu
     end
 
-    if (exitTool) then return 2 end
-
-    --rf2.print(".")
+    if ui.state == uiStatus.exit then
+        return 2
+    end
 
     if event and event ~= 0 then
         rf2.print(" Event: " .. string.format("0x%X", event))
@@ -340,6 +410,14 @@ local function run_ui(event, touchState)
             createPopupMenu()
             rf2.print("Popup menu created")
         end
+    end
+
+    if getRSSI() == 0 then
+        rf2.setWaitMessage("No telemetry")
+        ui.showNoTelemetry = true
+    elseif ui.wait.showNoTelemetry then
+        rf2.clearWaitMessage()
+        ui.showNoTelemetry = false
     end
 
     rf2.mspQueue:processQueue()
