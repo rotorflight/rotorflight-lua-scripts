@@ -118,9 +118,10 @@ return {
     onProcessedMspStatus = function(self, status)
         fcStatus = status
         labels[2].t = armingDisableFlagsToString(fcStatus.armingDisableFlags)
-        if not editing then
+        if not editing and (fields[1].data.value ~= fcStatus.profile or fields[2].data.value ~= fcStatus.rateProfile) then
             fields[1].data.value = fcStatus.profile
             fields[2].data.value = fcStatus.rateProfile
+            rf2.onPageReady(self) -- force page redraw (important for ui_lvgl)
         end
         fields[4].data.value = fcStatus.realTimeLoad
         fields[5].data.value = fcStatus.cpuLoad

@@ -38,6 +38,7 @@ end
 
 return {
     read = function(self)
+        self.profileSwitcher.getStatus(self)
         rf2.useApi("mspGovernorProfile").read(receivedGovernorProfile, self, governorProfile)
     end,
     write = function(self)

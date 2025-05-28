@@ -56,6 +56,7 @@ end
 
 return {
     read = function(self)
+        self.profileSwitcher.getStatus(self)
         rf2.useApi("mspRescueProfile").read(receivedRescueProfile, self, rescueProfile)
     end,
     write = function(self)

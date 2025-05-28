@@ -57,6 +57,7 @@ end
 
 return {
     read = function(self)
+        self.profileSwitcher.getStatus(self)
         rf2.useApi("mspPidProfile").read(receivedPidProfile, self, pidProfile)
     end,
     write = function(self)

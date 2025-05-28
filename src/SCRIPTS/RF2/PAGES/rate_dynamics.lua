@@ -78,6 +78,7 @@ end
 
 return {
     read = function(self)
+        self.rateSwitcher.getStatus(self)
         rf2.useApi("mspRcTuning").read(receivedRcTuning, self, rcTuning)
     end,
     write = function(self)

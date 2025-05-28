@@ -117,7 +117,7 @@ rf2.settingsSaved = function()
     end
 end
 
-local function createPopupMenu()
+local function buildPopupMenu()
     local dg = lvgl.dialog({ title = "Menu", close = function() print("Closed") end })
     local w = 200
     local x = LCD_W / 2 - w / 2 - 50
@@ -162,9 +162,7 @@ local function createPopupMenu()
     dg:build(lyt)
 end
 
-rf2.onPageReady = function(page)
-    page.isReady = true
-
+local function buildPage()
     lvgl.clear()
 
     local function formatVal(val, field)
@@ -184,7 +182,7 @@ rf2.onPageReady = function(page)
     end
 
     local children = {}
-    for i, label in ipairs(page.labels) do
+    for i, label in ipairs(Page.labels) do
         --rf2.print("Label: " .. label.t)
         children[#children + 1] = {
             type = "label",
@@ -196,7 +194,7 @@ rf2.onPageReady = function(page)
         }
     end
 
-    for i, field in ipairs(page.fields) do
+    for i, field in ipairs(Page.fields) do
         if field.t then
             children[#children + 1] = {
                 type = "label",
@@ -217,7 +215,7 @@ rf2.onPageReady = function(page)
                     return  s
                 end,
                 press = function()
-                    if field.preEdit then field.preEdit(field, page) end
+                    if field.preEdit then field.preEdit(field, Page) end
                 end,
             }
         elseif field.data and field.data.value and type(field.data.value) == "number" then
@@ -233,6 +231,7 @@ rf2.onPageReady = function(page)
                 }
             elseif field.data.table then
                 local choiceTable = lvglHelper.toChoiceTable(field.data.table, field.data.max + 1)
+                --rf2.print("Choice with value: " .. tostring(field.data.value))
                 child = {
                     type = "choice",
                     --title = "todo",
@@ -245,7 +244,7 @@ rf2.onPageReady = function(page)
                         rf2.print(val)
                         field.data.value = choiceTable:getOriginalKey(val)
                         if field.postEdit then
-                            field:postEdit(page)
+                            field:postEdit(Page)
                         end
                     end,
                 }
@@ -258,7 +257,7 @@ rf2.onPageReady = function(page)
                     get = function() return field.data.value end,
                     set = function(val)
                         if field.change then
-                            field:change(val, page)
+                            field:change(val, Page)
                         end
                         rf2.print(val)
                         field.data.value = val
@@ -284,7 +283,7 @@ rf2.onPageReady = function(page)
         {
             type = "page",
             title = "Rotorflight",
-            subtitle = page.title,
+            subtitle = Page.title,
             icon = "/SCRIPTS/TOOLS/LVGLIMG/smile.png",
             back = function() rf2.loadPageFiles() end,
             children = children
@@ -301,6 +300,17 @@ local function loadPage(pageScript)
     ui.pageScript = pageScript
 end
 
+rf2.onPageReady = function(page)
+    page.isReady = true
+    Page = page
+    buildPage()
+end
+
+rf2.reloadPage = function()
+    rf2.print("Reloading page: " .. tostring(ui.pageScript))
+    loadPage(ui.pageScript)
+end
+
 rf2.loadPageFiles = function()
     Page = nil
     local pageFiles = assert(rf2.loadScript("pages.lua"))()
@@ -308,15 +318,15 @@ rf2.loadPageFiles = function()
     lvgl.clear();
 
     local children = {}
-    local w = (LCD_W - 40) / 3
-    local h = 40
+    local w = (LCD_W - 30) / 3
+    local h = 50
     local x = LCD_W / 2 - w / 2 - 5
 
     for i, page in ipairs(pageFiles) do
         children[#children + 1] = {
             type = "button",
-            x = 10 + #children % 3 * (w + 10),
-            y = 20 + #children // 3 * (h + 10),
+            x = 6 + #children % 3 * (w + 4),
+            y = 6 + #children // 3 * (h + 4),
             w = w,
             h = h,
             text = page.title,
@@ -407,17 +417,16 @@ local function run_ui(event, touchState)
         if sysPressCounter == 2 then
             sysPressCounter = 0
             rf2.print("Creating popup menu")
-            createPopupMenu()
-            rf2.print("Popup menu created")
+            buildPopupMenu()
         end
     end
 
     if getRSSI() == 0 then
         rf2.setWaitMessage("No telemetry")
-        ui.showNoTelemetry = true
-    elseif ui.wait.showNoTelemetry then
+        ui.showingNoTelemetry = true
+    elseif ui.wait.showingNoTelemetry then
         rf2.clearWaitMessage()
-        ui.showNoTelemetry = false
+        ui.showingNoTelemetry = false
     end
 
     rf2.mspQueue:processQueue()

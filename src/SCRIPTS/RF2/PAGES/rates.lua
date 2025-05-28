@@ -86,11 +86,11 @@ local function buildForm()
 
     x = margin
     incY(lineSpacing * 0.5)
-    fields[13] = { t = "Rates type",                      x = x,          y = incY(lineSpacing), sp = x + sp, data = rcTuning.rates_type, postEdit = function(self, page) page.updateRatesType(page) end }
+    fields[13] = { t = "Rates type",     x = x, y = incY(lineSpacing), sp = x + sp, data = rcTuning.rates_type, postEdit = function(self, page) page.updateRatesType(page) end }
 
     incY(lineSpacing * 0.5)
-    fields[14] = { t = "Current rate profile",            x = x,          y = incY(lineSpacing), sp = x + sp * 1.17, data = { min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = startEditing, postEdit = endRateEditing }
-    fields[15] = { t = "Destination profile",             x = x,          y = incY(lineSpacing), sp = x + sp * 1.17, data = { min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } } }
+    fields[14] = { t = "Current rate profile",            x = x,          y = incY(lineSpacing), sp = x + sp * 1.17, data = { min = 0, max = 5, value = rcTuning.currentRateProfile, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = startEditing, postEdit = endRateEditing }
+    fields[15] = { t = "Destination profile",             x = x,          y = incY(lineSpacing), sp = x + sp * 1.17, data = { min = 0, max = 5, value = rcTuning.destRateProfile, table = { [0] = "1", "2", "3", "4", "5", "6" } } }
     fields[#fields + 1] = { t = "[Copy Current to Dest]", x = x + indent, y = incY(lineSpacing), preEdit = copyProfile }
     --rf2.showMemoryUsage("after buildform")
 end
@@ -115,6 +115,7 @@ end
 
 return {
     read = function(self)
+        mspStatus.getStatus(self.onProcessedMspStatus, self)
         rf2.useApi("mspRcTuning").read(receivedRcTuning, self, rcTuning)
     end,
     write = function(self)
@@ -148,6 +149,7 @@ return {
                 profileAdjustmentTS = rf2.clock()
             end
             currentField.data.value = status.rateProfile
+            rcTuning.currentRateProfile = status.rateProfile
         end
         local destField = self.fields[15]
         if not destField.data.value then
@@ -156,6 +158,7 @@ return {
             else
                 destField.data.value = 4
             end
+            rcTuning.destRateProfile = destField.data.value
         end
         rf2.lcdNeedsInvalidate = true
         self.isReady = true

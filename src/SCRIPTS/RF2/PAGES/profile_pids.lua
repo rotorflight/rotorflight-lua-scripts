@@ -100,6 +100,7 @@ end
 
 return {
     read = function(self)
+        mspStatus.getStatus(self.onProcessedMspStatus, self)
         rf2.useApi("mspPidTuning").read(receivedPidTuning, self, pids)
     end,
     write = function(self)
