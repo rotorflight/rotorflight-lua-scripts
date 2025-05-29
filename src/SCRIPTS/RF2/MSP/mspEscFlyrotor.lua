@@ -3,8 +3,8 @@ local govMode = { [0] = "Ext Governor", "Esc Governor" }
 local becVoltage = { [0] = "Disable", "7.5V", "8.0V", "8.5V", "12.0V" }
 local motorDirection = { [0] = "CW", "CCW" }
 local fanControl = { [0] = "Automatic", "Always On" }
-local throttleProtocols = { [0] = "PWM", "DSHOT", "Serial Port" }
-local telemetryProtocols = { [0] = "FLYROTOR", "SBUS2" }
+local throttleProtocols = { [0] = "PWM", "RESERVE" }
+local telemetryProtocols = { [0] = "FLYROTOR", "RESERVE" }
 local ledColors = { [0] = "CUSTOM", "BLACK", "RED", "GREEN", "BLUE", "YELLOW", "MAGENTA", "CYAN", "WHITE", "ORANGE", "GRAY", "MAROON", "DARK_GREEN", "NAVY", "PURPLE", "TEAL", "SILVER", "PINK", "GOLD", "BROWN", "LIGHT_BLUE", "FL_PINK", "FL_ORANGE", "FL_LIME", "FL_MINT", "FL_CYAN", "FL_PURPLE", "FL_HOT_PINK", "FL_LIGHT_YELLOW", "FL_AQUAMARINE", "FL_GOLD", "FL_DEEP_PINK", "FL_NEON_GREEN", "FL_ORANGE_RED" }
 
 local function getDefaults()
@@ -45,7 +45,7 @@ local function getDefaults()
         led_color = { min = 0, max = #ledColors, table = ledColors },
         unknown3 = nil,
         motor_temp_sensor = { min = 0, max = #statusOptions, table = statusOptions},
-        motor_temp = { min = 50, max = 175, unit = rf2.units.celsius },
+        motor_temp = { min = 50, max = 155, unit = rf2.units.celsius },
         capacity_cutoff = { min = 0, max = 10000, mult = 100 }
     }
 end
