@@ -1,18 +1,16 @@
-# 2.2.0-RC3
+# 2.2.0
 
-This is the *Third Release Candidate* of the *Rotorflight Lua Scripts for EdgeTX and OpenTX* for RF 2.2.0.
-
-**NOTE:** The final 2.2.0 version will be released after a few release candidates. Please don't use RCs once the final release is out.
+This is the 2.2.0 release of the *Rotorflight Lua Scripts for EdgeTX and OpenTX*.
 
 ## Downloads
 
 The download locations are:
 
-- [Rotorflight Configurator](https://github.com/rotorflight/rotorflight-configurator/releases/tag/release/2.2.0-RC3)
-- [Rotorflight Blackbox](https://github.com/rotorflight/rotorflight-blackbox/releases/tag/release/2.2.0-RC3)
-- [Lua Scripts for EdgeTX and OpenTX](https://github.com/rotorflight/rotorflight-lua-scripts/releases/tag/release/2.2.0-RC3)
-- [Lua Scripts for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos/releases/tag/release/2.2.0-RC3)
-- [Lua Suite for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos-suite/releases/tag/release/2.2.0-RC3)
+- [Rotorflight Configurator](https://github.com/rotorflight/rotorflight-configurator/releases/tag/release/2.2.0)
+- [Rotorflight Blackbox](https://github.com/rotorflight/rotorflight-blackbox/releases/tag/release/2.2.0)
+- [Lua Scripts for EdgeTX and OpenTX](https://github.com/rotorflight/rotorflight-lua-scripts/releases/tag/release/2.2.0)
+- [Lua Scripts for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos/releases/tag/release/2.2.0)
+- [Lua Suite for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos-suite/releases/tag/release/2.2.0)
 
 ## Notes
 
@@ -23,17 +21,19 @@ Rotorflight setup instructions can be found on the Rotorflight website [www.roto
 The `rf2bg` background script will do a couple of things:
 - Set the clock on the flight controller, so your log files have the correct timestamp.
 - Enable CRSF/ELRS custom telemetry, if the model is configured to use that.
-- Tell you what adjustment you just made, if any.
+- Optionally tell you what adjustment you just made, if any.
 
 If you want to use any of these features, make sure you've defined and enabled a special function running `rf2bg`, with *Repeat* set to *On*.
 
-## Changes from 2.1.0
+## Changes from 2.1.1
 
 - Added page *Rate Dynamics*
 - Added page *PID Controller Settings*
 - Added new RF 2.2 settings to existing pages
 - Added units to most settings
+- Better support for EdgeTX 2.11
 - Reduced memory usage
+- Various minor fixes
 
 
 
