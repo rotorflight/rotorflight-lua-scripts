@@ -8,8 +8,8 @@ local function getDefaults()
     defaults.gov_zero_throttle_timeout = { min = 0, max = 100, scale = 10, unit = rf2.units.seconds }
     defaults.gov_lost_headspeed_timeout = { min = 0, max = 100, scale = 10, unit = rf2.units.seconds }
     defaults.gov_autorotation_timeout = { min = 0, max = 100, scale = 10, unit = rf2.units.seconds }
-    defaults.gov_autorotation_bailout_time = { min = 0, max = 100, scale = 10, unit = rf2.units.seconds }
-    defaults.gov_autorotation_min_entry_time = { min = 0, max = 100, scale = 10, unit = rf2.units.seconds }
+    defaults.gov_autorotation_bailout_time = { min = 0, max = 600, scale = 10, unit = rf2.units.seconds }
+    defaults.gov_autorotation_min_entry_time = { min = 0, max = 600, scale = 10, unit = rf2.units.seconds }
     defaults.gov_handover_throttle = { min = 10, max = 50, unit = rf2.units.percentage }
     defaults.gov_pwr_filter = { min = 0, max = 250, unit = rf2.units.herz }
     defaults.gov_rpm_filter = { min = 0, max = 250, unit = rf2.units.herz }
