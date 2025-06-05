@@ -47,7 +47,7 @@ local function showWaitMessage()
             type = "page",
             title = "Rotorflight",
             subtitle = Page and Page.title or "",
-            --icon = "/SCRIPTS/TOOLS/LVGLIMG/smile.png",
+            icon = rf2.baseDir .. "rf2.png",
             back = function() ui.show() end,
             children = {
                 {
@@ -66,16 +66,20 @@ local function showWaitMessage()
 end
 
 rf2.setCurrentField = function(field)
-    -- only for compatibility with ui_lcd at the moment
-    --rf2.print("Current field set to: " .. tostring(field))
+    -- Setting the focus is not (yet) supported with LVGL.
+    -- So this is only for compatibility with ui_lcd at the moment
+end
+
+rf2.storeCurrentField = function()
+    -- Not supported with LVGL
 end
 
 local function rebootFc()
-    --rf2.setWaitMessage("Rebooting FC...") -- TODO?
+    --rf2.setWaitMessage("Rebooting FC...") -- Won't disappear since we don't get a response
     rf2.mspQueue:add({
         command = 68, -- MSP_REBOOT
         processReply = function(self, buf)
-            --ui.previousState = nil
+            -- Won't get here
         end,
         simulatorResponse = {}
     })
@@ -210,7 +214,7 @@ local function buildPage()
                 y = field.y,
                 w = field.w or 200,
                 text = function()
-                    local s = string.gsub(field.t, "[%[%]]", "")
+                    local s = string.gsub(field.t, "[%[%]]", "") -- remove brackets around [button]
                     return  s
                 end,
                 press = function()
@@ -283,7 +287,7 @@ local function buildPage()
             type = "page",
             title = "Rotorflight " .. rf2.luaVersion,
             subtitle = Page.title,
-            --icon = "/SCRIPTS/TOOLS/LVGLIMG/smile.png",
+            icon = rf2.baseDir .. "rf2.png",
             back = function() rf2.loadPageFiles() end,
             children = children
         },
@@ -322,13 +326,14 @@ rf2.loadPageFiles = function()
     local x = LCD_W / 2 - w / 2 - 5
 
     for i, page in ipairs(pageFiles) do
+        local text = string.gsub(page.title, "^ESC %- ", "") -- remove leading 'ESC - ' from title
         children[#children + 1] = {
             type = "button",
             x = 6 + #children % 3 * (w + 4),
             y = 6 + #children // 3 * (h + 4),
             w = w,
             h = h,
-            text = page.title,
+            text = text,
             press = function() loadPage(page.script) end,
         }
     end
@@ -338,11 +343,8 @@ rf2.loadPageFiles = function()
             type = "page",
             title = "Rotorflight " .. rf2.luaVersion,
             subtitle = "Main menu",
-            --icon = "/SCRIPTS/TOOLS/LVGLIMG/smile.png",
+            icon = rf2.baseDir .. "rf2.png",
             back = function() ui.state = uiStatus.exit end,
-            --flexFlow = lvgl.FLOW_ROW,
-            --flexPad = 10,
-            --w = LCD_W,
             children = children
         },
     }
