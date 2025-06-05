@@ -22,11 +22,12 @@ local sysPressCounter = 0
 local Page = nil
 
 rf2.showMessage = function(title, text)
-    rf2.print(tostring(title) .. " - " .. tostring(text))
-end
+    local dg = lvgl.dialog({ title = title, w = 300, h = 200 })
+    local lyt = {
+        { type = "label", align = VCENTER + CENTER, text = text, w = 290 },
+    }
 
-rf2.hideMessage = function()
-    rf2.print("Message hidden")
+    dg:build(lyt)
 end
 
 rf2.setWaitMessage = function(message)
