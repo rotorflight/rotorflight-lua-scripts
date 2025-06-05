@@ -1,7 +1,5 @@
 local lvglHelper = rf2.useScript("lvglHelper")
 
-local LUA_VERSION = "2.2.0-RC5"
-
 local uiStatus =
 {
     init        = 1,
@@ -283,9 +281,9 @@ local function buildPage()
     local lyt = {
         {
             type = "page",
-            title = "Rotorflight",
+            title = "Rotorflight " .. rf2.luaVersion,
             subtitle = Page.title,
-            icon = "/SCRIPTS/TOOLS/LVGLIMG/smile.png",
+            --icon = "/SCRIPTS/TOOLS/LVGLIMG/smile.png",
             back = function() rf2.loadPageFiles() end,
             children = children
         },
@@ -338,7 +336,7 @@ rf2.loadPageFiles = function()
     local lyt = {
         {
             type = "page",
-            title = "Rotorflight " .. LUA_VERSION,
+            title = "Rotorflight " .. rf2.luaVersion,
             subtitle = "Main menu",
             --icon = "/SCRIPTS/TOOLS/LVGLIMG/smile.png",
             back = function() ui.state = uiStatus.exit end,
@@ -355,7 +353,6 @@ end
 
 ui.show = function()
     if ui.wait.message and not ui.wait.shown then
-        rf2.print("Showing wait message: " .. tostring(ui.wait.message))
         showWaitMessage()
         ui.wait.shown = true
     end
@@ -417,7 +414,6 @@ local function run_ui(event, touchState)
         -- for some reason the tool gets all events twice, so we need to ignore the first one
         if sysPressCounter == 2 then
             sysPressCounter = 0
-            rf2.print("Creating popup menu")
             buildPopupMenu()
         end
     end
