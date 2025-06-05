@@ -428,7 +428,7 @@ local function run_ui(event, touchState)
         ui.showingNoTelemetry = false
     end
 
-    rf2.mspQueue:processQueue()
+    rf2.mspQueue:processQueue() -- Note: if a Lua error occurs here, an error message will be shown by EdgeTX and run_ui will not be called anymore.
 
     return 0
 end

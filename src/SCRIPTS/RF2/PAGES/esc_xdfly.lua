@@ -16,9 +16,9 @@ labels[1] = { t = "ESC not ready, waiting...",     x = x,          y = incY(line
 labels[2] = { t = "---",                           x = x + indent, y = incY(lineSpacing), bold = false }
 fields[1] = { t = nil, x = 0, y = 0, data = nil, readOnly = true } -- dummy field since ui.lua expects at least one field
 
-local function addField(text, data)
+local function addField(text, data, w)
     if not data.hidden then
-        fields[#fields + 1] = { t = text, x = x + indent, y = incY(lineSpacing), sp = x + sp, data = data }
+        fields[#fields + 1] = { t = text, x = x + indent, y = incY(lineSpacing), sp = x + sp, w = w, data = data }
     end
 end
 
@@ -34,7 +34,7 @@ local function receivedEscParameters(page, data)
     addField("Cell cutoff", escParameters.cell_cutoff)
 
     labels[#labels + 1] = { t = "Governor", x = x, y = incY(lineSpacing * 2) }
-    addField("Mode", escParameters.governor)
+    addField("Mode", escParameters.governor, 125)
     addField("P-gain", escParameters.gov_p)
     addField("I-gain", escParameters.gov_i)
     addField("Pole pairs", escParameters.pole_pairs)
@@ -58,6 +58,7 @@ end
 
 return {
     read = function(self)
+        if not self.isReady then rf2.onPageReady(self) end
         rf2.useApi("mspEscXdfly").read(receivedEscParameters, self)
     end,
     write = function(self)

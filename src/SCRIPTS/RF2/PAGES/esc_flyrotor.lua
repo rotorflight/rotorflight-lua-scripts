@@ -20,7 +20,7 @@ labels[#labels + 1] = { t = "---",                       x = x + indent, y = inc
 
 -- Basic
 labels[#labels + 1] = { t = "Basic",                     x = x,          y = incY(lineSpacing) }
-fields[#fields + 1] = { t = "ESC mode",                  x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.esc_mode }
+fields[#fields + 1] = { t = "ESC mode",                  x = x + indent, y = incY(lineSpacing), sp = x + sp, w = 125, data = escParameters.esc_mode }
 fields[#fields + 1] = { t = "Cell count [S]",            x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.cell_count }
 fields[#fields + 1] = { t = "BEC voltage",               x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.bec_voltage }
 fields[#fields + 1] = { t = "Motor direction",           x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.motor_direction }

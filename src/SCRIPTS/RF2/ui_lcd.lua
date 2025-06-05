@@ -125,14 +125,6 @@ rf2.settingsSaved = function()
     end
 end
 
-rf2.saveSettings = function()
-    if pageState ~= pageStatus.saving then
-        pageState = pageStatus.saving
-        saveTS = rf2.clock()
-        Page.write(Page)
-    end
-end
-
 rf2.readPage = function()
     collectgarbage()
     Page.read(Page)

@@ -15,7 +15,8 @@ local escParameters = rf2.useApi(mspEscScorp).getDefaults()
 
 local function rebootEsc(field, page)
     escParameters.command = 0x80
-    rf2.saveSettings()
+    rf2.useApi(mspEscScorp).write(escParameters)
+    rf2.reloadPage()
 end
 
 labels[1] = { t = "ESC not ready, waiting...", x = x,          y = incY(lineSpacing) }
@@ -23,9 +24,9 @@ labels[2] = { t = "  Please power cycle",      x = x + indent, y = incY(lineSpac
 labels[3] = { t = "     your ESC now.",        x = x + indent, y = incY(lineSpacing), bold = false }
 
 --- Basic
-fields[1] = { t = "Flight Mode",           x = x,              y = incY(lineSpacing * 2), sp = x + sp, data = escParameters.flight_mode }
+fields[1] = { t = "Flight Mode",           x = x,              y = incY(lineSpacing * 2), sp = x + sp, w = 150, data = escParameters.flight_mode }
 fields[2] = { t = "Rotation",              x = x,              y = incY(lineSpacing), sp = x + sp,     data = escParameters.rotation }
-fields[3] = { t = "Telemetry Protocol",    x = x ,             y = incY(lineSpacing), sp = x + sp,     data = escParameters.telemetry_protocol }
+fields[3] = { t = "Telemetry Protocol",    x = x ,             y = incY(lineSpacing), sp = x + sp,     w = 150, data = escParameters.telemetry_protocol }
 fields[4] = { t = "Startup Sound",         x = x,              y = incY(lineSpacing), sp = x + sp,     data = escParameters.startup_sound }
 fields[5] = { t = "BEC Voltage",           x = x,              y = incY(lineSpacing), sp = x + sp,     data = escParameters.bec_voltage }
 
