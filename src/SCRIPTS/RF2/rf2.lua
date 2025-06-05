@@ -61,7 +61,7 @@ rf2 = {
     useKillEnterBreak = not(lcd.setColor and select(3, getVersion()) >= 2 and select(4, getVersion()) >= 11),
 
     -- Use LVGL graphics on color radios with EdgeTX 2.11 or higher
-    canUseLvgl = lcd.setColor and select(3, getVersion()) >= 2 and select(4, getVersion()) >= 11,
+    canUseLvgl = lcd.setColor and (select(3, getVersion()) >= 3 or (select(3, getVersion()) == 2 and select(4, getVersion()) >= 11)),
 
     --[[
     showMemoryUsage = function(remark)
