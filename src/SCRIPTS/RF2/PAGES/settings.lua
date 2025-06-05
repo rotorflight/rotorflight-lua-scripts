@@ -34,7 +34,8 @@ fields[8] = { t = "Adjustment Teller",       x = x + indent, y = incY(lineSpacin
 
 if rf2.canUseLvgl then
     incY(lineSpacing * 0.5)
-    fields[9] = { t = "Use touch UI",        x = x, y = incY(lineSpacing), sp = x + sp }
+    labels[4] = { t = "Tool Options",        x = x, y = incY(lineSpacing) }
+    fields[9] = { t = "Use touch UI",        x = x + indent, y = incY(lineSpacing), sp = x + sp }
 end
 
 local function setValues()
