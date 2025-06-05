@@ -21,7 +21,7 @@ if rf2.apiVersion >= 12.07 then
         PageFiles[#PageFiles + 1] = { title = "Model on TX", script = "model.lua" }
     end
     if settings.showExperimental == 1 then
-        PageFiles[#PageFiles + 1] = { title = "Experimental (danger!)", script = "experimental.lua" }
+        PageFiles[#PageFiles + 1] = { title = "Experimental (!)", script = "experimental.lua" }
     end
     if settings.showFlyRotor == 1 then
         PageFiles[#PageFiles + 1] = { title = "ESC - FLYROTOR", script = "esc_flyrotor.lua" }
