@@ -1,4 +1,5 @@
-local lvglHelper = rf2.useScript("lvglHelper")
+local lvglHelper = rf2.useScript("LVGL/helper")
+local waitMessage = rf2.useScript("LVGL/waitMessage")
 
 local uiStatus =
 {
@@ -10,8 +11,7 @@ local uiStatus =
 
 local ui = {
     state = uiStatus.init,
-    previousState = nil,
-    wait = {}
+    previousState = nil
 }
 
 local uiInit
@@ -20,29 +20,13 @@ local Page = nil
 local PageFiles = nil
 local CurrentPage = 0
 
-local function showMessage(title, text)
-    --rf2.print("Showing message: " .. title .. " - " .. text)
-    local dg = lvgl.dialog({ title = title, w = 300, h = 200 })
-    local lyt = {
-        { type = "label", align = VCENTER + CENTER, text = text, w = 290 },
-    }
-
-    dg:build(lyt)
-end
-
 rf2.setWaitMessage = function(message)
-    --rf2.print("Setting wait message: "..message)
-    if message ~= ui.wait.message or (message == ui.wait.message and not ui.wait.shown) then
-        ui.wait.message = message
-        ui.wait.shown = false
-    end
+    local title = Page and Page.title or ""
+    waitMessage.setWaitMessage(title, message)
 end
 
 rf2.clearWaitMessage = function()
-    --rf2.print("Clearing wait message")
-    if not ui.wait.message then return end
-    ui.wait.message = nil
-    ui.wait.shown = false
+    waitMessage.clearWaitMessage()
     ui.previousState = nil -- force redraw of previous ui
 end
 
@@ -110,32 +94,6 @@ local function showMainMenu()
     ui.previousState = uiStatus.mainMenu
 end
 
-local function showWaitMessage()
-    lvgl.clear();
-
-    local lyt = {
-        {
-            type = "page",
-            title = "Rotorflight " .. rf2.luaVersion,
-            subtitle = Page and Page.title or "",
-            icon = rf2.baseDir .. "rf2.png",
-            back = function() ui.show() end,
-            children = {
-                {
-                    type = "label",
-                    x = 70,
-                    y = 16,
-                    color = BLACK,
-                    font = DBLSIZE,
-                    text = ui.wait.message or ""
-                },
-            },
-        },
-    }
-
-    lvgl.build(lyt)
-end
-
 rf2.setCurrentField = function(field)
     -- Setting the focus is not (yet) supported with LVGL.
     -- So this is only for compatibility with ui_lcd at the moment
@@ -176,13 +134,13 @@ rf2.settingsSaved = function()
             errorHandler = function(self)
                 if rf2.apiVersion >= 12.08 then
                     if not rf2.saveWarningShown then
-                        showMessage("Save warning", "Settings will be saved\nafter disarming.")
+                        rf2.useScript("LVGL/messageBox").showMessage("Save warning", "Settings will be saved\nafter disarming.")
                         rf2.saveWarningShown = true
                     else
                         Page:read()
                     end
                 else
-                    showMessage("Save error", "Make sure your heli\nis disarmed.")
+                    rf2.useScript("LVGL/messageBox").showMessage("Save error", "Make sure your heli\nis disarmed.")
                 end
             end,
             simulatorResponse = {}
@@ -364,10 +322,7 @@ rf2.onPageReady = function(page)
 end
 
 ui.show = function()
-    if ui.wait.message and not ui.wait.shown then
-        showWaitMessage()
-        ui.wait.shown = true
-    end
+    waitMessage.updateWaitMessage()
 
     if ui.previousState == ui.state then return end
     ui.previousState = ui.state
