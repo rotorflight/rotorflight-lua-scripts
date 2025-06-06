@@ -2,10 +2,10 @@ local lvglHelper = rf2.useScript("lvglHelper")
 
 local uiStatus =
 {
-    init        = 1,
-    mainMenu    = 2,
-    pages       = 3,
-    exit        = 5
+    init = 1,
+    mainMenu = 2,
+    pages = 3,
+    exit = 4
 }
 
 local ui = {
@@ -15,11 +15,13 @@ local ui = {
 }
 
 local uiInit
-
-local sysPressCounter = 0
+local IgnoreNextKeyEvent = false
 local Page = nil
+local PageFiles = nil
+local CurrentPage = 0
 
-rf2.showMessage = function(title, text)
+local function showMessage(title, text)
+    --rf2.print("Showing message: " .. title .. " - " .. text)
     local dg = lvgl.dialog({ title = title, w = 300, h = 200 })
     local lyt = {
         { type = "label", align = VCENTER + CENTER, text = text, w = 290 },
@@ -29,14 +31,83 @@ rf2.showMessage = function(title, text)
 end
 
 rf2.setWaitMessage = function(message)
-    ui.wait.message = message
+    --rf2.print("Setting wait message: "..message)
+    if message ~= ui.wait.message or (message == ui.wait.message and not ui.wait.shown) then
+        ui.wait.message = message
+        ui.wait.shown = false
+    end
 end
 
 rf2.clearWaitMessage = function()
+    --rf2.print("Clearing wait message")
     if not ui.wait.message then return end
     ui.wait.message = nil
     ui.wait.shown = false
     ui.previousState = nil -- force redraw of previous ui
+end
+
+local function loadPage()
+    local pageScript = PageFiles[CurrentPage].script
+    Page = assert(rf2.loadScript("PAGES/" .. pageScript, "cd"))() -- TODO: consider "cd"
+    Page:read()
+end
+
+rf2.reloadPage = function()
+    loadPage()
+end
+
+rf2.loadPageFiles = function(setCurrentPageToLastPage)
+    PageFiles = assert(rf2.loadScript("pages.lua"))()
+    if setCurrentPageToLastPage then
+        CurrentPage = #PageFiles
+    end
+    collectgarbage()
+end
+
+local function showMainMenu()
+    if not PageFiles then
+        rf2.loadPageFiles()
+    end
+    Page = nil
+
+    lvgl.clear();
+
+    local children = {}
+    local w = (LCD_W - 30) / 3
+    local h = 50
+    local x = LCD_W / 2 - w / 2 - 5
+
+    for i, page in ipairs(PageFiles) do
+        local text = string.gsub(page.title, "^ESC %- ", "") -- remove leading 'ESC - ' from page title
+        children[#children + 1] = {
+            type = "button",
+            x = 6 + #children % 3 * (w + 4),
+            y = 6 + #children // 3 * (h + 4),
+            w = w,
+            h = h,
+            text = text,
+            press = function()
+                rf2.mspQueue:clear()
+                CurrentPage = i
+                loadPage()
+            end,
+        }
+    end
+
+    local lyt = {
+        {
+            type = "page",
+            title = "Rotorflight " .. rf2.luaVersion,
+            subtitle = "Main menu",
+            icon = rf2.baseDir .. "rf2.png",
+            back = function() ui.state = uiStatus.exit end,
+            children = children
+        },
+    }
+
+    lvgl.build(lyt)
+    ui.state = uiStatus.mainMenu
+    ui.previousState = uiStatus.mainMenu
 end
 
 local function showWaitMessage()
@@ -45,7 +116,7 @@ local function showWaitMessage()
     local lyt = {
         {
             type = "page",
-            title = "Rotorflight",
+            title = "Rotorflight " .. rf2.luaVersion,
             subtitle = Page and Page.title or "",
             icon = rf2.baseDir .. "rf2.png",
             back = function() ui.show() end,
@@ -86,7 +157,7 @@ local function rebootFc()
     if Page then
         Page:read()
     else
-        rf2.loadPageFiles()
+        showMainMenu()
     end
 end
 
@@ -105,13 +176,13 @@ rf2.settingsSaved = function()
             errorHandler = function(self)
                 if rf2.apiVersion >= 12.08 then
                     if not rf2.saveWarningShown then
-                        rf2.showMessage("Save warning", "Settings will be saved\nafter disarming.")
+                        showMessage("Save warning", "Settings will be saved\nafter disarming.")
                         rf2.saveWarningShown = true
                     else
                         Page:read()
                     end
                 else
-                    rf2.showMessage("Save error", "Make sure your heli\nis disarmed.")
+                    showMessage("Save error", "Make sure your heli\nis disarmed.")
                 end
             end,
             simulatorResponse = {}
@@ -120,19 +191,14 @@ rf2.settingsSaved = function()
     end
 end
 
-local function buildPopupMenu()
+local function showPopupMenu()
     local dg = lvgl.dialog({ title = "Menu", close = function() print("Closed") end })
     local w = 200
     local x = LCD_W / 2 - w / 2 - 50
-
     local lyt = {}
     if Page and not Page.readOnly == true then
         lyt[#lyt + 1] = {
-            type = "button",
-            text = "Save",
-            x = x,
-            y = 25,
-            w = w,
+            type = "button", text = "Save", x = x, y = 25, w = w,
             press = function()
                 dg:close()
                 Page:write()
@@ -142,11 +208,7 @@ local function buildPopupMenu()
 
     if Page then
         lyt[#lyt + 1] = {
-            type = "button",
-            text = "Reload",
-            x = x,
-            y = 75,
-            w = w,
+            type = "button", text = "Reload", x = x, y = 75, w = w,
             press = function()
                 Page:read()
                 dg:close()
@@ -165,7 +227,7 @@ local function buildPopupMenu()
     dg:build(lyt)
 end
 
-local function buildPage()
+local function showPage()
     lvgl.clear()
 
     local function formatVal(val, field)
@@ -186,7 +248,6 @@ local function buildPage()
 
     local children = {}
     for i, label in ipairs(Page.labels) do
-        --rf2.print("Label: " .. label.t)
         children[#children + 1] = {
             type = "label",
             x = label.x,
@@ -244,7 +305,6 @@ local function buildPage()
                     w = field.w or 100,
                     get = function() return choiceTable:getChoiceKey(field.data.value) end,
                     set = function(val)
-                        rf2.print(val)
                         field.data.value = choiceTable:getOriginalKey(val)
                         if field.postEdit then
                             field:postEdit(Page)
@@ -262,7 +322,6 @@ local function buildPage()
                         if field.change then
                             field:change(val, Page)
                         end
-                        rf2.print(val)
                         field.data.value = val
                     end,
                     display = function(val)
@@ -288,69 +347,20 @@ local function buildPage()
             title = "Rotorflight " .. rf2.luaVersion,
             subtitle = Page.title,
             icon = rf2.baseDir .. "rf2.png",
-            back = function() rf2.loadPageFiles() end,
+            back = function() showMainMenu() end,
             children = children
         },
     }
 
     lvgl.build(lyt)
     ui.state = uiStatus.pages
-end
-
-local function loadPage(pageScript)
-    Page = assert(rf2.loadScript("PAGES/" .. pageScript, "cd"))()
-    Page:read()
-    ui.pageScript = pageScript
+    ui.previousState = uiStatus.pages
 end
 
 rf2.onPageReady = function(page)
     page.isReady = true
     Page = page
-    buildPage()
-end
-
-rf2.reloadPage = function()
-    rf2.print("Reloading page: " .. tostring(ui.pageScript))
-    loadPage(ui.pageScript)
-end
-
-rf2.loadPageFiles = function()
-    Page = nil
-    local pageFiles = assert(rf2.loadScript("pages.lua"))()
-
-    lvgl.clear();
-
-    local children = {}
-    local w = (LCD_W - 30) / 3
-    local h = 50
-    local x = LCD_W / 2 - w / 2 - 5
-
-    for i, page in ipairs(pageFiles) do
-        local text = string.gsub(page.title, "^ESC %- ", "") -- remove leading 'ESC - ' from title
-        children[#children + 1] = {
-            type = "button",
-            x = 6 + #children % 3 * (w + 4),
-            y = 6 + #children // 3 * (h + 4),
-            w = w,
-            h = h,
-            text = text,
-            press = function() loadPage(page.script) end,
-        }
-    end
-
-    local lyt = {
-        {
-            type = "page",
-            title = "Rotorflight " .. rf2.luaVersion,
-            subtitle = "Main menu",
-            icon = rf2.baseDir .. "rf2.png",
-            back = function() ui.state = uiStatus.exit end,
-            children = children
-        },
-    }
-
-    lvgl.build(lyt)
-    ui.state = uiStatus.mainMenu
+    showPage()
 end
 
 ui.show = function()
@@ -362,12 +372,12 @@ ui.show = function()
     if ui.previousState == ui.state then return end
     ui.previousState = ui.state
 
-    rf2.print("Loading UI for ui.state" .. tostring(ui.state))
+    --rf2.print("*** Loading UI for ui.state " .. tostring(ui.state))
 
     if ui.state == uiStatus.mainMenu then
-        rf2.loadPageFiles()
-    elseif ui.state == uiStatus.pages and ui.pageScript then
-        loadPage(ui.pageScript)
+        showMainMenu()
+    elseif ui.state == uiStatus.pages then
+        loadPage()
     end
 end
 
@@ -375,6 +385,7 @@ local function run_ui(event, touchState)
     ui.show()
 
     if ui.state == uiStatus.init then
+        rf2.mspQueue.maxRetries = -1 -- retry indefinitely
         uiInit = uiInit or assert(rf2.loadScript("ui_init.lua"))()
         local gotApiVersion = uiInit.f()
         rf2.setWaitMessage(uiInit.t)
@@ -388,42 +399,54 @@ local function run_ui(event, touchState)
         return 2
     end
 
-    if event and event ~= 0 then
-        rf2.print(" Event: " .. string.format("0x%X", event))
-    end
-
-    local evttxt
-    if (event == EVT_VIRTUAL_NEXT) or (event == EVT_VIRTUAL_NEXT_PAGE) then
-        evttxt = "NEXT"
-    elseif (event == EVT_VIRTUAL_PREV) or (event == EVT_VIRTUAL_PREV_PAGE) then
-        evttxt = "PREV"
-    elseif (event == EVT_TOUCH_BREAK) or (event == EVT_TOUCH_TAP) then
-        evttxt = "TOUCH " .. touchState.x .. "," .. touchState.y
-    else
-        if event ~= 0 then evttxt = event end
-    end
-    if evttxt then
-        rf2.print("Event: " .. evttxt)
-    end
+    -- if event and event ~= 0 then
+    --     rf2.print(" Event: " .. string.format("0x%X", event))
+    -- end
 
     if Page and Page.timer and (not Page.lastTimeTimerFired or Page.lastTimeTimerFired + 0.5 < rf2.clock()) then
         Page.lastTimeTimerFired = rf2.clock()
         Page.timer(Page)
     end
 
-    if event and event == 0x60D then -- SYS
-        sysPressCounter = sysPressCounter + 1
-        -- for some reason the tool gets all events twice, so we need to ignore the first one
-        if sysPressCounter == 2 then
-            sysPressCounter = 0
-            buildPopupMenu()
+    if event then
+        if event == EVT_EXIT_BREAK and Page then
+            rf2.mspQueue:clear()
+            showMainMenu()
+        end
+
+        if event == 0x60D or event == EVT_VIRTUAL_PREV_PAGE or event == EVT_VIRTUAL_NEXT_PAGE then
+            -- For some reason the tool gets all key events twice, so we need to ignore the second one.
+            if not IgnoreNextKeyEvent then
+                if event == 0x60D then -- SYS
+                    showPopupMenu()
+                elseif event == EVT_VIRTUAL_PREV_PAGE then
+                    CurrentPage = CurrentPage - 1
+                    if CurrentPage < 1 then
+                        CurrentPage = #PageFiles
+                    end
+                    rf2.mspQueue:clear()
+                    loadPage()
+                elseif event == EVT_VIRTUAL_NEXT_PAGE then
+                    CurrentPage = CurrentPage + 1
+                    if CurrentPage > #PageFiles then
+                        CurrentPage = 1
+                    end
+                    rf2.mspQueue:clear()
+                    loadPage()
+                end
+                IgnoreNextKeyEvent = true
+            else
+                IgnoreNextKeyEvent = false
+            end
         end
     end
 
     if getRSSI() == 0 then
-        rf2.setWaitMessage("No telemetry")
-        ui.showingNoTelemetry = true
-    elseif ui.wait.showingNoTelemetry then
+        if not ui.showingNoTelemetry then
+            rf2.setWaitMessage("No telemetry")
+            ui.showingNoTelemetry = true
+        end
+    elseif ui.showingNoTelemetry then
         rf2.clearWaitMessage()
         ui.showingNoTelemetry = false
     end
