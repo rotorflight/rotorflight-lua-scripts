@@ -127,7 +127,7 @@ end
 
 rf2.readPage = function()
     collectgarbage()
-    Page.read(Page)
+    Page:read()
 end
 
 local function requestPage()
@@ -137,6 +137,14 @@ local function requestPage()
         if Page.read then
             rf2.readPage()
         end
+    end
+end
+
+local function saveSettings()
+    if pageState ~= pageStatus.saving then
+        pageState = pageStatus.saving
+        saveTS = rf2.clock()
+        Page:write()
     end
 end
 
@@ -154,7 +162,7 @@ local function createPopupMenu()
     popupMenu = {}
     if uiState == uiStatus.pages then
         if not Page.readOnly then
-            popupMenu[#popupMenu + 1] = { t = "Save Page", f = rf2.saveSettings }
+            popupMenu[#popupMenu + 1] = { t = "Save Page", f = saveSettings }
         end
         popupMenu[#popupMenu + 1] = { t = "Reload", f = invalidatePages }
     end
@@ -475,7 +483,7 @@ local function run_ui(event)
         end
         if Page and Page.timer and (not Page.lastTimeTimerFired or Page.lastTimeTimerFired + 0.5 < rf2.clock()) then
             Page.lastTimeTimerFired = rf2.clock()
-            Page.timer(Page)
+            Page:timer()
         end
         if not Page then
             if pageChanged then
