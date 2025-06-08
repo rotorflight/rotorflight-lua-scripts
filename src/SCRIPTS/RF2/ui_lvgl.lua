@@ -150,39 +150,28 @@ rf2.settingsSaved = function()
 end
 
 local function showPopupMenu()
-    local dg = lvgl.dialog({ title = "Menu", close = function() print("Closed") end })
-    local w = 200
-    local x = LCD_W / 2 - w / 2 - 50
-    local lyt = {}
+    local menu = { title = "Menu", items = {} }
+
     if Page and not Page.readOnly == true then
-        lyt[#lyt + 1] = {
-            type = "button", text = "Save", x = x, y = 25, w = w,
-            press = function()
-                dg:close()
-                Page:write()
-            end
+        menu.items[#menu.items + 1] = {
+            text = "Save",
+            click = function() Page:write() end
         }
     end
 
     if Page then
-        lyt[#lyt + 1] = {
-            type = "button", text = "Reload", x = x, y = 75, w = w,
-            press = function()
-                Page:read()
-                dg:close()
-            end
+        menu.items [#menu.items + 1] = {
+            text = "Reload",
+            click = function() Page:read() end
         }
     end
 
-    lyt[#lyt + 1] = {
-        type = "button", text = "Reboot", x = x, y = 125, w = w,
-        press = function(self)
-            dg:close()
-            rebootFc()
-        end
+    menu.items[#menu.items + 1] = {
+        text = "Reboot",
+        click = function() rebootFc() end
     }
 
-    dg:build(lyt)
+    rf2.useScript("LVGL/popupMenu").show(menu)
 end
 
 local function showPage()
