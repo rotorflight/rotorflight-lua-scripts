@@ -6,7 +6,6 @@ local function show(menu)
     local h = 50
 
     for i, item in ipairs(menu.items) do
-        rf2.print("Adding item: " .. item.text)
         children[#children + 1] = {
             type = "button",
             x = 6 + #children % 3 * (w + 4),

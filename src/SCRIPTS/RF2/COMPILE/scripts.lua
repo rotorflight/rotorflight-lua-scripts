@@ -5,6 +5,7 @@ local scripts = {
     "/SCRIPTS/RF2/LVGL/helper.lua",
     "/SCRIPTS/RF2/LVGL/mainMenu.lua",
     "/SCRIPTS/RF2/LVGL/messageBox.lua",
+    "/SCRIPTS/RF2/LVGL/page.lua",
     "/SCRIPTS/RF2/LVGL/popupMenu.lua",
     "/SCRIPTS/RF2/LVGL/waitMessage.lua",
     "/SCRIPTS/RF2/MSP/RATES/ACTUAL.lua",
