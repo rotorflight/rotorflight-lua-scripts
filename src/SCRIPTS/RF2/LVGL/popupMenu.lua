@@ -11,8 +11,7 @@ local function show(menu)
             press = function()
                 dg:close()
                 if item.click then
-                    dg:close()
-                    item.click()
+                    item.click(i)
                 end
             end
         }

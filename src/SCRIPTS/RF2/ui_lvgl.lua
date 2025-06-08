@@ -54,42 +54,29 @@ local function showMainMenu()
     end
     Page = nil
 
-    lvgl.clear();
+    local menu = {
+        title = "Rotorflight " .. rf2.luaVersion,
+        subtitle = "Main Menu",
+        items = {},
+        back = function() ui.state = uiStatus.exit end
+    }
 
-    local children = {}
-    local w = (LCD_W - 30) / 3
-    local h = 50
-    local x = LCD_W / 2 - w / 2 - 5
+    local onMenuItemClick = function(index)
+        rf2.mspQueue:clear()
+        CurrentPage = index
+        loadPage()
+    end
 
     for i, page in ipairs(PageFiles) do
         local text = string.gsub(page.title, "^ESC %- ", "") -- remove leading 'ESC - ' from page title
-        children[#children + 1] = {
-            type = "button",
-            x = 6 + #children % 3 * (w + 4),
-            y = 6 + #children // 3 * (h + 4),
-            w = w,
-            h = h,
+        menu.items[#menu.items + 1] = {
             text = text,
-            press = function()
-                rf2.mspQueue:clear()
-                CurrentPage = i
-                loadPage()
-            end,
+            click = onMenuItemClick
         }
     end
 
-    local lyt = {
-        {
-            type = "page",
-            title = "Rotorflight " .. rf2.luaVersion,
-            subtitle = "Main menu",
-            icon = rf2.baseDir .. "rf2.png",
-            back = function() ui.state = uiStatus.exit end,
-            children = children
-        },
-    }
+    rf2.useScript("LVGL/mainMenu").show(menu)
 
-    lvgl.build(lyt)
     ui.state = uiStatus.mainMenu
     ui.previousState = uiStatus.mainMenu
 end
