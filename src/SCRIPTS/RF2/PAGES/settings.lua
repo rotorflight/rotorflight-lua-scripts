@@ -66,7 +66,7 @@ return {
         settings.useAdjustmentTeller = fields[8].data.value
         settings.useLvgl = fields[9].data.value
         settingsHelper.saveSettings(settings)
-        rf2.loadPageFiles(true)
+        rf2.reloadMainMenu(true)
         rf2.settingsSaved()
     end,
     title       = "Settings",

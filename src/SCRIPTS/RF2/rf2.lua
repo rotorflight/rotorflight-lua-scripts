@@ -5,17 +5,17 @@ rf2 = {
 
     loadScript = loadScript,
 
-    useScript = function(scriptName)
+    executeScript = function(scriptName)
         collectgarbage()
         return assert(rf2.loadScript(rf2.baseDir .. scriptName .. ".lua"))()
     end,
 
     useApi = function(apiName)
-        return rf2.useScript("MSP/" .. apiName)
+        return rf2.executeScript("MSP/" .. apiName)
     end,
 
     loadSettings = function()
-        return rf2.useScript("PAGES/helpers/settingsHelper").loadSettings();
+        return rf2.executeScript("PAGES/helpers/settingsHelper").loadSettings();
     end,
 
     print = function(str)

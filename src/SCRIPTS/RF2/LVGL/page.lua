@@ -1,4 +1,4 @@
-local lvglHelper = rf2.useScript("LVGL/helper")
+local lvglHelper = rf2.executeScript("LVGL/helper")
 
 local function show(page)
     lvgl.clear()

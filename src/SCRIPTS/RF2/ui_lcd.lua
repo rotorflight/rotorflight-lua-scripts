@@ -55,21 +55,6 @@ rf2.clearWaitMessage = function()
     waitMessage = nil
 end
 
-rf2.displayMessage = function(title, text)
-    displayMessage = { title = title, text = text }
-end
-
-rf2.storeCurrentField = function()
-    rf2.currentField = currentField
-end
-
-rf2.setCurrentField = function()
-    if rf2.currentField then
-        currentField = rf2.currentField
-        rf2.currentField = nil
-    end
-end
-
 rf2.onPageReady = function(page)
     page.isReady = true
     rf2.lcdNeedsInvalidate = true
@@ -85,6 +70,10 @@ local function rebootFc()
         end,
         simulatorResponse = {}
     })
+end
+
+local function showMessage(title, text)
+    displayMessage = { title = title, text = text }
 end
 
 rf2.settingsSaved = function()
@@ -106,13 +95,13 @@ rf2.settingsSaved = function()
                 errorHandler = function(self)
                     if rf2.apiVersion >= 12.08 then
                         if not rf2.saveWarningShown then
-                            rf2.displayMessage("Save warning", "Settings will be saved\nafter disarming.")
+                            showMessage("Save warning", "Settings will be saved\nafter disarming.")
                             rf2.saveWarningShown = true
                         else
                             invalidatePages()
                         end
                     else
-                        rf2.displayMessage("Save error", "Make sure your heli\nis disarmed.")
+                        showMessage("Save error", "Make sure your heli\nis disarmed.")
                     end
                 end,
                 simulatorResponse = {}
@@ -337,7 +326,7 @@ local function drawPopupMenu()
     end
 end
 
-rf2.loadPageFiles = function(setCurrentPageToLastPage)
+rf2.reloadMainMenu = function(setCurrentPageToLastPage)
     PageFiles = assert(rf2.loadScript("pages.lua"))()
     if setCurrentPageToLastPage then
         currentPage = #PageFiles
@@ -382,7 +371,7 @@ local function run_ui(event)
             return 0
         end
         init = nil
-        rf2.loadPageFiles()
+        rf2.reloadMainMenu()
         invalidatePages()
         uiState = prevUiState or uiStatus.mainMenu
         prevUiState = nil
@@ -493,7 +482,7 @@ local function run_ui(event)
             end
             collectgarbage()
             --rf2.showMemoryUsage("before loading page")
-            Page = assert(rf2.loadScript("PAGES/"..PageFiles[currentPage].script))()
+            Page = rf2.executeScript("PAGES/" .. PageFiles[currentPage].script)
             --rf2.showMemoryUsage("after loading page")
             collectgarbage()
         end
