@@ -5,9 +5,9 @@ rf2 = {
 
     loadScript = loadScript,
 
-    executeScript = function(scriptName)
+    executeScript = function(scriptName, ...)
         collectgarbage()
-        return assert(rf2.loadScript(rf2.baseDir .. scriptName .. ".lua"))()
+        return assert(rf2.loadScript(rf2.baseDir .. scriptName .. ".lua"))(...)
     end,
 
     useApi = function(apiName)

@@ -1,3 +1,6 @@
+local lcdShared = rf2.executeScript("LCD/shared")
+local messageBox = rf2.executeScript("LCD/messageBox", lcdShared)
+
 local uiStatus =
 {
     init     = 1,
@@ -28,11 +31,9 @@ local pageScrollY = 0
 local mainMenuScrollY = 0
 local PageFiles, Page, init, popupMenu
 local scrollSpeedTS = 0
-local displayMessage
 local waitMessage
 local pageChanged = false
 
-local backgroundFill = TEXT_BGCOLOR or ERASE
 local foregroundColor = LINE_COLOR or SOLID
 
 local globalTextOptions = TEXT_COLOR or 0
@@ -72,10 +73,6 @@ local function rebootFc()
     })
 end
 
-local function showMessage(title, text)
-    displayMessage = { title = title, text = text }
-end
-
 rf2.settingsSaved = function()
     -- check if this page requires writing to eeprom to save (most do)
     if Page and Page.eepromWrite then
@@ -95,13 +92,13 @@ rf2.settingsSaved = function()
                 errorHandler = function(self)
                     if rf2.apiVersion >= 12.08 then
                         if not rf2.saveWarningShown then
-                            showMessage("Save warning", "Settings will be saved\nafter disarming.")
+                            messageBox.show("Save warning", "Settings will be saved\nafter disarming.")
                             rf2.saveWarningShown = true
                         else
                             invalidatePages()
                         end
                     else
-                        showMessage("Save error", "Make sure your heli\nis disarmed.")
+                        messageBox.show("Save error", "Make sure your heli\nis disarmed.")
                     end
                 end,
                 simulatorResponse = {}
@@ -201,34 +198,6 @@ local function drawScreenTitle(screenTitle)
     end
 end
 
-local function getLineSpacing()
-    if rf2.radio.highRes then
-        return 25
-    end
-    return 10
-end
-
-local function drawTextMultiline(x, y, text, options)
-    for str in string.gmatch(text, "([^\n]+)") do
-        lcd.drawText(x, y, str, options)
-        y = y + getLineSpacing()
-    end
-end
-
-local function drawMessage(title, message)
-    if rf2.radio.highRes then
-        lcd.drawFilledRectangle(50, 40, LCD_W - 100, LCD_H - 80, TITLE_BGCOLOR)
-        lcd.drawText(60, 45, title, MENU_TITLE_COLOR)
-        lcd.drawFilledRectangle(50, 70, LCD_W - 100, LCD_H - 100, backgroundFill)
-        lcd.drawRectangle(50, 40, LCD_W - 100, LCD_H - 80, SOLID)
-        drawTextMultiline(70, 80, message)
-    else
-        lcd.drawFilledRectangle(0, 0, LCD_W, 10, FORCE)
-        lcd.drawText(1, 1, title, INVERS)
-        drawTextMultiline(5, 5 + getLineSpacing(), message)
-    end
-end
-
 local function fieldIsButton(f)
     return f.t and string.sub(f.t, 1, 1) == "[" and not f.data
 end
@@ -313,7 +282,7 @@ local function drawPopupMenu()
     local h_offset = rf2.radio.MenuBox.h_offset
     local h = #popupMenu * h_line + h_offset*2
 
-    lcd.drawFilledRectangle(x,y,w,h,backgroundFill)
+    lcd.drawFilledRectangle(x,y,w,h,lcdShared.backgroundFill)
     lcd.drawRectangle(x,y,w-1,h-1,foregroundColor)
     lcd.drawText(x+h_line/2,y+h_offset,"Menu:",globalTextOptions)
 
@@ -339,11 +308,9 @@ local function run_ui(event)
     --     rf2.print("uiState: " .. uiState .. " pageState: " .. pageState .. " Event: " .. string.format("0x%X", event))
     -- end
 
-    if displayMessage then
-        lcd.clear()
-        drawMessage(displayMessage.title, displayMessage.text)
-        if event == EVT_VIRTUAL_EXIT or event == EVT_VIRTUAL_ENTER then
-            displayMessage = nil
+
+    if messageBox.update(event) then
+        if lcdShared.forceReload then
             invalidatePages()
         end
     elseif popupMenu then
@@ -366,7 +333,7 @@ local function run_ui(event)
         lcd.clear()
         drawScreenTitle("Rotorflight " .. rf2.luaVersion)
         init = init or assert(rf2.loadScript("ui_init.lua"))()
-        drawTextMultiline(4, rf2.radio.yMinLimit, init.t)
+        lcdShared.drawTextMultiline(4, rf2.radio.yMinLimit, init.t)
         if not init.f() then
             return 0
         end
@@ -392,7 +359,7 @@ local function run_ui(event)
         lcd.clear()
         local yMinLim = rf2.radio.yMinLimit
         local yMaxLim = rf2.radio.yMaxLimit
-        local lineSpacing = getLineSpacing()
+        local lineSpacing = lcdShared.getLineSpacing()
         local currentFieldY = (currentPage-1)*lineSpacing + yMinLim
         if currentFieldY <= yMinLim then
             mainMenuScrollY = 0
@@ -502,7 +469,7 @@ local function run_ui(event)
             elseif pageState == pageStatus.waiting then
                 saveMsg = waitMessage
             end
-            lcd.drawFilledRectangle(rf2.radio.SaveBox.x,rf2.radio.SaveBox.y,rf2.radio.SaveBox.w,rf2.radio.SaveBox.h,backgroundFill)
+            lcd.drawFilledRectangle(rf2.radio.SaveBox.x,rf2.radio.SaveBox.y,rf2.radio.SaveBox.w,rf2.radio.SaveBox.h,lcdShared.backgroundFill)
             lcd.drawRectangle(rf2.radio.SaveBox.x,rf2.radio.SaveBox.y,rf2.radio.SaveBox.w,rf2.radio.SaveBox.h,SOLID)
             lcd.drawText(rf2.radio.SaveBox.x+rf2.radio.SaveBox.x_offset,rf2.radio.SaveBox.y+rf2.radio.SaveBox.h_offset,saveMsg,DBLSIZE + globalTextOptions)
         end
