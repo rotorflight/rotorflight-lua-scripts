@@ -100,9 +100,9 @@ local function saveSettingsToEeprom()
             if not rf2.saveWarningShown then
                 rf2.saveWarningShown = true
                 if rf2.apiVersion >= 12.08 then
-                    rf2.executeScript("LVGL/messageBox").showMessage("Save warning", "Settings will be saved\nafter disarming.")
+                    rf2.executeScript("LVGL/messageBox").show("Save warning", "Settings will be saved\nafter disarming.")
                 else
-                    rf2.executeScript("LVGL/messageBox").showMessage("Save error", "Make sure your heli\nis disarmed.")
+                    rf2.executeScript("LVGL/messageBox").show("Save error", "Make sure your heli\nis disarmed.")
                 end
                 ui.previousState = nil
             end

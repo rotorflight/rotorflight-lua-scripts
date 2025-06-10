@@ -1,4 +1,4 @@
-local function showMessage(title, text)
+local function show(title, text)
     --rf2.print("Showing message: " .. title .. " - " .. text)
     local dg = lvgl.dialog({ title = title, w = 300, h = 200 })
     local lyt = {
@@ -8,4 +8,4 @@ local function showMessage(title, text)
     dg:build(lyt)
 end
 
-return { showMessage = showMessage }
+return { show = show }
