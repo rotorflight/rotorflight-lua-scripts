@@ -28,7 +28,7 @@ if scriptsCompiled then
     end
 
     if useLvgl then
-        run = assert(rf2.loadScript("ui_lvgl.lua"))()
+        run = assert(rf2.loadScript("ui_lvgl_runner.lua"))()
     else
         run = assert(rf2.loadScript("ui_lcd.lua"))()
     end

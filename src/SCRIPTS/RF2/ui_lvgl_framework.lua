@@ -1,0 +1,198 @@
+local waitMessage = rf2.executeScript("LVGL/waitMessage")
+
+local ui = {
+    status =
+    {
+        init = 1,
+        mainMenu = 2,
+        pages = 3,
+        exit = 4
+    },
+    state = 1,  -- ui.status.init
+    previousState = nil
+}
+
+local PageFiles = nil
+local Page = nil
+local CurrentPageIndex = -1
+
+ui.refresh = function()
+    ui.previousState = nil
+end
+
+ui.setWaitMessage = function(message)
+    local title = Page and Page.title or ""
+    waitMessage.setWaitMessage(title, message)
+end
+
+ui.clearWaitMessage = function()
+    waitMessage.clearWaitMessage()
+    ui.refresh()
+end
+
+ui.loadMainMenu = function(setCurrentPageToLastPage)
+    PageFiles = rf2.executeScript("pages")
+    if setCurrentPageToLastPage then
+        CurrentPageIndex = #PageFiles
+    end
+end
+
+ui.loadPage = function()
+    Page = rf2.executeScript("PAGES/" .. PageFiles[CurrentPageIndex].script)
+    Page:read()
+end
+
+ui.showMainMenu = function()
+    Page = nil
+
+    local menu = {
+        title = "Rotorflight " .. rf2.luaVersion,
+        subtitle = "Main Menu",
+        items = {},
+        back = function() ui.state = ui.status.exit end
+    }
+
+    local onMenuItemClick = function(index)
+        rf2.mspQueue:clear()
+        CurrentPageIndex = index
+        ui.loadPage()
+    end
+
+    for i, page in ipairs(PageFiles) do
+        local text = string.gsub(page.title, "^ESC %- ", "") -- remove leading 'ESC - ' from page title
+        menu.items[#menu.items + 1] = {
+            text = text,
+            click = onMenuItemClick
+        }
+    end
+
+    rf2.executeScript("LVGL/mainMenu").show(menu)
+
+    ui.state = ui.status.mainMenu
+    ui.previousState = ui.status.mainMenu
+end
+
+local function rebootFc()
+    --setWaitMessage("Rebooting FC...") -- Won't disappear since we don't get a response
+    rf2.mspQueue:add({
+        command = 68, -- MSP_REBOOT
+        processReply = function(self, buf)
+            -- Won't ever get here
+        end,
+        simulatorResponse = {}
+    })
+    ui.refresh()
+end
+
+ui.saveSettingsToEeprom = function()
+    if not Page or not Page.eepromWrite then
+        ui.refresh()
+        return
+    end
+
+    local mspEepromWrite =
+    {
+        command = 250, -- MSP_EEPROM_WRITE, fails when armed
+        processReply = function(self, buf)
+            if Page.reboot then
+                rebootFc()
+            end
+            ui.refresh()
+        end,
+        errorHandler = function(self)
+            if not ui.saveWarningShown then
+                ui.saveWarningShown = true
+                if rf2.apiVersion >= 12.08 then
+                    rf2.executeScript("LVGL/messageBox").show("Save warning", "Settings will be saved\nafter disarming.")
+                else
+                    rf2.executeScript("LVGL/messageBox").show("Save error", "Make sure your heli\nis disarmed.")
+                end
+                ui.refresh()
+            end
+        end,
+        simulatorResponse = {}
+    }
+    rf2.mspQueue:add(mspEepromWrite)
+end
+
+ui.showPopupMenu = function()
+    local menu = { title = "Menu", items = {} }
+
+    if Page then
+        if not Page.readOnly then
+            menu.items[#menu.items + 1] = {
+                text = "Save",
+                click = function() Page:write() end
+            }
+        end
+
+        menu.items [#menu.items + 1] = {
+            text = "Reload",
+            click = function() Page:read() end
+        }
+    end
+
+    menu.items[#menu.items + 1] = {
+        text = "Reboot",
+        click = function() rebootFc() end
+    }
+
+    rf2.executeScript("LVGL/popupMenu").show(menu)
+end
+
+ui.showPage = function()
+    assert(Page, "Page is not loaded")
+    Page.back = function() ui.showMainMenu() end
+    rf2.executeScript("LVGL/page").show(Page)
+    ui.state = ui.status.pages
+    ui.previousState = ui.status.pages
+end
+
+ui.update = function()
+    if getRSSI() == 0 then
+        if not ui.showingNoTelemetry then
+            ui.setWaitMessage("No telemetry")
+            ui.showingNoTelemetry = true
+        end
+    elseif ui.showingNoTelemetry then
+        ui.clearWaitMessage()
+        ui.showingNoTelemetry = false
+    end
+
+    waitMessage.updateWaitMessage()
+
+    if Page and Page.timer and (not Page.lastTimeTimerFired or Page.lastTimeTimerFired + 0.5 < rf2.clock()) then
+        Page.lastTimeTimerFired = rf2.clock()
+        Page:timer()
+    end
+
+    if ui.previousState == ui.state then return end
+    ui.previousState = ui.state
+
+    --rf2.print("*** Loading UI for ui.state " .. tostring(ui.state))
+
+    if ui.state == ui.status.mainMenu then
+        ui.showMainMenu()
+    elseif ui.state == ui.status.pages then
+        ui.loadPage()
+    end
+end
+
+ui.incPage = function(inc)
+    if not PageFiles then return end
+    CurrentPageIndex = CurrentPageIndex + inc
+    if CurrentPageIndex < 1 then
+        CurrentPageIndex = #PageFiles
+    elseif CurrentPageIndex > #PageFiles then
+        CurrentPageIndex = 1
+    end
+    rf2.mspQueue:clear()
+    ui.loadPage()
+end
+
+ui.onPageReady = function(page)
+    page.isReady = true
+    ui.showPage()
+end
+
+return ui

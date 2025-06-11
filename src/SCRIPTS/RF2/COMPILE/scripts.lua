@@ -86,7 +86,8 @@ local scripts = {
     "/SCRIPTS/RF2/tool.lua",
     "/SCRIPTS/RF2/ui_init.lua",
     "/SCRIPTS/RF2/ui_lcd.lua",
-    "/SCRIPTS/RF2/ui_lvgl.lua",
+    "/SCRIPTS/RF2/ui_lvgl_framework.lua",
+    "/SCRIPTS/RF2/ui_lvgl_runner.lua",
     "/SCRIPTS/TOOLS/rf2.lua",
 }
 return scripts[...]
