@@ -47,7 +47,9 @@ local function setValues()
     fields[6].data = { value = settings.showXdfly or 0, min = 0, max = 1, table = hideShow }
     fields[7].data = { value = settings.showYge or 0, min = 0, max = 1, table = hideShow }
     fields[8].data = { value = settings.useAdjustmentTeller or 0, min = 0, max = 1, table = offOn }
-    fields[9].data = { value = settings.useLvgl or 1, min = 0, max = 1, table = offOn }
+    if rf2.canUseLvgl then
+        fields[9].data = { value = settings.useLvgl or 1, min = 0, max = 1, table = offOn }
+    end
 end
 
 return {
@@ -64,7 +66,9 @@ return {
         settings.showXdfly = fields[6].data.value
         settings.showYge = fields[7].data.value
         settings.useAdjustmentTeller = fields[8].data.value
-        settings.useLvgl = fields[9].data.value
+        if rf2.canUseLvgl then
+            settings.useLvgl = fields[9].data.value
+        end
         settingsHelper.saveSettings(settings)
         rf2.reloadMainMenu(true)
         rf2.settingsSaved()

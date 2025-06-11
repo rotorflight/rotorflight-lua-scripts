@@ -1,5 +1,5 @@
 local function show(menu)
-    lvgl.clear();
+    lvgl.clear()
 
     local children = {}
     local w = (LCD_W - 30) / 3
@@ -9,7 +9,7 @@ local function show(menu)
         children[#children + 1] = {
             type = "button",
             x = 6 + #children % 3 * (w + 4),
-            y = 6 + #children // 3 * (h + 4),
+            y = 6 + math.floor(#children / 3) * (h + 4),
             w = w,
             h = h,
             text = item.text,
