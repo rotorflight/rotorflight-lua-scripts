@@ -1,4 +1,4 @@
-local template = assert(rf2.loadScript(rf2.radio.template))()
+local template = rf2.executeScript(rf2.radio.template)
 local mspStatus = rf2.useApi("mspStatus")
 local margin = template.margin
 local indent = template.indent

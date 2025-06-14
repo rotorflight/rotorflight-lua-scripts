@@ -1,5 +1,5 @@
-local template = assert(rf2.loadScript(rf2.radio.template))()
-local settingsHelper = assert(rf2.loadScript("PAGES/helpers/settingsHelper.lua"))()
+local template = rf2.executeScript(rf2.radio.template)
+local settingsHelper = rf2.executeScript("PAGES/helpers/settingsHelper")
 local margin = template.margin
 local indent = template.indent
 local lineSpacing = template.lineSpacing
