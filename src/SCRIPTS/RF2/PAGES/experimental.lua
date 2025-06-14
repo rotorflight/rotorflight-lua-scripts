@@ -29,8 +29,7 @@ end
 -- Draw int8 fields: not supported anymore since data can't have multiple representations
 
 local function receivedExperimental(page, _)
-    rf2.lcdNeedsInvalidate = true
-    page.isReady = true
+    rf2.onPageReady(page)
 end
 
 return {

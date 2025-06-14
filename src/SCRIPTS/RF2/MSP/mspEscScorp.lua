@@ -133,6 +133,8 @@ local function setEscParameters(data)
     local message = {
         command = 218, -- MSP_SET_ESC_PARAMETERS
         payload = {},
+        postSendDelay = 2,
+        simulatorResponse = {}
     }
     rf2.mspHelper.writeU8(message.payload, data.esc_signature)
     rf2.mspHelper.writeU8(message.payload, data.command)

@@ -73,12 +73,12 @@ if rf2.apiVersion >= 12.08 then
 end
 
 local function receivedRcTuning(page)
-    rf2.lcdNeedsInvalidate = true
-    page.isReady = true
+    rf2.onPageReady(page)
 end
 
 return {
     read = function(self)
+        self.rateSwitcher.getStatus(self)
         rf2.useApi("mspRcTuning").read(receivedRcTuning, self, rcTuning)
     end,
     write = function(self)

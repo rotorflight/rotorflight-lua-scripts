@@ -18,9 +18,8 @@ labels[#labels + 1] = { t = "Accelerometer Trim", x = x,          y = incY(lineS
 fields[#fields + 1] = { t = "Roll",               x = x + indent, y = incY(lineSpacing), sp = x + sp, data = data.roll_trim }
 fields[#fields + 1] = { t = "Pitch",              x = x + indent, y = incY(lineSpacing), sp = x + sp, data = data.pitch_trim }
 
-local function receivedData(page, data)
-    rf2.lcdNeedsInvalidate = true
-    page.isReady = true
+local function receivedData(page)
+    rf2.onPageReady(page)
 end
 
 return {

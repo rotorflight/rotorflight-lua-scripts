@@ -37,8 +37,7 @@ local function onReceivedModelName(page, name)
 end
 
 local function onReceivedPilotConfig(page, config)
-    rf2.lcdNeedsInvalidate = true
-    page.isReady = true
+    rf2.onPageReady(page)
 end
 
 local function pilotConfigReset()

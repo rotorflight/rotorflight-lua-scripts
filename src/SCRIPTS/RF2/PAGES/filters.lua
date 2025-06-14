@@ -40,8 +40,7 @@ fields[#fields + 1] = { t = "Max Frequency",            x = x + indent, y = incY
 -- TODO: preset and min_hz for API >= 12.08
 
 local function receivedFilterConfig(page, _)
-    rf2.lcdNeedsInvalidate = true
-    page.isReady = true
+    rf2.onPageReady(page)
 end
 
 return {

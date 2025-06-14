@@ -32,6 +32,12 @@ incY(lineSpacing * 0.5)
 labels[3] = { t = "Rf2bg Options",           x = x, y = incY(lineSpacing) }
 fields[8] = { t = "Adjustment Teller",       x = x + indent, y = incY(lineSpacing), sp = x + sp }
 
+if rf2.canUseLvgl then
+    incY(lineSpacing * 0.5)
+    labels[4] = { t = "Tool Options",        x = x, y = incY(lineSpacing) }
+    fields[9] = { t = "Use touch UI",        x = x + indent, y = incY(lineSpacing), sp = x + sp }
+end
+
 local function setValues()
     fields[1].data = { value = settings.showModelOnTx or 0, min = 0, max = 1, table = hideShow }
     fields[2].data = { value = settings.showExperimental or 0, min = 0, max = 1, table = hideShow }
@@ -41,13 +47,15 @@ local function setValues()
     fields[6].data = { value = settings.showXdfly or 0, min = 0, max = 1, table = hideShow }
     fields[7].data = { value = settings.showYge or 0, min = 0, max = 1, table = hideShow }
     fields[8].data = { value = settings.useAdjustmentTeller or 0, min = 0, max = 1, table = offOn }
+    if rf2.canUseLvgl then
+        fields[9].data = { value = settings.useLvgl or 1, min = 0, max = 1, table = offOn }
+    end
 end
 
 return {
     read = function(self)
         setValues()
-        rf2.lcdNeedsInvalidate = true
-        self.isReady = true
+        rf2.onPageReady(self)
     end,
     write = function(self)
         settings.showModelOnTx = fields[1].data.value
@@ -58,8 +66,11 @@ return {
         settings.showXdfly = fields[6].data.value
         settings.showYge = fields[7].data.value
         settings.useAdjustmentTeller = fields[8].data.value
+        if rf2.canUseLvgl then
+            settings.useLvgl = fields[9].data.value
+        end
         settingsHelper.saveSettings(settings)
-        rf2.loadPageFiles(true)
+        rf2.reloadMainMenu(true)
         rf2.settingsSaved()
     end,
     title       = "Settings",

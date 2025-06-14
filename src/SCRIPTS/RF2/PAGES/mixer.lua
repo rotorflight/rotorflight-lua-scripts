@@ -56,12 +56,11 @@ fields[#fields + 1] = { t = "Center trim",              x = x + indent, y = incY
 if rf2.apiVersion >= 12.08 then
     incY(lineSpacing * 0.5)
 
-    fields[#fields + 1] = { t = "[Enable Mixer Passthrough]", x = x,    y = incY(lineSpacing), preEdit = onClickOverride }
+    fields[#fields + 1] = { t = "[Enable Mixer Passthrough]", x = x,    y = incY(lineSpacing), w = 250, preEdit = onClickOverride }
 end
 
 local function receivedMixerConfig(page, _)
-    rf2.lcdNeedsInvalidate = true
-    page.isReady = true
+    rf2.onPageReady(page)
 end
 
 return {

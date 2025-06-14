@@ -2,6 +2,7 @@ chdir("/SCRIPTS/RF2")
 
 local run = nil
 local scriptsCompiled = assert(loadScript("COMPILE/scripts_compiled.lua"))()
+local useLvgl = false
 
 if scriptsCompiled then
     --print("RF2: Before rf2.lua: ", collectgarbage("count") * 1024)
@@ -21,12 +22,20 @@ if scriptsCompiled then
     rf2.mspCommon = assert(rf2.loadScript("MSP/common.lua"))()
     --rf2.showMemoryUsage("common loaded")
 
-    run = assert(rf2.loadScript("ui.lua"))()
-    --rf2.showMemoryUsage("ui loaded")
+    if rf2.canUseLvgl then
+        local settings = rf2.loadSettings()
+        if settings["useLvgl"] == nil or settings["useLvgl"] == 1 then useLvgl = true end
+    end
 
+    if useLvgl then
+        run = assert(rf2.loadScript("ui_lvgl_runner.lua"))()
+    else
+        run = assert(rf2.loadScript("ui_lcd.lua"))()
+    end
+    --rf2.showMemoryUsage("ui loaded")
 else
     run = assert(loadScript("COMPILE/compile.lua"))()
     collectgarbage()
 end
 
-return { run = run }
+return { run = run, useLvgl = useLvgl }

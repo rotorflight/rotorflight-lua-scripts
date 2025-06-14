@@ -26,6 +26,13 @@ local genericReplacements = {
         match = "  ",
         replace = "  ",
         replacement = ""
+    },
+    {
+        -- Remove debug info from release builds.
+        files = "/SCRIPTS/RF2/COMPILE/compile.lua",
+        match = "loadScript%(script, %'cd%'%)",
+        replace = "loadScript%(script, %'cd%'%)",
+        replacement = "loadScript(script, 'c')"
     }
 }
 

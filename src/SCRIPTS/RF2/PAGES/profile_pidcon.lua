@@ -52,12 +52,12 @@ fields[#fields + 1] = { t = "P B-term cutoff",         x = x + indent, y = incY(
 fields[#fields + 1] = { t = "Y B-term cutoff",         x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.bterm_cutoff_yaw }
 
 local function receivedPidProfile(page, _)
-    rf2.lcdNeedsInvalidate = true
-    page.isReady = true
+    rf2.onPageReady(page)
 end
 
 return {
     read = function(self)
+        self.profileSwitcher.getStatus(self)
         rf2.useApi("mspPidProfile").read(receivedPidProfile, self, pidProfile)
     end,
     write = function(self)

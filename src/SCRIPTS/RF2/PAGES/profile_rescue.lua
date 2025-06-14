@@ -51,12 +51,12 @@ fields[#fields + 1] = { t = "Max collective",      x = x + indent, y = incY(line
 --]]
 
 local function receivedRescueProfile(page, _)
-    rf2.lcdNeedsInvalidate = true
-    page.isReady = true
+    rf2.onPageReady(page)
 end
 
 return {
     read = function(self)
+        self.profileSwitcher.getStatus(self)
         rf2.useApi("mspRescueProfile").read(receivedRescueProfile, self, rescueProfile)
     end,
     write = function(self)

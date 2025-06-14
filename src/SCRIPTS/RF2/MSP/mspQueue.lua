@@ -103,12 +103,12 @@ function MspQueueController:processQueue()
     --end
 
     if (cmd == self.currentMessage.command and not err) or (self.currentMessage.command == 68 and self.retryCount == 2) then -- 68 = MSP_REBOOT
-        --rf2.log("Received cmd "..cmd..": {" .. joinTableItems(buf, ", ") .. "}")
+        --rf2.print("Received cmd "..self.currentMessage.command..": {" .. joinTableItems(buf, ", ") .. "}")
         self.currentMessage.buf = buf
         if self.currentMessage.postSendDelay then return end
         self:handleReply()
-    elseif self.maxRetries >= 0 and self.retryCount > self.maxRetries then
-        --rf2.print("Max retries reached, aborting queue")
+    elseif err or (self.maxRetries >= 0 and self.retryCount > self.maxRetries) then
+        --rf2.print("Error or max retries reached, aborting queue")
         if self.currentMessage.errorHandler then
             self.currentMessage:errorHandler()
         end
@@ -127,6 +127,7 @@ function MspQueueController:handleReply()
 end
 
 function MspQueueController:clear()
+    --rf2.print("Clearing MSP queue")
     self.messageQueue = {}
     self.currentMessage = nil
     self.lastTimeCommandSent = nil
