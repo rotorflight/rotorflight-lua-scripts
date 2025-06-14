@@ -18,11 +18,12 @@ rf2 = {
         return rf2.executeScript("PAGES/helpers/settingsHelper").loadSettings();
     end,
 
-    print = function(str)
+    print = function(format, ...)
+        local str = string.format("RF2: " .. format, ...)
         if rf2.runningInSimulator then
-            print("RF2: " .. tostring(str))
+            print(str)
         else
-            --serialWrite(tostring(str).."\r\n") -- 115200 bps
+            --serialWrite(str .. "\r\n") -- 115200 bps
             --rf2.log(str)
         end
     end,
