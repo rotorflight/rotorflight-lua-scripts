@@ -37,11 +37,11 @@ local function run(event, touchState)
             ui.showMainMenu()
         end
 
-        if event == 0x60D or event == EVT_VIRTUAL_PREV_PAGE or event == EVT_VIRTUAL_NEXT_PAGE then
+        if event == 0x20D or event == EVT_VIRTUAL_PREV_PAGE or event == EVT_VIRTUAL_NEXT_PAGE then
             -- For some reason the tool gets all key events twice, so we need to ignore the second one.
             if not IgnoreNextKeyEvent then
                 IgnoreNextKeyEvent = true
-                if event == 0x60D then -- SYS
+                if event == 0x20D then -- SYS break
                     ui.showPopupMenu()
                 elseif event == EVT_VIRTUAL_PREV_PAGE then
                     ui.incPage(-1)
