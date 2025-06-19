@@ -55,11 +55,9 @@ return {
         settings.autoSetName = fields[1].data.value
         settingsHelper.saveSettings(settings)
         pilotConfigReset()
-        rf2.settingsSaved()
+        rf2.settingsSaved(true, false)
     end,
     title       = "Model",
-    reboot      = false,
-    eepromWrite = true,
     labels      = labels,
     fields      = fields
 }

@@ -44,11 +44,9 @@ return {
     end,
     write = function(self)
         rf2.useApi("mspGovernorConfig").write(governorConfig)
-        rf2.settingsSaved()
+        rf2.settingsSaved(true, true)
     end,
     title       = "Governor",
-    reboot      = true,
-    eepromWrite = true,
     labels      = labels,
     fields      = fields
 }

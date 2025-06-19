@@ -76,9 +76,9 @@ local function showMessage(title, text)
     displayMessage = { title = title, text = text }
 end
 
-rf2.settingsSaved = function()
+rf2.settingsSaved = function(eepromWrite, reboot)
     -- check if this page requires writing to eeprom to save (most do)
-    if Page and Page.eepromWrite then
+    if eepromWrite then
         -- don't write again if we're already responding to earlier page.write()s
         if pageState ~= pageStatus.eepromWrite then
             pageState = pageStatus.eepromWrite
@@ -86,7 +86,7 @@ rf2.settingsSaved = function()
             {
                 command = 250, -- MSP_EEPROM_WRITE, fails when armed
                 processReply = function(self, buf)
-                    if Page.reboot then
+                    if reboot then
                         rebootFc()
                     else
                         invalidatePages()

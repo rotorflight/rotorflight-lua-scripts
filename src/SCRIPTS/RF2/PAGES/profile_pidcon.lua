@@ -62,11 +62,9 @@ return {
     end,
     write = function(self)
         rf2.useApi("mspPidProfile").write(pidProfile)
-        rf2.settingsSaved()
+        rf2.settingsSaved(true, false)
     end,
     title       = "PID Controller Settings",
-    reboot      = false,
-    eepromWrite = true,
     labels      = labels,
     fields      = fields,
     profileSwitcher = profileSwitcher,

@@ -83,11 +83,9 @@ return {
     end,
     write = function(self)
         rf2.useApi("mspRcTuning").write(rcTuning)
-        rf2.settingsSaved()
+        rf2.settingsSaved(true, false)
     end,
     title       = "Rate Dynamics",
-    reboot      = false,
-    eepromWrite = true,
     labels      = labels,
     fields      = fields,
     rateSwitcher = rateSwitcher,

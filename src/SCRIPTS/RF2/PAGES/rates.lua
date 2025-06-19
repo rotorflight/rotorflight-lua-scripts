@@ -40,7 +40,7 @@ local function copyProfile(field, page)
     }
 
     rf2.mspQueue:add(mspCopyProfile)
-    rf2.settingsSaved()
+    rf2.settingsSaved(true, false)
 end
 
 local function buildForm()
@@ -120,11 +120,9 @@ return {
     end,
     write = function(self)
         rf2.useApi("mspRcTuning").write(rcTuning)
-        rf2.settingsSaved()
+        rf2.settingsSaved(true, false)
     end,
     title       = "Rates",
-    reboot      = false,
-    eepromWrite = true,
     labels      = labels,
     fields      = fields,
 

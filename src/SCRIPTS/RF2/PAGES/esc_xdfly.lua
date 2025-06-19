@@ -61,11 +61,9 @@ return {
     end,
     write = function(self)
         rf2.useApi("mspEscXdfly").write(escParameters)
-        rf2.settingsSaved()
+        rf2.settingsSaved(false, false)
     end,
     title       = "XDFly Setup",
-    reboot      = false,
-    eepromWrite = false,
     labels      = labels,
     fields      = fields,
 }

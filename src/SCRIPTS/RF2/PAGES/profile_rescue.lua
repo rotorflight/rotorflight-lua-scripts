@@ -61,11 +61,9 @@ return {
     end,
     write = function(self)
         rf2.useApi("mspRescueProfile").write(rescueProfile)
-        rf2.settingsSaved()
+        rf2.settingsSaved(true, false)
     end,
     title       = "Profile - Rescue",
-    reboot      = false,
-    eepromWrite = true,
     labels      = labels,
     fields      = fields,
     profileSwitcher = profileSwitcher,

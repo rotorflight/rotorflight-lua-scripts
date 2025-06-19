@@ -38,10 +38,9 @@ return {
     end,
     write = function(self)
         mspExperimental.write(experimental)
-        rf2.settingsSaved()
+        rf2.settingsSaved(true, false)
     end,
     title       = "Experimental",
-    eepromWrite = true,
     labels      = labels,
     fields      = fields
 }

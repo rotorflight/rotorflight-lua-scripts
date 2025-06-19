@@ -43,11 +43,9 @@ return {
     end,
     write = function(self)
         rf2.useApi("mspGovernorProfile").write(governorProfile)
-        rf2.settingsSaved()
+        rf2.settingsSaved(true, false)
     end,
     title       = "Profile - Governor",
-    reboot      = false,
-    eepromWrite = true,
     labels      = labels,
     fields      = fields,
     profileSwitcher = profileSwitcher,

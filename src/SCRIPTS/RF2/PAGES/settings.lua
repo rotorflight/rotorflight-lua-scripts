@@ -71,11 +71,9 @@ return {
         end
         settingsHelper.saveSettings(settings)
         rf2.reloadMainMenu(true)
-        rf2.settingsSaved()
+        rf2.settingsSaved(false, false)
     end,
     title       = "Settings",
-    reboot      = false,
-    eepromWrite = false,
     labels      = labels,
     fields      = fields
 }

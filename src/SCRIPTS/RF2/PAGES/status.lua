@@ -97,8 +97,6 @@ return {
         mspDataflash.getDataflashSummary(self.onReceivedDataflashSummary, self)
     end,
     write       = nil,
-    reboot      = false,
-    eepromWrite = false,
     title       = "Status",
     labels      = labels,
     fields      = fields,

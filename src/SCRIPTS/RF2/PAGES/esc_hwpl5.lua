@@ -61,10 +61,8 @@ return {
     end,
     write = function(self)
         rf2.useApi(mspEscHwPl5).write(escParameters)
-        rf2.settingsSaved()
+        rf2.settingsSaved(false, false)
     end,
-    eepromWrite = false,
-    reboot      = false,
     title       = "Platinum V5 Setup",
     labels      = labels,
     fields      = fields,

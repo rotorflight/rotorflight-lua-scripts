@@ -69,10 +69,8 @@ return {
     end,
     write = function(self)
         rf2.useApi("mspMixer").write(mixerConfig)
-        rf2.settingsSaved()
+        rf2.settingsSaved(true, false)
     end,
-    eepromWrite = true,
-    reboot      = false,
     title       = "Mixer",
     labels      = labels,
     fields      = fields

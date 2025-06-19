@@ -84,9 +84,9 @@ local function rebootFc()
     ui.refresh()
 end
 
-ui.saveSettingsToEeprom = function()
-    if not Page or not Page.eepromWrite then
-        ui.refresh()
+ui.saveSettingsToEeprom = function(eepromWrite, reboot)
+    if not eepromWrite then
+        if ui.state == ui.status.pages then ui.refresh() end
         return
     end
 
@@ -94,10 +94,10 @@ ui.saveSettingsToEeprom = function()
     {
         command = 250, -- MSP_EEPROM_WRITE, fails when armed
         processReply = function(self, buf)
-            if Page.reboot then
+            if reboot then
                 rebootFc()
             end
-            ui.refresh()
+            if ui.state == ui.status.pages then ui.refresh() end
         end,
         errorHandler = function(self)
             if not ui.saveWarningShown then
@@ -141,7 +141,7 @@ ui.showPopupMenu = function()
 end
 
 ui.showPage = function()
-    assert(Page, "Page is not loaded")
+    if not Page then return end -- might happen if the user returned to the main menu right after saving.
     Page.back = function() ui.showMainMenu() end
     rf2.executeScript("LVGL/page").show(Page)
     ui.state = ui.status.pages

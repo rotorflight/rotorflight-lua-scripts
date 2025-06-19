@@ -28,10 +28,8 @@ return {
     end,
     write = function(self)
         rf2.useApi(mspAccTrim).write(data)
-        rf2.settingsSaved()
+        rf2.settingsSaved(true, false)
     end,
-    eepromWrite = true,
-    reboot      = false,
     title       = "Accelerometer",
     labels      = labels,
     fields      = fields

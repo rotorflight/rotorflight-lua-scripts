@@ -74,10 +74,8 @@ return {
     end,
     write = function(self)
         rf2.useApi(mspEscFlyrotor).write(escParameters)
-        rf2.settingsSaved()
+        rf2.settingsSaved(false, false)
     end,
-    eepromWrite = false,
-    reboot      = false,
     title       = "FLYROTOR Setup",
     labels      = labels,
     fields      = fields,

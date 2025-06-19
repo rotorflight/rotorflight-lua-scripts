@@ -49,10 +49,8 @@ return {
     end,
     write = function(self)
         rf2.useApi("mspFilterConfig").write(filterConfig)
-        rf2.settingsSaved()
+        rf2.settingsSaved(true, true)
     end,
-    eepromWrite = true,
-    reboot      = true,
     title       = "Gyro Filters",
     labels      = labels,
     fields      = fields,
