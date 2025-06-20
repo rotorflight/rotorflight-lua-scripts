@@ -72,7 +72,8 @@ rf2 = {
         milliseconds = " ms",
         volt = "V",
         celsius = " C",
-        rpm = " RPM"
+        rpm = " RPM",
+        meters = " m"
     },
 
     -- Color radios on EdgeTX >= 2.11 do not send EVT_VIRTUAL_ENTER anymore after EVT_VIRTUAL_ENTER_LONG

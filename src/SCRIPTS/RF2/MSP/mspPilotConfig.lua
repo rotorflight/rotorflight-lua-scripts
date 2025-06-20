@@ -8,6 +8,14 @@ local function getDefaults()
     defaults.model_param2_value = { min = -32000, max = 32000 }
     defaults.model_param3_type = { min = 0, max = #paramTypes, table = paramTypes }
     defaults.model_param3_value = { min = -32000, max = 32000 }
+    if rf2.apiVersion >= 12.09 then
+        defaults.stats_total_flights = { min = 0, max = 2147483647 } -- Actual max is 4294967295, but EdgeTX doesn't support unsigned longs.
+        defaults.stats_total_time_s = { min = 0, max = 2147483647, unit = rf2.units.seconds }
+        defaults.stats_total_dist_m = { min = 0, max = 2147483647, unit = rf2.units.meters }
+        defaults.stats_min_armed_time_s = { min = -1, max = 127, unit = rf2.units.seconds }
+        -- Calculated fields
+        defaults.statsEnabled = { min = 0, max = 1, table = { [0] = "Off", "On" } }
+    end
     return defaults
 end
 
@@ -23,9 +31,17 @@ local function getPilotConfig(callback, callbackParam, config)
             config.model_param2_value.value = rf2.mspHelper.readS16(buf)
             config.model_param3_type.value = rf2.mspHelper.readU8(buf)
             config.model_param3_value.value = rf2.mspHelper.readS16(buf)
+            if rf2.apiVersion >= 12.09 then
+                config.stats_total_flights.value = rf2.mspHelper.readU32(buf)
+                config.stats_total_time_s.value = rf2.mspHelper.readU32(buf)
+                config.stats_total_dist_m.value = rf2.mspHelper.readU32(buf)
+                config.stats_min_armed_time_s.value = rf2.mspHelper.readS8(buf)
+                -- Calculated fields
+                config.statsEnabled.value = config.stats_min_armed_time_s.value ~= -1 and 1 or 0
+            end
             callback(callbackParam, config)
         end,
-        simulatorResponse = { 21,  1, 240, 0,  0, 0, 0,  0, 0, 0 }
+        simulatorResponse = { 21,  1, 240, 0,  0, 0, 0,  0, 0, 0,  10,0,0,0,  100,0,0,0,  0,0,0,0,  10}
     }
     rf2.mspQueue:add(message)
 end
@@ -43,6 +59,12 @@ local function setPilotConfig(config)
     rf2.mspHelper.writeU16(message.payload, config.model_param2_value.value)
     rf2.mspHelper.writeU8(message.payload, config.model_param3_type.value)
     rf2.mspHelper.writeU16(message.payload, config.model_param3_value.value)
+    if rf2.apiVersion >= 12.09 then
+        rf2.mspHelper.writeU32(message.payload, config.stats_total_flights.value)
+        rf2.mspHelper.writeU32(message.payload, config.stats_total_time_s.value)
+        rf2.mspHelper.writeU32(message.payload, config.stats_total_dist_m.value)
+        rf2.mspHelper.writeU8(message.payload, config.stats_min_armed_time_s.value)
+    end
     rf2.mspQueue:add(message)
 end
 
