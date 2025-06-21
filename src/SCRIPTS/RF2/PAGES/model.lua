@@ -46,14 +46,13 @@ local function buildForm(page)
         if pilotConfig.statsEnabled.value and pilotConfig.statsEnabled.value == 1 then
             fields[#fields + 1] = { t = "Total flights",  x = x, y = incY(lineSpacing), sp = x + sp, data = pilotConfig.stats_total_flights, readOnly = true }
 
-            local formatSeconds = function(seconds)
+            local function formatSeconds(seconds)
                 local days = math.floor(seconds / 86400)
                 seconds = seconds % 86400
                 local hours = math.floor(seconds / 3600)
                 seconds = seconds % 3600
                 local minutes = math.floor(seconds / 60)
                 seconds = seconds % 60
-
                 local s = string.format("%02d:%02d:%02d", hours, minutes, seconds)
                 if days > 0 then
                     -- e.g. 12d04:30:58
@@ -84,8 +83,15 @@ local function buildForm(page)
     labels[#labels + 1] = { t = "Radio Configuration",       x = x, y = incY(lineSpacing) }
     labels[#labels + 1] = { t = "Note: requires rf2bg",   x = x + indent, y = incY(lineSpacing), bold = false }
     incY(lineSpacing * 0.25)
+
+    local function getAutoSetName()
+        if rf2.apiVersion >= 12.07 and rf2.apiVersion < 12.09 then
+            return settings.autoSetName or 0
+        end
+        return rf2.getBit(pilotConfig.model_flags.value, pilotConfig.model_flags.MODEL_SET_NAME) or 0
+    end
     setNameOnTxFieldIndex = #fields + 1
-    fields[setNameOnTxFieldIndex] = { t = "Set name on TX",         x = x, y = incY(lineSpacing), sp = x + sp, data = { value = settings.autoSetName or 0, min = 0, max = 1, table = { [0] = "Off", "On" } } }
+    fields[setNameOnTxFieldIndex] = { t = "Set name on TX", x = x, y = incY(lineSpacing), sp = x + sp, data = { value = getAutoSetName() or 0, min = 0, max = 1, table = { [0] = "Off", "On" } } }
     incY(lineSpacing * 0.25)
     fields[#fields + 1] = { t = "Param1 type",  x = x, y = incY(lineSpacing), sp = x + sp, data = pilotConfig.model_param1_type }
     fields[#fields + 1] = { t = "Param1 value", x = x, y = incY(lineSpacing), sp = x + sp, data = pilotConfig.model_param1_value }
@@ -112,6 +118,17 @@ local function pilotConfigReset()
     model.setGlobalVariable(7, 8, 0)
 end
 
+local function setAutoSetName()
+    local autoSetName = fields[setNameOnTxFieldIndex].data.value
+    if rf2.apiVersion >= 12.07 and rf2.apiVersion < 12.09 then
+        settings.autoSetName = autoSetName
+        settingsHelper.saveSettings(settings)
+        return
+    end
+
+    pilotConfig.model_flags.value = rf2.setBit(pilotConfig.model_flags.value, pilotConfig.model_flags.MODEL_SET_NAME, autoSetName)
+end
+
 return {
     read = function(self)
         --buildForm(self)
@@ -119,9 +136,8 @@ return {
         rf2.useApi("mspPilotConfig").read(onReceivedPilotConfig, self, pilotConfig)
     end,
     write = function(self)
+        setAutoSetName()
         rf2.useApi("mspPilotConfig").write(pilotConfig)
-        settings.autoSetName = fields[setNameOnTxFieldIndex].data.value
-        settingsHelper.saveSettings(settings)
         pilotConfigReset()
         rf2.settingsSaved(true, false)
     end,

@@ -17,7 +17,7 @@ local offOn = { [0] = "Off", "On" }
 
 y = yMinLim - tableSpacing.header
 labels[1] = { t = "Display Various Pages",   x = x, y = incY(lineSpacing) }
-fields[1] = { t = "Model on TX",             x = x + indent, y = incY(lineSpacing), sp = x + sp }
+fields[1] = { t = "Model",                   x = x + indent, y = incY(lineSpacing), sp = x + sp }
 fields[2] = { t = "Experimental (!)",        x = x + indent, y = incY(lineSpacing), sp = x + sp }
 
 incY(lineSpacing * 0.5)
