@@ -55,6 +55,27 @@ local function show(page)
                     if field.preEdit then field.preEdit(field, page) end
                 end,
             }
+        elseif field.data and field.data.value and type(field.data.value) == "string" then
+            local child
+            if field.readOnly then
+                child = {
+                    type = "label",
+                    x = field.sp or field.x,
+                    y = field.y + 3,
+                    text = field.data.value,
+                }
+            else
+                child = {
+                    type = "textEdit",
+                    x = field.sp or field.x,
+                    y = field.y,
+                    w = field.w or 125,
+                    value = field.data.value,
+                    length = field.data.max or 10,
+                }
+            end
+
+            children[#children + 1] = child
         elseif field.data and field.data.value and type(field.data.value) == "number" then
             local child
             if field.readOnly then
