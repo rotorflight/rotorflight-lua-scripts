@@ -34,6 +34,10 @@ rf2 = {
         return rf2.executeScript("PAGES/helpers/settingsHelper").loadSettings();
     end,
 
+    saveSettings = function(settings)
+        return rf2.executeScript("PAGES/helpers/settingsHelper").saveSettings(settings);
+    end,
+
     print = function(format, ...)
         local str = string.format("RF2: " .. format, ...)
         if rf2.runningInSimulator then
