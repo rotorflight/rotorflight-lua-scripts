@@ -234,18 +234,23 @@ local function fieldIsButton(f)
 end
 
 local function drawScreen()
-    if currentField > #Page.fields then currentField = #Page.fields end
     local yMinLim = rf2.radio.yMinLimit
     local yMaxLim = rf2.radio.yMaxLimit
-    local currentFieldY = Page.fields[currentField].y
     local textOptions = rf2.radio.textSize + globalTextOptions
     local boldTextOptions = (rf2.isEdgeTx and TEXT_COLOR and BOLD + TEXT_COLOR) or textOptions
-    if currentFieldY <= Page.fields[1].y then
+
+    if #Page.fields == 0 then
         pageScrollY = 0
-    elseif currentFieldY - pageScrollY <= yMinLim then
-        pageScrollY = currentFieldY - yMinLim
-    elseif currentFieldY - pageScrollY >= yMaxLim then
-        pageScrollY = currentFieldY - yMaxLim
+    else
+        if currentField > #Page.fields then currentField = #Page.fields end
+        local currentFieldY = Page.fields[currentField] and Page.fields[currentField].y or 0
+        if currentFieldY <= Page.fields[1].y then
+            pageScrollY = 0
+        elseif currentFieldY - pageScrollY <= yMinLim then
+            pageScrollY = currentFieldY - yMinLim
+        elseif currentFieldY - pageScrollY >= yMaxLim then
+            pageScrollY = currentFieldY - yMaxLim
+        end
     end
     for i=1,#Page.labels do
         local f = Page.labels[i]
