@@ -1,4 +1,4 @@
-local template = assert(rf2.loadScript(rf2.radio.template))()
+local template = rf2.executeScript(rf2.radio.template)
 local margin = template.margin
 local indent = template.indent
 local lineSpacing = template.lineSpacing
@@ -10,7 +10,7 @@ local y = yMinLim - lineSpacing
 local function incY(val) y = y + val return y end
 local labels = {}
 local fields = {}
-local profileSwitcher = assert(rf2.loadScript("PAGES/helpers/profileSwitcher.lua"))()
+local profileSwitcher = rf2.executeScript("PAGES/helpers/profileSwitcher.lua")
 local rescueProfile = rf2.useApi("mspRescueProfile").getDefaults()
 
 fields[#fields + 1] = { t = "Current PID profile", x = x,          y = incY(lineSpacing), sp = x + sp * 1.17, data = { value = nil, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = profileSwitcher.startPidEditing, postEdit = profileSwitcher.endPidEditing }

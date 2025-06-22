@@ -1,11 +1,7 @@
-local template = assert(rf2.loadScript(rf2.radio.template))()
-local margin = template.margin
-local indent = template.indent
+local template = rf2.executeScript(rf2.radio.template)
 local lineSpacing = template.lineSpacing
-local tableSpacing = template.tableSpacing
-local sp = template.listSpacing.field
 local yMinLim = rf2.radio.yMinLimit
-local x = margin
+local x = template.margin
 local y = yMinLim - lineSpacing
 local inc = { x = function(val) x = x + val return x end, y = function(val) y = y + val return y end }
 local labels = {}
@@ -21,5 +17,5 @@ return {
     title  = "Accelerometer",
     labels = labels,
     fields = fields,
-    init   = assert(rf2.loadScript("acc_cal.lua"))(),
+    init   = rf2.executeScript("acc_cal"),
 }

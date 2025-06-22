@@ -1,7 +1,7 @@
 local initializationDone = false
 local crsfCustomTelemetryEnabled = false
 
-local settingsHelper = assert(rf2.loadScript(rf2.baseDir.."PAGES/helpers/settingsHelper.lua"))()
+local settingsHelper = rf2.executeScript("PAGES/helpers/settingsHelper")
 local autoSetName = settingsHelper.loadSettings().autoSetName == 1 or false
 local useAdjustmentTeller = settingsHelper.loadSettings().useAdjustmentTeller == 1 or false
 settingsHelper = nil
@@ -108,7 +108,7 @@ local function waitForCustomSensorsDiscovery()
     if sensorsDiscoveredTimeout ~= 0 then
         if rf2.clock() < sensorsDiscoveredTimeout then
             --rf2.print("Waiting for sensors to be discovered...")
-            customTelemetryTask = customTelemetryTask or assert(rf2.loadScript(rf2.baseDir.."rf2tlm.lua"))()
+            customTelemetryTask = customTelemetryTask or rf2.executeScript("rf2tlm")
             customTelemetryTask.run()
             return 1 -- wait for sensors to be discovered
         end
