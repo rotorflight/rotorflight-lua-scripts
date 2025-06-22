@@ -1,5 +1,5 @@
 local template = rf2.executeScript(rf2.radio.template)
-local settingsHelper = rf2.executeScript("PAGES/helpers/settingsHelper")
+local settings = rf2.loadSettings()
 local margin = template.margin
 local indent = template.indent
 local lineSpacing = template.lineSpacing
@@ -11,7 +11,6 @@ local y = yMinLim - lineSpacing
 local function incY(val) y = y + val return y end
 local labels = {}
 local fields = {}
-local settings = settingsHelper.loadSettings()
 local hideShow = { [0] = "Hide", "Show" }
 local offOn = { [0] = "Off", "On" }
 
@@ -69,7 +68,7 @@ return {
         if rf2.canUseLvgl then
             settings.useLvgl = fields[9].data.value
         end
-        settingsHelper.saveSettings(settings)
+        rf2.saveSettings(settings)
         rf2.reloadMainMenu(true)
         rf2.settingsSaved(false, false)
     end,

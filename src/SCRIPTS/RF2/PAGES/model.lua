@@ -1,5 +1,5 @@
 local template = rf2.executeScript(rf2.radio.template)
-local settingsHelper = rf2.executeScript("PAGES/helpers/settingsHelper")
+local settings = rf2.loadSettings()
 local margin = template.margin
 local indent = template.indent
 local lineSpacing = template.lineSpacing
@@ -12,7 +12,6 @@ local function incY(val) y = y + val return y end
 local labels = {}
 local fields = {}
 local pilotConfig = rf2.useApi("mspPilotConfig").getDefaults()
-local settings = settingsHelper.loadSettings()
 local modelName = "---"
 local setNameOnTxFieldIndex
 
@@ -35,14 +34,15 @@ local function buildForm(page)
         fields[#fields + 1] = { t = "Enabled",            x = x, y = incY(lineSpacing), sp = x + sp, data = pilotConfig.statsEnabled,
             postEdit = function(self, page)
                 if self.data.value == 0 then
-                    pilotConfig.stats_min_armed_time_s.value = -1
+                    pilotConfig.stats_min_armed_time_s.value = -1   -- stats disabled
                 else
-                    pilotConfig.stats_min_armed_time_s.value = 15
+                    pilotConfig.stats_min_armed_time_s.value = 15   -- >= 15s armed counts as a flight
                 end
                 buildForm(page)
                 rf2.onPageReady(page)
             end
         }
+
         if pilotConfig.statsEnabled.value and pilotConfig.statsEnabled.value == 1 then
             fields[#fields + 1] = { t = "Total flights",  x = x, y = incY(lineSpacing), sp = x + sp, data = pilotConfig.stats_total_flights, readOnly = true }
 
@@ -82,7 +82,6 @@ local function buildForm(page)
     incY(lineSpacing * 0.5)
     labels[#labels + 1] = { t = "Radio Configuration",       x = x, y = incY(lineSpacing) }
     labels[#labels + 1] = { t = "Note: requires rf2bg",   x = x + indent, y = incY(lineSpacing), bold = false }
-    incY(lineSpacing * 0.25)
 
     local function getAutoSetName()
         if rf2.apiVersion >= 12.07 and rf2.apiVersion < 12.09 then
@@ -90,8 +89,10 @@ local function buildForm(page)
         end
         return rf2.getBit(pilotConfig.model_flags.value, pilotConfig.model_flags.MODEL_SET_NAME) or 0
     end
+    incY(lineSpacing * 0.25)
     setNameOnTxFieldIndex = #fields + 1
     fields[setNameOnTxFieldIndex] = { t = "Set name on TX", x = x, y = incY(lineSpacing), sp = x + sp, data = { value = getAutoSetName() or 0, min = 0, max = 1, table = { [0] = "Off", "On" } } }
+
     incY(lineSpacing * 0.25)
     fields[#fields + 1] = { t = "Param1 type",  x = x, y = incY(lineSpacing), sp = x + sp, data = pilotConfig.model_param1_type }
     fields[#fields + 1] = { t = "Param1 value", x = x, y = incY(lineSpacing), sp = x + sp, data = pilotConfig.model_param1_value }
@@ -122,7 +123,7 @@ local function setAutoSetName()
     local autoSetName = fields[setNameOnTxFieldIndex].data.value
     if rf2.apiVersion >= 12.07 and rf2.apiVersion < 12.09 then
         settings.autoSetName = autoSetName
-        settingsHelper.saveSettings(settings)
+        rf2.saveSettings(settings)
         return
     end
 
@@ -131,7 +132,6 @@ end
 
 return {
     read = function(self)
-        --buildForm(self)
         rf2.useApi("mspName").getModelName(onReceivedModelName, self)
         rf2.useApi("mspPilotConfig").read(onReceivedPilotConfig, self, pilotConfig)
     end,
