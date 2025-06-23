@@ -8,18 +8,18 @@ if scriptsCompiled then
     --print("RF2: Before rf2.lua: ", collectgarbage("count") * 1024)
     assert(loadScript("rf2.lua"))()
     --rf2.showMemoryUsage("rf2 loaded")
-    rf2.protocol = assert(rf2.loadScript("protocols.lua"))()
+    rf2.protocol = rf2.executeScript("protocols")
     --rf2.showMemoryUsage("protocols loaded")
-    rf2.radio = assert(rf2.loadScript("radios.lua"))().msp
+    rf2.radio = rf2.executeScript("radios").msp
     --rf2.showMemoryUsage("radios loaded")
-    rf2.mspQueue = assert(rf2.loadScript("MSP/mspQueue.lua"))()
+    rf2.mspQueue = rf2.executeScript("MSP/mspQueue")
     --rf2.showMemoryUsage("MSP queue loaded")
     rf2.mspQueue.maxRetries = rf2.protocol.maxRetries
-    rf2.mspHelper = assert(rf2.loadScript("MSP/mspHelper.lua"))()
+    rf2.mspHelper = rf2.executeScript("MSP/mspHelper")
     --rf2.showMemoryUsage("MSP helper loaded")
-    assert(rf2.loadScript(rf2.protocol.mspTransport))()
+    rf2.executeScript(rf2.protocol.mspTransport)
     --rf2.showMemoryUsage("mspTransport loaded")
-    rf2.mspCommon = assert(rf2.loadScript("MSP/common.lua"))()
+    rf2.mspCommon = rf2.executeScript("MSP/common")
     --rf2.showMemoryUsage("common loaded")
 
     if rf2.canUseLvgl then
@@ -28,9 +28,9 @@ if scriptsCompiled then
     end
 
     if useLvgl then
-        run = assert(rf2.loadScript("ui_lvgl.lua"))()
+        run = rf2.executeScript("ui_lvgl_runner")
     else
-        run = assert(rf2.loadScript("ui_lcd.lua"))()
+        run = rf2.executeScript("ui_lcd")
     end
     --rf2.showMemoryUsage("ui loaded")
 else

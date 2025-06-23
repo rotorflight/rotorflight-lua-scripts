@@ -3,11 +3,27 @@ rf2 = {
     baseDir = "/SCRIPTS/RF2/",
     runningInSimulator = string.sub(select(2, getVersion()), -4) == "simu",
 
-    loadScript = loadScript,
+    startsWith = function(str, prefix)
+        return string.sub(str, 1, #prefix) == prefix
+    end,
+
+    endsWith = function(str, suffix)
+        return suffix == "" or string.sub(str, -#suffix) == suffix
+    end,
+
+    loadScript = function(script)
+        if not rf2.startsWith(script, rf2.baseDir) then
+            script = rf2.baseDir .. script
+        end
+        if not rf2.endsWith(script, ".lua") then
+            script = script .. ".lua"
+        end
+        return loadScript(script)
+    end,
 
     executeScript = function(scriptName, ...)
         collectgarbage()
-        return assert(rf2.loadScript(rf2.baseDir .. scriptName .. ".lua"))(...)
+        return assert(rf2.loadScript(scriptName))(...)
     end,
 
     useApi = function(apiName)
@@ -18,11 +34,12 @@ rf2 = {
         return rf2.executeScript("PAGES/helpers/settingsHelper").loadSettings();
     end,
 
-    print = function(str)
+    print = function(format, ...)
+        local str = string.format("RF2: " .. format, ...)
         if rf2.runningInSimulator then
-            print("RF2: " .. tostring(str))
+            print(str)
         else
-            --serialWrite(tostring(str).."\r\n") -- 115200 bps
+            --serialWrite(str .. "\r\n") -- 115200 bps
             --rf2.log(str)
         end
     end,

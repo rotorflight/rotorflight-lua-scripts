@@ -1,4 +1,4 @@
-local template = assert(rf2.loadScript(rf2.radio.template))()
+local template = rf2.executeScript(rf2.radio.template)
 local margin = template.margin
 local indent = template.indent
 local lineSpacing = template.lineSpacing
@@ -74,10 +74,8 @@ return {
     end,
     write = function(self)
         rf2.useApi(mspEscFlyrotor).write(escParameters)
-        rf2.settingsSaved()
+        rf2.settingsSaved(false, false)
     end,
-    eepromWrite = false,
-    reboot      = false,
     title       = "FLYROTOR Setup",
     labels      = labels,
     fields      = fields,

@@ -1,7 +1,7 @@
-local template = assert(rf2.loadScript(rf2.radio.template))()
-local mspStatus = assert(rf2.loadScript("MSP/mspStatus.lua"))()
-local mspDataflash = assert(rf2.loadScript("MSP/mspDataflash.lua"))()
-local mspSetProfile = assert(rf2.loadScript("MSP/mspSetProfile.lua"))()
+local template = rf2.executeScript(rf2.radio.template)
+local mspStatus = rf2.useApi("mspStatus")
+local mspDataflash = rf2.useApi("mspDataflash")
+local mspSetProfile = rf2.useApi("mspSetProfile.lua")
 local margin = template.margin
 local indent = template.indent
 local lineSpacing = template.lineSpacing
@@ -97,8 +97,6 @@ return {
         mspDataflash.getDataflashSummary(self.onReceivedDataflashSummary, self)
     end,
     write       = nil,
-    reboot      = false,
-    eepromWrite = false,
     title       = "Status",
     labels      = labels,
     fields      = fields,

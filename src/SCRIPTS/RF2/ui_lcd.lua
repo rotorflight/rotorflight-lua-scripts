@@ -73,9 +73,9 @@ local function rebootFc()
     })
 end
 
-rf2.settingsSaved = function()
+rf2.settingsSaved = function(eepromWrite, reboot)
     -- check if this page requires writing to eeprom to save (most do)
-    if Page and Page.eepromWrite then
+    if eepromWrite then
         -- don't write again if we're already responding to earlier page.write()s
         if pageState ~= pageStatus.eepromWrite then
             pageState = pageStatus.eepromWrite
@@ -83,7 +83,7 @@ rf2.settingsSaved = function()
             {
                 command = 250, -- MSP_EEPROM_WRITE, fails when armed
                 processReply = function(self, buf)
-                    if Page.reboot then
+                    if reboot then
                         rebootFc()
                     else
                         invalidatePages()
@@ -139,7 +139,7 @@ local function confirm(page)
     uiState = uiStatus.confirm
     invalidatePages()
     currentField = 1
-    Page = assert(rf2.loadScript(page))()
+    Page = rf2.executeScript(page)
     collectgarbage()
 end
 
@@ -296,7 +296,7 @@ local function drawPopupMenu()
 end
 
 rf2.reloadMainMenu = function(setCurrentPageToLastPage)
-    PageFiles = assert(rf2.loadScript("pages.lua"))()
+    PageFiles = rf2.executeScript("pages")
     if setCurrentPageToLastPage then
         currentPage = #PageFiles
     end
@@ -332,7 +332,7 @@ local function run_ui(event)
     elseif uiState == uiStatus.init then
         lcd.clear()
         drawScreenTitle("Rotorflight " .. rf2.luaVersion)
-        init = init or assert(rf2.loadScript("ui_init.lua"))()
+        init = init or rf2.executeScript("ui_init")
         lcdShared.drawTextMultiline(4, rf2.radio.yMinLimit, init.t)
         if not init.f() then
             return 0

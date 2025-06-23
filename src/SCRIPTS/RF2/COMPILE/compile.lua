@@ -1,6 +1,6 @@
 -- ui.lua is quite big and compiling it later might throw an 'out of memory' error
 collectgarbage()
-assert(loadScript("ui_lcd.lua", 'c'))
+assert(loadScript("ui_lcd.lua", 'cd'))
 
 local i = 1
 local scripts = assert(loadScript("COMPILE/scripts.lua"))

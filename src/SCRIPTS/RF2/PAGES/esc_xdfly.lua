@@ -1,4 +1,4 @@
-local template = assert(rf2.loadScript(rf2.radio.template))()
+local template = rf2.executeScript(rf2.radio.template)
 local margin = template.margin
 local indent = template.indent
 local lineSpacing = template.lineSpacing
@@ -61,11 +61,9 @@ return {
     end,
     write = function(self)
         rf2.useApi("mspEscXdfly").write(escParameters)
-        rf2.settingsSaved()
+        rf2.settingsSaved(false, false)
     end,
     title       = "XDFly Setup",
-    reboot      = false,
-    eepromWrite = false,
     labels      = labels,
     fields      = fields,
 }

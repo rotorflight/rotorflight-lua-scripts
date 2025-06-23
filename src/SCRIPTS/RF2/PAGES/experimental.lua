@@ -1,4 +1,4 @@
-local template = assert(rf2.loadScript(rf2.radio.template))()
+local template = rf2.executeScript(rf2.radio.template)
 local margin = template.margin
 local lineSpacing = template.lineSpacing
 local tableSpacing = template.tableSpacing
@@ -38,10 +38,9 @@ return {
     end,
     write = function(self)
         mspExperimental.write(experimental)
-        rf2.settingsSaved()
+        rf2.settingsSaved(true, false)
     end,
     title       = "Experimental",
-    eepromWrite = true,
     labels      = labels,
     fields      = fields
 }

@@ -1,5 +1,5 @@
-local template = assert(rf2.loadScript(rf2.radio.template))()
-local mspServos = assert(rf2.loadScript("MSP/mspServos.lua"))()
+local template = rf2.executeScript(rf2.radio.template)
+local mspServos = rf2.useApi("mspServos")
 local margin = template.margin
 local indent = template.indent
 local lineSpacing = template.lineSpacing
@@ -94,7 +94,7 @@ return {
         for servoIndex = 0, #servoConfigs do
             mspServos.setServoConfiguration(servoIndex, servoConfigs[servoIndex])
         end
-        rf2.settingsSaved()
+        rf2.settingsSaved(true, false)
     end,
     timer = function(self)
         if updateSelectedServoConfiguration then
@@ -103,8 +103,6 @@ return {
         end
     end,
     title       = "Servos",
-    reboot      = false,
-    eepromWrite = true,
     labels      = labels,
     fields      = fields
 }

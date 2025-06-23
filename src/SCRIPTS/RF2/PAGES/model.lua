@@ -1,5 +1,5 @@
-local template = assert(rf2.loadScript(rf2.radio.template))()
-local settingsHelper = assert(rf2.loadScript("PAGES/helpers/settingsHelper.lua"))()
+local template = rf2.executeScript(rf2.radio.template)
+local settingsHelper = rf2.executeScript("PAGES/helpers/settingsHelper")
 local margin = template.margin
 local indent = template.indent
 local lineSpacing = template.lineSpacing
@@ -55,11 +55,9 @@ return {
         settings.autoSetName = fields[1].data.value
         settingsHelper.saveSettings(settings)
         pilotConfigReset()
-        rf2.settingsSaved()
+        rf2.settingsSaved(true, false)
     end,
     title       = "Model",
-    reboot      = false,
-    eepromWrite = true,
     labels      = labels,
     fields      = fields
 }

@@ -1,4 +1,4 @@
-local template = assert(rf2.loadScript(rf2.radio.template))()
+local template = rf2.executeScript(rf2.radio.template)
 local mspStatus = rf2.useApi("mspStatus")
 local margin = template.margin
 local indent = template.indent
@@ -37,7 +37,7 @@ local function copyProfile(field, page)
     }
 
     rf2.mspQueue:add(mspCopyProfile)
-    rf2.settingsSaved()
+    rf2.settingsSaved(true, false)
 end
 
 x = margin
@@ -105,11 +105,9 @@ return {
     end,
     write = function(self)
         rf2.useApi("mspPidTuning").write(pids)
-        rf2.settingsSaved()
+        rf2.settingsSaved(true, false)
     end,
     title       = "PID Gains",
-    reboot      = false,
-    eepromWrite = true,
     labels      = labels,
     fields      = fields,
 

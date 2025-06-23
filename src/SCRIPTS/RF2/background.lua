@@ -36,17 +36,17 @@ local function run()
     end
 
     if not isInitialized then
-        initTask = initTask or assert(rf2.loadScript(rf2.baseDir.."background_init.lua"))()
+        initTask = initTask or rf2.executeScript("background_init")
         local initTaskResult = initTask.run(modelIsConnected)
         if not initTaskResult.isInitialized then
             --rf2.print("Not initialized yet")
             return
         end
         if initTaskResult.crsfCustomTelemetryEnabled then
-            customTelemetryTask = assert(rf2.loadScript(rf2.baseDir.."rf2tlm.lua"))()
+            customTelemetryTask = rf2.executeScript("rf2tlm")
         end
         if initTask.useAdjustmentTeller then
-            adjTellerTask = assert(rf2.loadScript(rf2.baseDir.."adj_teller.lua"))()
+            adjTellerTask = rf2.executeScript("adj_teller")
         end
         initTask = nil
         collectgarbage()

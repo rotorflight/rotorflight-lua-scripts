@@ -1,4 +1,4 @@
-local template = assert(rf2.loadScript(rf2.radio.template))()
+local template = rf2.executeScript(rf2.radio.template)
 local margin = template.margin
 local indent = template.indent
 local lineSpacing = template.lineSpacing
@@ -44,11 +44,9 @@ return {
     end,
     write = function(self)
         rf2.useApi("mspGovernorConfig").write(governorConfig)
-        rf2.settingsSaved()
+        rf2.settingsSaved(true, true)
     end,
     title       = "Governor",
-    reboot      = true,
-    eepromWrite = true,
     labels      = labels,
     fields      = fields
 }
