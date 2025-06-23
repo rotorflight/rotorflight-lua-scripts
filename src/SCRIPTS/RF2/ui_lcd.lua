@@ -1,5 +1,6 @@
 local lcdShared = rf2.executeScript("LCD/shared")
-local messageBox = rf2.executeScript("LCD/messageBox", lcdShared)
+local messageBox = nil -- loaded on demand
+local popupMenu = nil  -- loaded on demand
 
 local uiStatus =
 {
@@ -25,11 +26,9 @@ local pageState = pageStatus.display
 local currentPage = 1
 local currentField = 1
 local saveTS = 0
-local popupMenuActive = 1
-local killEnterBreak = 0
 local pageScrollY = 0
 local mainMenuScrollY = 0
-local PageFiles, Page, init, popupMenu
+local PageFiles, Page, init
 local scrollSpeedTS = 0
 local waitMessage
 local pageChanged = false
@@ -73,6 +72,11 @@ local function rebootFc()
     })
 end
 
+local function createMessageBox(title, text)
+    messageBox = rf2.executeScript("LCD/messageBox", lcdShared)
+    messageBox.show(title, text)
+end
+
 rf2.settingsSaved = function(eepromWrite, reboot)
     -- check if this page requires writing to eeprom to save (most do)
     if eepromWrite then
@@ -92,13 +96,13 @@ rf2.settingsSaved = function(eepromWrite, reboot)
                 errorHandler = function(self)
                     if rf2.apiVersion >= 12.08 then
                         if not rf2.saveWarningShown then
-                            messageBox.show("Save warning", "Settings will be saved\nafter disarming.")
+                            createMessageBox("Save warning", "Settings will be saved\nafter disarming.")
                             rf2.saveWarningShown = true
                         else
                             invalidatePages()
                         end
                     else
-                        messageBox.show("Save error", "Make sure your heli\nis disarmed.")
+                        createMessageBox("Save error", "Make sure your heli\nis disarmed.")
                     end
                 end,
                 simulatorResponse = {}
@@ -144,17 +148,22 @@ local function confirm(page)
 end
 
 local function createPopupMenu()
-    popupMenuActive = 1
-    popupMenu = {}
+    local menu = { title = "Menu:", items = {} }
+
     if uiState == uiStatus.pages then
         if not Page.readOnly then
-            popupMenu[#popupMenu + 1] = { t = "Save Page", f = saveSettings }
+            menu.items[#menu.items + 1] = { text = "Save", click = saveSettings }
         end
-        popupMenu[#popupMenu + 1] = { t = "Reload", f = invalidatePages }
+        menu.items [#menu.items + 1] = { text = "Reload", click = invalidatePages }
     end
-    popupMenu[#popupMenu + 1] = { t = "Reboot", f = rebootFc }
-    popupMenu[#popupMenu + 1] = { t = "Acc Cal", f = function() confirm("CONFIRM/acc_cal.lua") end }
+
+    menu.items[#menu.items + 1] = { text = "Reboot", click = rebootFc }
+    menu.items[#menu.items + 1] = { text = "Acc Cal", click = function() confirm("CONFIRM/acc_cal.lua") end }
+
+    popupMenu = rf2.executeScript("LCD/popupMenu", lcdShared)
+    popupMenu.show(menu)
 end
+
 
 local function incMax(val, inc, base)
     return ((val + inc + base - 1) % base) + 1
@@ -182,10 +191,6 @@ end
 
 local function incMainMenu(inc)
     currentPage = clipValue(currentPage + inc, 1, #PageFiles)
-end
-
-local function incPopupMenu(inc)
-    popupMenuActive = clipValue(popupMenuActive + inc, 1, #popupMenu)
 end
 
 local function drawScreenTitle(screenTitle)
@@ -274,27 +279,6 @@ local function incValue(inc)
     end
 end
 
-local function drawPopupMenu()
-    local x = rf2.radio.MenuBox.x
-    local y = rf2.radio.MenuBox.y
-    local w = rf2.radio.MenuBox.w
-    local h_line = rf2.radio.MenuBox.h_line
-    local h_offset = rf2.radio.MenuBox.h_offset
-    local h = #popupMenu * h_line + h_offset*2
-
-    lcd.drawFilledRectangle(x,y,w,h,lcdShared.backgroundFill)
-    lcd.drawRectangle(x,y,w-1,h-1,foregroundColor)
-    lcd.drawText(x+h_line/2,y+h_offset,"Menu:",globalTextOptions)
-
-    for i,e in ipairs(popupMenu) do
-        local textOptions = globalTextOptions
-        if popupMenuActive == i then
-            textOptions = textOptions + INVERS
-        end
-        lcd.drawText(x+rf2.radio.MenuBox.x_offset,y+(i-1)*h_line+h_offset,e.t,textOptions)
-    end
-end
-
 rf2.reloadMainMenu = function(setCurrentPageToLastPage)
     PageFiles = rf2.executeScript("pages")
     if setCurrentPageToLastPage then
@@ -308,26 +292,16 @@ local function run_ui(event)
     --     rf2.print("uiState: " .. uiState .. " pageState: " .. pageState .. " Event: " .. string.format("0x%X", event))
     -- end
 
-
-    if messageBox.update(event) then
+    if messageBox and messageBox.update(event) then
+        --rf2.print("Messagebox active")
         if lcdShared.forceReload then
+            messageBox = nil
             invalidatePages()
         end
-    elseif popupMenu then
-        drawPopupMenu()
-        if event == EVT_VIRTUAL_EXIT then
+    elseif popupMenu and popupMenu.update(event) then
+        --rf2.print("Popup menu active")
+        if popupMenu.menu == nil then
             popupMenu = nil
-        elseif event == EVT_VIRTUAL_PREV then
-            incPopupMenu(-1)
-        elseif event == EVT_VIRTUAL_NEXT then
-            incPopupMenu(1)
-        elseif event == EVT_VIRTUAL_ENTER then
-            if killEnterBreak == 1 then
-                killEnterBreak = 0
-            else
-                popupMenu[popupMenuActive].f()
-                popupMenu = nil
-            end
         end
     elseif uiState == uiStatus.init then
         lcd.clear()
@@ -353,7 +327,7 @@ local function run_ui(event)
         elseif event == EVT_VIRTUAL_ENTER then
             uiState = uiStatus.pages
         elseif event == EVT_VIRTUAL_ENTER_LONG then
-            if rf2.useKillEnterBreak then killEnterBreak = 1 end
+            if rf2.useKillEnterBreak then lcdShared.killEnterBreak = true end
             createPopupMenu()
         end
         lcd.clear()
@@ -404,7 +378,7 @@ local function run_ui(event)
                     end
                 end
             elseif event == EVT_VIRTUAL_ENTER_LONG then
-                if rf2.useKillEnterBreak then killEnterBreak = 1 end
+                if rf2.useKillEnterBreak then lcdShared.killEnterBreak = true end
                 createPopupMenu()
             elseif event == EVT_VIRTUAL_EXIT then
                 invalidatePages()

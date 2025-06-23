@@ -12,9 +12,22 @@ local function drawTextMultiline(x, y, text, options)
     end
 end
 
+local function clipValue(val, min, max)
+    if val < min then
+        val = min
+    elseif val > max then
+        val = max
+    end
+    return val
+end
+
 return {
     backgroundFill = TEXT_BGCOLOR or ERASE,
     getLineSpacing = getLineSpacing,
     drawTextMultiline = drawTextMultiline,
-    forceReload = false
+    clipValue = clipValue,
+    forceReload = false,
+    textOptions = TEXT_COLOR or 0,
+    foregroundColor = LINE_COLOR or SOLID,
+    killEnterBreak = false
 }

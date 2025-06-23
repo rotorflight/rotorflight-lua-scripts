@@ -25,7 +25,7 @@ local function update(event)
 
     lcd.clear()
     drawMessage(displayMessage.title, displayMessage.text)
-    
+
     if event == EVT_VIRTUAL_EXIT or event == EVT_VIRTUAL_ENTER then
         displayMessage = nil
         lcdShared.forceReload = true
