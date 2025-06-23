@@ -2,6 +2,7 @@ local scripts = {
     "/SCRIPTS/FUNCTIONS/rf2bg.lua",
     "/SCRIPTS/RF2/COMPILE/compile.lua",
     "/SCRIPTS/RF2/CONFIRM/acc_cal.lua",
+    "/SCRIPTS/RF2/LCD/mainMenu.lua",
     "/SCRIPTS/RF2/LCD/messageBox.lua",
     "/SCRIPTS/RF2/LCD/popupMenu.lua",
     "/SCRIPTS/RF2/LCD/shared.lua",

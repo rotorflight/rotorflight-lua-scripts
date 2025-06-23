@@ -1,6 +1,7 @@
 local lcdShared = rf2.executeScript("LCD/shared")
 local messageBox = nil -- loaded on demand
 local popupMenu = nil  -- loaded on demand
+local mainMenu = rf2.executeScript("LCD/mainMenu", lcdShared)
 
 local uiStatus =
 {
@@ -23,19 +24,13 @@ local pageStatus =
 local uiState = uiStatus.init
 local prevUiState
 local pageState = pageStatus.display
-local currentPage = 1
 local currentField = 1
 local saveTS = 0
 local pageScrollY = 0
-local mainMenuScrollY = 0
-local PageFiles, Page, init
+local Page, init
 local scrollSpeedTS = 0
 local waitMessage
 local pageChanged = false
-
-local foregroundColor = LINE_COLOR or SOLID
-
-local globalTextOptions = TEXT_COLOR or 0
 
 local function invalidatePages()
     Page = nil
@@ -165,10 +160,6 @@ local function createPopupMenu()
 end
 
 
-local function incMax(val, inc, base)
-    return ((val + inc + base - 1) % base) + 1
-end
-
 local function clipValue(val,min,max)
     if val < min then
         val = min
@@ -179,7 +170,7 @@ local function clipValue(val,min,max)
 end
 
 local function incPage(inc)
-    currentPage = incMax(currentPage, inc, #PageFiles)
+    mainMenu.incCurrentPage(inc)
     currentField = 1
     pageChanged = true
     invalidatePages()
@@ -187,20 +178,6 @@ end
 
 local function incField(inc)
     currentField = clipValue(currentField + inc, 1, #Page.fields)
-end
-
-local function incMainMenu(inc)
-    currentPage = clipValue(currentPage + inc, 1, #PageFiles)
-end
-
-local function drawScreenTitle(screenTitle)
-    if rf2.radio.highRes then
-        lcd.drawFilledRectangle(0, 0, LCD_W, 30, TITLE_BGCOLOR)
-        lcd.drawText(5,5,screenTitle, MENU_TITLE_COLOR)
-    else
-        lcd.drawFilledRectangle(0, 0, LCD_W, 10, FORCE)
-        lcd.drawText(1,1,screenTitle,INVERS)
-    end
 end
 
 local function fieldIsButton(f)
@@ -212,7 +189,7 @@ local function drawScreen()
     local yMinLim = rf2.radio.yMinLimit
     local yMaxLim = rf2.radio.yMaxLimit
     local currentFieldY = Page.fields[currentField].y
-    local textOptions = rf2.radio.textSize + globalTextOptions
+    local textOptions = rf2.radio.textSize + lcdShared.textOptions
     local boldTextOptions = (rf2.isEdgeTx and TEXT_COLOR and BOLD + TEXT_COLOR) or textOptions
     if currentFieldY <= Page.fields[1].y then
         pageScrollY = 0
@@ -263,7 +240,7 @@ local function drawScreen()
             lcd.drawText(f.sp or f.x, y, val, valueOptions)
         end
     end
-    drawScreenTitle(Page.title)
+    lcdShared.drawScreenTitle(Page.title)
 end
 
 local function incValue(inc)
@@ -279,13 +256,7 @@ local function incValue(inc)
     end
 end
 
-rf2.reloadMainMenu = function(setCurrentPageToLastPage)
-    PageFiles = rf2.executeScript("pages")
-    if setCurrentPageToLastPage then
-        currentPage = #PageFiles
-    end
-    collectgarbage()
-end
+rf2.reloadMainMenu = mainMenu.reload
 
 local function run_ui(event)
     -- if event and event ~= 0 then
@@ -293,19 +264,17 @@ local function run_ui(event)
     -- end
 
     if messageBox and messageBox.update(event) then
-        --rf2.print("Messagebox active")
         if lcdShared.forceReload then
             messageBox = nil
             invalidatePages()
         end
     elseif popupMenu and popupMenu.update(event) then
-        --rf2.print("Popup menu active")
         if popupMenu.menu == nil then
             popupMenu = nil
         end
     elseif uiState == uiStatus.init then
         lcd.clear()
-        drawScreenTitle("Rotorflight " .. rf2.luaVersion)
+        lcdShared.drawScreenTitle("Rotorflight " .. rf2.luaVersion)
         init = init or rf2.executeScript("ui_init")
         lcdShared.drawTextMultiline(4, rf2.radio.yMinLimit, init.t)
         if not init.f() then
@@ -318,38 +287,15 @@ local function run_ui(event)
         prevUiState = nil
     elseif uiState == uiStatus.mainMenu then
         if event == EVT_VIRTUAL_EXIT then
-            collectgarbage()
             return 2
-        elseif event == EVT_VIRTUAL_NEXT then
-            incMainMenu(1)
-        elseif event == EVT_VIRTUAL_PREV then
-            incMainMenu(-1)
         elseif event == EVT_VIRTUAL_ENTER then
             uiState = uiStatus.pages
         elseif event == EVT_VIRTUAL_ENTER_LONG then
             if rf2.useKillEnterBreak then lcdShared.killEnterBreak = true end
             createPopupMenu()
+        else
+            mainMenu.update(event)
         end
-        lcd.clear()
-        local yMinLim = rf2.radio.yMinLimit
-        local yMaxLim = rf2.radio.yMaxLimit
-        local lineSpacing = lcdShared.getLineSpacing()
-        local currentFieldY = (currentPage-1)*lineSpacing + yMinLim
-        if currentFieldY <= yMinLim then
-            mainMenuScrollY = 0
-        elseif currentFieldY - mainMenuScrollY <= yMinLim then
-            mainMenuScrollY = currentFieldY - yMinLim
-        elseif currentFieldY - mainMenuScrollY >= yMaxLim then
-            mainMenuScrollY = currentFieldY - yMaxLim
-        end
-        for i=1, #PageFiles do
-            local attr = currentPage == i and INVERS or 0
-            local y = (i-1)*lineSpacing + yMinLim - mainMenuScrollY
-            if y >= 0 and y <= LCD_H then
-                lcd.drawText(6, y, PageFiles[i].title, attr)
-            end
-        end
-        drawScreenTitle("Rotorflight " .. rf2.luaVersion)
     elseif uiState == uiStatus.pages then
         if pageState == pageStatus.saving then
             if saveTS + rf2.protocol.saveTimeout <= rf2.clock() then
@@ -423,7 +369,7 @@ local function run_ui(event)
             end
             collectgarbage()
             --rf2.showMemoryUsage("before loading page")
-            Page = rf2.executeScript("PAGES/" .. PageFiles[currentPage].script)
+            Page = mainMenu.loadCurrentPage()
             --rf2.showMemoryUsage("after loading page")
             collectgarbage()
         end
@@ -445,7 +391,7 @@ local function run_ui(event)
             end
             lcd.drawFilledRectangle(rf2.radio.SaveBox.x,rf2.radio.SaveBox.y,rf2.radio.SaveBox.w,rf2.radio.SaveBox.h,lcdShared.backgroundFill)
             lcd.drawRectangle(rf2.radio.SaveBox.x,rf2.radio.SaveBox.y,rf2.radio.SaveBox.w,rf2.radio.SaveBox.h,SOLID)
-            lcd.drawText(rf2.radio.SaveBox.x+rf2.radio.SaveBox.x_offset,rf2.radio.SaveBox.y+rf2.radio.SaveBox.h_offset,saveMsg,DBLSIZE + globalTextOptions)
+            lcd.drawText(rf2.radio.SaveBox.x+rf2.radio.SaveBox.x_offset,rf2.radio.SaveBox.y+rf2.radio.SaveBox.h_offset,saveMsg,DBLSIZE + lcdShared.textOptions)
         end
     elseif uiState == uiStatus.confirm then
         lcd.clear()
