@@ -11,8 +11,9 @@ local y = yMinLim - lineSpacing
 local function incY(val) y = y + val return y end
 local labels = {}
 local fields = {}
-local pilotConfig = rf2.useApi("mspPilotConfig").getDefaults()
 local modelName = "---"
+local flighStats = rf2.useApi("mspFlightStats").getDefaults()
+local pilotConfig = rf2.useApi("mspPilotConfig").getDefaults()
 local setNameOnTxFieldIndex
 
 local function buildForm(page)
@@ -31,20 +32,20 @@ local function buildForm(page)
     if rf2.apiVersion >= 12.09 then
         incY(lineSpacing * 0.5)
         labels[#labels + 1] = { t = "Statistics",         x = x, y = incY(lineSpacing) }
-        fields[#fields + 1] = { t = "Enabled",            x = x, y = incY(lineSpacing), sp = x + sp, data = pilotConfig.statsEnabled,
+        fields[#fields + 1] = { t = "Enabled",            x = x, y = incY(lineSpacing), sp = x + sp, data = flighStats.statsEnabled,
             postEdit = function(self, page)
                 if self.data.value == 0 then
-                    pilotConfig.stats_min_armed_time_s.value = -1   -- stats disabled
+                    flighStats.stats_min_armed_time_s.value = -1   -- stats disabled
                 else
-                    pilotConfig.stats_min_armed_time_s.value = 15   -- >= 15s armed counts as a flight
+                    flighStats.stats_min_armed_time_s.value = 15   -- >= 15s armed counts as a flight
                 end
                 buildForm(page)
                 rf2.onPageReady(page)
             end
         }
 
-        if pilotConfig.statsEnabled.value and pilotConfig.statsEnabled.value == 1 then
-            fields[#fields + 1] = { t = "Total flights",  x = x, y = incY(lineSpacing), sp = x + sp, data = pilotConfig.stats_total_flights, readOnly = true }
+        if flighStats.statsEnabled.value and flighStats.statsEnabled.value == 1 then
+            fields[#fields + 1] = { t = "Total flights",  x = x, y = incY(lineSpacing), sp = x + sp, data = flighStats.stats_total_flights, readOnly = true }
 
             local function formatSeconds(seconds)
                 local days = math.floor(seconds / 86400)
@@ -62,16 +63,16 @@ local function buildForm(page)
                     return s
                 end
             end
-            local totalTime = formatSeconds(pilotConfig.stats_total_time_s.value)
+            local totalTime = formatSeconds(flighStats.stats_total_time_s.value)
             fields[#fields + 1] = { t = "Total time",     x = x, y = incY(lineSpacing), sp = x + sp, data = { value = totalTime }, readOnly = true  }
 
-            fields[#fields + 1] = { t = "Total distance", x = x, y = incY(lineSpacing), sp = x + sp, data = pilotConfig.stats_total_dist_m, readOnly = true  }
-            fields[#fields + 1] = { t = "Min armed time", x = x, y = incY(lineSpacing), sp = x + sp, data = pilotConfig.stats_min_armed_time_s }
+            fields[#fields + 1] = { t = "Total distance", x = x, y = incY(lineSpacing), sp = x + sp, data = flighStats.stats_total_dist_m, readOnly = true  }
+            fields[#fields + 1] = { t = "Min armed time", x = x, y = incY(lineSpacing), sp = x + sp, data = flighStats.stats_min_armed_time_s }
 
             local function resetStats(self, page)
-                pilotConfig.stats_total_flights.value = 0
-                pilotConfig.stats_total_time_s.value = 0
-                pilotConfig.stats_total_dist_m.value = 0
+                flighStats.stats_total_flights.value = 0
+                flighStats.stats_total_time_s.value = 0
+                flighStats.stats_total_dist_m.value = 0
                 buildForm(page)
                 rf2.onPageReady(page)
             end
@@ -133,10 +134,12 @@ end
 return {
     read = function(self)
         rf2.useApi("mspName").getModelName(onReceivedModelName, self)
+        rf2.useApi("mspFlightStats").read(nil, nil, flighStats)
         rf2.useApi("mspPilotConfig").read(onReceivedPilotConfig, self, pilotConfig)
     end,
     write = function(self)
         setAutoSetName()
+        rf2.useApi("mspFlightStats").write(flighStats)
         rf2.useApi("mspPilotConfig").write(pilotConfig)
         pilotConfigReset()
         rf2.settingsSaved(true, false)
