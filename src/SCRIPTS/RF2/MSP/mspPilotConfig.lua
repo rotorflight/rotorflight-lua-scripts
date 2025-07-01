@@ -23,7 +23,7 @@ end
 local function getPilotConfig(callback, callbackParam, config)
     if not config then config = getDefaults() end
     local message = {
-        command = 12, -- MSP_PILOT_CONFIG
+        command = 12, -- MSP_PILOT_CONFIG, introduced in MSP API 12.7
         processReply = function(self, buf)
             config.model_id.value = rf2.mspHelper.readU8(buf)
             config.model_param1_type.value = rf2.mspHelper.readU8(buf)
@@ -35,23 +35,17 @@ local function getPilotConfig(callback, callbackParam, config)
             if rf2.apiVersion >= 12.09 then
                 config.model_flags.value = rf2.mspHelper.readU32(buf)
                 --rf2.print("model_flags: " .. tostring(config.model_flags.value))
-                config.stats_total_flights.value = rf2.mspHelper.readU32(buf)
-                config.stats_total_time_s.value = rf2.mspHelper.readU32(buf)
-                config.stats_total_dist_m.value = rf2.mspHelper.readU32(buf)
-                config.stats_min_armed_time_s.value = rf2.mspHelper.readS8(buf)
-                -- Calculated fields
-                config.statsEnabled.value = config.stats_min_armed_time_s.value ~= -1 and 1 or 0
             end
-            callback(callbackParam, config)
+            if callback then callback(callbackParam, config) end
         end,
-        simulatorResponse = { 21, 1,240,0, 0,0,0, 0,0,0, 2,0,0,0, 10,0,0,0, 100,0,0,0, 0,0,0,0, 10}
+        simulatorResponse = { 21,  1,240,0,  0,0,0,  0,0,0,  2,0,0,0 }
     }
     rf2.mspQueue:add(message)
 end
 
 local function setPilotConfig(config)
     local message = {
-        command = 13, -- MSP_SET_PILOT_CONFIG
+        command = 13, -- MSP_SET_PILOT_CONFIG, introduced in MSP API 12.7
         payload = {},
         simulatorResponse = {}
     }
@@ -65,10 +59,6 @@ local function setPilotConfig(config)
     if rf2.apiVersion >= 12.09 then
         --rf2.print("model_flags: " .. tostring(config.model_flags.value))
         rf2.mspHelper.writeU32(message.payload, config.model_flags.value)
-        rf2.mspHelper.writeU32(message.payload, config.stats_total_flights.value)
-        rf2.mspHelper.writeU32(message.payload, config.stats_total_time_s.value)
-        rf2.mspHelper.writeU32(message.payload, config.stats_total_dist_m.value)
-        rf2.mspHelper.writeU8(message.payload, config.stats_min_armed_time_s.value)
     end
     rf2.mspQueue:add(message)
 end
