@@ -134,12 +134,16 @@ end
 return {
     read = function(self)
         rf2.useApi("mspName").getModelName(onReceivedModelName, self)
-        rf2.useApi("mspFlightStats").read(nil, nil, flighStats)
+        if rf2.apiVersion >= 12.09 then
+            rf2.useApi("mspFlightStats").read(nil, nil, flighStats)
+        end
         rf2.useApi("mspPilotConfig").read(onReceivedPilotConfig, self, pilotConfig)
     end,
     write = function(self)
         setAutoSetName()
-        rf2.useApi("mspFlightStats").write(flighStats)
+        if rf2.apiVersion >= 12.09 then
+            rf2.useApi("mspFlightStats").write(flighStats)
+        end
         rf2.useApi("mspPilotConfig").write(pilotConfig)
         pilotConfigReset()
         rf2.settingsSaved(true, false)
