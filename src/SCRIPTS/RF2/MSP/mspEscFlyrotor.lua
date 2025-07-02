@@ -1,6 +1,7 @@
 local statusOptions = { [0] = "Disable", "Enable" }
 local govMode = { [0] = "Ext Governor", "Esc Governor" }
 local becVoltage = { [0] = "Disable", "7.5V", "8.0V", "8.5V", "12.0V" }
+local timing = { [0] = "Auto", "1°", "2°", "3°", "4°", "6°", "7°", "8°", "9°", "10°" }
 local motorDirection = { [0] = "CW", "CCW" }
 local fanControl = { [0] = "Automatic", "Always On" }
 local throttleProtocols = { [0] = "PWM", "RESERVE" }
@@ -28,7 +29,7 @@ local function getDefaults()
         low_voltage = { min = 28, max = 38, scale = 10, unit = rf2.units.volt },
         temperature = { min = 50, max = 135, unit = rf2.units.celsius },
         bec_voltage = { min = 0, max = #becVoltage, table = becVoltage },
-        timing = { min = 1, max = 30, unit = rf2.units.degrees },
+        timing = { min = 0, max = #timing, table = timing },
         motor_direction = { min = 0, max = #motorDirection, table = motorDirection },
         starting_torque = { min = 1, max = 15 },
         response_speed = { min = 1, max = 15 },
@@ -39,7 +40,7 @@ local function getDefaults()
         p_gain = { min = 1, max = 100 },
         i_gain = { min = 1, max = 100 },
         d_gain = { min = 0, max = 100 },
-        max_motor_erpm = { min = 0, max = 1000000, mult = 100},
+        max_motor_erpm = { min = 0, max = 1000000, mult = 130000},
         throttle_protocol = { min = 0, max = #throttleProtocols, table = throttleProtocols },
         telemetry_protocol = { min = 0, max = #telemetryProtocols, table = telemetryProtocols },
         led_color = { min = 0, max = #ledColors, table = ledColors },
@@ -110,7 +111,7 @@ local function getEscParameters(callback, callbackParam, data)
             data.capacity_cutoff.value = getUInt(buf, 2)
             callback(callbackParam, data)
         end,
-        simulatorResponse = { 115, 0, 0, 1, 24,  231, 79, 190, 216, 78, 29, 169, 244, 1, 0, 0, 1, 0, 2, 0, 4, 76, 7, 148, 0, 6, 30, 125, 1, 15, 0, 3, 15, 1, 20, 0, 10, 0, 45, 0, 35, 0, 10, 0, 150, 0, 0, 0, 3, 0, 0, 0, 0, 100, 0, 0 },
+        simulatorResponse = { 115, 0, 0, 1, 24,  231, 79, 190, 216, 78, 29, 169, 244, 1, 0, 0, 1, 0, 2, 0, 4, 76, 7, 148, 0, 6, 30, 125, 1, 0, 0, 3, 15, 1, 20, 0, 10, 0, 45, 0, 35, 0, 10, 0, 150, 0, 0, 0, 3, 0, 0, 0, 0, 100, 0, 0 },
         --[[
         simulatorResponse = {
             115, -- signature

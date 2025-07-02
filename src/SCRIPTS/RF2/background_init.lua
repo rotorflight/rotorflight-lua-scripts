@@ -123,7 +123,7 @@ local function waitForCustomSensorsDiscovery()
 end
 
 local function setModelName(name)
-    local newName =  ">" .. ((name and #name > 0) and name or "Rotorflight")
+    local newName =  ((name and #name > 0) and name or "Rotorflight")
     local info = model.getInfo()
     if info.name == newName then
         return

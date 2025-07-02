@@ -31,7 +31,7 @@ fields[#fields + 1] = { t = "Fan control",               x = x + indent, y = inc
 labels[#labels + 1] = { t = "Advanced",                  x = x,          y = incY(lineSpacing) }
 fields[#fields + 1] = { t = "Low voltage",               x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.low_voltage }
 fields[#fields + 1] = { t = "Temperature",               x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.temperature }
-fields[#fields + 1] = { t = "Timing angle",              x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.timing }
+fields[#fields + 1] = { t = "Electrical angle",          x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.timing }
 fields[#fields + 1] = { t = "Starting torque",           x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.starting_torque }
 fields[#fields + 1] = { t = "Response speed",            x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.response_speed }
 fields[#fields + 1] = { t = "Buzzer volume",             x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.buzzer_volume }
