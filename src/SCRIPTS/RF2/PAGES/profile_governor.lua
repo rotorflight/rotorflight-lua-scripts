@@ -1,4 +1,4 @@
-local template = assert(rf2.loadScript(rf2.radio.template))()
+local template = rf2.executeScript(rf2.radio.template)
 local margin = template.margin
 local indent = template.indent
 local lineSpacing = template.lineSpacing
@@ -10,13 +10,13 @@ local y = yMinLim - lineSpacing
 local function incY(val) y = y + val return y end
 local labels = {}
 local fields = {}
-local profileSwitcher = assert(rf2.loadScript("PAGES/helpers/profileSwitcher.lua"))()
+local profileSwitcher = rf2.executeScript("PAGES/helpers/profileSwitcher.lua")
 local governorProfile = rf2.useApi("mspGovernorProfile").getDefaults()
 
 fields[#fields + 1] = { t = "Current PID profile", x = x, y = incY(lineSpacing), sp = x + sp * 1.17, data = { value = nil, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = profileSwitcher.startPidEditing, postEdit = profileSwitcher.endPidEditing }
 
 incY(lineSpacing * 0.25)
-fields[#fields + 1] = { t = "Full headspeed",      x = x, y = incY(lineSpacing), sp = x + sp, data = governorProfile.headspeed,            id = "govHeadspeed"}
+fields[#fields + 1] = { t = "Full headspeed",      x = x, y = incY(lineSpacing), sp = x + sp, data = governorProfile.headspeed,            w = 100, id = "govHeadspeed"}
 fields[#fields + 1] = { t = "Max throttle",        x = x, y = incY(lineSpacing), sp = x + sp, data = governorProfile.max_throttle,         id = "govMaxThrottle" }
 if rf2.apiVersion >= 12.07 then
     fields[#fields + 1] = { t = "Min throttle",    x = x, y = incY(lineSpacing), sp = x + sp, data = governorProfile.min_throttle,         id = "govMinThrottle" }
@@ -33,21 +33,19 @@ fields[#fields + 1] = { t = "TTA gain",            x = x, y = incY(lineSpacing),
 fields[#fields + 1] = { t = "TTA limit",           x = x, y = incY(lineSpacing), sp = x + sp, data = governorProfile.tta_limit,            id = "govTTALimit" }
 
 local function receivedGovernorProfile(page, _)
-    rf2.lcdNeedsInvalidate = true
-    page.isReady = true
+    rf2.onPageReady(page)
 end
 
 return {
     read = function(self)
+        self.profileSwitcher.getStatus(self)
         rf2.useApi("mspGovernorProfile").read(receivedGovernorProfile, self, governorProfile)
     end,
     write = function(self)
         rf2.useApi("mspGovernorProfile").write(governorProfile)
-        rf2.settingsSaved()
+        rf2.settingsSaved(true, false)
     end,
     title       = "Profile - Governor",
-    reboot      = false,
-    eepromWrite = true,
     labels      = labels,
     fields      = fields,
     profileSwitcher = profileSwitcher,

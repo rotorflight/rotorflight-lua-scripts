@@ -1,10 +1,7 @@
-local template = assert(rf2.loadScript(rf2.radio.template))()
-local mspSetProfile = assert(rf2.loadScript("MSP/mspSetProfile.lua"))()
-local mspStatus = assert(rf2.loadScript("MSP/mspStatus.lua"))()
+local template = rf2.executeScript(rf2.radio.template)
 local margin = template.margin
 local indent = template.indent
 local lineSpacing = template.lineSpacing
-local tableSpacing = template.tableSpacing
 local sp = template.listSpacing.field
 template = nil
 local yMinLim = rf2.radio.yMinLimit
@@ -13,11 +10,9 @@ local y = yMinLim - lineSpacing
 local function incY(val) y = y + val return y end
 local labels = {}
 local fields = {}
-local rateSwitcher = assert(rf2.loadScript("PAGES/helpers/rateSwitcher.lua"))()
+local rateSwitcher = rf2.executeScript("PAGES/helpers/rateSwitcher.lua")
 local rcTuning = rf2.useApi("mspRcTuning").getDefaults()
 collectgarbage()
-local editing = false
-local profileAdjustmentTS = nil
 
 local tableStartY = yMinLim - lineSpacing
 y = tableStartY
@@ -73,21 +68,19 @@ if rf2.apiVersion >= 12.08 then
 end
 
 local function receivedRcTuning(page)
-    rf2.lcdNeedsInvalidate = true
-    page.isReady = true
+    rf2.onPageReady(page)
 end
 
 return {
     read = function(self)
+        self.rateSwitcher.getStatus(self)
         rf2.useApi("mspRcTuning").read(receivedRcTuning, self, rcTuning)
     end,
     write = function(self)
         rf2.useApi("mspRcTuning").write(rcTuning)
-        rf2.settingsSaved()
+        rf2.settingsSaved(true, false)
     end,
     title       = "Rate Dynamics",
-    reboot      = false,
-    eepromWrite = true,
     labels      = labels,
     fields      = fields,
     rateSwitcher = rateSwitcher,

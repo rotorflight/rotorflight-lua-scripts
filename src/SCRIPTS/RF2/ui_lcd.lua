@@ -1,5 +1,3 @@
-local LUA_VERSION = "2.2.0"
-
 local uiStatus =
 {
     init     = 1,
@@ -57,19 +55,9 @@ rf2.clearWaitMessage = function()
     waitMessage = nil
 end
 
-rf2.displayMessage = function(title, text)
-    displayMessage = { title = title, text = text }
-end
-
-rf2.storeCurrentField = function()
-    rf2.currentField = currentField
-end
-
-rf2.setCurrentField = function()
-    if rf2.currentField then
-        currentField = rf2.currentField
-        rf2.currentField = nil
-    end
+rf2.onPageReady = function(page)
+    page.isReady = true
+    rf2.lcdNeedsInvalidate = true
 end
 
 local function rebootFc()
@@ -84,9 +72,13 @@ local function rebootFc()
     })
 end
 
-rf2.settingsSaved = function()
+local function showMessage(title, text)
+    displayMessage = { title = title, text = text }
+end
+
+rf2.settingsSaved = function(eepromWrite, reboot)
     -- check if this page requires writing to eeprom to save (most do)
-    if Page and Page.eepromWrite then
+    if eepromWrite then
         -- don't write again if we're already responding to earlier page.write()s
         if pageState ~= pageStatus.eepromWrite then
             pageState = pageStatus.eepromWrite
@@ -94,7 +86,7 @@ rf2.settingsSaved = function()
             {
                 command = 250, -- MSP_EEPROM_WRITE, fails when armed
                 processReply = function(self, buf)
-                    if Page.reboot then
+                    if reboot then
                         rebootFc()
                     else
                         invalidatePages()
@@ -103,13 +95,13 @@ rf2.settingsSaved = function()
                 errorHandler = function(self)
                     if rf2.apiVersion >= 12.08 then
                         if not rf2.saveWarningShown then
-                            rf2.displayMessage("Save warning", "Settings will be saved\nafter disarming.")
+                            showMessage("Save warning", "Settings will be saved\nafter disarming.")
                             rf2.saveWarningShown = true
                         else
                             invalidatePages()
                         end
                     else
-                        rf2.displayMessage("Save error", "Make sure your heli\nis disarmed.")
+                        showMessage("Save error", "Make sure your heli\nis disarmed.")
                     end
                 end,
                 simulatorResponse = {}
@@ -122,17 +114,9 @@ rf2.settingsSaved = function()
     end
 end
 
-rf2.saveSettings = function()
-    if pageState ~= pageStatus.saving then
-        pageState = pageStatus.saving
-        saveTS = rf2.clock()
-        Page.write(Page)
-    end
-end
-
 rf2.readPage = function()
     collectgarbage()
-    Page.read(Page)
+    Page:read()
 end
 
 local function requestPage()
@@ -145,12 +129,20 @@ local function requestPage()
     end
 end
 
+local function saveSettings()
+    if pageState ~= pageStatus.saving then
+        pageState = pageStatus.saving
+        saveTS = rf2.clock()
+        Page:write()
+    end
+end
+
 local function confirm(page)
     prevUiState = uiState
     uiState = uiStatus.confirm
     invalidatePages()
     currentField = 1
-    Page = assert(rf2.loadScript(page))()
+    Page = rf2.executeScript(page)
     collectgarbage()
 end
 
@@ -159,7 +151,7 @@ local function createPopupMenu()
     popupMenu = {}
     if uiState == uiStatus.pages then
         if not Page.readOnly then
-            popupMenu[#popupMenu + 1] = { t = "Save Page", f = rf2.saveSettings }
+            popupMenu[#popupMenu + 1] = { t = "Save Page", f = saveSettings }
         end
         popupMenu[#popupMenu + 1] = { t = "Reload", f = invalidatePages }
     end
@@ -334,8 +326,8 @@ local function drawPopupMenu()
     end
 end
 
-rf2.loadPageFiles = function(setCurrentPageToLastPage)
-    PageFiles = assert(rf2.loadScript("pages.lua"))()
+rf2.reloadMainMenu = function(setCurrentPageToLastPage)
+    PageFiles = rf2.executeScript("pages")
     if setCurrentPageToLastPage then
         currentPage = #PageFiles
     end
@@ -372,14 +364,14 @@ local function run_ui(event)
         end
     elseif uiState == uiStatus.init then
         lcd.clear()
-        drawScreenTitle("Rotorflight "..LUA_VERSION)
-        init = init or assert(rf2.loadScript("ui_init.lua"))()
+        drawScreenTitle("Rotorflight " .. rf2.luaVersion)
+        init = init or rf2.executeScript("ui_init")
         drawTextMultiline(4, rf2.radio.yMinLimit, init.t)
         if not init.f() then
             return 0
         end
         init = nil
-        rf2.loadPageFiles()
+        rf2.reloadMainMenu()
         invalidatePages()
         uiState = prevUiState or uiStatus.mainMenu
         prevUiState = nil
@@ -416,7 +408,7 @@ local function run_ui(event)
                 lcd.drawText(6, y, PageFiles[i].title, attr)
             end
         end
-        drawScreenTitle("Rotorflight "..LUA_VERSION)
+        drawScreenTitle("Rotorflight " .. rf2.luaVersion)
     elseif uiState == uiStatus.pages then
         if pageState == pageStatus.saving then
             if saveTS + rf2.protocol.saveTimeout <= rf2.clock() then
@@ -480,7 +472,7 @@ local function run_ui(event)
         end
         if Page and Page.timer and (not Page.lastTimeTimerFired or Page.lastTimeTimerFired + 0.5 < rf2.clock()) then
             Page.lastTimeTimerFired = rf2.clock()
-            Page.timer(Page)
+            Page:timer()
         end
         if not Page then
             if pageChanged then
@@ -490,7 +482,7 @@ local function run_ui(event)
             end
             collectgarbage()
             --rf2.showMemoryUsage("before loading page")
-            Page = assert(rf2.loadScript("PAGES/"..PageFiles[currentPage].script))()
+            Page = rf2.executeScript("PAGES/" .. PageFiles[currentPage].script)
             --rf2.showMemoryUsage("after loading page")
             collectgarbage()
         end

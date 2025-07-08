@@ -1,32 +1,58 @@
 rf2 = {
+    luaVersion = "2.2.1",
     baseDir = "/SCRIPTS/RF2/",
     runningInSimulator = string.sub(select(2, getVersion()), -4) == "simu",
 
-    loadScript = loadScript,
+    startsWith = function(str, prefix)
+        return string.sub(str, 1, #prefix) == prefix
+    end,
+
+    endsWith = function(str, suffix)
+        return suffix == "" or string.sub(str, -#suffix) == suffix
+    end,
+
+    loadScript = function(script)
+        if not rf2.startsWith(script, rf2.baseDir) then
+            script = rf2.baseDir .. script
+        end
+        if not rf2.endsWith(script, ".lua") then
+            script = script .. ".lua"
+        end
+        return loadScript(script)
+    end,
+
+    executeScript = function(scriptName)
+        collectgarbage()
+        return assert(rf2.loadScript(scriptName))()
+    end,
+
+    useApi = function(apiName)
+        return rf2.executeScript("MSP/" .. apiName)
+    end,
+
+    loadSettings = function()
+        return rf2.executeScript("PAGES/helpers/settingsHelper").loadSettings();
+    end,
+
+    print = function(format, ...)
+        local str = string.format("RF2: " .. format, ...)
+        if rf2.runningInSimulator then
+            print(str)
+        else
+            --serialWrite(str .. "\r\n") -- 115200 bps
+            --rf2.log(str)
+        end
+    end,
 
     log = function(str)
         if rf2.runningInSimulator then
-            print(tostring(str))
+            rf2.print(tostring(str))
         else
             if not rf2.logfile then
                 rf2.logfile = io.open("/LOGS/rf2.log", "a")
             end
             io.write(rf2.logfile, string.format("%.2f ", rf2.clock()) .. tostring(str) .. "\n")
         end
-    end,
-
-    print = function(str)
-        if rf2.runningInSimulator then
-            print("RF2: " .. tostring(str))
-        else
-            --serialWrite(tostring(str).."\r\n") -- 115200 bps
-            --rf2.log(str)
-        end
-    end,
-
-    useApi = function(apiName)
-        collectgarbage()
-        return assert(rf2.loadScript(rf2.baseDir.."MSP/" .. apiName .. ".lua"))()
     end,
 
     clock = function()
@@ -52,6 +78,9 @@ rf2 = {
     -- Color radios on EdgeTX >= 2.11 do not send EVT_VIRTUAL_ENTER anymore after EVT_VIRTUAL_ENTER_LONG
     useKillEnterBreak = not(lcd.setColor and select(3, getVersion()) >= 2 and select(4, getVersion()) >= 11),
 
+    -- Use LVGL graphics on color radios with EdgeTX 2.11 or higher
+    canUseLvgl = lcd.setColor and (select(3, getVersion()) >= 3 or (select(3, getVersion()) == 2 and select(4, getVersion()) >= 11)),
+
     --[[
     showMemoryUsage = function(remark)
         if not rf2.oldMemoryUsage then
@@ -69,10 +98,11 @@ rf2 = {
         rf2.oldMemoryUsage = currentMemoryUsage
     end,
 
-    printGlobals = function(maxDepth)
+    dumpTable = function(table, maxDepth)
         local seen = {}
+        maxDepth = maxDepth or 2
 
-        local function dumpTable(tbl, indent, depth)
+        local function dumpTableInternal(tbl, indent, depth)
             if seen[tbl] or depth > maxDepth then
                 rf2.print(indent .. "*already visited or max depth*")
                 return
@@ -84,7 +114,7 @@ rf2 = {
                 local vType = type(v)
                 if vType == "table" then
                     rf2.print(indent .. keyStr .. " = {")
-                    dumpTable(v, indent .. "  ", depth + 1)
+                    dumpTableInternal(v, indent .. "  ", depth + 1)
                     rf2.print(indent .. "}")
                 else
                     rf2.print(indent .. keyStr .. " = " .. tostring(v))
@@ -92,7 +122,11 @@ rf2 = {
             end
         end
 
-        dumpTable(_G, "", 0)
+        dumpTableInternal(table, "", 0)
+    end,
+
+    printGlobals = function(maxDepth)
+        rf2.dumpTable(_G, maxDepth)
     end,
 
     isInteger = function(n)

@@ -1,4 +1,4 @@
-local template = assert(rf2.loadScript(rf2.radio.template))()
+local template = rf2.executeScript(rf2.radio.template)
 local margin = template.margin
 local indent = template.indent
 local lineSpacing = template.lineSpacing
@@ -11,7 +11,7 @@ local y = yMinLim - lineSpacing
 local function incY(val) y = y + val return y end
 local labels = {}
 local fields = {}
-local profileSwitcher = assert(rf2.loadScript("PAGES/helpers/profileSwitcher.lua"))()
+local profileSwitcher = rf2.executeScript("PAGES/helpers/profileSwitcher.lua")
 local pidProfile = rf2.useApi("mspPidProfile").getDefaults()
 collectgarbage()
 
@@ -52,21 +52,19 @@ fields[#fields + 1] = { t = "P B-term cutoff",         x = x + indent, y = incY(
 fields[#fields + 1] = { t = "Y B-term cutoff",         x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.bterm_cutoff_yaw }
 
 local function receivedPidProfile(page, _)
-    rf2.lcdNeedsInvalidate = true
-    page.isReady = true
+    rf2.onPageReady(page)
 end
 
 return {
     read = function(self)
+        self.profileSwitcher.getStatus(self)
         rf2.useApi("mspPidProfile").read(receivedPidProfile, self, pidProfile)
     end,
     write = function(self)
         rf2.useApi("mspPidProfile").write(pidProfile)
-        rf2.settingsSaved()
+        rf2.settingsSaved(true, false)
     end,
     title       = "PID Controller Settings",
-    reboot      = false,
-    eepromWrite = true,
     labels      = labels,
     fields      = fields,
     profileSwitcher = profileSwitcher,

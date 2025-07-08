@@ -1,4 +1,4 @@
-local template = assert(rf2.loadScript(rf2.radio.template))()
+local template = rf2.executeScript(rf2.radio.template)
 local margin = template.margin
 local indent = template.indent
 local lineSpacing = template.lineSpacing
@@ -18,9 +18,8 @@ labels[#labels + 1] = { t = "Accelerometer Trim", x = x,          y = incY(lineS
 fields[#fields + 1] = { t = "Roll",               x = x + indent, y = incY(lineSpacing), sp = x + sp, data = data.roll_trim }
 fields[#fields + 1] = { t = "Pitch",              x = x + indent, y = incY(lineSpacing), sp = x + sp, data = data.pitch_trim }
 
-local function receivedData(page, data)
-    rf2.lcdNeedsInvalidate = true
-    page.isReady = true
+local function receivedData(page)
+    rf2.onPageReady(page)
 end
 
 return {
@@ -29,10 +28,8 @@ return {
     end,
     write = function(self)
         rf2.useApi(mspAccTrim).write(data)
-        rf2.settingsSaved()
+        rf2.settingsSaved(true, false)
     end,
-    eepromWrite = true,
-    reboot      = false,
     title       = "Accelerometer",
     labels      = labels,
     fields      = fields

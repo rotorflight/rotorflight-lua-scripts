@@ -1,4 +1,4 @@
-local template = assert(rf2.loadScript(rf2.radio.template))()
+local template = rf2.executeScript(rf2.radio.template)
 local margin = template.margin
 local indent = template.indent
 local lineSpacing = template.lineSpacing
@@ -17,7 +17,7 @@ labels[1] = { t = "ESC not ready, waiting...", x = x,   y = incY(lineSpacing) }
 labels[2] = { t = "---",                x = x + indent, y = incY(lineSpacing), bold = false }
 labels[3] = { t = "---",                x = x + indent, y = incY(lineSpacing), bold = false }
 
-fields[1] = { t = "Flight Mode",        x = x,          y = incY(lineSpacing * 2), sp = x + sp, data = escParameters.flight_mode }
+fields[1] = { t = "Flight Mode",        x = x,          y = incY(lineSpacing * 2), sp = x + sp, w = 125, data = escParameters.flight_mode }
 fields[2] = { t = "Rotation",           x = x,          y = incY(lineSpacing), sp = x + sp,     data = escParameters.rotation }
 
 labels[4] = { t = "Voltage",            x = x,          y = incY(lineSpacing * 2) }
@@ -52,8 +52,7 @@ local function receivedEscParameters(page, data)
     end
 
     page.readOnly = false     -- enable 'Save Page'
-    page.isReady = true
-    rf2.lcdNeedsInvalidate = true
+    rf2.onPageReady(page)
 end
 
 return {
@@ -62,10 +61,8 @@ return {
     end,
     write = function(self)
         rf2.useApi(mspEscHwPl5).write(escParameters)
-        rf2.settingsSaved()
+        rf2.settingsSaved(false, false)
     end,
-    eepromWrite = false,
-    reboot      = false,
     title       = "Platinum V5 Setup",
     labels      = labels,
     fields      = fields,

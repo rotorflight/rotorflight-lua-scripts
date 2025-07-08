@@ -1,7 +1,7 @@
-local template = assert(rf2.loadScript(rf2.radio.template))()
-local mspStatus = assert(rf2.loadScript("MSP/mspStatus.lua"))()
-local mspDataflash = assert(rf2.loadScript("MSP/mspDataflash.lua"))()
-local mspSetProfile = assert(rf2.loadScript("MSP/mspSetProfile.lua"))()
+local template = rf2.executeScript(rf2.radio.template)
+local mspStatus = rf2.useApi("mspStatus")
+local mspDataflash = rf2.useApi("mspDataflash")
+local mspSetProfile = rf2.useApi("mspSetProfile.lua")
 local margin = template.margin
 local indent = template.indent
 local lineSpacing = template.lineSpacing
@@ -32,21 +32,21 @@ local endRateEditing = function(field, page)
     mspSetProfile.setRateProfile(field.data.value)
 end
 
-fields[#fields + 1] = { t = "Current PID profile",   x = x,              y = incY(lineSpacing), sp = x + sp * 1.17, data = { value = nil, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = startEditing, postEdit = endPidEditing }
-fields[#fields + 1] = { t = "Current rate profile",  x = x,              y = incY(lineSpacing), sp = x + sp * 1.17, data = { value = nil, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = startEditing, postEdit = endRateEditing }
+fields[1] = { t = "Current PID profile",   x = x,              y = incY(lineSpacing), sp = x + sp * 1.17, data = { value = nil, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = startEditing, postEdit = endPidEditing }
+fields[2] = { t = "Current rate profile",  x = x,              y = incY(lineSpacing), sp = x + sp * 1.17, data = { value = nil, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = startEditing, postEdit = endRateEditing }
 
 incY(lineSpacing * 0.25)
-labels[#labels + 1] = { t = "Arming Disabled Flags", x = x,              y = incY(lineSpacing) }
-labels[#labels + 1] = { t = "---",                   x = x + indent,     y = incY(lineSpacing), bold = false }
+fields[3] = { t = "Real-time load",        x = x,              y = incY(lineSpacing), sp = x + sp, data = { value = 0, scale = 10, unit = rf2.units.percentage }, readOnly = true }
+fields[4] = { t = "CPU load",              x = x,              y = incY(lineSpacing), sp = x + sp, data = { value = 0, scale = 10, unit = rf2.units.percentage }, readOnly = true }
 
 incY(lineSpacing * 0.25)
-labels[#labels + 1] = { t = "Dataflash Free Space",  x = x,              y = incY(lineSpacing) }
-labels[#labels + 1] = { t = "---",                   x = x + indent,     y = incY(lineSpacing), bold = false }
-fields[#fields + 1] = { t = "[Erase]",               x = x + indent * 7, y = y }
+labels[1] = { t = "Arming Disabled Flags", x = x,              y = incY(lineSpacing) }
+labels[2] = { t = "---",                   x = x + indent,     y = incY(lineSpacing), bold = false }
 
 incY(lineSpacing * 0.25)
-fields[#fields + 1] = { t = "Real-time load",        x = x,              y = incY(lineSpacing), sp = x + sp, data = { value = 0, scale = 10, unit = rf2.units.percentage }, readOnly = true }
-fields[#fields + 1] = { t = "CPU load",              x = x,              y = incY(lineSpacing), sp = x + sp, data = { value = 0, scale = 10, unit = rf2.units.percentage }, readOnly = true }
+labels[3] = { t = "Dataflash Free Space",  x = x,              y = incY(lineSpacing) }
+labels[4] = { t = "---",                   x = x + indent,     y = incY(lineSpacing), bold = false }
+fields[5] = { t = "[Erase]",               x = x + indent * 7, y = y }
 
 local function armingDisableFlagsToString(flags)
     local t = ""
@@ -59,7 +59,7 @@ local function armingDisableFlagsToString(flags)
             if i == 3 then t = t .. "Bad RX Recovery" end
             if i == 4 then t = t .. "Box Fail Safe" end
             if i == 5 then t = t .. "Governor" end
-            --if i == 6 then t = t .. "Crash Detected" end
+            if i == 6 then t = t .. "RPM Signal" end
             if i == 7 then t = t .. "Throttle" end
             if i == 8 then t = t .. "Angle" end
             if i == 9 then t = t .. "Boot Grace Time" end
@@ -97,8 +97,6 @@ return {
         mspDataflash.getDataflashSummary(self.onReceivedDataflashSummary, self)
     end,
     write       = nil,
-    reboot      = false,
-    eepromWrite = false,
     title       = "Status",
     labels      = labels,
     fields      = fields,
@@ -118,12 +116,13 @@ return {
     onProcessedMspStatus = function(self, status)
         fcStatus = status
         labels[2].t = armingDisableFlagsToString(fcStatus.armingDisableFlags)
-        if not editing then
+        if not editing and (fields[1].data.value ~= fcStatus.profile or fields[2].data.value ~= fcStatus.rateProfile) then
             fields[1].data.value = fcStatus.profile
             fields[2].data.value = fcStatus.rateProfile
+            rf2.onPageReady(self) -- force page redraw (important for ui_lvgl)
         end
-        fields[4].data.value = fcStatus.realTimeLoad
-        fields[5].data.value = fcStatus.cpuLoad
+        fields[3].data.value = fcStatus.realTimeLoad
+        fields[4].data.value = fcStatus.cpuLoad
         rf2.lcdNeedsInvalidate = true
     end,
 
@@ -146,9 +145,8 @@ return {
         end
         labels[4].t = getFreeDataflashSpace()
         if dataflashSummary.supported then
-            fields[3].preEdit = self.onClickErase
+            fields[5].preEdit = self.onClickErase
         end
-        rf2.lcdNeedsInvalidate = true
-        self.isReady = true
+        rf2.onPageReady(self)
     end,
 }

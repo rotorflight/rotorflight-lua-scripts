@@ -1,4 +1,4 @@
-local template = assert(rf2.loadScript(rf2.radio.template))()
+local template = rf2.executeScript(rf2.radio.template)
 local margin = template.margin
 local lineSpacing = template.lineSpacing
 local tableSpacing = template.tableSpacing
@@ -29,8 +29,7 @@ end
 -- Draw int8 fields: not supported anymore since data can't have multiple representations
 
 local function receivedExperimental(page, _)
-    rf2.lcdNeedsInvalidate = true
-    page.isReady = true
+    rf2.onPageReady(page)
 end
 
 return {
@@ -39,10 +38,9 @@ return {
     end,
     write = function(self)
         mspExperimental.write(experimental)
-        rf2.settingsSaved()
+        rf2.settingsSaved(true, false)
     end,
     title       = "Experimental",
-    eepromWrite = true,
     labels      = labels,
     fields      = fields
 }

@@ -1,4 +1,4 @@
-local template = assert(rf2.loadScript(rf2.radio.template))()
+local template = rf2.executeScript(rf2.radio.template)
 local margin = template.margin
 local indent = template.indent
 local lineSpacing = template.lineSpacing
@@ -25,12 +25,12 @@ labels[1] = { t = "ESC not ready, waiting...", x = x,       y = incY(lineSpacing
 labels[2] = { t = "---",                    x = x + indent, y = incY(lineSpacing), bold = false }
 labels[3] = { t = "---",                    x = x + indent, y = incY(lineSpacing), bold = false }
 
-fields[1] = { t = "ESC Mode",               x = x,          y = incY(lineSpacing * 2), sp = x + sp, data = escParameters.esc_mode }
+fields[1] = { t = "ESC Mode",               x = x,          y = incY(lineSpacing * 2), sp = x + sp, w = 125, data = escParameters.esc_mode }
 fields[2] = { t = "Direction",              x = x,          y = incY(lineSpacing), sp = x + sp, data = escParameters.direction }
 fields[3] = { t = "BEC",                    x = x,          y = incY(lineSpacing), sp = x + sp, data = escParameters.bec_voltage }
 
 labels[4] = { t = "Protection",             x = x,          y = incY(lineSpacing * 2) }
-fields[4] = { t = "Cutoff Handling",        x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.cutoff_handling }
+fields[4] = { t = "Cutoff Handling",        x = x + indent, y = incY(lineSpacing), sp = x + sp, w = 125, data = escParameters.cutoff_handling }
 fields[5] = { t = "Cutoff Cell Voltage",    x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.cutoff_cell_voltage }
 fields[6] = { t = "Current Limit (A)",      x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.current_limit }
 
@@ -40,7 +40,7 @@ fields[7] = { t = "Min Start Power",        x = x + indent, y = incY(lineSpacing
 fields[8] = { t = "Max Start Power",        x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.max_start_power }
 fields[9] = { t = "Startup Response",       x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.startup_response }
 fields[10] = { t = "Throttle Response",     x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.throttle_response }
-fields[11] = { t = "Motor Timing",          x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.motor_timing }
+fields[11] = { t = "Motor Timing",          x = x + indent, y = incY(lineSpacing), sp = x + sp, w = 125, data = escParameters.motor_timing }
 fields[12] = { t = "Active Freewheel",      x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.active_freewheel }
 fields[13] = { t = "F3C Autorotation",      x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.f3c_autorotation }
 
@@ -72,8 +72,7 @@ local function receivedEscParameters(page, data)
     -- The read-only flag is set when the ESC is connected to an RX pin instead of a TX pin in half-duplex mode. Only supported by YGE.
     page.readOnly = bit32.band(data.command, 0x40) == 0x40
     updateRatio(nil, page)
-    page.isReady = true
-    rf2.lcdNeedsInvalidate = true
+    rf2.onPageReady(page)
 end
 
 return {
@@ -82,10 +81,8 @@ return {
     end,
     write = function(self)
         rf2.useApi(mspEscYge).write(escParameters)
-        rf2.settingsSaved()
+        rf2.settingsSaved(false, false)
     end,
-    eepromWrite = false,
-    reboot      = false,
     title       = "YGE ESC",
     labels      = labels,
     fields      = fields,

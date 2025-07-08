@@ -1,5 +1,5 @@
-local template = assert(rf2.loadScript(rf2.radio.template))()
-local mspServos = assert(rf2.loadScript("MSP/mspServos.lua"))()
+local template = rf2.executeScript(rf2.radio.template)
+local mspServos = rf2.useApi("mspServos")
 local margin = template.margin
 local indent = template.indent
 local lineSpacing = template.lineSpacing
@@ -33,6 +33,7 @@ local function onChangeServo(field, page)
     selectedServoIndex = field.data.value
     rf2.lastChangedServo = selectedServoIndex
     setValues(selectedServoIndex)
+    rf2.onPageReady(page)
 end
 
 local function onPreEditCenter(field, page)
@@ -82,8 +83,7 @@ local function receivedServoConfigurations(page, configs)
     selectedServoIndex = rf2.lastChangedServo or 0
     setValues(selectedServoIndex)
     page.fields[1].data.max = #configs
-    rf2.lcdNeedsInvalidate = true
-    page.isReady = true
+    rf2.onPageReady(page)
 end
 
 return {
@@ -94,7 +94,7 @@ return {
         for servoIndex = 0, #servoConfigs do
             mspServos.setServoConfiguration(servoIndex, servoConfigs[servoIndex])
         end
-        rf2.settingsSaved()
+        rf2.settingsSaved(true, false)
     end,
     timer = function(self)
         if updateSelectedServoConfiguration then
@@ -103,8 +103,6 @@ return {
         end
     end,
     title       = "Servos",
-    reboot      = false,
-    eepromWrite = true,
     labels      = labels,
     fields      = fields
 }

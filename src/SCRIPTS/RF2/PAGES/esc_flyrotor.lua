@@ -1,4 +1,4 @@
-local template = assert(rf2.loadScript(rf2.radio.template))()
+local template = rf2.executeScript(rf2.radio.template)
 local margin = template.margin
 local indent = template.indent
 local lineSpacing = template.lineSpacing
@@ -20,7 +20,7 @@ labels[#labels + 1] = { t = "---",                       x = x + indent, y = inc
 
 -- Basic
 labels[#labels + 1] = { t = "Basic",                     x = x,          y = incY(lineSpacing) }
-fields[#fields + 1] = { t = "ESC mode",                  x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.esc_mode }
+fields[#fields + 1] = { t = "ESC mode",                  x = x + indent, y = incY(lineSpacing), sp = x + sp, w = 125, data = escParameters.esc_mode }
 fields[#fields + 1] = { t = "Cell count [S]",            x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.cell_count }
 fields[#fields + 1] = { t = "BEC voltage",               x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.bec_voltage }
 fields[#fields + 1] = { t = "Motor direction",           x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.motor_direction }
@@ -31,7 +31,7 @@ fields[#fields + 1] = { t = "Fan control",               x = x + indent, y = inc
 labels[#labels + 1] = { t = "Advanced",                  x = x,          y = incY(lineSpacing) }
 fields[#fields + 1] = { t = "Low voltage",               x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.low_voltage }
 fields[#fields + 1] = { t = "Temperature",               x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.temperature }
-fields[#fields + 1] = { t = "Timing angle",              x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.timing }
+fields[#fields + 1] = { t = "Electrical angle",          x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.timing }
 fields[#fields + 1] = { t = "Starting torque",           x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.starting_torque }
 fields[#fields + 1] = { t = "Response speed",            x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.response_speed }
 fields[#fields + 1] = { t = "Buzzer volume",             x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.buzzer_volume }
@@ -65,8 +65,7 @@ local function receivedEscParameters(page, data)
         page.readOnly = bit32.band(data.command, 0x40) == 0x40
     end
 
-    page.isReady = true
-    rf2.lcdNeedsInvalidate = true
+    rf2.onPageReady(page)
 end
 
 return {
@@ -75,10 +74,8 @@ return {
     end,
     write = function(self)
         rf2.useApi(mspEscFlyrotor).write(escParameters)
-        rf2.settingsSaved()
+        rf2.settingsSaved(false, false)
     end,
-    eepromWrite = false,
-    reboot      = false,
     title       = "FLYROTOR Setup",
     labels      = labels,
     fields      = fields,

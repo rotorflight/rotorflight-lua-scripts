@@ -1,4 +1,4 @@
-local template = assert(rf2.loadScript(rf2.radio.template))()
+local template = rf2.executeScript(rf2.radio.template)
 local margin = template.margin
 local indent = template.indent
 local lineSpacing = template.lineSpacing
@@ -56,12 +56,11 @@ fields[#fields + 1] = { t = "Center trim",              x = x + indent, y = incY
 if rf2.apiVersion >= 12.08 then
     incY(lineSpacing * 0.5)
 
-    fields[#fields + 1] = { t = "[Enable Mixer Passthrough]", x = x,    y = incY(lineSpacing), preEdit = onClickOverride }
+    fields[#fields + 1] = { t = "[Enable Mixer Passthrough]", x = x,    y = incY(lineSpacing), w = 250, preEdit = onClickOverride }
 end
 
 local function receivedMixerConfig(page, _)
-    rf2.lcdNeedsInvalidate = true
-    page.isReady = true
+    rf2.onPageReady(page)
 end
 
 return {
@@ -70,10 +69,8 @@ return {
     end,
     write = function(self)
         rf2.useApi("mspMixer").write(mixerConfig)
-        rf2.settingsSaved()
+        rf2.settingsSaved(true, false)
     end,
-    eepromWrite = true,
-    reboot      = false,
     title       = "Mixer",
     labels      = labels,
     fields      = fields

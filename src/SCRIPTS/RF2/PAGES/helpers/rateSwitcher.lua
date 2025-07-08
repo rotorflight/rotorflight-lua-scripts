@@ -1,5 +1,5 @@
 local rateSwitcher = {
-    mspStatus = assert(rf2.loadScript("MSP/mspStatus.lua"))(),
+    mspStatus = rf2.executeScript("MSP/mspStatus"),
     editing = false,
     rateAdjustmentTS = nil,
 

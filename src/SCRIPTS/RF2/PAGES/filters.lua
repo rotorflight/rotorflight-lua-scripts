@@ -1,4 +1,4 @@
-local template = assert(rf2.loadScript(rf2.radio.template))()
+local template = rf2.executeScript(rf2.radio.template)
 local margin = template.margin
 local indent = template.indent
 local lineSpacing = template.lineSpacing
@@ -40,8 +40,7 @@ fields[#fields + 1] = { t = "Max Frequency",            x = x + indent, y = incY
 -- TODO: preset and min_hz for API >= 12.08
 
 local function receivedFilterConfig(page, _)
-    rf2.lcdNeedsInvalidate = true
-    page.isReady = true
+    rf2.onPageReady(page)
 end
 
 return {
@@ -50,10 +49,8 @@ return {
     end,
     write = function(self)
         rf2.useApi("mspFilterConfig").write(filterConfig)
-        rf2.settingsSaved()
+        rf2.settingsSaved(true, true)
     end,
-    eepromWrite = true,
-    reboot      = true,
     title       = "Gyro Filters",
     labels      = labels,
     fields      = fields,

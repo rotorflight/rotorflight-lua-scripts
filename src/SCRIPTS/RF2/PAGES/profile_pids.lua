@@ -1,4 +1,4 @@
-local template = assert(rf2.loadScript(rf2.radio.template))()
+local template = rf2.executeScript(rf2.radio.template)
 local mspStatus = rf2.useApi("mspStatus")
 local margin = template.margin
 local indent = template.indent
@@ -37,7 +37,7 @@ local function copyProfile(field, page)
     }
 
     rf2.mspQueue:add(mspCopyProfile)
-    rf2.settingsSaved()
+    rf2.settingsSaved(true, false)
 end
 
 x = margin
@@ -51,37 +51,37 @@ labels[#labels + 1] = { t = "Yaw",   x = x, y = incY(tableSpacing.row) }
 x = x + tableSpacing.col
 y = tableStartY
 labels[#labels + 1] = { t = "P",     x = x, y = incY(tableSpacing.header) }
-fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.roll_p }
-fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.pitch_p }
-fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.yaw_p }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), w = 50, data = pids.roll_p }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), w = 50, data = pids.pitch_p }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), w = 50, data = pids.yaw_p }
 
 x = x + colSpacing
 y = tableStartY
 labels[#labels + 1] = { t = "I",     x = x, y = incY(tableSpacing.header) }
-fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.roll_i }
-fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.pitch_i }
-fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.yaw_i }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), w = 50, data = pids.roll_i }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), w = 50, data = pids.pitch_i }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), w = 50, data = pids.yaw_i }
 
 x = x + colSpacing
 y = tableStartY
 labels[#labels + 1] = { t = "D",     x = x, y = incY(tableSpacing.header) }
-fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.roll_d }
-fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.pitch_d }
-fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.yaw_d }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), w = 50, data = pids.roll_d }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), w = 50, data = pids.pitch_d }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), w = 50, data = pids.yaw_d }
 
 x = x + colSpacing
 y = tableStartY
 labels[#labels + 1] = { t = "FF",    x = x, y = incY(tableSpacing.header) }
-fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.roll_f }
-fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.pitch_f }
-fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.yaw_f }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), w = 50, data = pids.roll_f }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), w = 50, data = pids.pitch_f }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), w = 50, data = pids.yaw_f }
 
 x = x + colSpacing
 y = tableStartY
 labels[#labels + 1] = { t = "B",     x = x, y = incY(tableSpacing.header) }
-fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.roll_b }
-fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.pitch_b }
-fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = pids.yaw_b }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), w = 50, data = pids.roll_b }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), w = 50, data = pids.pitch_b }
+fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), w = 50, data = pids.yaw_b }
 
 x = margin
 incY(lineSpacing * 0.5)
@@ -95,21 +95,19 @@ fields[#fields + 1] = { t = "Roll",                   x = x + indent, y = incY(l
 fields[#fields + 1] = { t = "Pitch",                  x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pids.pitch_o }
 
 local function receivedPidTuning(page, data)
-    rf2.lcdNeedsInvalidate = true
-    page.isReady = true
+    rf2.onPageReady(page)
 end
 
 return {
     read = function(self)
+        mspStatus.getStatus(self.onProcessedMspStatus, self)
         rf2.useApi("mspPidTuning").read(receivedPidTuning, self, pids)
     end,
     write = function(self)
         rf2.useApi("mspPidTuning").write(pids)
-        rf2.settingsSaved()
+        rf2.settingsSaved(true, false)
     end,
     title       = "PID Gains",
-    reboot      = false,
-    eepromWrite = true,
     labels      = labels,
     fields      = fields,
 

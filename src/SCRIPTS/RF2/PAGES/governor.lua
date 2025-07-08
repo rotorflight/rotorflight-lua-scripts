@@ -1,4 +1,4 @@
-local template = assert(rf2.loadScript(rf2.radio.template))()
+local template = rf2.executeScript(rf2.radio.template)
 local margin = template.margin
 local indent = template.indent
 local lineSpacing = template.lineSpacing
@@ -15,7 +15,7 @@ local governorConfig = rf2.useApi("mspGovernorConfig").getDefaults()
 x = margin
 y = yMinLim - tableSpacing.header
 
-fields[#fields + 1] = { t = "Mode",                 x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_mode,                      id = "govMode" }
+fields[#fields + 1] = { t = "Mode",                 x = x, y = incY(lineSpacing), w = 150, sp = x + sp, data = governorConfig.gov_mode,                      id = "govMode" }
 fields[#fields + 1] = { t = "Handover throttle",    x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_handover_throttle,         id = "govHandoverThrottle" }
 fields[#fields + 1] = { t = "Startup time",         x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_startup_time,              id = "govStartupTime" }
 fields[#fields + 1] = { t = "Spoolup time",         x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_spoolup_time,              id = "govSpoolupTime" }
@@ -35,8 +35,7 @@ fields[#fields + 1] = { t = "TTA bandwidth",        x = x, y = incY(lineSpacing)
 fields[#fields + 1] = { t = "Precomp bandwidth",    x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_ff_filter,                 id = "govFFFilterHz" }
 
 local function receivedGovernorConfig(page, _)
-    rf2.lcdNeedsInvalidate = true
-    page.isReady = true
+    rf2.onPageReady(page)
 end
 
 return {
@@ -45,11 +44,9 @@ return {
     end,
     write = function(self)
         rf2.useApi("mspGovernorConfig").write(governorConfig)
-        rf2.settingsSaved()
+        rf2.settingsSaved(true, true)
     end,
     title       = "Governor",
-    reboot      = true,
-    eepromWrite = true,
     labels      = labels,
     fields      = fields
 }
