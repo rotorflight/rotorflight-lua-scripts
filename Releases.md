@@ -1,3 +1,40 @@
+# 2.2.1
+
+This is the 2.2.1 release of the *Rotorflight Lua Scripts for EdgeTX and OpenTX*.
+
+## Downloads
+
+The download locations are:
+
+- [Rotorflight Configurator](https://github.com/rotorflight/rotorflight-configurator/releases/tag/release/2.2.1)
+- [Rotorflight Blackbox](https://github.com/rotorflight/rotorflight-blackbox/releases/tag/release/2.2.1)
+- [Lua Scripts for EdgeTX and OpenTX](https://github.com/rotorflight/rotorflight-lua-scripts/releases/tag/release/2.2.1)
+- [Lua Scripts for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos/releases/tag/release/2.2.1)
+- [Lua Suite for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos-suite/releases/tag/release/2.2.1)
+
+## Notes
+
+Rotorflight setup instructions can be found on the Rotorflight website [www.rotorflight.org](https://www.rotorflight.org/).
+
+## rf2bg
+
+The `rf2bg` background script will do a couple of things:
+- Set the clock on the flight controller, so your log files have the correct timestamp.
+- Enable CRSF/ELRS custom telemetry, if the model is configured to use that.
+- Optionally tell you what adjustment you just made, if any.
+
+If you want to use any of these features, make sure you've defined and enabled a special function running `rf2bg`, with *Repeat* set to *On*.
+
+## Changes from 2.2.0
+
+- Touch UI support on EdgeTX 2.11+
+- Improved support for FLYROTOR ESC
+- Various minor fixes
+
+
+
+***
+
 # 2.2.0
 
 This is the 2.2.0 release of the *Rotorflight Lua Scripts for EdgeTX and OpenTX*.
