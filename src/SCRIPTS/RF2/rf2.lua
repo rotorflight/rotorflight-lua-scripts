@@ -34,6 +34,10 @@ rf2 = {
         return rf2.executeScript("PAGES/helpers/settingsHelper").loadSettings();
     end,
 
+    saveSettings = function(settings)
+        return rf2.executeScript("PAGES/helpers/settingsHelper").saveSettings(settings);
+    end,
+
     print = function(format, ...)
         local str = string.format("RF2: " .. format, ...)
         if rf2.runningInSimulator then
@@ -72,7 +76,8 @@ rf2 = {
         milliseconds = " ms",
         volt = "V",
         celsius = " C",
-        rpm = " RPM"
+        rpm = " RPM",
+        meters = " m"
     },
 
     -- Color radios on EdgeTX >= 2.11 do not send EVT_VIRTUAL_ENTER anymore after EVT_VIRTUAL_ENTER_LONG
@@ -80,6 +85,20 @@ rf2 = {
 
     -- Use LVGL graphics on color radios with EdgeTX 2.11 or higher
     canUseLvgl = lcd.setColor and (select(3, getVersion()) >= 3 or (select(3, getVersion()) == 2 and select(4, getVersion()) >= 11)),
+
+    getBit = function(value, number)
+        local mask = bit32.lshift(1, number)
+        return bit32.band(value, mask) ~= 0 and 1 or 0
+    end,
+
+    setBit = function(value, number, state)
+        local mask = bit32.lshift(1, number)
+        if state == 1 then
+            return bit32.bor(value, mask)
+        else
+            return bit32.band(value, bit32.bnot(mask))
+        end
+    end,
 
     --[[
     showMemoryUsage = function(remark)
