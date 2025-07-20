@@ -19,6 +19,7 @@ local function pilotConfigHasBeenSet()
 end
 
 local function setTimer(index, paramValue)
+    model.resetTimer(index)
     local timer = model.getTimer(index)
     timer.value = paramValue
     model.setTimer(index, timer)
