@@ -9,12 +9,20 @@ local function pilotConfigReset()
     model.setGlobalVariable(7, 8, 0)
 end
 
+local function pilotConfigHasBeenReset()
+    return model.getGlobalVariable(7, 8) == 0
+end
+
 local function run()
     if rf2.runningInSimulator then
         modelIsConnected = true
     elseif getRSSI() > 0 then
         lastTimeRssi = rf2.clock()
         modelIsConnected = true
+        if isInitialized and pilotConfigHasBeenReset() then
+            -- Since EdgeTX 2.11 the background script will resume execution instead of starting it again after running a tool.
+            isInitialized = false
+        end
     elseif getRSSI() == 0 then
         if lastTimeRssi and rf2.clock() - lastTimeRssi < 5 then
             -- Do not re-initialise if the RSSI is 0 for less than 5 seconds.
