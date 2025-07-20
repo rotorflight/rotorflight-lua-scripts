@@ -18,7 +18,7 @@ Rotorflight setup instructions can be found on the Rotorflight website [www.roto
 
 ## Changes from 2.2.0
 
-- Added touch UI support for EdgeTX 2.11+
+- Added touch UI support for EdgeTX 2.11+. Use the `SYS` key to bring up the Save menu.
 - Improved support for FLYROTOR ESC
 - Various minor fixes
 
