@@ -37,7 +37,9 @@ local function onChangeServo(field, page)
 end
 
 local function onPreEditCenter(field, page)
-    mspServos.enableServoOverride(selectedServoIndex)
+    if not overrideAllServos then
+        mspServos.enableServoOverride(selectedServoIndex)
+    end
 end
 
 local function onChangeCenter(field, page)
@@ -45,7 +47,9 @@ local function onChangeCenter(field, page)
 end
 
 local function onPostEditCenter(field, page)
-    mspServos.disableServoOverride(selectedServoIndex)
+    if not overrideAllServos then
+        mspServos.disableServoOverride(selectedServoIndex)
+    end
 end
 
 local function onClickOverride(field, page)
