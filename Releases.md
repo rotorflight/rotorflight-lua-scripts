@@ -1,6 +1,6 @@
 # 2.2.1
 
-This is the 2.2.1 release of the *Rotorflight Lua Scripts for EdgeTX and OpenTX*.
+This is a maintenance release containing minor bug fixes.
 
 ## Downloads
 
@@ -16,18 +16,9 @@ The download locations are:
 
 Rotorflight setup instructions can be found on the Rotorflight website [www.rotorflight.org](https://www.rotorflight.org/).
 
-## rf2bg
-
-The `rf2bg` background script will do a couple of things:
-- Set the clock on the flight controller, so your log files have the correct timestamp.
-- Enable CRSF/ELRS custom telemetry, if the model is configured to use that.
-- Optionally tell you what adjustment you just made, if any.
-
-If you want to use any of these features, make sure you've defined and enabled a special function running `rf2bg`, with *Repeat* set to *On*.
-
 ## Changes from 2.2.0
 
-- Touch UI support on EdgeTX 2.11+
+- Added touch UI support for EdgeTX 2.11+. Use the `SYS` key to bring up the Save menu.
 - Improved support for FLYROTOR ESC
 - Various minor fixes
 
