@@ -1,10 +1,9 @@
 local initializationDone = false
 local crsfCustomTelemetryEnabled = false
 
-local settingsHelper = rf2.executeScript("PAGES/helpers/settingsHelper")
-local autoSetName = settingsHelper.loadSettings().autoSetName == 1 or false
-local useAdjustmentTeller = settingsHelper.loadSettings().useAdjustmentTeller == 1 or false
-settingsHelper = nil
+local settings = rf2.loadSettings()
+local autoSetName = settings.autoSetName == 1 or false
+local useAdjustmentTeller = settings.useAdjustmentTeller == 1 or false
 
 local pilotConfigSetMagic = -765
 local function pilotConfigSet()
@@ -20,6 +19,7 @@ local function pilotConfigHasBeenSet()
 end
 
 local function setTimer(index, paramValue)
+    model.resetTimer(index)
     local timer = model.getTimer(index)
     timer.value = paramValue
     model.setTimer(index, timer)
@@ -55,7 +55,36 @@ local function setParam(paramType, paramValue)
     end
 end
 
+local function setModelName(name)
+    if not name then return end
+    --local newName = ">" .. ((name and #name > 0) and name or "Rotorflight")
+    local newName = name
+
+    local info = model.getInfo()
+    if info.name == newName then return end
+    settings.previousModelName = info.name
+    rf2.saveSettings(settings)
+    info.name = newName
+    model.setInfo(info)
+end
+
+local function resetModelName()
+    if not settings.previousModelName then return end
+    local info = model.getInfo()
+    info.name = settings.previousModelName
+    model.setInfo(info)
+    settings.previousModelName = nil
+    rf2.saveSettings(settings)
+end
+
 local function onPilotConfigReceived(_, config)
+    if rf2.apiVersion >= 12.09 then
+        -- RF 2.0 to 2.2 (MSP API 12.06 to 12.08) used settings.autoSetName (a global radio setting) to set the model name.
+        -- RF 2.3+ (MSP API 12.09+) uses a setting on the model to set the model name.
+        autoSetName = rf2.getBit(config.model_flags.value, config.model_flags.MODEL_SET_NAME) == 1 or false
+        --rf2.print("MODEL_SET_NAME: " .. tostring(autoSetName))
+    end
+
     local paramValue = config.model_param1_value.value
     local paramType = config.model_param1_type.table[config.model_param1_type.value]
     setParam(paramType, paramValue)
@@ -122,16 +151,6 @@ local function waitForCustomSensorsDiscovery()
     return 0
 end
 
-local function setModelName(name)
-    local newName =  ">" .. ((name and #name > 0) and name or "Rotorflight")
-    local info = model.getInfo()
-    if info.name == newName then
-        return
-    end
-    info.name = newName
-    model.setInfo(info)
-end
-
 local queueInitialized = false
 local function initializeQueue()
     --rf2.print("Initializing MSP queue")
@@ -142,12 +161,7 @@ local function initializeQueue()
         function(_, version)
             rf2.apiVersion = version
 
-            if autoSetName then
-                rf2.useApi("mspName").getModelName(
-                    function(_, name)
-                        setModelName(name)
-                    end)
-            end
+            rf2.useApi("mspName").getModelName(function(_, name) rf2.modelName = name end)
 
             if rf2.apiVersion >= 12.07 then
                 if not pilotConfigHasBeenSet() then
@@ -164,6 +178,9 @@ local function initializeQueue()
 
             rf2.useApi("mspSetRtc").setRtc(
                 function()
+                    if autoSetName then
+                        setModelName(rf2.modelName)
+                    end
                     playTone(1600, 300, 0, PLAY_BACKGROUND)
                     --rf2.print("RTC set")
                     rf2.mspQueue.maxRetries = rf2.protocol.maxRetries
@@ -179,10 +196,7 @@ local function initialize(modelIsConnected)
     end
 
     if not modelIsConnected then
-        if autoSetName then
-            setModelName(nil)
-        end
-
+        resetModelName()
         return false
     end
 

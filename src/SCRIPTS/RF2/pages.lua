@@ -18,7 +18,7 @@ PageFiles[#PageFiles + 1] = { title = "Accelerometer Trim", script = "accelerome
 
 if rf2.apiVersion >= 12.07 then
     if settings.showModelOnTx == 1 then
-        PageFiles[#PageFiles + 1] = { title = "Model on TX", script = "model" }
+        PageFiles[#PageFiles + 1] = { title = "Model", script = "model" }
     end
     if settings.showExperimental == 1 then
         PageFiles[#PageFiles + 1] = { title = "Experimental (!)", script = "experimental" }
