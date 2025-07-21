@@ -4,6 +4,7 @@ local scripts = {
     "/SCRIPTS/RF2/CONFIRM/acc_cal.lua",
     "/SCRIPTS/RF2/LCD/mainMenu.lua",
     "/SCRIPTS/RF2/LCD/messageBox.lua",
+    "/SCRIPTS/RF2/LCD/page.lua",
     "/SCRIPTS/RF2/LCD/popupMenu.lua",
     "/SCRIPTS/RF2/LCD/shared.lua",
     "/SCRIPTS/RF2/LVGL/helper.lua",

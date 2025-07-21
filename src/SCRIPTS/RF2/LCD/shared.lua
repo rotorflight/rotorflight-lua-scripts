@@ -40,5 +40,14 @@ return {
     textOptions = TEXT_COLOR or 0,
     foregroundColor = LINE_COLOR or SOLID,
     killEnterBreak = false,
-    drawScreenTitle = drawScreenTitle
+    drawScreenTitle = drawScreenTitle,
+    pageStatus =
+    {
+        display = 1,
+        editing = 2,
+        saving  = 3,
+        eepromWrite = 4,
+        rebooting = 5,
+        waiting = 6
+    }
 }
