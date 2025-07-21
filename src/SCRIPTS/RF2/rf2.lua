@@ -21,9 +21,9 @@ rf2 = {
         return loadScript(script)
     end,
 
-    executeScript = function(scriptName)
+    executeScript = function(scriptName, ...)
         collectgarbage()
-        return assert(rf2.loadScript(scriptName))()
+        return assert(rf2.loadScript(scriptName))(...)
     end,
 
     useApi = function(apiName)
