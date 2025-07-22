@@ -158,5 +158,4 @@ t.update = function(pageState, event)
     return pageState
 end
 
-
 return t

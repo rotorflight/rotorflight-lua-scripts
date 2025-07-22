@@ -111,7 +111,7 @@ local function confirm(page)
     uiState = uiStatus.confirm
     invalidatePages()
     Page = rf2.executeScript(page)
-    Page.lcd = rf2.executeScript("LCD/page", lcdShared, Page)
+    Page.lcdp = rf2.executeScript("LCD/page", lcdShared, Page)
     collectgarbage()
 end
 
@@ -180,7 +180,7 @@ local function run_ui(event)
         end
     elseif uiState == uiStatus.pages then
         if Page then
-            pageState = Page.lcd.update(pageState, event)
+            pageState = Page.lcdp.update(pageState, event)
         end
 
         if pageState == lcdShared.pageStatus.saving then
@@ -217,7 +217,7 @@ local function run_ui(event)
             collectgarbage()
             --rf2.showMemoryUsage("before loading page")
             Page = mainMenu.loadCurrentPage()
-            Page.lcd = rf2.executeScript("LCD/page", lcdShared, Page)
+            Page.lcdp = rf2.executeScript("LCD/page", lcdShared, Page)
             --rf2.showMemoryUsage("after loading page")
             collectgarbage()
         end
@@ -238,7 +238,7 @@ local function run_ui(event)
             lcd.drawText(rf2.radio.SaveBox.x + rf2.radio.SaveBox.x_offset, rf2.radio.SaveBox.y + rf2.radio.SaveBox.h_offset, saveMsg,DBLSIZE + lcdShared.textOptions)
         end
     elseif uiState == uiStatus.confirm then
-        Page.lcd.draw(pageState)
+        Page.lcdp.draw(pageState)
         if event == EVT_VIRTUAL_ENTER then
             uiState = uiStatus.init
             init = Page.init
