@@ -10,6 +10,8 @@ local function fieldIsButton(f)
 end
 
 t.draw = function(pageState)
+    if not Page or not Page.fields or #Page.fields == 0 then return end
+
     lcd.clear()
 
     if currentField > #Page.fields then currentField = #Page.fields end

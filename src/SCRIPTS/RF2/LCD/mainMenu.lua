@@ -2,6 +2,7 @@ local lcdShared = ...
 local t = {}
 local PageFiles
 local CurrentPageIndex = 1
+local mainMenuScrollY = 0
 
 -- t.show = function (menu)
 --     t.menu = menu
@@ -26,7 +27,6 @@ local function draw()
     local lineSpacing = lcdShared.getLineSpacing()
     local currentFieldY = (CurrentPageIndex-1) * lineSpacing + yMinLim
 
-    local mainMenuScrollY = 0
     if currentFieldY <= yMinLim then
         mainMenuScrollY = 0
     elseif currentFieldY - mainMenuScrollY <= yMinLim then
