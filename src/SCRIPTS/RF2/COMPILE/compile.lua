@@ -1,7 +1,3 @@
--- ui.lua is quite big and compiling it later might throw an 'out of memory' error
-collectgarbage()
-assert(loadScript("ui_lcd.lua", 'c'))
-
 local i = 1
 local scripts = assert(loadScript("COMPILE/scripts.lua"))
 collectgarbage()
@@ -30,12 +26,11 @@ local function compile()
     local script = scripts(i)
     i = i + 1
     if script then
-        if script == "/SCRIPTS/RF2/ui_lcd.lua" then return 0 end
         lcd.clear()
         lcd.drawText(2, 2, "Compiling...", SMLSIZE)
         lcd.drawText(2, 22, script, SMLSIZE)
-        assert(loadScript(script, 'cd')) -- The 'd' flags gets removed in by minimize.lua
         collectgarbage()
+        assert(loadScript(script, 'cd')) -- The 'd' flags gets removed in by minimize.lua
         return 0
     end
     local file = io.open("COMPILE/scripts_compiled.lua", 'w')

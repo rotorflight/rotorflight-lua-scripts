@@ -21,13 +21,6 @@ local genericReplacements = {
         replacement = ""
     },
     {
-        -- ui_lcd.lua is the biggest file (~18K) and can't be compiled on some b&w radios without making it smaller. This is done by removing all double spaces.
-        files = "/SCRIPTS/RF2/ui_lcd.lua",
-        match = "  ",
-        replace = "  ",
-        replacement = ""
-    },
-    {
         -- Remove debug info from release builds.
         files = "/SCRIPTS/RF2/COMPILE/compile.lua",
         match = "loadScript%(script, %'cd%'%)",
