@@ -21,8 +21,8 @@ local genericReplacements = {
         replacement = ""
     },
     {
-        -- ui.lua is the biggest file (~18K) and can't be compiled on some b&w radios without making it smaller. This is done by removing all double spaces.
-        files = "/SCRIPTS/RF2/ui.lua",
+        -- ui_lcd.lua is the biggest file (~18K) and can't be compiled on some b&w radios without making it smaller. This is done by removing all double spaces.
+        files = "/SCRIPTS/RF2/ui_lcd.lua",
         match = "  ",
         replace = "  ",
         replacement = ""
