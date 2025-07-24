@@ -420,7 +420,7 @@ local function run_ui(event)
         drawScreenTitle("Rotorflight " .. rf2.luaVersion)
     elseif uiState == uiStatus.pages then
         if pageState == pageStatus.saving then
-            if saveTS + rf2.protocol.saveTimeout <= rf2.clock() then
+            if saveTS + 4.0 <= rf2.clock() then
                 --rf2.print("Save timeout!")
                 pageState = pageStatus.display
                 invalidatePages()

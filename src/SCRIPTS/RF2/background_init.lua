@@ -184,7 +184,7 @@ local function initializeQueue()
                     end
                     playTone(1600, 300, 0, PLAY_BACKGROUND)
                     --rf2.print("RTC set")
-                    rf2.mspQueue.maxRetries = rf2.protocol.maxRetries
+                    rf2.mspQueue.maxRetries = 3
                     initializationDone = true
                 end)
         end)
