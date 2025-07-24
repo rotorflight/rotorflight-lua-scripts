@@ -32,6 +32,9 @@ local displayMessage
 local waitMessage
 local pageChanged = false
 
+-- Color radios on EdgeTX >= 2.11 do not send EVT_VIRTUAL_ENTER anymore after EVT_VIRTUAL_ENTER_LONG
+local useKillEnterBreak = not(lcd.setColor and select(3, getVersion()) >= 2 and select(4, getVersion()) >= 11)
+
 local backgroundFill = TEXT_BGCOLOR or ERASE
 local foregroundColor = LINE_COLOR or SOLID
 
@@ -392,7 +395,7 @@ local function run_ui(event)
         elseif event == EVT_VIRTUAL_ENTER then
             uiState = uiStatus.pages
         elseif event == EVT_VIRTUAL_ENTER_LONG then
-            if rf2.useKillEnterBreak then killEnterBreak = 1 end
+            if useKillEnterBreak then killEnterBreak = 1 end
             createPopupMenu()
         end
         lcd.clear()
@@ -443,7 +446,7 @@ local function run_ui(event)
                     end
                 end
             elseif event == EVT_VIRTUAL_ENTER_LONG then
-                if rf2.useKillEnterBreak then killEnterBreak = 1 end
+                if useKillEnterBreak then killEnterBreak = 1 end
                 createPopupMenu()
             elseif event == EVT_VIRTUAL_EXIT then
                 invalidatePages()

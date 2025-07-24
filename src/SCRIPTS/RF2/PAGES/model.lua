@@ -88,7 +88,8 @@ local function buildForm(page)
         if rf2.apiVersion >= 12.07 and rf2.apiVersion < 12.09 then
             return settings.autoSetName or 0
         end
-        return rf2.getBit(pilotConfig.model_flags.value, pilotConfig.model_flags.MODEL_SET_NAME) or 0
+        local getBit = rf2.executeScript("F/getBit")
+        return getBit(pilotConfig.model_flags.value, pilotConfig.model_flags.MODEL_SET_NAME) or 0
     end
     incY(lineSpacing * 0.25)
     setNameOnTxFieldIndex = #fields + 1
@@ -128,7 +129,8 @@ local function setAutoSetName()
         return
     end
 
-    pilotConfig.model_flags.value = rf2.setBit(pilotConfig.model_flags.value, pilotConfig.model_flags.MODEL_SET_NAME, autoSetName)
+    local setBit = rf2.executeScript("HELPERS/setBit")
+    pilotConfig.model_flags.value = setBit(pilotConfig.model_flags.value, pilotConfig.model_flags.MODEL_SET_NAME, autoSetName)
 end
 
 return {

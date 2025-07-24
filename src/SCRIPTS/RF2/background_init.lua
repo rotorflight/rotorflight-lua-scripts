@@ -81,7 +81,8 @@ local function onPilotConfigReceived(_, config)
     if rf2.apiVersion >= 12.09 then
         -- RF 2.0 to 2.2 (MSP API 12.06 to 12.08) used settings.autoSetName (a global radio setting) to set the model name.
         -- RF 2.3+ (MSP API 12.09+) uses a setting on the model to set the model name.
-        autoSetName = rf2.getBit(config.model_flags.value, config.model_flags.MODEL_SET_NAME) == 1 or false
+        local getBit = rf2.executeScript("F/getBit")
+        autoSetName = getBit(config.model_flags.value, config.model_flags.MODEL_SET_NAME) == 1 or false
         --rf2.print("MODEL_SET_NAME: " .. tostring(autoSetName))
     end
 

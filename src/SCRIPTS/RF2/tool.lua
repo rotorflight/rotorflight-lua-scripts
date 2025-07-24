@@ -22,7 +22,8 @@ if scriptsCompiled then
     rf2.mspCommon = rf2.executeScript("MSP/common")
     --rf2.showMemoryUsage("common loaded")
 
-    if rf2.canUseLvgl then
+    local canUseLvgl = rf2.executeScript("F/canUseLvgl")()
+    if canUseLvgl then
         local settings = rf2.loadSettings()
         if settings["useLvgl"] == nil or settings["useLvgl"] == 1 then useLvgl = true end
     end
