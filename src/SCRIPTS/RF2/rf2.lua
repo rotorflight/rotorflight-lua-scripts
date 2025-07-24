@@ -3,27 +3,25 @@ rf2 = {
     baseDir = "/SCRIPTS/RF2/",
     runningInSimulator = string.sub(select(2, getVersion()), -4) == "simu",
 
-    startsWith = function(str, prefix)
-        return string.sub(str, 1, #prefix) == prefix
-    end,
-
-    endsWith = function(str, suffix)
-        return suffix == "" or string.sub(str, -#suffix) == suffix
-    end,
-
     loadScript = function(script)
-        if not rf2.startsWith(script, rf2.baseDir) then
+        local startsWith = function(str, prefix)
+            return string.sub(str, 1, #prefix) == prefix
+        end
+        local endsWith = function(str, suffix)
+            return suffix == "" or string.sub(str, -#suffix) == suffix
+        end
+        if not startsWith(script, rf2.baseDir) then
             script = rf2.baseDir .. script
         end
-        if not rf2.endsWith(script, ".lua") then
+        if not endsWith(script, ".lua") then
             script = script .. ".lua"
         end
+        collectgarbage()
         return loadScript(script)
     end,
 
-    executeScript = function(scriptName)
-        collectgarbage()
-        return assert(rf2.loadScript(scriptName))()
+    executeScript = function(scriptName, ...)
+        return assert(rf2.loadScript(scriptName))(...)
     end,
 
     useApi = function(apiName)
