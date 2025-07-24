@@ -274,6 +274,7 @@ local function drawScreen()
             if type(val) == "number" then
                 if f.data.scale then
                     val = val / f.data.scale
+                    val = math.floor(val*100 + 0.5) / 100
                 end
                 if (f.data.scale or 1) <= 1 then
                     val = math.floor(val)
