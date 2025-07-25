@@ -6,6 +6,7 @@ local function show(page)
     local function formatVal(val, field)
         if field.data.scale then
             val = val / field.data.scale
+            val = math.floor(val*100 + 0.5) / 100
         end
         if (field.data.scale or 1) <= 1 then
             val = math.floor(val)

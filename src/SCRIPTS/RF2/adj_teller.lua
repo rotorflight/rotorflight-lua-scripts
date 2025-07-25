@@ -207,7 +207,7 @@ local function init()
 
     if rf2.runningInSimulator then
         adjustmentCollector = sportAdjustmentsCollector:new("Tmp1", "Tmp2")
-    elseif rf2.protocol.mspTransport == "MSP/sp.lua" then
+    elseif sportTelemetryPush() ~= nil then
         adjustmentCollector = sportAdjustmentsCollector:new("5110", "5111")
     else
         adjustmentCollector = crsfAdjustmentsCollector:new()

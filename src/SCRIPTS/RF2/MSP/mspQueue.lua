@@ -64,10 +64,10 @@ function MspQueueController:processQueue()
         if not self.lastTimeCommandSent or (self.lastTimeCommandSent + retryDelay < rf2.clock()) then
             if self.currentMessage.payload then
                 --rf2.print("Sending  cmd "..self.currentMessage.command..": {" .. joinTableItems(self.currentMessage.payload, ", ") .. "}")
-                rf2.protocol.mspWrite(self.currentMessage.command, self.currentMessage.payload)
+                rf2.mspCommon.mspSendRequest(self.currentMessage.command, self.currentMessage.payload)
             else
                 --rf2.print("Sending  cmd "..self.currentMessage.command)
-                rf2.protocol.mspWrite(self.currentMessage.command, {})
+                rf2.mspCommon.mspSendRequest(self.currentMessage.command, {})
             end
             self.lastTimeCommandSent = rf2.clock()
             self.retryCount = self.retryCount + 1

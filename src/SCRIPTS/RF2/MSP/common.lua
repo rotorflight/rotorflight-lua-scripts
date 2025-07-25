@@ -16,14 +16,14 @@ local mspTxBuf = {}
 local mspTxIdx = 1
 local mspTxCRC = 0
 
+local protocolScript = "MSP/" .. rf2.executeScript("protocols")
+local mspSend, mspPoll, maxTxBufferSize, maxRxBufferSize = rf2.executeScript(protocolScript)
+
 local common = {}
 
 function common.mspProcessTxQ()
     if (#(mspTxBuf) == 0) then
         return false
-    end
-    if not rf2.protocol.push() then
-        return true
     end
     --rf2.print("Sending mspTxBuf size "..tostring(#mspTxBuf).." at Idx "..tostring(mspTxIdx).." for cmd: "..tostring(mspLastReq))
     local payload = {}
@@ -34,21 +34,21 @@ function common.mspProcessTxQ()
         payload[1] = payload[1] + MSP_STARTFLAG
     end
     local i = 2
-    while (i <= rf2.protocol.maxTxBufferSize) and mspTxIdx <= #mspTxBuf do
+    while (i <= maxTxBufferSize) and mspTxIdx <= #mspTxBuf do
         payload[i] = mspTxBuf[mspTxIdx]
         mspTxIdx = mspTxIdx + 1
         mspTxCRC = bit32.bxor(mspTxCRC,payload[i])
         i = i + 1
     end
-    if i <= rf2.protocol.maxTxBufferSize then
+    if i <= maxTxBufferSize then
         payload[i] = mspTxCRC
-        rf2.protocol.mspSend(payload)
+        mspSend(payload)
         mspTxBuf = {}
         mspTxIdx = 1
         mspTxCRC = 0
         return false
     end
-    rf2.protocol.mspSend(payload)
+    mspSend(payload)
     return true
 end
 
@@ -102,12 +102,12 @@ local function mspReceivedReply(payload)
         mspStarted = false
         return nil
     end
-    while (idx <= rf2.protocol.maxRxBufferSize) and (#mspRxBuf < mspRxSize) do
+    while (idx <= maxRxBufferSize) and (#mspRxBuf < mspRxSize) do
         mspRxBuf[#mspRxBuf + 1] = payload[idx]
         mspRxCRC = bit32.bxor(mspRxCRC, payload[idx])
         idx = idx + 1
     end
-    if idx > rf2.protocol.maxRxBufferSize then
+    if idx > maxRxBufferSize then
         --rf2.print("  mspReceivedReply:  payload continues into next frame.")
         -- Store the last sequence number so we can start there on the next continuation payload
         mspRemoteSeq = seq
@@ -128,7 +128,7 @@ end
 function common.mspPollReply()
     local startTime = rf2.clock()
     while (rf2.clock() - startTime < 0.05) do
-        local mspData = rf2.protocol.mspPoll()
+        local mspData = mspPoll()
         if mspData ~= nil and mspReceivedReply(mspData) then
             mspLastReq = 0
             return mspRxReq, mspRxBuf, mspRxError

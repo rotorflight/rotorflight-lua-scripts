@@ -20,6 +20,9 @@ local init
 local waitMessage
 local pageChanged = false
 
+-- Color radios on EdgeTX >= 2.11 do not send EVT_VIRTUAL_ENTER anymore after EVT_VIRTUAL_ENTER_LONG
+local useKillEnterBreak = not(lcd.setColor and select(3, getVersion()) >= 2 and select(4, getVersion()) >= 11)
+
 local function invalidatePages()
     Page = nil
     pageState = lcdShared.pageStatus.display
@@ -173,7 +176,7 @@ local function run_ui(event)
         elseif event == EVT_VIRTUAL_ENTER then
             uiState = uiStatus.pages
         elseif event == EVT_VIRTUAL_ENTER_LONG then
-            if rf2.useKillEnterBreak then lcdShared.killEnterBreak = true end
+            if useKillEnterBreak then lcdShared.killEnterBreak = true end
             createPopupMenu()
         else
             mainMenu.update(event)
@@ -184,7 +187,7 @@ local function run_ui(event)
         end
 
         if pageState == lcdShared.pageStatus.saving then
-            if saveTS + rf2.protocol.saveTimeout <= rf2.clock() then
+            if saveTS + 4.0 <= rf2.clock() then
                 --rf2.print("Save timeout!")
                 pageState = lcdShared.pageStatus.display
                 invalidatePages()
@@ -196,7 +199,7 @@ local function run_ui(event)
             elseif event == EVT_VIRTUAL_NEXT_PAGE then
                 incPage(1)
             elseif event == EVT_VIRTUAL_ENTER_LONG then
-                if rf2.useKillEnterBreak then lcdShared.killEnterBreak = true end
+                if useKillEnterBreak then lcdShared.killEnterBreak = true end
                 createPopupMenu()
             elseif event == EVT_VIRTUAL_EXIT then
                 invalidatePages()

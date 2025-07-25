@@ -7,7 +7,7 @@ local function getDefaults()
     defaults.swash_type = { min = 0, max = 6, table = { [0] = "NONE", "PASSTHROUGH", "CP120", "CP135", "CP140", "FP90L", "FP90V" } }
     defaults.swash_ring = { min = 0, max = 100 }
     defaults.swash_phase = { min = -1800, max = 1800, scale = 10, mult = 5, unit = rf2.units.degrees }
-    defaults.swash_pitch_limit = { min = 0, max = 3000, scale = 83.33333333333333, mult = 8.3333333333333, unit = rf2.units.degrees }
+    defaults.swash_pitch_limit = { min = 0, max = 3000, scale = 1000/12, mult = 100/12, unit = rf2.units.degrees }
     defaults.swash_trim_roll = { min = -1000, max = 1000, scale = 10, unit = rf2.units.percentage }
     defaults.swash_trim_pitch = { min = -1000, max = 1000, scale = 10, unit = rf2.units.percentage }
     defaults.swash_trim_collective = { min = -1000, max = 1000, scale = 10, unit = rf2.units.percentage }

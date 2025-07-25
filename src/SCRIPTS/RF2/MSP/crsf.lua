@@ -1,40 +1,27 @@
+-- Usage: local mspSend, mspPoll, maxTxBufferSize, maxRxBufferSize = rf2.executeScript("MSP/csrf")
+
 -- CRSF Devices
 local CRSF_ADDRESS_BETAFLIGHT          = 0xC8
 local CRSF_ADDRESS_RADIO_TRANSMITTER   = 0xEA
 
--- CRSF Frame Types
-local CRSF_FRAMETYPE_MSP_REQ           = 0x7A      -- response request using msp sequence as command
-local CRSF_FRAMETYPE_MSP_RESP          = 0x7B      -- reply with 60 byte chunked binary
-local CRSF_FRAMETYPE_MSP_WRITE         = 0x7C      -- write with 60 byte chunked binary
-
-local crsfMspCmd = 0
-
-rf2.protocol.mspSend = function(payload)
+local function mspSend(payload)
     local payloadOut = { CRSF_ADDRESS_BETAFLIGHT, CRSF_ADDRESS_RADIO_TRANSMITTER }
-    for i=1, #(payload) do
+    for i = 1, #(payload) do
         payloadOut[i+2] = payload[i]
     end
-    return rf2.protocol.push(crsfMspCmd, payloadOut)
+    local CRSF_FRAMETYPE_MSP_WRITE = 0x7C      -- write with 60 byte chunked binary
+    return crossfireTelemetryPush(CRSF_FRAMETYPE_MSP_WRITE, payloadOut)
 end
 
-rf2.protocol.mspRead = function(cmd)
-    crsfMspCmd = CRSF_FRAMETYPE_MSP_REQ
-    return rf2.mspCommon.mspSendRequest(cmd, {})
-end
-
-rf2.protocol.mspWrite = function(cmd, payload)
-    crsfMspCmd = CRSF_FRAMETYPE_MSP_WRITE
-    return rf2.mspCommon.mspSendRequest(cmd, payload)
-end
-
-rf2.protocol.mspPoll = function()
+local function mspPoll()
     while true do
         local cmd, data = crossfireTelemetryPop()
+        local CRSF_FRAMETYPE_MSP_RESP = 0x7B      -- reply with 60 byte chunked binary
         if cmd == CRSF_FRAMETYPE_MSP_RESP and data[1] == CRSF_ADDRESS_RADIO_TRANSMITTER and data[2] == CRSF_ADDRESS_BETAFLIGHT then
 --[[
             rf2.print("cmd:0x"..string.format("%X", cmd))
             rf2.print("  data length: "..string.format("%u", #data))
-            for i=1,#data do
+            for i = 1,#data do
                 rf2.print("  ["..string.format("%u", i).."]:  0x"..string.format("%X", data[i]))
             end
 --]]
@@ -48,3 +35,7 @@ rf2.protocol.mspPoll = function()
         end
     end
 end
+
+local maxTxBufferSize = 8
+local maxRxBufferSize = 58
+return mspSend, mspPoll, maxTxBufferSize, maxRxBufferSize
