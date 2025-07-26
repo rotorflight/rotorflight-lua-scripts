@@ -15,8 +15,6 @@ if scriptsCompiled then
     rf2.mspQueue.maxRetries = 3
     rf2.mspHelper = rf2.executeScript("MSP/mspHelper")
     --rf2.showMemoryUsage("MSP helper loaded")
-    rf2.mspCommon = rf2.executeScript("MSP/common")
-    --rf2.showMemoryUsage("common loaded")
 
     local canUseLvgl = rf2.executeScript("F/canUseLvgl")()
     if canUseLvgl then
