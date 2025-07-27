@@ -128,6 +128,7 @@ return {
 
     onErasedDataflash = function(self, _)
         mspDataflash.getDataflashSummary(self.onReceivedDataflashSummary, self)
+        rf2.clearWaitMessage()
     end,
 
     onClickErase = function(field, self)

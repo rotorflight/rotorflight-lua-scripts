@@ -2,7 +2,10 @@ local lcdShared = rf2.executeScript("LCD/shared")
 local messageBox = nil -- loaded on demand
 local popupMenu = nil  -- loaded on demand
 local Page = nil       -- loaded on demand
-local mainMenu = rf2.executeScript("LCD/mainMenu", lcdShared)
+local mainMenu = nil   -- loaded on demand
+
+local PageFiles
+local CurrentPageIndex = 1
 
 local uiStatus =
 {
@@ -26,10 +29,7 @@ local useKillEnterBreak = not(lcd.setColor and select(3, getVersion()) >= 2 and 
 local function invalidatePages()
     Page = nil
     pageState = lcdShared.pageStatus.display
-    collectgarbage()
 end
-
-rf2.reloadPage = invalidatePages
 
 rf2.setWaitMessage = function(message)
     pageState = lcdShared.pageStatus.waiting
@@ -115,7 +115,6 @@ local function confirm(page)
     invalidatePages()
     Page = rf2.executeScript(page)
     Page.lcdp = rf2.executeScript("LCD/page", lcdShared, Page)
-    collectgarbage()
 end
 
 local function createPopupMenu()
@@ -136,12 +135,17 @@ local function createPopupMenu()
 end
 
 local function incPage(inc)
-    mainMenu.incCurrentPage(inc)
+    CurrentPageIndex = rf2.executeScript("F/incMax")(CurrentPageIndex, inc, #PageFiles)
     pageChanged = true
     invalidatePages()
 end
 
-rf2.reloadMainMenu = mainMenu.reload
+local function reloadPageFiles(setCurrentPageToLastPage)
+    PageFiles = rf2.executeScript("pages")
+    if setCurrentPageToLastPage then
+        CurrentPageIndex = #PageFiles
+    end
+end
 
 local function run_ui(event)
     -- if event and event ~= 0 then
@@ -166,14 +170,18 @@ local function run_ui(event)
             return 0
         end
         init = nil
-        rf2.reloadMainMenu()
+        reloadPageFiles()
         invalidatePages()
         uiState = prevUiState or uiStatus.mainMenu
         prevUiState = nil
     elseif uiState == uiStatus.mainMenu then
+        if not mainMenu then
+            mainMenu = rf2.executeScript("LCD/mainMenu", lcdShared, PageFiles, CurrentPageIndex)
+        end
         if event == EVT_VIRTUAL_EXIT then
             return 2
         elseif event == EVT_VIRTUAL_ENTER then
+            CurrentPageIndex = mainMenu.getSelectedPageIndex()
             uiState = uiStatus.pages
         elseif event == EVT_VIRTUAL_ENTER_LONG then
             if useKillEnterBreak then lcdShared.killEnterBreak = true end
@@ -182,12 +190,13 @@ local function run_ui(event)
             mainMenu.update(event)
         end
     elseif uiState == uiStatus.pages then
+        mainMenu = nil
         if Page then
             pageState = Page.lcdp.update(pageState, event)
         end
 
         if pageState == lcdShared.pageStatus.saving then
-            if saveTS + 4.0 <= rf2.clock() then
+            if saveTS + 5.0 <= rf2.clock() then
                 --rf2.print("Save timeout!")
                 pageState = lcdShared.pageStatus.display
                 invalidatePages()
@@ -217,12 +226,10 @@ local function run_ui(event)
                 pageChanged = false
                 rf2.mspQueue:clear()
             end
-            collectgarbage()
             --rf2.showMemoryUsage("before loading page")
-            Page = mainMenu.loadCurrentPage()
+            Page = rf2.executeScript("PAGES/" .. PageFiles[CurrentPageIndex].script)
             Page.lcdp = rf2.executeScript("LCD/page", lcdShared, Page)
             --rf2.showMemoryUsage("after loading page")
-            collectgarbage()
         end
         if pageState == lcdShared.pageStatus.saving or pageState == lcdShared.pageStatus.eepromWrite or
             pageState == lcdShared.pageStatus.rebooting or pageState == lcdShared.pageStatus.waiting then
@@ -260,5 +267,8 @@ local function run_ui(event)
 
     return 0
 end
+
+rf2.reloadPage = invalidatePages
+rf2.reloadMainMenu = reloadPageFiles
 
 return run_ui
