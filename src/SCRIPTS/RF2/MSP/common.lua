@@ -1,9 +1,6 @@
--- Protocol version
-local MSP_VERSION = bit32.lshift(1,5)
-local MSP_STARTFLAG = bit32.lshift(1,4)
+-- Usage: local mspSendRequest, mspProcessTxQ, mspPollReply, mspClearTxBuf = rf2.executeScript("MSP/common")
 
--- Sequence number for next MSP packet
-local mspSeq = 0
+local mspSeq = 0 -- Sequence number for next MSP packet
 local mspRemoteSeq = 0
 local mspRxBuf = {}
 local mspRxError = false
@@ -19,18 +16,18 @@ local mspTxCRC = 0
 local protocolScript = "MSP/" .. rf2.executeScript("protocols")
 local mspSend, mspPoll, maxTxBufferSize, maxRxBufferSize = rf2.executeScript(protocolScript)
 
-local common = {}
-
-function common.mspProcessTxQ()
+local function mspProcessTxQ()
     if (#(mspTxBuf) == 0) then
         return false
     end
     --rf2.print("Sending mspTxBuf size "..tostring(#mspTxBuf).." at Idx "..tostring(mspTxIdx).." for cmd: "..tostring(mspLastReq))
     local payload = {}
+    local MSP_VERSION = bit32.lshift(1,5)
     payload[1] = mspSeq + MSP_VERSION
     mspSeq = bit32.band(mspSeq + 1, 0x0F)
     if mspTxIdx == 1 then
         -- start flag
+        local MSP_STARTFLAG = bit32.lshift(1,4)
         payload[1] = payload[1] + MSP_STARTFLAG
     end
     local i = 2
@@ -52,7 +49,7 @@ function common.mspProcessTxQ()
     return true
 end
 
-function common.mspSendRequest(cmd, payload)
+local function mspSendRequest(cmd, payload)
     --rf2.print("Sending cmd "..cmd)
     -- busy
     if #(mspTxBuf) ~= 0 or not cmd then
@@ -65,7 +62,7 @@ function common.mspSendRequest(cmd, payload)
         mspTxBuf[i+2] = bit32.band(payload[i],0xFF)
     end
     mspLastReq = cmd
-    return common.mspProcessTxQ()
+    return mspProcessTxQ()
 end
 
 local function mspReceivedReply(payload)
@@ -125,7 +122,7 @@ local function mspReceivedReply(payload)
     return true
 end
 
-function common.mspPollReply()
+local function mspPollReply()
     local startTime = rf2.clock()
     while (rf2.clock() - startTime < 0.05) do
         local mspData = mspPoll()
@@ -136,8 +133,8 @@ function common.mspPollReply()
     end
 end
 
-function common.mspClearTxBuf()
+local function mspClearTxBuf()
     mspTxBuf = {}
 end
 
-return common
+return mspSendRequest, mspProcessTxQ, mspPollReply, mspClearTxBuf
