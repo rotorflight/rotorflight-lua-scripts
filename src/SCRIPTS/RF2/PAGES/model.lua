@@ -129,7 +129,7 @@ local function setAutoSetName()
         return
     end
 
-    local setBit = rf2.executeScript("HELPERS/setBit")
+    local setBit = rf2.executeScript("F/setBit")
     pilotConfig.model_flags.value = setBit(pilotConfig.model_flags.value, pilotConfig.model_flags.MODEL_SET_NAME, autoSetName)
 end
 

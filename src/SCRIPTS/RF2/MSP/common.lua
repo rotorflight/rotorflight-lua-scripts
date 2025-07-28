@@ -14,11 +14,14 @@ local mspTxIdx = 1
 local mspTxCRC = 0
 
 local protocolScript = "MSP/" .. rf2.executeScript("protocols")
-local mspSend, mspPoll, maxTxBufferSize, maxRxBufferSize = rf2.executeScript(protocolScript)
+local mspSend, mspPoll, telemetryPush, maxTxBufferSize, maxRxBufferSize = rf2.executeScript(protocolScript)
 
 local function mspProcessTxQ()
     if (#(mspTxBuf) == 0) then
         return false
+    end
+    if not telemetryPush() then
+        return true
     end
     --rf2.print("Sending mspTxBuf size "..tostring(#mspTxBuf).." at Idx "..tostring(mspTxIdx).." for cmd: "..tostring(mspLastReq))
     local payload = {}
