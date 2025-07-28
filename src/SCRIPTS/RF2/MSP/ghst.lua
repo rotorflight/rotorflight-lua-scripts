@@ -16,4 +16,4 @@ end
 
 local maxTxBufferSize = 10
 local maxRxBufferSize = 6
-return mspSend, mspPoll, maxTxBufferSize, maxRxBufferSize
+return mspSend, mspPoll, ghostTelemetryPush, maxTxBufferSize, maxRxBufferSize

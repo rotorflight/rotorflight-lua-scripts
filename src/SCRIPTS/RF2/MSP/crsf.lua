@@ -38,4 +38,4 @@ end
 
 local maxTxBufferSize = 8
 local maxRxBufferSize = 58
-return mspSend, mspPoll, maxTxBufferSize, maxRxBufferSize
+return mspSend, mspPoll, crossfireTelemetryPush, maxTxBufferSize, maxRxBufferSize

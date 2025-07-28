@@ -62,4 +62,4 @@ end
 
 local maxTxBufferSize = 6
 local maxRxBufferSize = 6
-return mspSend, mspPoll, maxTxBufferSize, maxRxBufferSize
+return mspSend, mspPoll, sportTelemetryPush, maxTxBufferSize, maxRxBufferSize
