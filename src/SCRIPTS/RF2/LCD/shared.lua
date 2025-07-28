@@ -47,7 +47,6 @@ return {
         editing = 2,
         saving  = 3,
         eepromWrite = 4,
-        rebooting = 5,
-        waiting = 6
+        rebooting = 5
     }
 }

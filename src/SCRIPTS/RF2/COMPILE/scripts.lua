@@ -7,6 +7,7 @@ local scripts = {
     "/SCRIPTS/RF2/LCD/page.lua",
     "/SCRIPTS/RF2/LCD/popupMenu.lua",
     "/SCRIPTS/RF2/LCD/shared.lua",
+    "/SCRIPTS/RF2/LCD/waitMessage.lua",
     "/SCRIPTS/RF2/F/canUseLvgl.lua",
     "/SCRIPTS/RF2/F/getBit.lua",
     "/SCRIPTS/RF2/F/incMax.lua",
