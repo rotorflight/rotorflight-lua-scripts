@@ -24,7 +24,7 @@ local init
 local pageChanged = false
 
 -- Color radios on EdgeTX >= 2.11 do not send EVT_VIRTUAL_ENTER anymore after EVT_VIRTUAL_ENTER_LONG
-local useKillEnterBreak = not(lcd.setColor and select(3, getVersion()) >= 2 and select(4, getVersion()) >= 11)
+local useKillEnterBreak = not(lcd.setColor and (select(3, getVersion()) >= 3 or select(3, getVersion()) >= 2 and select(4, getVersion()) >= 11))
 
 rf2.setWaitMessage = function(message)
     waitMessage.text = message
