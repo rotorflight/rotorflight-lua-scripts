@@ -55,7 +55,7 @@ rf2 = {
         meters = " m"
     },
 
-    --[[
+    --[NIR
     print = function(format, ...)
         local str = string.format("RF2: " .. format, ...)
         if rf2.runningInSimulator then

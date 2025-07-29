@@ -8,6 +8,7 @@ local adjfuncValueChanged
 local currentAdjfuncId
 local currentAdjfuncValue
 
+if not rf2 then assert(loadScript("rf2.lua"))() end
 
 local adjfunctions = {
     -- see src/main/fc/rc_adjustments.h
@@ -115,14 +116,6 @@ local adjfunctions = {
     id75 = { name = "Yaw Precomp Cutoff", wavs = { "ya-pr-cu" } },
 }
 
-local function drawTextMultiline(x, y, text, options)
-    local lineSpacing = (LCD_W < 320) and 10 or 25
-    for str in string.gmatch(text, "([^\n]+)") do
-        lcd.drawText(x, y, str, options)
-        y = y + lineSpacing
-    end
-end
-
 local function getTelemetryId(name)
     local field = getFieldInfo(name)
     if field then
@@ -132,10 +125,27 @@ local function getTelemetryId(name)
     end
 end
 
-local function showValue(v)
+local function showMessage(message)
+    local function drawTextMultiline(x, y, text, options)
+        local lineSpacing = (LCD_W < 320) and 10 or 25
+        for str in string.gmatch(text, "([^\n]+)") do
+            lcd.drawText(x, y, str, options)
+            y = y + lineSpacing
+        end
+    end
+
     lcd.clear()
-    drawTextMultiline(1, 1, tostring(v), 0)
+    drawTextMultiline(1, 1, message, 0)
 end
+
+--[NIR
+local function showValue(label, value)
+    lcd.clear()
+    lcd.drawText(1, 1, label, 0)
+    local y = (LCD_W < 320) and 10 or 25
+    lcd.drawText(1, y, tostring(value), DBLSIZE)
+end
+--]]
 
 local sportAdjustmentsCollector = {}
 sportAdjustmentsCollector.__index = sportAdjustmentsCollector
@@ -214,14 +224,14 @@ local function init()
     end
 
     if adjustmentCollector.initFailedMessage then
-        showValue(adjustmentCollector.initFailedMessage)
+        showMessage(adjustmentCollector.initFailedMessage)
         timeExitTool = rf2.clock() + 5
         return
     end
 
     currentAdjfuncId, currentAdjfuncValue = adjustmentCollector:getAdjfuncIdAndValue()
 
-    showValue("Waiting for adjustment...")
+    showMessage("Waiting for adjustment...")
 end
 
 local function run()
@@ -269,12 +279,14 @@ local function run()
 
     if invalidate then
         timeLastChange = rf2.clock()
+        --[NIR
         local adjfunction = adjfunctions["id"..currentAdjfuncId]
         if adjfunction ~= nil then
-            showValue(adjfunction.name..": "..currentAdjfuncValue)
+            showValue(adjfunction.name, currentAdjfuncValue)
         else
-            showValue("Unknown adjfunc "..currentAdjfuncId..": "..currentAdjfuncValue)
+            showValue("Unknown adjfunc "..currentAdjfuncId, currentAdjfuncValue)
         end
+        --]]
     end
 
     return 0

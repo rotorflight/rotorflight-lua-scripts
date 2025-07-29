@@ -7,6 +7,13 @@ print("Minimizing script memory usage...")
 
 local genericReplacements = {
     {
+        -- Replace --[NIR with --[[ to comment out debug code that should not be in a release
+        files = "/SCRIPTS/RF2/",
+        match = "--%[NIR",
+        replace = "--%[NIR",
+        replacement = "--[["
+    },
+    {
         -- Remove id = "xxx" from the fields table in page files. This id is not used by the official Rotorflight scripts.
         files = "/SCRIPTS/RF2/PAGES/",
         match = "^%s-fields%[",
@@ -26,6 +33,14 @@ local genericReplacements = {
         match = "loadScript%(script, %'cd%'%)",
         replace = "loadScript%(script, %'cd%'%)",
         replacement = "loadScript(script, 'c')"
+    },
+    {
+        -- Remove 'name = "xxx", ' from the adjfunctions fields table in adj_teller.lua.
+        -- Names are only used for debugging and are expensive.
+        files = "/SCRIPTS/RF2/adj_teller.lua",
+        match = "name = \"(.-)\", ",
+        replace = "name = \"(.-)\", ",
+        replacement = ""
     }
 }
 
