@@ -51,7 +51,8 @@ local function run()
             return
         end
         if initTaskResult.crsfCustomTelemetryEnabled then
-            customTelemetryTask = rf2.executeScript("rf2tlm")
+            local requestedSensorsBySid = rf2.executeScript("rf2tlm_sensors", initTaskResult.crsfCustomTelemetrySensors)
+            customTelemetryTask = rf2.executeScript("rf2tlm", requestedSensorsBySid)
         end
         if initTask.useAdjustmentTeller then
             adjTellerTask = rf2.executeScript("adj_teller")
@@ -78,7 +79,11 @@ end
 
 local function runProtected()
     local status, err = pcall(run)
-    --if not status then rf2.print(err) end
+    --[NIR
+    if not status then rf2.print(err) end
+    --]]
+    --collectgarbage()
+    --rf2.print("Mem: %d", collectgarbage("count")*1024)
     return 0
 end
 

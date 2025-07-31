@@ -94,6 +94,7 @@ local scripts = {
     "/SCRIPTS/RF2/protocols.lua",
     "/SCRIPTS/RF2/radios.lua",
     "/SCRIPTS/RF2/rf2.lua",
+    "/SCRIPTS/RF2/rf2tlm_sensors.lua",
     "/SCRIPTS/RF2/rf2tlm.lua",
     "/SCRIPTS/RF2/tool.lua",
     "/SCRIPTS/RF2/ui_init.lua",

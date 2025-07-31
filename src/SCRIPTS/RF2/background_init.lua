@@ -1,5 +1,6 @@
 local initializationDone = false
 local crsfCustomTelemetryEnabled = false
+local crsfCustomTelemetrySensors = nil
 
 local settings = rf2.loadSettings()
 local autoSetName = settings.autoSetName == 1 or false
@@ -173,6 +174,11 @@ local function initializeQueue()
                     rf2.useApi("mspTelemetryConfig").getTelemetryConfig(
                         function(_, config)
                             crsfCustomTelemetryEnabled = config.crsf_telemetry_mode.value == 1
+                            if crsfCustomTelemetryEnabled then
+                                crsfCustomTelemetrySensors = config.crsf_telemetry_sensors
+                            else
+                                crsfCustomTelemetrySensors = nil
+                            end
                         end)
                 end
             end
@@ -215,7 +221,8 @@ local function run(modelIsConnected)
     return
     {
         isInitialized = initialize(modelIsConnected),
-        crsfCustomTelemetryEnabled = crsfCustomTelemetryEnabled
+        crsfCustomTelemetryEnabled = crsfCustomTelemetryEnabled,
+        crsfCustomTelemetrySensors = crsfCustomTelemetrySensors
     }
 end
 
