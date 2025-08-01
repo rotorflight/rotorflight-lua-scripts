@@ -11,10 +11,6 @@ local function pilotConfigSet()
     model.setGlobalVariable(7, 8, pilotConfigSetMagic)
 end
 
-local function pilotConfigReset()
-    model.setGlobalVariable(7, 8, 0)
-end
-
 local function pilotConfigHasBeenSet()
     return model.getGlobalVariable(7, 8) == pilotConfigSetMagic
 end
@@ -103,50 +99,24 @@ local function onPilotConfigReceived(_, config)
 end
 
 local sensorsDiscoveredTimeout = 0
-local customTelemetryTask
-local function waitForCustomSensorsDiscovery()
-    -- OpenTX and EdgeTX reference sensors by their ID. In order to always have the
-    -- same ID when using custom CRSF/ELRS telemetry, follow this procedure:
-    -- 1. Power off the model
-    -- 2. "Delete all" sensors from the model
-    -- 3. Select "Discover new"
-    -- 4. Power on the model
-    -- 5. Wait for the sensors to be discovered.
-    -- MSP calls during this procedure can interfere with discovering custom sensors.
-    -- waitForCustomSensorsDiscovery facilitates waiting for the sensors to be discovered
-    -- before continuing with MSP calls.
-
+local hasSensor = rf2.executeScript("F/hasSensor")
+local function waitForCrsfSensorsDiscovery()
     if not crossfireTelemetryPush() or rf2.runningInSimulator then
         -- Model does not use CRSF/ELRS
         return 0
     end
 
-    local sensorsDiscovered
-    if getFieldInfo ~= nil then
-        -- EdgeTX
-        sensorsDiscovered = getFieldInfo("TPWR") ~= nil
-    else
-        -- OpenTX
-        sensorsDiscovered = getValue("TPWR") ~= nil
-    end
-
+    local sensorsDiscovered = hasSensor("TPWR")
     if not sensorsDiscovered then
-        -- Wait 10 secs for telemetry script to discover sensors before continuing with MSP calls,
-        -- since MSP can interfere with discovering custom sensors
-        sensorsDiscoveredTimeout = rf2.clock() + 10
+        -- Wait 2 secs to discover all CRSF sensors before continuing.
+        sensorsDiscoveredTimeout = rf2.clock() + 2
     end
 
     if sensorsDiscoveredTimeout ~= 0 then
         if rf2.clock() < sensorsDiscoveredTimeout then
-            --rf2.print("Waiting for sensors to be discovered...")
-            customTelemetryTask = customTelemetryTask or rf2.executeScript("rf2tlm")
-            customTelemetryTask.run()
             return 1 -- wait for sensors to be discovered
         end
         sensorsDiscoveredTimeout = 0
-        customTelemetryTask = nil
-        collectgarbage()
-        return 2 -- sensors might just have been discovered
     end
 
     --rf2.print("Sensors already discovered")
@@ -197,7 +167,7 @@ local function initializeQueue()
 end
 
 local function initialize(modelIsConnected)
-    local sensorsDiscoveryWaitState = waitForCustomSensorsDiscovery()
+    local sensorsDiscoveryWaitState = waitForCrsfSensorsDiscovery()
     if sensorsDiscoveryWaitState == 1 then
         return false
     end

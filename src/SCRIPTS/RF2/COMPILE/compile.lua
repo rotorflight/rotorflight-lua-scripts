@@ -28,7 +28,7 @@ local function compile()
     if script then
         lcd.clear()
         lcd.drawText(2, 2, "Compiling...", SMLSIZE)
-        lcd.drawText(2, 22, script, SMLSIZE)
+        lcd.drawText(2, 58, script, SMLSIZE)
         collectgarbage()
         assert(loadScript(script, 'cd')) -- The 'd' flags gets removed in by minimize.lua
         return 0
