@@ -116,11 +116,6 @@ local function onReceivedPilotConfig(page, config)
     rf2.onPageReady(page)
 end
 
-local function pilotConfigReset()
-    -- Reset FM8-GV8, see background.lua
-    model.setGlobalVariable(7, 8, 0)
-end
-
 local function setAutoSetName()
     local autoSetName = fields[setNameOnTxFieldIndex].data.value
     if rf2.apiVersion >= 12.07 and rf2.apiVersion < 12.09 then
@@ -147,7 +142,7 @@ return {
             rf2.useApi("mspFlightStats").write(flighStats)
         end
         rf2.useApi("mspPilotConfig").write(pilotConfig)
-        pilotConfigReset()
+        rf2.executeScript("F/pilotConfigReset")()
         rf2.settingsSaved(true, false)
     end,
     title       = "Model",

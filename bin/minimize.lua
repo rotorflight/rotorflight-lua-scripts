@@ -21,7 +21,36 @@ local genericReplacements = {
         replacement = ""
     },
     {
-        -- Remove simulatorResponse = {...} from MSP APIs, since they are not used outside of the simulator.
+        -- Remove 'name = "xxx", ' from the adjfunctions fields table in adj_teller.lua.
+        -- Names are only used for debugging and are expensive.
+        files = "/SCRIPTS/RF2/adj_teller.lua",
+        match = "name = \"(.-)\", ",
+        replace = "name = \"(.-)\", ",
+        replacement = ""
+    },
+    {
+        -- large files (>10K)  can't sometimes be compiled on some b&w radios without making it smaller. This is done by removing all double spaces.
+        files = { "/SCRIPTS/RF2/adj_teller.lua", "/SCRIPTS/RF2/rf2tlm_sensors.lua" },
+        match = "  ",
+        replace = "  ",
+        replacement = ""
+    },
+    {
+        -- This is also done by replacing ' = ' with '='.
+        files = { "/SCRIPTS/RF2/adj_teller.lua", "/SCRIPTS/RF2/rf2tlm_sensors.lua" },
+        match = " = ",
+        replace = " = ",
+        replacement = "="
+    },
+    {
+        -- This is also done by removing comments.
+        files = { "/SCRIPTS/RF2/adj_teller.lua", "/SCRIPTS/RF2/rf2tlm_sensors.lua" },
+        match = "%-%-.*",
+        replace = "%-%-.*",
+        replacement = ""
+    },
+    {
+        -- Remove simulatorResponse = {...} from MSP APIs, since they are not used outside the simulator.
         files = "/SCRIPTS/RF2/MSP/",
         match = "simulatorResponse = {(.-)}",
         replace = "simulatorResponse = {(.-)},?",
@@ -33,14 +62,6 @@ local genericReplacements = {
         match = "loadScript%(script, %'cd%'%)",
         replace = "loadScript%(script, %'cd%'%)",
         replacement = "loadScript(script, 'c')"
-    },
-    {
-        -- Remove 'name = "xxx", ' from the adjfunctions fields table in adj_teller.lua.
-        -- Names are only used for debugging and are expensive.
-        files = "/SCRIPTS/RF2/adj_teller.lua",
-        match = "name = \"(.-)\", ",
-        replace = "name = \"(.-)\", ",
-        replacement = ""
     }
 }
 
@@ -79,7 +100,13 @@ local function processGenericReplacements()
         i = i + 1
         if script == nil then break end
         for _, genericReplacement in ipairs(genericReplacements) do
-            if string.match(script, genericReplacement.files) then
+            if type(genericReplacement.files) == "table" then
+                for _, partialFileName in ipairs(genericReplacement.files) do
+                    if string.match(script, partialFileName) then
+                        processFile("." .. script, genericReplacement)
+                    end
+                end
+            elseif string.match(script, genericReplacement.files) then
                 processFile("." .. script, genericReplacement)
             end
         end

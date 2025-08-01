@@ -65,7 +65,10 @@ return {
         settings.showTribunus = fields[5].data.value
         settings.showXdfly = fields[6].data.value
         settings.showYge = fields[7].data.value
-        settings.useAdjustmentTeller = fields[8].data.value
+        if settings.useAdjustmentTeller ~= fields[8].data.value then
+            settings.useAdjustmentTeller = fields[8].data.value
+            rf2.executeScript("F/pilotConfigReset")() -- restart rf2bg
+        end
         if canUseLvgl then
             settings.useLvgl = fields[9].data.value
         end
