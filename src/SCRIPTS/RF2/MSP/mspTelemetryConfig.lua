@@ -16,6 +16,7 @@ local function getTelemetryConfig(callback, callbackParam)
                 config.crsf_telemetry_sensors = {}
                 for i = 1, 40 do
                     config.crsf_telemetry_sensors[i] = rf2.mspHelper.readU8(buf)
+                    --rf2.print(tostring(config.crsf_telemetry_sensors[i]))
                 end
             end
 
