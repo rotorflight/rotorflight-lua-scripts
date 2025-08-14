@@ -5,7 +5,7 @@ local timing = { [0] = "Auto", "1°", "2°", "3°", "4°", "6°", "7°", "8°", 
 local motorDirection = { [0] = "CW", "CCW" }
 local fanControl = { [0] = "Automatic", "Always On" }
 local throttleProtocols = { [0] = "PWM", "RESERVE" }
-local telemetryProtocols = { [0] = "FLYROTOR", "RESERVE" }
+local telemetryProtocols = { [0] = "FLYROTOR" }
 local ledColors = { [0] = "CUSTOM", "BLACK", "RED", "GREEN", "BLUE", "YELLOW", "MAGENTA", "CYAN", "WHITE", "ORANGE", "GRAY", "MAROON", "DARK_GREEN", "NAVY", "PURPLE", "TEAL", "SILVER", "PINK", "GOLD", "BROWN", "LIGHT_BLUE", "FL_PINK", "FL_ORANGE", "FL_LIME", "FL_MINT", "FL_CYAN", "FL_PURPLE", "FL_HOT_PINK", "FL_LIGHT_YELLOW", "FL_AQUAMARINE", "FL_GOLD", "FL_DEEP_PINK", "FL_NEON_GREEN", "FL_ORANGE_RED" }
 
 local function getDefaults()
@@ -37,8 +37,8 @@ local function getDefaults()
         current_gain = { min = -20, max = 20 },
         fan_control = { min = 0, max = #fanControl, table = fanControl },
         soft_start = { min = 5, max = 55, unit = rf2.units.seconds },
-        p_gain = { min = 1, max = 100 },
-        i_gain = { min = 1, max = 100 },
+        p_gain = { min = 0, max = 100 },
+        i_gain = { min = 0, max = 100 },
         d_gain = { min = 0, max = 100 },
         max_motor_erpm = { min = 0, max = 1000000, mult = 130000},
         throttle_protocol = { min = 0, max = #throttleProtocols, table = throttleProtocols },
@@ -46,8 +46,8 @@ local function getDefaults()
         led_color = { min = 0, max = #ledColors, table = ledColors },
         unknown3 = nil,
         motor_temp_sensor = { min = 0, max = #statusOptions, table = statusOptions},
-        motor_temp = { min = 50, max = 155, unit = rf2.units.celsius },
-        capacity_cutoff = { min = 0, max = 10000, mult = 100 }
+        motor_temp = { min = 50, max = 150, unit = rf2.units.celsius },
+        capacity_cutoff = { min = 0, max = 10000, mult = 5200 }
     }
 end
 
