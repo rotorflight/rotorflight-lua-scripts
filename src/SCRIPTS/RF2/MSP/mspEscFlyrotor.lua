@@ -39,7 +39,7 @@ local function getDefaults()
         soft_start = { min = 5, max = 55, unit = rf2.units.seconds },
         p_gain = { min = 0, max = 100 },
         i_gain = { min = 0, max = 100 },
-        d_gain = { min = 0, max = 100 },
+        drive_freq = { min = 20000, max = 32000 },
         max_motor_erpm = { min = 0, max = 1000000, mult = 130000},
         throttle_protocol = { min = 0, max = #throttleProtocols, table = throttleProtocols },
         telemetry_protocol = { min = 0, max = #telemetryProtocols, table = telemetryProtocols },
@@ -100,7 +100,7 @@ local function getEscParameters(callback, callbackParam, data)
             data.soft_start.value = rf2.mspHelper.readU8(buf)
             data.p_gain.value = getUInt(buf, 2)
             data.i_gain.value = getUInt(buf, 2)
-            data.d_gain.value = getUInt(buf, 2)
+            data.drive_freq.value = getUInt(buf, 2)
             data.max_motor_erpm.value = getUInt(buf, 3)
             data.throttle_protocol.value = rf2.mspHelper.readU8(buf)
             data.telemetry_protocol.value = rf2.mspHelper.readU8(buf)
@@ -111,7 +111,7 @@ local function getEscParameters(callback, callbackParam, data)
             data.capacity_cutoff.value = getUInt(buf, 2)
             callback(callbackParam, data)
         end,
-        simulatorResponse = { 115, 0, 0, 1, 24,  231, 79, 190, 216, 78, 29, 169, 244, 1, 0, 0, 1, 0, 2, 0, 4, 76, 7, 148, 0, 6, 30, 125, 1, 0, 0, 3, 15, 1, 20, 0, 10, 0, 45, 0, 35, 0, 10, 0, 150, 0, 0, 0, 3, 0, 0, 0, 0, 100, 0, 0 },
+        simulatorResponse = { 115, 0, 0, 1, 24,  231, 79, 190, 216, 78, 29, 169, 244, 1, 0, 0, 1, 0, 2, 0, 4, 76, 7, 148, 0, 6, 30, 125, 1, 0, 0, 3, 15, 1, 20, 0, 10, 0, 45, 0, 35, 93, 192, 0, 150, 0, 0, 0, 3, 0, 0, 0, 0, 100, 0, 0 },
         --[[
         simulatorResponse = {
             115, -- signature
@@ -139,7 +139,7 @@ local function getEscParameters(callback, callbackParam, data)
             10, -- soft start
             0, 45, -- p-gain
             0, 35, -- i-gain
-            0, 10, -- d-gain
+            93, 192, -- drive-freq
             0, 150, 0 -- max motor erpm
             0, -- throttle protocol
             0, -- telemetry protocol
@@ -194,7 +194,7 @@ local function setEscParameters(data)
     rf2.mspHelper.writeU8(message.payload, data.soft_start.value)
     setUInt(message.payload, data.p_gain.value, 2)
     setUInt(message.payload, data.i_gain.value, 2)
-    setUInt(message.payload, data.d_gain.value, 2)
+    setUInt(message.payload, data.drive_freq.value, 2)
     setUInt(message.payload, data.max_motor_erpm.value, 3)
     rf2.mspHelper.writeU8(message.payload, data.throttle_protocol.value)
     rf2.mspHelper.writeU8(message.payload, data.telemetry_protocol.value)

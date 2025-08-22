@@ -41,7 +41,7 @@ fields[#fields + 1] = { t = "Current gain",              x = x + indent, y = inc
 labels[#labels + 1] = { t = "Esc governor",              x = x,          y = incY(lineSpacing) }
 fields[#fields + 1] = { t = "Gov P-gain",                x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.p_gain }
 fields[#fields + 1] = { t = "Gov I-gain",                x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.i_gain }
-fields[#fields + 1] = { t = "Gov D-gain",                x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.d_gain }
+fields[#fields + 1] = { t = "Drive frequency",           x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.drive_freq }
 fields[#fields + 1] = { t = "Motor max ERPM",            x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.max_motor_erpm }
 
 -- Other
