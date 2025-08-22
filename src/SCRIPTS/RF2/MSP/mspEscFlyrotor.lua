@@ -39,15 +39,15 @@ local function getDefaults()
         soft_start = { min = 5, max = 55, unit = rf2.units.seconds },
         p_gain = { min = 0, max = 100 },
         i_gain = { min = 0, max = 100 },
-        drive_freq = { min = 20000, max = 32000 },
-        max_motor_erpm = { min = 0, max = 1000000, mult = 130000},
+        drive_freq = { min = 20000, max = 32000, mult = 1000 },
+        max_motor_erpm = { min = 0, max = 1000000, mult = 1000 },
         throttle_protocol = { min = 0, max = #throttleProtocols, table = throttleProtocols },
         telemetry_protocol = { min = 0, max = #telemetryProtocols, table = telemetryProtocols },
         led_color = { min = 0, max = #ledColors, table = ledColors },
         unknown3 = nil,
         motor_temp_sensor = { min = 0, max = #statusOptions, table = statusOptions},
         motor_temp = { min = 50, max = 150, unit = rf2.units.celsius },
-        capacity_cutoff = { min = 0, max = 10000, mult = 5200 }
+        capacity_cutoff = { min = 0, max = 10000, mult = 100 }
     }
 end
 
@@ -111,7 +111,7 @@ local function getEscParameters(callback, callbackParam, data)
             data.capacity_cutoff.value = getUInt(buf, 2)
             callback(callbackParam, data)
         end,
-        simulatorResponse = { 115, 0, 0, 1, 24,  231, 79, 190, 216, 78, 29, 169, 244, 1, 0, 0, 1, 0, 2, 0, 4, 76, 7, 148, 0, 6, 30, 125, 1, 0, 0, 3, 15, 1, 20, 0, 10, 0, 45, 0, 35, 93, 192, 0, 150, 0, 0, 0, 3, 0, 0, 0, 0, 100, 0, 0 },
+        simulatorResponse = { 115, 0, 0, 1, 24,  231, 79, 190, 216, 78, 29, 169, 244, 1, 0, 0, 1, 0, 2, 0, 4, 76, 7, 148, 0, 6, 30, 125, 1, 0, 0, 3, 15, 1, 20, 0, 10, 0, 45, 0, 35, 93, 192, 1, 251, 208, 0, 0, 3, 0, 0, 0, 0, 100, 0, 0 },
         --[[
         simulatorResponse = {
             115, -- signature
@@ -140,7 +140,7 @@ local function getEscParameters(callback, callbackParam, data)
             0, 45, -- p-gain
             0, 35, -- i-gain
             93, 192, -- drive-freq
-            0, 150, 0 -- max motor erpm
+            1, 251, 208 -- max motor erpm
             0, -- throttle protocol
             0, -- telemetry protocol
             3, -- led color
