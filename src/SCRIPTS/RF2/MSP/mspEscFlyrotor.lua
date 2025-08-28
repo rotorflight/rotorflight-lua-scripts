@@ -47,7 +47,7 @@ local function getDefaults()
         unknown3 = nil,
         motor_temp_sensor = { min = 0, max = #statusOptions, table = statusOptions},
         motor_temp = { min = 50, max = 150, unit = rf2.units.celsius },
-        capacity_cutoff = { min = 0, max = 10000, mult = 100 }
+        capacity_cutoff = { min = 0, max = 50000, mult = 100 }
     }
 end
 
