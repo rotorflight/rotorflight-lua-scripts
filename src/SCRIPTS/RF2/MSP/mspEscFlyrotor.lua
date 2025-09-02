@@ -1,5 +1,5 @@
 local statusOptions = { [0] = "Disable", "Enable" }
-local govMode = { [0] = "Ext Governor", "Esc Governor" }
+local govMode = { [0] = "ESC Governor", "Linear Throttle", "RF Gyro Governor" }
 local becVoltage = { [0] = "Disable", "7.5V", "8.0V", "8.5V", "12.0V" }
 local timing = { [0] = "Auto", "1°", "2°", "3°", "4°", "6°", "7°", "8°", "9°", "10°" }
 local motorDirection = { [0] = "CW", "CCW" }
