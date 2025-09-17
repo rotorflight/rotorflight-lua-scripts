@@ -39,7 +39,7 @@ local function getDefaults()
         soft_start = { min = 5, max = 55, unit = rf2.units.seconds },
         p_gain = { min = 0, max = 100 },
         i_gain = { min = 0, max = 100 },
-        drive_freq = { min = 20000, max = 32000, mult = 1000 },
+        drive_freq = { min = 8000, max = 32000, mult = 1000 },
         max_motor_erpm = { min = 0, max = 1000000, mult = 1000 },
         throttle_protocol = { min = 0, max = #throttleProtocols, table = throttleProtocols },
         telemetry_protocol = { min = 0, max = #telemetryProtocols, table = telemetryProtocols },
