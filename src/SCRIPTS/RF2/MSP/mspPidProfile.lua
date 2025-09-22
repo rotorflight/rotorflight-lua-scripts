@@ -6,7 +6,9 @@ local function getDefaults()
     data.error_decay_time_yaw = { min = 0, max = 250, scale = 10, unit = rf2.units.seconds }
     data.error_decay_limit_cyclic = { min = 0, max = 250, unit = rf2.units.degreesPerSecond }
     data.error_decay_limit_yaw = { min = 0, max = 250, unit = rf2.units.degreesPerSecond }
-    data.error_rotation = { min = 0, max = 1, table = { [0] = "OFF", "ON" } }
+    if rf2.apiVersion < 12.09 then
+        data.error_rotation = { min = 0, max = 1, table = { [0] = "OFF", "ON" } }
+    end
     data.error_limit_roll = { min = 0, max = 180, unit = rf2.units.degrees }
     data.error_limit_pitch = { min = 0, max = 180, unit = rf2.units.degrees }
     data.error_limit_yaw = { min = 0, max = 180, unit = rf2.units.degrees }
@@ -61,7 +63,11 @@ local function getPidProfile(callback, callbackParam, data)
             data.error_decay_time_yaw.value = rf2.mspHelper.readU8(buf)
             data.error_decay_limit_cyclic.value = rf2.mspHelper.readU8(buf)
             data.error_decay_limit_yaw.value = rf2.mspHelper.readU8(buf)
-            data.error_rotation.value = rf2.mspHelper.readU8(buf)
+            if rf2.apiVersion < 12.09 then
+                data.error_rotation.value = rf2.mspHelper.readU8(buf)
+            else
+                buf.offset = buf.offset + 1
+            end
             data.error_limit_roll.value = rf2.mspHelper.readU8(buf)
             data.error_limit_pitch.value = rf2.mspHelper.readU8(buf)
             data.error_limit_yaw.value = rf2.mspHelper.readU8(buf)
@@ -123,7 +129,11 @@ local function setPidProfile(data)
     rf2.mspHelper.writeU8(message.payload, data.error_decay_time_yaw.value)
     rf2.mspHelper.writeU8(message.payload, data.error_decay_limit_cyclic.value)
     rf2.mspHelper.writeU8(message.payload, data.error_decay_limit_yaw.value)
-    rf2.mspHelper.writeU8(message.payload, data.error_rotation.value)
+    if rf2.apiVersion < 12.09 then
+        rf2.mspHelper.writeU8(message.payload, data.error_rotation.value)
+    else
+        rf2.mspHelper.writeU8(message.payload, 0)
+    end
     rf2.mspHelper.writeU8(message.payload, data.error_limit_roll.value)
     rf2.mspHelper.writeU8(message.payload, data.error_limit_pitch.value)
     rf2.mspHelper.writeU8(message.payload, data.error_limit_yaw.value)
