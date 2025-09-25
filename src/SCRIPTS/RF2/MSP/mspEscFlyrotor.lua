@@ -1,11 +1,11 @@
 local statusOptions = { [0] = "Disable", "Enable" }
-local govMode = { [0] = "Ext Governor", "Esc Governor" }
+local govMode = { [0] = "ESC Governor", "Linear Throttle", "RF Gyro Governor" }
 local becVoltage = { [0] = "Disable", "7.5V", "8.0V", "8.5V", "12.0V" }
 local timing = { [0] = "Auto", "1°", "2°", "3°", "4°", "6°", "7°", "8°", "9°", "10°" }
 local motorDirection = { [0] = "CW", "CCW" }
 local fanControl = { [0] = "Automatic", "Always On" }
 local throttleProtocols = { [0] = "PWM", "RESERVE" }
-local telemetryProtocols = { [0] = "FLYROTOR", "RESERVE" }
+local telemetryProtocols = { [0] = "FLYROTOR" }
 local ledColors = { [0] = "CUSTOM", "BLACK", "RED", "GREEN", "BLUE", "YELLOW", "MAGENTA", "CYAN", "WHITE", "ORANGE", "GRAY", "MAROON", "DARK_GREEN", "NAVY", "PURPLE", "TEAL", "SILVER", "PINK", "GOLD", "BROWN", "LIGHT_BLUE", "FL_PINK", "FL_ORANGE", "FL_LIME", "FL_MINT", "FL_CYAN", "FL_PURPLE", "FL_HOT_PINK", "FL_LIGHT_YELLOW", "FL_AQUAMARINE", "FL_GOLD", "FL_DEEP_PINK", "FL_NEON_GREEN", "FL_ORANGE_RED" }
 
 local function getDefaults()
@@ -37,17 +37,17 @@ local function getDefaults()
         current_gain = { min = -20, max = 20 },
         fan_control = { min = 0, max = #fanControl, table = fanControl },
         soft_start = { min = 5, max = 55, unit = rf2.units.seconds },
-        p_gain = { min = 1, max = 100 },
-        i_gain = { min = 1, max = 100 },
-        d_gain = { min = 0, max = 100 },
-        max_motor_erpm = { min = 0, max = 1000000, mult = 130000},
+        p_gain = { min = 0, max = 100 },
+        i_gain = { min = 0, max = 100 },
+        drive_freq = { min = 10000, max = 24000, mult = 1000 },
+        max_motor_erpm = { min = 0, max = 1000000, mult = 1000 },
         throttle_protocol = { min = 0, max = #throttleProtocols, table = throttleProtocols },
         telemetry_protocol = { min = 0, max = #telemetryProtocols, table = telemetryProtocols },
         led_color = { min = 0, max = #ledColors, table = ledColors },
         unknown3 = nil,
         motor_temp_sensor = { min = 0, max = #statusOptions, table = statusOptions},
-        motor_temp = { min = 50, max = 155, unit = rf2.units.celsius },
-        capacity_cutoff = { min = 0, max = 10000, mult = 100 }
+        motor_temp = { min = 50, max = 150, unit = rf2.units.celsius },
+        capacity_cutoff = { min = 0, max = 50000, mult = 100 }
     }
 end
 
@@ -100,7 +100,7 @@ local function getEscParameters(callback, callbackParam, data)
             data.soft_start.value = rf2.mspHelper.readU8(buf)
             data.p_gain.value = getUInt(buf, 2)
             data.i_gain.value = getUInt(buf, 2)
-            data.d_gain.value = getUInt(buf, 2)
+            data.drive_freq.value = getUInt(buf, 2)
             data.max_motor_erpm.value = getUInt(buf, 3)
             data.throttle_protocol.value = rf2.mspHelper.readU8(buf)
             data.telemetry_protocol.value = rf2.mspHelper.readU8(buf)
@@ -111,7 +111,7 @@ local function getEscParameters(callback, callbackParam, data)
             data.capacity_cutoff.value = getUInt(buf, 2)
             callback(callbackParam, data)
         end,
-        simulatorResponse = { 115, 0, 0, 1, 24,  231, 79, 190, 216, 78, 29, 169, 244, 1, 0, 0, 1, 0, 2, 0, 4, 76, 7, 148, 0, 6, 30, 125, 1, 0, 0, 3, 15, 1, 20, 0, 10, 0, 45, 0, 35, 0, 10, 0, 150, 0, 0, 0, 3, 0, 0, 0, 0, 100, 0, 0 },
+        simulatorResponse = { 115, 0, 0, 1, 24,  231, 79, 190, 216, 78, 29, 169, 244, 1, 0, 0, 1, 0, 2, 0, 4, 76, 7, 148, 0, 6, 30, 125, 1, 0, 0, 3, 15, 1, 20, 0, 10, 0, 45, 0, 35, 93, 192, 1, 251, 208, 0, 0, 3, 0, 0, 0, 0, 100, 0, 0 },
         --[[
         simulatorResponse = {
             115, -- signature
@@ -139,8 +139,8 @@ local function getEscParameters(callback, callbackParam, data)
             10, -- soft start
             0, 45, -- p-gain
             0, 35, -- i-gain
-            0, 10, -- d-gain
-            0, 150, 0 -- max motor erpm
+            93, 192, -- drive-freq
+            1, 251, 208 -- max motor erpm
             0, -- throttle protocol
             0, -- telemetry protocol
             3, -- led color
@@ -194,7 +194,7 @@ local function setEscParameters(data)
     rf2.mspHelper.writeU8(message.payload, data.soft_start.value)
     setUInt(message.payload, data.p_gain.value, 2)
     setUInt(message.payload, data.i_gain.value, 2)
-    setUInt(message.payload, data.d_gain.value, 2)
+    setUInt(message.payload, data.drive_freq.value, 2)
     setUInt(message.payload, data.max_motor_erpm.value, 3)
     rf2.mspHelper.writeU8(message.payload, data.throttle_protocol.value)
     rf2.mspHelper.writeU8(message.payload, data.telemetry_protocol.value)
