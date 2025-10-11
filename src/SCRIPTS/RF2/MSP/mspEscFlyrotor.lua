@@ -23,7 +23,8 @@ local function getDefaults()
         fw_minor = nil,
         fw_patch = nil,
         hw_version = nil,
-        unknown2 = nil,
+        thr_min = nil,
+        thr_max = nil,
         esc_mode = { min = 0, max = #govMode, table = govMode },
         cell_count = { min = 4, max = 14 },
         low_voltage = { min = 28, max = 38, scale = 10, unit = rf2.units.volt },
@@ -37,9 +38,12 @@ local function getDefaults()
         current_gain = { min = -20, max = 20 },
         fan_control = { min = 0, max = #fanControl, table = fanControl },
         soft_start = { min = 5, max = 55, unit = rf2.units.seconds },
+        auto_restart_time = { min = 0, max = 100, unit = rf2.units.seconds },
+        restart_acc = { min = 1, max = 10 },
         p_gain = { min = 0, max = 100 },
         i_gain = { min = 0, max = 100 },
-        drive_freq = { min = 10000, max = 24000, mult = 1000 },
+        unknown2 = nil,
+        drive_freq = { min = 10, max = 24 },
         max_motor_erpm = { min = 0, max = 1000000, mult = 1000 },
         throttle_protocol = { min = 0, max = #throttleProtocols, table = throttleProtocols },
         telemetry_protocol = { min = 0, max = #telemetryProtocols, table = telemetryProtocols },
@@ -84,7 +88,8 @@ local function getEscParameters(callback, callbackParam, data)
             data.fw_minor = rf2.mspHelper.readU8(buf)
             data.fw_patch = rf2.mspHelper.readU8(buf)
             data.hw_version = rf2.mspHelper.readU8(buf)
-            data.unknown2 = getUInt(buf, 4)
+            data.thr_min = getUInt(buf, 2)
+            data.thr_max = getUInt(buf, 2)
             data.esc_mode.value = rf2.mspHelper.readU8(buf)
             data.cell_count.value = rf2.mspHelper.readU8(buf)
             data.low_voltage.value = rf2.mspHelper.readU8(buf)
@@ -98,9 +103,12 @@ local function getEscParameters(callback, callbackParam, data)
             data.current_gain.value = rf2.mspHelper.readU8(buf) - 20
             data.fan_control.value = rf2.mspHelper.readU8(buf)
             data.soft_start.value = rf2.mspHelper.readU8(buf)
-            data.p_gain.value = getUInt(buf, 2)
-            data.i_gain.value = getUInt(buf, 2)
-            data.drive_freq.value = getUInt(buf, 2)
+            data.auto_restart_time.value = rf2.mspHelper.readU8(buf)
+            data.restart_acc.value = rf2.mspHelper.readU8(buf)
+            data.p_gain.value = rf2.mspHelper.readU8(buf)
+            data.i_gain.value = rf2.mspHelper.readU8(buf)
+            data.unknown2 = rf2.mspHelper.readU8(buf)
+            data.drive_freq.value = rf2.mspHelper.readU8(buf)
             data.max_motor_erpm.value = getUInt(buf, 3)
             data.throttle_protocol.value = rf2.mspHelper.readU8(buf)
             data.telemetry_protocol.value = rf2.mspHelper.readU8(buf)
@@ -111,7 +119,7 @@ local function getEscParameters(callback, callbackParam, data)
             data.capacity_cutoff.value = getUInt(buf, 2)
             callback(callbackParam, data)
         end,
-        simulatorResponse = { 115, 0, 0, 1, 24,  231, 79, 190, 216, 78, 29, 169, 244, 1, 0, 0, 1, 0, 2, 0, 4, 76, 7, 148, 0, 6, 30, 125, 1, 0, 0, 3, 15, 1, 20, 0, 10, 0, 45, 0, 35, 93, 192, 1, 251, 208, 0, 0, 3, 0, 0, 0, 0, 100, 0, 0 },
+        simulatorResponse = { 115, 0, 0, 1, 24,  231, 79, 190, 216, 78, 29, 169, 244, 1, 0, 0, 1, 0, 2, 0, 4, 76, 7, 148, 0, 6, 30, 125, 1, 0, 0, 3, 15, 1, 20, 0, 10, 30, 5, 45, 35, 0, 16, 1, 251, 208, 0, 0, 3, 0, 0, 0, 0, 100, 0, 0 },
         --[[
         simulatorResponse = {
             115, -- signature
@@ -123,7 +131,8 @@ local function getEscParameters(callback, callbackParam, data)
             1, 0, 0, -- IAP
             1, 0, 2, -- firmware version
             0, -- hw version 18
-            4, 76, 7, 148, -- unknown2
+            4, 76, -- thr_min
+            7, 148, -- thr_max
             0, -- esc mode
             6, -- cell count
             30, -- low voltage
@@ -137,9 +146,12 @@ local function getEscParameters(callback, callbackParam, data)
             20, -- current gain 33
             0, -- fan control
             10, -- soft start
-            0, 45, -- p-gain
-            0, 35, -- i-gain
-            93, 192, -- drive-freq
+            30, -- auto restart time
+            5, -- restart acc
+            45, -- p-gain
+            35, -- i-gain
+            0, -- unknown2
+            16, -- drive-freq
             1, 251, 208 -- max motor erpm
             0, -- throttle protocol
             0, -- telemetry protocol
@@ -178,7 +190,8 @@ local function setEscParameters(data)
     rf2.mspHelper.writeU8(message.payload, data.fw_minor)
     rf2.mspHelper.writeU8(message.payload, data.fw_patch)
     rf2.mspHelper.writeU8(message.payload, data.hw_version)
-    setUInt(message.payload, data.unknown2, 4)
+    setUInt(message.payload, data.thr_min, 2)
+    setUInt(message.payload, data.thr_max, 2)
     rf2.mspHelper.writeU8(message.payload, data.esc_mode.value)
     rf2.mspHelper.writeU8(message.payload, data.cell_count.value)
     rf2.mspHelper.writeU8(message.payload, data.low_voltage.value)
@@ -192,9 +205,12 @@ local function setEscParameters(data)
     rf2.mspHelper.writeU8(message.payload, data.current_gain.value + 20)
     rf2.mspHelper.writeU8(message.payload, data.fan_control.value)
     rf2.mspHelper.writeU8(message.payload, data.soft_start.value)
-    setUInt(message.payload, data.p_gain.value, 2)
-    setUInt(message.payload, data.i_gain.value, 2)
-    setUInt(message.payload, data.drive_freq.value, 2)
+    rf2.mspHelper.writeU8(message.payload, data.auto_restart_time.value)
+    rf2.mspHelper.writeU8(message.payload, data.restart_acc.value)
+    rf2.mspHelper.writeU8(message.payload, data.p_gain.value)
+    rf2.mspHelper.writeU8(message.payload, data.i_gain.value)
+    rf2.mspHelper.writeU8(message.payload, data.unknown2)
+    rf2.mspHelper.writeU8(message.payload, data.drive_freq.value)
     setUInt(message.payload, data.max_motor_erpm.value, 3)
     rf2.mspHelper.writeU8(message.payload, data.throttle_protocol.value)
     rf2.mspHelper.writeU8(message.payload, data.telemetry_protocol.value)
