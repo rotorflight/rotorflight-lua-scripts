@@ -112,19 +112,23 @@ local function show(page)
                     x = field.sp or field.x,
                     y = field.y,
                     w = field.w or 75,
-                    get = function() return field.data.value end,
+                    get = function()
+                        return field.data.value / (field.data.mult or 1)
+                    end,
                     set = function(val)
+                        local newVal = math.ceil(val * (field.data.mult or 1))
                         if field.change then
-                            field:change(val, page)
+                            field:change(newVal, page)
                         end
-                        field.data.value = val
+                        field.data.value = newVal
+                        --rf2.print("Value after editing: %s", tostring(field.data.value))
                     end,
                     display = function(val)
-                        return formatVal(val, field)
+                        return formatVal(val * (field.data.mult or 1), field)
                     end,
                 }
-                if field.data.min then child.min = field.data.min end
-                if field.data.max then child.max = field.data.max end
+                if field.data.min then child.min = field.data.min / (field.data.mult or 1) end
+                if field.data.max then child.max = field.data.max / (field.data.mult or 1) end
             end
 
             children[#children + 1] = child
