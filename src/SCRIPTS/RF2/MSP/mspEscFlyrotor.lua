@@ -4,7 +4,7 @@ local becVoltage = { [0] = "Disable", "7.5V", "8.0V", "8.5V", "12.0V" }
 local timing = { [0] = "Auto", "1°", "2°", "3°", "4°", "6°", "7°", "8°", "9°", "10°" }
 local motorDirection = { [0] = "CW", "CCW" }
 local fanControl = { [0] = "Automatic", "Always On" }
-local throttleProtocols = { [0] = "PWM", "RESERVE" }
+local throttleProtocols = { [0] = "PWM" }
 local telemetryProtocols = { [0] = "FLYROTOR" }
 local ledColors = { [0] = "CUSTOM", "BLACK", "RED", "GREEN", "BLUE", "YELLOW", "MAGENTA", "CYAN", "WHITE", "ORANGE", "GRAY", "MAROON", "DARK_GREEN", "NAVY", "PURPLE", "TEAL", "SILVER", "PINK", "GOLD", "BROWN", "LIGHT_BLUE", "FL_PINK", "FL_ORANGE", "FL_LIME", "FL_MINT", "FL_CYAN", "FL_PURPLE", "FL_HOT_PINK", "FL_LIGHT_YELLOW", "FL_AQUAMARINE", "FL_GOLD", "FL_DEEP_PINK", "FL_NEON_GREEN", "FL_ORANGE_RED" }
 
