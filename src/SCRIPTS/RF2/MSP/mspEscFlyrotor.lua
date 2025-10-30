@@ -6,7 +6,7 @@ local motorDirection = { [0] = "CW", "CCW" }
 local fanControl = { [0] = "Automatic", "Always On" }
 local throttleProtocols = { [0] = "PWM" }
 local telemetryProtocols = { [0] = "FLYROTOR" }
-local ledColors = { [0] = "CUSTOM", "BLACK", "RED", "GREEN", "BLUE", "YELLOW", "MAGENTA", "CYAN", "WHITE", "ORANGE", "GRAY", "MAROON", "DARK_GREEN", "NAVY", "PURPLE", "TEAL", "SILVER", "PINK", "GOLD", "BROWN", "LIGHT_BLUE", "FL_PINK", "FL_ORANGE", "FL_LIME", "FL_MINT", "FL_CYAN", "FL_PURPLE", "FL_HOT_PINK", "FL_LIGHT_YELLOW", "FL_AQUAMARINE", "FL_GOLD", "FL_DEEP_PINK", "FL_NEON_GREEN", "FL_ORANGE_RED" }
+local ledColors = { [0] = "CUSTOM", "OFF", "RED", "GREEN", "BLUE", "YELLOW", "MAGENTA", "CYAN", "WHITE", "ORANGE", "GRAY", "MAROON", "DARK_GREEN", "NAVY", "PURPLE", "TEAL", "SILVER", "PINK", "GOLD", "BROWN", "LIGHT_BLUE", "FL_PINK", "FL_ORANGE", "FL_LIME", "FL_MINT", "FL_CYAN", "FL_PURPLE", "FL_HOT_PINK", "FL_LIGHT_YELLOW", "FL_AQUAMARINE", "FL_GOLD", "FL_DEEP_PINK", "FL_NEON_GREEN", "FL_ORANGE_RED" }
 
 local function getDefaults()
     return {
@@ -44,7 +44,7 @@ local function getDefaults()
         i_gain = { min = 0, max = 100 },
         unknown2 = nil,
         drive_freq = { min = 10, max = 24 },
-        max_motor_erpm = { min = 0, max = 1000000, mult = 1000 },
+        max_motor_erpm = { min = 1000, max = 1000000, mult = 100 },
         throttle_protocol = { min = 0, max = #throttleProtocols, table = throttleProtocols },
         telemetry_protocol = { min = 0, max = #telemetryProtocols, table = telemetryProtocols },
         led_color = { min = 0, max = #ledColors, table = ledColors },
