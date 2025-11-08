@@ -49,7 +49,7 @@ local function getGovernorProfile(callback, callbackParam, data)
             end
             callback(callbackParam, data)
         end,
-        simulatorResponse = { 208, 7, 100, 10, 125, 5, 20, 0, 20, 10, 40, 100, 100, 10 }
+        simulatorResponse = { 208, 7, 100, 10, 125, 5, 20, 0, 20, 10, 40, 100, 100, 10, 10, 0, 0 }
     }
     rf2.mspQueue:add(message)
 end
