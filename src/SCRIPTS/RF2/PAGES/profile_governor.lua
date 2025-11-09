@@ -21,14 +21,23 @@ fields[#fields + 1] = { t = "Max throttle",        x = x, y = incY(lineSpacing),
 if rf2.apiVersion >= 12.07 then
     fields[#fields + 1] = { t = "Min throttle",    x = x, y = incY(lineSpacing), sp = x + sp, data = governorProfile.min_throttle,         id = "govMinThrottle" }
 end
+if rf2.apiVersion >= 12.09 then
+    fields[#fields+1] = { t = "Throttle fallback", x = x, y = incY(lineSpacing), sp = x + sp, data = governorProfile.fallback_drop,        id = "govFallbackDrop" }
+end
+incY(lineSpacing * 0.5)
+labels[#labels + 1] = { t = "PID",                 x = x, y = incY(lineSpacing) }
 fields[#fields + 1] = { t = "PID master gain",     x = x, y = incY(lineSpacing), sp = x + sp, data = governorProfile.gain,                 id = "govMasterGain" }
 fields[#fields + 1] = { t = "P-gain",              x = x, y = incY(lineSpacing), sp = x + sp, data = governorProfile.p_gain,               id = "govPGain" }
 fields[#fields + 1] = { t = "I-gain",              x = x, y = incY(lineSpacing), sp = x + sp, data = governorProfile.i_gain,               id = "govIGain" }
 fields[#fields + 1] = { t = "D-gain",              x = x, y = incY(lineSpacing), sp = x + sp, data = governorProfile.d_gain,               id = "govDGain" }
 fields[#fields + 1] = { t = "FF-gain",             x = x, y = incY(lineSpacing), sp = x + sp, data = governorProfile.f_gain,               id = "govFGain" }
-fields[#fields + 1] = { t = "Yaw precomp.",        x = x, y = incY(lineSpacing), sp = x + sp, data = governorProfile.yaw_ff_weight,        id = "govYawPrecomp" }
-fields[#fields + 1] = { t = "Cyclic precomp.",     x = x, y = incY(lineSpacing), sp = x + sp, data = governorProfile.cyclic_ff_weight,     id = "govCyclicPrecomp" }
-fields[#fields + 1] = { t = "Coll precomp.",       x = x, y = incY(lineSpacing), sp = x + sp, data = governorProfile.collective_ff_weight, id = "govCollectivePrecomp" }
+incY(lineSpacing * 0.5)
+labels[#labels + 1] = { t = "Precompensation",     x = x, y = incY(lineSpacing) }
+fields[#fields + 1] = { t = "Collective",          x = x, y = incY(lineSpacing), sp = x + sp, data = governorProfile.collective_weight,    id = "govCollectivePrecomp" }
+fields[#fields + 1] = { t = "Cyclic",              x = x, y = incY(lineSpacing), sp = x + sp, data = governorProfile.cyclic_weight,        id = "govCyclicPrecomp" }
+fields[#fields + 1] = { t = "Yaw",                 x = x, y = incY(lineSpacing), sp = x + sp, data = governorProfile.yaw_weight,           id = "govYawPrecomp" }
+incY(lineSpacing * 0.5)
+labels[#labels + 1] = { t = "TTA",                 x = x, y = incY(lineSpacing) }
 fields[#fields + 1] = { t = "TTA gain",            x = x, y = incY(lineSpacing), sp = x + sp, data = governorProfile.tta_gain,             id = "govTTAGain" }
 fields[#fields + 1] = { t = "TTA limit",           x = x, y = incY(lineSpacing), sp = x + sp, data = governorProfile.tta_limit,            id = "govTTALimit" }
 
