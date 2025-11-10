@@ -9,7 +9,7 @@ The download locations are:
 - [Rotorflight Configurator](https://github.com/rotorflight/rotorflight-configurator/releases/tag/snapshot/2.3.0-20251111)
 - [Rotorflight Blackbox](https://github.com/rotorflight/rotorflight-blackbox/releases/tag/snapshot/2.3.0-20251111)
 - [Lua Scripts for EdgeTX and OpenTX](https://github.com/rotorflight/rotorflight-lua-scripts/releases/tag/snapshot/2.3.0-20251111)
-- [Lua Scripts for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos/releases/tag/snapshot/2.3.0-202511111)
+- [Lua Scripts for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos/releases/tag/snapshot/2.3.0-20251111)
 - [Lua Suite for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos-suite/releases/tag/snapshot/2.3.0-20251111)
 
 ## Notes
