@@ -135,6 +135,19 @@ local function show(page)
         end
     end
 
+    if page.isReady and not page.readOnly then
+        children[#children + 1] = {
+            type = "button",
+            x = 5,
+            y = children[#children].y + 35,
+            w = LCD_W - 20,
+            text = "Save",
+            press = function()
+                page:write()
+            end,
+        }
+    end
+
     for _, child in ipairs(children) do
         child.x = child.x * 1.75
         child.y = (child.y - rf2.radio.yMinLimit + 5) * 1.75
