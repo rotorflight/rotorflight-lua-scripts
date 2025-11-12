@@ -34,8 +34,8 @@ local function toChoiceTable(t, maxChoices)
     end
 
     -- Finally assemble the choice table
-    for _, k in ipairs(sortedKeys) do
-        local v = t[k]
+    for i = 1, #sortedKeys do
+        local v = t[sortedKeys[i]]
         --rf2.print("Adding choice: " .. tostring(v))
         choiceTable.values[#choiceTable.values + 1] = v
         if maxChoices and #choiceTable.values >= maxChoices then

@@ -249,7 +249,9 @@ local function run()
         if adjfuncIdChanged then
             local adjfunction = adjfunctions["id"..currentAdjfuncId]
             if adjfunction ~= nil then
-                for index, value in ipairs(adjfunction.wavs) do
+
+                for i = 1, #adjfunction.wavs do
+                    local value = adjfunction.wavs[i]
                     playFile(rf2.baseDir.."SOUNDS/"..value..".wav")
                 end
             end

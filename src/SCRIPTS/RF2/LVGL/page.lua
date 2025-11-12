@@ -21,7 +21,8 @@ local function show(page)
     end
 
     local children = {}
-    for i, label in ipairs(page.labels) do
+    for i = 1, #page.labels do
+        local label = page.labels[i]
         children[#children + 1] = {
             type = "label",
             x = label.x,
@@ -32,7 +33,8 @@ local function show(page)
         }
     end
 
-    for i, field in ipairs(page.fields) do
+    for i = 1, #page.fields do
+        local field = page.fields[i]
         if field.t then
             children[#children + 1] = {
                 type = "label",
@@ -148,7 +150,8 @@ local function show(page)
         }
     end
 
-    for _, child in ipairs(children) do
+    for i = 1, #children do
+        local child = children[i]
         child.x = child.x * 1.75
         child.y = (child.y - rf2.radio.yMinLimit + 5) * 1.75
     end

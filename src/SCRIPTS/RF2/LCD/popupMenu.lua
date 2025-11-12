@@ -19,7 +19,8 @@ local function draw()
     lcd.drawRectangle(x, y, w-1, h-1, lcdShared.foregroundColor)
     lcd.drawText(x + h_line/2, y + h_offset, t.menu.title, lcdShared.textOptions)
 
-    for i, item in ipairs(t.menu.items) do
+    for i = 1, #t.menu.items do
+        local item = t.menu.items[i]
         local textOptions = lcdShared.textOptions
         if activeMenuItem == i then
             textOptions = textOptions + INVERS

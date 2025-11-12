@@ -319,7 +319,8 @@ local function initializeSensors(ids)
     setTelemetryValue(0xEE01, 0, 0, 0, UNIT_RAW, 0, "*Cnt")
     setTelemetryValue(0xEE02, 0, 0, 0, UNIT_RAW, 0, "*Skp")
 
-    for _, id in ipairs(ids) do
+    for i = 1, #ids do
+        local id = ids[i]
         if id ~= 0 and sensorsById[id] ~= nil then
             local sensor = sensorsById[id]
             local ptr = 1
@@ -340,7 +341,8 @@ local function getSensorsBySid(ids)
     -- }
 
     local result = {}
-    for _, id in ipairs(ids) do
+    for i = 1, #ids do
+        local id = ids[i]
         if id ~= 0 and sensorsById[id] ~= nil then
             local sensor = sensorsById[id]
             result[sensor.sid] = { name = sensor.name, unit = sensor.unit, prec = sensor.prec, dec = sensor.dec }

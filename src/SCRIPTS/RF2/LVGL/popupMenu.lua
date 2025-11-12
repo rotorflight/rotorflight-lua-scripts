@@ -4,7 +4,8 @@ local function show(menu)
     local x = LCD_W / 2 - w / 2 - 50
     local lyt = {}
 
-    for i, item in ipairs(menu.items) do
+    for i = 1, #menu.items do
+        local item = menu.items[i]
         local y = 25 + (i - 1) * 50
         lyt[#lyt + 1] = {
             type = "button", text = item.text, x = x, y = y, w = w,

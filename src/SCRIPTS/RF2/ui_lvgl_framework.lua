@@ -58,7 +58,8 @@ ui.showMainMenu = function()
         ui.loadPage()
     end
 
-    for i, page in ipairs(PageFiles) do
+    for i = 1, #PageFiles do
+        local page = PageFiles[i]
         local text = string.gsub(page.title, "^ESC %- ", "") -- remove leading 'ESC - ' from page title
         menu.items[#menu.items + 1] = {
             text = text,

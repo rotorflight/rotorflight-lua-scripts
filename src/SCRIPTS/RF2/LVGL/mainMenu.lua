@@ -5,7 +5,8 @@ local function show(menu)
     local w = (LCD_W - 30) / 3
     local h = 50
 
-    for i, item in ipairs(menu.items) do
+    for i = 1, #menu.items do
+        local item = menu.items[i]
         children[#children + 1] = {
             type = "button",
             x = 6 + #children % 3 * (w + 4),
