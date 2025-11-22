@@ -1,3 +1,42 @@
+# 2.3.0-20251111
+
+This is a *development snapshot* of the Rotorflight 2.3.0 Lua Scripts for EdgeTX/OpenTX.
+
+## Downloads
+
+The download locations are:
+
+- [Rotorflight Configurator](https://github.com/rotorflight/rotorflight-configurator/releases/tag/snapshot/2.3.0-20251111)
+- [Rotorflight Blackbox](https://github.com/rotorflight/rotorflight-blackbox/releases/tag/snapshot/2.3.0-20251111)
+- [Lua Scripts for EdgeTX and OpenTX](https://github.com/rotorflight/rotorflight-lua-scripts/releases/tag/snapshot/2.3.0-20251111)
+- [Lua Scripts for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos/releases/tag/snapshot/2.3.0-20251111)
+- [Lua Suite for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos-suite/releases/tag/snapshot/2.3.0-20251111)
+
+## Notes
+
+This version is intended for beta testing only. It may contain incomplete features or stability issues and is not recommended for end-user use.
+
+For more information, please join the Rotorflight Discord chat.
+
+## Changes Since Version 2.2.1
+
+- *Model* page
+  - Added support for per model statistics like *Total flights* and *Total time*
+  - When *Set name on TX* is used to automatically set the model name on your transmitter, *rf2bg* will revert to the name you specified on the transmitter when no model is connected (instead of '>Rotorflight').
+- *rf2bg* background script
+  - Custom CRSF telemetry sensors can now be deleted and discovered at any time
+  - No need to follow a special procedure anymore to get the sensors in the correct order
+- Added support for the new Rotorflight governor
+- Added partial support for the FlySky PA01
+- Updated FLYROTOR ESC parameters
+- Improved touch UI support
+- Reduced memory usage
+- Various minor fixes
+
+
+
+***
+
 # 2.2.1
 
 This is a maintenance release containing minor bug fixes.

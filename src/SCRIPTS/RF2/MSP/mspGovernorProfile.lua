@@ -8,12 +8,16 @@ local function getDefaults()
     defaults.f_gain = { value = nil, min = 0, max = 250 }
     defaults.tta_gain = { value = nil, min = 0, max = 250 }
     defaults.tta_limit = { value = nil, min = 0, max = 250, unit = rf2.units.percentage }
-    defaults.yaw_ff_weight = { value = nil, min = 0, max = 250 }
-    defaults.cyclic_ff_weight = { value = nil, min = 0, max = 250 }
-    defaults.collective_ff_weight = { value = nil, min = 0, max = 250 }
+    defaults.yaw_weight = { value = nil, min = 0, max = 250 }
+    defaults.cyclic_weight = { value = nil, min = 0, max = 250 }
+    defaults.collective_weight = { value = nil, min = 0, max = 250 }
     defaults.max_throttle = { value = nil, min = 0, max = 100, unit = rf2.units.percentage }
     if rf2.apiVersion >= 12.07 then
         defaults.min_throttle = { value = nil, min = 0, max = 100, unit = rf2.units.percentage }
+    end
+    if rf2.apiVersion >= 12.09 then
+        defaults.fallback_drop = { min = 0, max = 50, unit = rf2.units.percentage }
+        defaults.flags = { }
     end
     return defaults
 end
@@ -32,16 +36,20 @@ local function getGovernorProfile(callback, callbackParam, data)
             data.f_gain.value = rf2.mspHelper.readU8(buf)
             data.tta_gain.value = rf2.mspHelper.readU8(buf)
             data.tta_limit.value = rf2.mspHelper.readU8(buf)
-            data.yaw_ff_weight.value = rf2.mspHelper.readU8(buf)
-            data.cyclic_ff_weight.value = rf2.mspHelper.readU8(buf)
-            data.collective_ff_weight.value = rf2.mspHelper.readU8(buf)
+            data.yaw_weight.value = rf2.mspHelper.readU8(buf)
+            data.cyclic_weight.value = rf2.mspHelper.readU8(buf)
+            data.collective_weight.value = rf2.mspHelper.readU8(buf)
             data.max_throttle.value = rf2.mspHelper.readU8(buf)
             if rf2.apiVersion >= 12.07 then
                 data.min_throttle.value = rf2.mspHelper.readU8(buf)
             end
+            if rf2.apiVersion >= 12.09 then
+                data.fallback_drop.value = rf2.mspHelper.readU8(buf)
+                data.flags.value = rf2.mspHelper.readU16(buf)
+            end
             callback(callbackParam, data)
         end,
-        simulatorResponse = { 208, 7, 100, 10, 125, 5, 20, 0, 20, 10, 40, 100, 100, 10 }
+        simulatorResponse = { 208, 7, 100, 10, 125, 5, 20, 0, 20, 10, 40, 100, 100, 10, 10, 0, 0 }
     }
     rf2.mspQueue:add(message)
 end
@@ -60,12 +68,16 @@ local function setGovernorProfile(data)
     rf2.mspHelper.writeU8(message.payload, data.f_gain.value)
     rf2.mspHelper.writeU8(message.payload, data.tta_gain.value)
     rf2.mspHelper.writeU8(message.payload, data.tta_limit.value)
-    rf2.mspHelper.writeU8(message.payload, data.yaw_ff_weight.value)
-    rf2.mspHelper.writeU8(message.payload, data.cyclic_ff_weight.value)
-    rf2.mspHelper.writeU8(message.payload, data.collective_ff_weight.value)
+    rf2.mspHelper.writeU8(message.payload, data.yaw_weight.value)
+    rf2.mspHelper.writeU8(message.payload, data.cyclic_weight.value)
+    rf2.mspHelper.writeU8(message.payload, data.collective_weight.value)
     rf2.mspHelper.writeU8(message.payload, data.max_throttle.value)
     if rf2.apiVersion >= 12.07 then
         rf2.mspHelper.writeU8(message.payload, data.min_throttle.value)
+    end
+    if rf2.apiVersion >= 12.09 then
+        rf2.mspHelper.writeU8(message.payload, data.fallback_drop.value)
+        rf2.mspHelper.writeU16(message.payload, data.flags.value)
     end
     rf2.mspQueue:add(message)
 end

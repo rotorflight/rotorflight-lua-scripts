@@ -51,6 +51,7 @@ local function receivedEscParameters(page, data)
     addField("LED color", escParameters.led_color)
     addField("Smart fan", escParameters.smart_fan)
 
+    page.readOnly = false
     rf2.onPageReady(page)
 end
 
@@ -66,4 +67,5 @@ return {
     title       = "XDFly Setup",
     labels      = labels,
     fields      = fields,
+    readOnly    = true
 }
