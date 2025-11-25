@@ -40,6 +40,8 @@ rf2 = {
         return getTime() / 100
     end,
 
+    isEdgeTx = rf2.executeScript("F/isEdgeTx")(),
+
     apiVersion = nil,
 
     units = {
