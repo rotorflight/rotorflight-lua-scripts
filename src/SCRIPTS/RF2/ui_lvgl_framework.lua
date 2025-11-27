@@ -180,7 +180,7 @@ end
 
 ui.incPage = function(inc)
     if not PageFiles then return end
-    CurrentPageIndex = rf2.executeScript("F/incMax", CurrentPageIndex, inc, #PageFiles)
+    CurrentPageIndex = rf2.executeScript("F/incMax")(CurrentPageIndex, inc, #PageFiles)
     rf2.mspQueue:clear()
     ui.loadPage()
 end
