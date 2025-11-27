@@ -42,7 +42,7 @@ local function getDefaults()
         restart_acc = { min = 1, max = 10 },
         p_gain = { min = 0, max = 100 },
         i_gain = { min = 0, max = 100 },
-        reserve = nil,
+        active_freewheel = { min = 0, max = #statusOptions, table = statusOptions},
         drive_freq = { min = 10, max = 24 },
         max_motor_erpm = { min = 1000, max = 1000000, mult = 100 },
         throttle_protocol = { min = 0, max = #throttleProtocols, table = throttleProtocols },
@@ -107,7 +107,7 @@ local function getEscParameters(callback, callbackParam, data)
             data.restart_acc.value = rf2.mspHelper.readU8(buf)
             data.p_gain.value = rf2.mspHelper.readU8(buf)
             data.i_gain.value = rf2.mspHelper.readU8(buf)
-            data.reserve = rf2.mspHelper.readU8(buf)
+            data.active_freewheel.value = rf2.mspHelper.readU8(buf)
             data.drive_freq.value = rf2.mspHelper.readU8(buf)
             data.max_motor_erpm.value = getUInt(buf, 3)
             data.throttle_protocol.value = rf2.mspHelper.readU8(buf)
@@ -119,7 +119,7 @@ local function getEscParameters(callback, callbackParam, data)
             data.capacity_cutoff.value = getUInt(buf, 2)
             callback(callbackParam, data)
         end,
-        simulatorResponse = { 115, 0, 1, 0, 155,  231, 79, 190, 216, 78, 29, 169, 244, 1, 0, 0, 1, 0, 2, 0, 4, 76, 7, 148, 0, 6, 30, 125, 1, 0, 0, 3, 15, 1, 20, 0, 10, 30, 5, 45, 35, 0, 16, 1, 251, 208, 0, 0, 3, 0, 0, 0, 0, 100, 0, 0 },
+        simulatorResponse = { 115, 0, 1, 0, 155,  231, 79, 190, 216, 78, 29, 169, 244, 1, 0, 0, 1, 0, 2, 0, 4, 76, 7, 148, 0, 6, 30, 125, 1, 0, 0, 3, 15, 1, 20, 0, 10, 30, 5, 45, 35, 1, 16, 1, 251, 208, 0, 0, 3, 0, 0, 0, 0, 100, 0, 0 },
         --[[
         simulatorResponse = {
             115, -- signature
@@ -150,7 +150,7 @@ local function getEscParameters(callback, callbackParam, data)
             5, -- restart acc
             45, -- p-gain
             35, -- i-gain
-            0, -- reserve
+            1, -- active freewheeling
             16, -- drive-freq
             1, 251, 208 -- max motor erpm
             0, -- throttle protocol
@@ -209,7 +209,7 @@ local function setEscParameters(data)
     rf2.mspHelper.writeU8(message.payload, data.restart_acc.value)
     rf2.mspHelper.writeU8(message.payload, data.p_gain.value)
     rf2.mspHelper.writeU8(message.payload, data.i_gain.value)
-    rf2.mspHelper.writeU8(message.payload, data.reserve)
+    rf2.mspHelper.writeU8(message.payload, data.active_freewheel)
     rf2.mspHelper.writeU8(message.payload, data.drive_freq.value)
     setUInt(message.payload, data.max_motor_erpm.value, 3)
     rf2.mspHelper.writeU8(message.payload, data.throttle_protocol.value)

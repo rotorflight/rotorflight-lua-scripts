@@ -41,13 +41,14 @@ fields[#fields + 1] = { t = "Auto Bailout Time",         x = x + indent, y = inc
 fields[#fields + 1] = { t = "Auto Bailout Accel",        x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.restart_acc }
 fields[#fields + 1] = { t = "Governor P",                x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.p_gain }
 fields[#fields + 1] = { t = "Governor I",                x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.i_gain }
+fields[#fields + 1] = { t = "Active Freewheeling",       x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.active_freewheel }
 fields[#fields + 1] = { t = "Drive Frequency [KHz]",     x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.drive_freq }
 fields[#fields + 1] = { t = "Maximun Motor ERPM",        x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.max_motor_erpm }
 
 -- Other
 labels[#labels + 1] = { t = "Other Parameters",          x = x, y = incY(lineSpacing) }
 fields[#fields + 1] = { t = "Throttle Protocol",         x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.throttle_protocol }
-fields[#fields + 1] = { t = "Telemetry Protocol",             x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.telemetry_protocol }
+fields[#fields + 1] = { t = "Telemetry Protocol",        x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.telemetry_protocol }
 fields[#fields + 1] = { t = "LED Color",                 x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.led_color }
 fields[#fields + 1] = { t = "Motor Temperture Sensor",   x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.motor_temp_sensor }
 fields[#fields + 1] = { t = "Motor Temperture Limit",    x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.motor_temp }
