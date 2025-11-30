@@ -155,7 +155,7 @@ local function getEscParameters(callback, callbackParam, data)
             1, 251, 208 -- max motor erpm
             0, -- throttle protocol
             0, -- telemetry protocol
-            3, -- led color Index
+            3, -- led color index
             0, 0, 0, -- led color value
             0, -- motor temp sensor
             100, -- motor temperature
