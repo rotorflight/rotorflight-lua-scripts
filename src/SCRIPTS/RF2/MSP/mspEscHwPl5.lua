@@ -55,6 +55,21 @@ local startupPower = {
     "Level 7",
 }
 
+-- Voltage lookup table based on hardware version
+-- Each hardware version maps to a list of possible BEC voltage settings
+-- The values are representing voltage in volts * 10
+-- Values are min, max, scale
+-- Example: 8.4V == 84, scale factor is 10 == 0.1V steps
+local voltage_lookup = {
+    ["HW1104_V100456NB"] = {50, 120, 10},
+    ["HW1106_V100456NB"] = {54, 84, 10},
+    ["HW1106_V200456NB"] = {50, 120, 10},
+    ["HW1106_V300456NB"] = {50, 120, 10},
+    ["HW1121_V100456NB"] = {50, 120, 10},
+    ["HW198_V1.00456NB"] = {50, 120, 10},
+    ["default"] = {50, 84, 10},
+}
+
 local function getDefaults()
     return {
         esc_signature = {},
@@ -67,7 +82,7 @@ local function getDefaults()
         lipo_cell_count = { min = 0, max = #lipoCellCount, table = lipoCellCount },
         cutoff_type = { min = 0, max = #cutoffType, table = cutoffType },
         cutoff_voltage = { min = 0, max = #cutoffVoltage, table = cutoffVoltage },
-        bec_voltage = { min = 54, max = 120, scale = 10, unit = rf2.units.volt },
+        bec_voltage = { min = 50, max = 84, scale = 10, unit = rf2.units.volt },
         startup_time = { min = 4, max = 25, unit = rf2.units.seconds },
         gov_p_gain = { min = 0, max = 9 },
         gov_i_gain = { min = 0, max = 9 },
@@ -102,6 +117,11 @@ local function getEscParameters(callback, callbackParam, data)
             data.cutoff_type.value = rf2.mspHelper.readU8(buf)
             data.cutoff_voltage.value = rf2.mspHelper.readU8(buf)
             data.bec_voltage.value = rf2.mspHelper.readU8(buf) + 54
+            --  get voltage range based on hardware version
+            voltages = voltage_lookup[data.hardware_version.value] or voltage_lookup["default"]
+            data.bec_voltage.min = voltages[1]
+            data.bec_voltage.max = voltages[2]
+            data.bec_voltage.scale = voltages[3]
             data.startup_time.value = rf2.mspHelper.readU8(buf) + 4
             data.gov_p_gain.value = rf2.mspHelper.readU8(buf)
             data.gov_i_gain.value = rf2.mspHelper.readU8(buf)
