@@ -82,7 +82,7 @@ local function getDefaults()
         lipo_cell_count = { min = 0, max = #lipoCellCount, table = lipoCellCount },
         cutoff_type = { min = 0, max = #cutoffType, table = cutoffType },
         cutoff_voltage = { min = 0, max = #cutoffVoltage, table = cutoffVoltage },
-        bec_voltage = { min = 50, max = 84, scale = 10, unit = rf2.units.volt },
+        bec_voltage = { min = 54, max = 84, scale = 10, unit = rf2.units.volt },
         startup_time = { min = 4, max = 25, unit = rf2.units.seconds },
         gov_p_gain = { min = 0, max = 9 },
         gov_i_gain = { min = 0, max = 9 },
