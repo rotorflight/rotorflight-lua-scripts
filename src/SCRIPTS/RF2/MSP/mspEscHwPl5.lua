@@ -60,7 +60,7 @@ local startupPower = {
 -- The values are representing voltage in volts * 10
 -- Values are min, max, scale
 -- Example: 8.4V == 84, scale factor is 10 == 0.1V steps
-local voltage_lookup = {
+local voltagesLookup = {
     ["HW1104_V100456NB"] = {50, 120, 10},
     ["HW1106_V100456NB"] = {54, 84, 10},
     ["HW1106_V200456NB"] = {50, 120, 10},
@@ -118,7 +118,7 @@ local function getEscParameters(callback, callbackParam, data)
             data.cutoff_voltage.value = rf2.mspHelper.readU8(buf)
             data.bec_voltage.value = rf2.mspHelper.readU8(buf) + 54
             --  get voltage range based on hardware version
-            voltages = voltage_lookup[data.hardware_version.value] or voltage_lookup["default"]
+            local voltages = voltagesLookup[data.hardware_version.value] or voltagesLookup["default"]
             data.bec_voltage.min = voltages[1]
             data.bec_voltage.max = voltages[2]
             data.bec_voltage.scale = voltages[3]
