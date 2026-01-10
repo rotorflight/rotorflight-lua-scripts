@@ -312,6 +312,13 @@ local sensorsById  =  {
     [105] = {sid = 0xDB05, name = "DBG5", unit = UNIT_RAW, prec = 0, dec = decS32 },
     [106] = {sid = 0xDB06, name = "DBG6", unit = UNIT_RAW, prec = 0, dec = decS32 },
     [107] = {sid = 0xDB07, name = "DBG7", unit = UNIT_RAW, prec = 0, dec = decS32 },
+
+    -- Statistics total flights
+    [108] = {sid = 0x1230, name = "STFl", unit = UNIT_RAW, prec = 0, dec = decS32 },
+    -- Statistics total filgts seconds
+    [109] = {sid = 0x1231, name = "STTs", unit = UNIT_RAW, prec = 0, dec = decS32 },
+    -- Statistics total flight distance meters
+    [110] = {sid = 0x1232, name = "STDm", unit = UNIT_RAW, prec = 0, dec = decS32 },
 }
 
 local function initializeSensors(ids)
