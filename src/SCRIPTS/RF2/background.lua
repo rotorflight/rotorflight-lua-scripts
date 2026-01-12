@@ -1,6 +1,7 @@
 local initTask = nil
 local adjTellerTask = nil
 local customTelemetryTask = nil
+local statsTask = nil
 local isInitialized = false
 local modelIsConnected = false
 local lastTimeRssi = nil
@@ -37,6 +38,7 @@ local function run()
             end
             adjTellerTask = nil
             customTelemetryTask = nil
+            statsTask = nil
             modelIsConnected = false
             isInitialized = false
             collectgarbage()
@@ -46,6 +48,7 @@ local function run()
     if not isInitialized then
         adjTellerTask = nil
         customTelemetryTask = nil
+        statsTask = nil
         collectgarbage()
         initTask = initTask or rf2.executeScript("background_init")
         local initTaskResult = initTask.run(modelIsConnected)
@@ -56,6 +59,9 @@ local function run()
         if initTaskResult.crsfCustomTelemetryEnabled then
             local requestedSensorsBySid = rf2.executeScript("rf2tlm_sensors", initTaskResult.crsfCustomTelemetrySensors)
             customTelemetryTask = rf2.executeScript("rf2tlm", requestedSensorsBySid)
+            if rf2.apiVersion >= 12.09 then
+                statsTask = rf2.executeScript("background_stats")
+            end
         end
         if initTask.useAdjustmentTeller then
             adjTellerTask = rf2.executeScript("adj_teller")
@@ -76,6 +82,11 @@ local function run()
     if customTelemetryTask then
         customTelemetryTask.run()
     end
+    if rf2.apiVersion >= 12.09 then
+        if statsTask then
+            statsTask.readStats()
+        end
+    end 
 end
 
 local function runProtected()
