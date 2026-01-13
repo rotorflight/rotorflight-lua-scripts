@@ -59,9 +59,6 @@ local function run()
         if initTaskResult.crsfCustomTelemetryEnabled then
             local requestedSensorsBySid = rf2.executeScript("rf2tlm_sensors", initTaskResult.crsfCustomTelemetrySensors)
             customTelemetryTask = rf2.executeScript("rf2tlm", requestedSensorsBySid)
-            if rf2.apiVersion >= 12.09 then
-                statsTask = rf2.executeScript("background_stats")
-            end
         end
         if initTask.useAdjustmentTeller then
             adjTellerTask = rf2.executeScript("adj_teller")
@@ -83,6 +80,9 @@ local function run()
         customTelemetryTask.run()
     end
     if rf2.apiVersion >= 12.09 then
+        if not statsTask and customTelemetryTask and hasSensor("ARM") then
+            statsTask = rf2.executeScript("background_stats")
+        end
         if statsTask then
             statsTask.readStats()
         end

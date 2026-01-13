@@ -36,9 +36,9 @@ local function readStats()
         if now - lastTelemetryUpdate >= 1 then
             lastTelemetryUpdate = now
             if flighStats.stats_total_flights.value then
-                setTelemetryValue(0x2001, 0, 0, flighStats.stats_total_flights.value, UNIT_RAW, 0, "STFl")
-                setTelemetryValue(0x2002, 0, 0, flighStats.stats_total_time_s.value, UNIT_RAW, 0, "STTs")
-                setTelemetryValue(0x2003, 0, 0, flighStats.stats_total_dist_m.value, UNIT_RAW, 0, "STTm")
+                setTelemetryValue(0x2001, 0, 0, flighStats.stats_total_flights.value, UNIT_RAW, 0, "FlyC")
+                setTelemetryValue(0x2002, 0, 0, flighStats.stats_total_time_s.value, UNIT_RAW, 0, "FlyT")
+                setTelemetryValue(0x2003, 0, 0, flighStats.stats_total_dist_m.value, UNIT_RAW, 0, "FlyD")
             end
         end
     end
