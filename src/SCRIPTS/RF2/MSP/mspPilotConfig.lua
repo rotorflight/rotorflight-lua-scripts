@@ -10,12 +10,6 @@ local function getDefaults()
     defaults.model_param3_value = { min = -32000, max = 32000 }
     if rf2.apiVersion >= 12.09 then
         defaults.model_flags = { MODEL_SET_NAME = 0, MODEL_TELL_CAPACITY = 1 } -- see pg/pilot.h
-        defaults.stats_total_flights = { min = 0, max = 2147483647 } -- Actual max is 4294967295, but EdgeTX doesn't support unsigned longs.
-        defaults.stats_total_time_s = { min = 0, max = 2147483647, unit = rf2.units.seconds }
-        defaults.stats_total_dist_m = { min = 0, max = 2147483647, unit = rf2.units.meters }
-        defaults.stats_min_armed_time_s = { min = -1, max = 127, unit = rf2.units.seconds }
-        -- Calculated fields
-        defaults.statsEnabled = { min = 0, max = 1, table = { [0] = "Off", "On" } }
     end
     return defaults
 end
