@@ -84,7 +84,7 @@ local function getGovernorConfig(callback, callbackParam, data)
             end
             callback(callbackParam, data)
         end,
-        simulatorResponse = { 2, 200, 0, 100, 0, 20, 0, 20, 0, 30, 0, 10, 0, 0, 0, 0, 0, 50, 0, 10, 5, 10, 0, 10, 5,  0, 30, 0, 0, 161, 246, 0, 0 }
+        simulatorResponse = { 2, 200, 0, 100, 0, 20, 0, 20, 0, 50, 0, 0, 0, 50, 0, 0, 0, 0, 0, 20, 5, 10, 0, 5, 0, 50, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
     }
     rf2.mspQueue:add(message)
 end
