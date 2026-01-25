@@ -7,6 +7,10 @@ local useLvgl = false
 if scriptsCompiled then
     --print("RF2: Before rf2.lua: ", collectgarbage("count") * 1024)
     assert(loadScript("rf2.lua"))()
+
+    local i18n = assert(loadScript("F/language.lua"))()
+    rf2.i18n = i18n
+
     --rf2.showMemoryUsage("rf2 loaded")
     rf2.radio = rf2.executeScript("radios").msp
     --rf2.showMemoryUsage("radios loaded")

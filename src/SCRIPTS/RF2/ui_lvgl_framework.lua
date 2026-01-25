@@ -12,6 +12,8 @@ local ui = {
     previousState = nil
 }
 
+local t = rf2.i18n.t
+
 local PageFiles = nil
 local Page = nil
 local CurrentPageIndex = -1
@@ -42,12 +44,14 @@ ui.loadPage = function()
     Page:read()
 end
 
+
+
 ui.showMainMenu = function()
     Page = nil
 
     local menu = {
         title = "Rotorflight " .. rf2.luaVersion,
-        subtitle = "Main Menu",
+        subtitle = t("TITLE_Menu_Menu", "Main Menu"),
         items = {},
         back = function() ui.state = ui.status.exit end
     }
@@ -63,6 +67,7 @@ ui.showMainMenu = function()
         local text = string.gsub(page.title, "^ESC %- ", "") -- remove leading 'ESC - ' from page title
         menu.items[#menu.items + 1] = {
             text = text,
+            icon = page.icon,
             click = onMenuItemClick
         }
     end
@@ -104,9 +109,9 @@ ui.saveSettingsToEeprom = function(eepromWrite, reboot)
             if not ui.saveWarningShown then
                 ui.saveWarningShown = true
                 if rf2.apiVersion >= 12.08 then
-                    rf2.executeScript("LVGL/messageBox").show("Save warning", "Settings will be saved\nafter disarming.")
+                    rf2.executeScript("LVGL/messageBox").show(t("TITLE_WARNING_Save", "Save warning"), t("MSG_WARNING_Save_later", "Settings will be saved\nafter disarming."))
                 else
-                    rf2.executeScript("LVGL/messageBox").show("Save error", "Make sure your heli\nis disarmed.")
+                    rf2.executeScript("LVGL/messageBox").show(t("TITLE_Save_Error", "Save error"), t("MSG_Save_Error", "Make sure your heli\nis disarmed."))
                 end
                 ui.refresh()
             end
@@ -122,19 +127,19 @@ ui.showPopupMenu = function()
     if Page then
         if not Page.readOnly then
             menu.items[#menu.items + 1] = {
-                text = "Save",
+                text = t("MENU_Save", "Save"),
                 click = function() Page:write() end
             }
         end
 
         menu.items [#menu.items + 1] = {
-            text = "Reload",
+            text = t("MENU_Reload", "Reload"),
             click = function() Page:read() end
         }
     end
 
     menu.items[#menu.items + 1] = {
-        text = "Reboot",
+        text = t("MENU_Reboot", "Reboot"),
         click = function() rebootFc() end
     }
 

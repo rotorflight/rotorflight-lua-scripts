@@ -9,6 +9,12 @@ local function init()
         return false
     end
 
+    if rf2.runningInSimulator then
+        rf2.apiVersion = apiVersion or 12.06
+        collectgarbage()
+        return true
+    end
+
     if not apiVersion and (not lastRunTS or lastRunTS + 2 < rf2.clock()) then
         returnTable.t = "Waiting for API version"
         mspApiVersion.getApiVersion(function(_, version) apiVersion = version end)
