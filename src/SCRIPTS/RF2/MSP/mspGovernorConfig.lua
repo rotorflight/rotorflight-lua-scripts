@@ -74,7 +74,7 @@ local function getGovernorConfig(callback, callbackParam, data)
                 data.gov_d_filter.value = rf2.mspHelper.readU8(buf)
                 data.gov_spooldown_time.value = rf2.mspHelper.readU16(buf)
                 data.gov_throttle_type.value = rf2.mspHelper.readU8(buf)
-                buf.offset = buf.offset + 2 --TODO: remove from MSP 12.9
+                buf.offset = buf.offset + 2
                 data.gov_idle_throttle.value = rf2.mspHelper.readU8(buf)
                 data.gov_auto_throttle.value = rf2.mspHelper.readU8(buf)
                 data.gov_bypass_throttle = {}
@@ -128,8 +128,8 @@ local function setGovernorConfig(config)
         rf2.mspHelper.writeU8(message.payload, config.gov_d_filter.value)
         rf2.mspHelper.writeU16(message.payload, config.gov_spooldown_time.value)
         rf2.mspHelper.writeU8(message.payload, config.gov_throttle_type.value)
-        rf2.mspHelper.writeU8(message.payload, 0) --TODO: remove from MSP 12.9
-        rf2.mspHelper.writeU8(message.payload, 0) --TODO: remove from MSP 12.9
+        rf2.mspHelper.writeU8(message.payload, 0)
+        rf2.mspHelper.writeU8(message.payload, 0)
         rf2.mspHelper.writeU8(message.payload, config.gov_idle_throttle.value)
         rf2.mspHelper.writeU8(message.payload, config.gov_auto_throttle.value)
         for i = 0, 8 do
