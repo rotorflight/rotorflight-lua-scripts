@@ -12,7 +12,9 @@ local function getDefaults()
     defaults.gov_throttle_hold_timeout = { min = 0, max = 100, scale = 10, unit = rf2.units.seconds }
     if rf2.apiVersion < 12.09 then
         defaults.gov_lost_headspeed_timeout = { min = 0, max = 100, scale = 10, unit = rf2.units.seconds }
-        defaults.gov_autorotation_timeout = { min = 0, max = 600, scale = 10, unit = rf2.units.seconds }
+    end
+    defaults.gov_autorotation_timeout = { min = 0, max = 600, scale = 10, unit = rf2.units.seconds }
+    if rf2.apiVersion < 12.09 then
         defaults.gov_autorotation_bailout_time = { min = 0, max = 100, scale = 10, unit = rf2.units.seconds }
         defaults.gov_autorotation_min_entry_time = { min = 0, max = 600, scale = 10, unit = rf2.units.seconds }
     end
@@ -28,10 +30,9 @@ local function getDefaults()
         defaults.gov_d_filter = { min = 0, max = 250, unit = rf2.units.herz }
         defaults.gov_spooldown_time = { min = 0, max = 600, scale = 10, unit = rf2.units.seconds }
         defaults.gov_throttle_type = { min = 0, max = 3, table = { [0] = "NORMAL", "OFF_ON", "OFF_IDLE_ON", "OFF_IDLE_AUTO_ON" } }
-        defaults.gov_idle_collective = { min = -100, max = 100 }
-        defaults.gov_wot_collective = { min = -100, max = 100 }
         defaults.gov_idle_throttle = { min = 0, max = 250, scale = 10, unit = rf2.units.percentage }
         defaults.gov_auto_throttle = { min = 0, max = 250, scale = 10, unit = rf2.units.percentage }
+        defaults.gov_bypass_throttle = { }
     end
     return defaults
 end
@@ -49,11 +50,15 @@ local function getGovernorConfig(callback, callbackParam, data)
             data.gov_throttle_hold_timeout.value = rf2.mspHelper.readU16(buf)
             if rf2.apiVersion < 12.09 then
                 data.gov_lost_headspeed_timeout.value = rf2.mspHelper.readU16(buf)
-                data.gov_autorotation_timeout.value = rf2.mspHelper.readU16(buf)
+            else
+                buf.offset = buf.offset + 2
+            end
+            data.gov_autorotation_timeout.value = rf2.mspHelper.readU16(buf)
+            if rf2.apiVersion < 12.09 then
                 data.gov_autorotation_bailout_time.value = rf2.mspHelper.readU16(buf)
                 data.gov_autorotation_min_entry_time.value = rf2.mspHelper.readU16(buf)
             else
-                buf.offset = buf.offset + 4*2
+                buf.offset = buf.offset + 2*2
             end
             data.gov_handover_throttle.value = rf2.mspHelper.readU8(buf)
             data.gov_pwr_filter.value = rf2.mspHelper.readU8(buf)
@@ -69,14 +74,17 @@ local function getGovernorConfig(callback, callbackParam, data)
                 data.gov_d_filter.value = rf2.mspHelper.readU8(buf)
                 data.gov_spooldown_time.value = rf2.mspHelper.readU16(buf)
                 data.gov_throttle_type.value = rf2.mspHelper.readU8(buf)
-                data.gov_idle_collective.value = rf2.mspHelper.readS8(buf)
-                data.gov_wot_collective.value = rf2.mspHelper.readS8(buf)
+                buf.offset = buf.offset + 2
                 data.gov_idle_throttle.value = rf2.mspHelper.readU8(buf)
                 data.gov_auto_throttle.value = rf2.mspHelper.readU8(buf)
+                data.gov_bypass_throttle = {}
+                for i = 0, 8 do
+                    data.gov_bypass_throttle[#data.gov_bypass_throttle + 1] = rf2.mspHelper.readU8(buf)
+                end
             end
             callback(callbackParam, data)
         end,
-        simulatorResponse = { 2, 200, 0, 100, 0, 20, 0, 20, 0, 30, 0, 10, 0, 0, 0, 0, 0, 50, 0, 10, 5, 10, 0, 10, 5,  0, 30, 0, 0, 161, 246, 0, 0 }
+        simulatorResponse = { 2, 200, 0, 100, 0, 20, 0, 20, 0, 50, 0, 0, 0, 50, 0, 0, 0, 0, 0, 20, 5, 10, 0, 5, 0, 50, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
     }
     rf2.mspQueue:add(message)
 end
@@ -95,12 +103,14 @@ local function setGovernorConfig(config)
     rf2.mspHelper.writeU16(message.payload, config.gov_throttle_hold_timeout.value)
     if rf2.apiVersion < 12.09 then
         rf2.mspHelper.writeU16(message.payload, config.gov_lost_headspeed_timeout.value)
-        rf2.mspHelper.writeU16(message.payload, config.gov_autorotation_timeout.value)
+    else
+        rf2.mspHelper.writeU16(message.payload, 0)
+    end
+    rf2.mspHelper.writeU16(message.payload, config.gov_autorotation_timeout.value)
+    if rf2.apiVersion < 12.09 then
         rf2.mspHelper.writeU16(message.payload, config.gov_autorotation_bailout_time.value)
         rf2.mspHelper.writeU16(message.payload, config.gov_autorotation_min_entry_time.value)
     else
-        rf2.mspHelper.writeU16(message.payload, 0)
-        rf2.mspHelper.writeU16(message.payload, 0)
         rf2.mspHelper.writeU16(message.payload, 0)
         rf2.mspHelper.writeU16(message.payload, 0)
     end
@@ -118,10 +128,13 @@ local function setGovernorConfig(config)
         rf2.mspHelper.writeU8(message.payload, config.gov_d_filter.value)
         rf2.mspHelper.writeU16(message.payload, config.gov_spooldown_time.value)
         rf2.mspHelper.writeU8(message.payload, config.gov_throttle_type.value)
-        rf2.mspHelper.writeU8(message.payload, config.gov_idle_collective.value)
-        rf2.mspHelper.writeU8(message.payload, config.gov_wot_collective.value)
+        rf2.mspHelper.writeU8(message.payload, 0)
+        rf2.mspHelper.writeU8(message.payload, 0)
         rf2.mspHelper.writeU8(message.payload, config.gov_idle_throttle.value)
         rf2.mspHelper.writeU8(message.payload, config.gov_auto_throttle.value)
+        for i = 0, 8 do
+            rf2.mspHelper.writeU8(message.payload, config.gov_bypass_throttle[i + 1] or 0)
+        end
     end
     rf2.mspQueue:add(message)
 end

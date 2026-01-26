@@ -23,16 +23,13 @@ if rf2.apiVersion >= 12.09 then
     fields[#fields + 1] = { t = "Handover throttle",        x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_handover_throttle }
     fields[#fields + 1] = { t = "Throttle Hold TO",         x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_throttle_hold_timeout }
     incY(lineSpacing * 0.5)
-    labels[#labels + 1] = { t = "Throttle Curve",           x = x, y = incY(lineSpacing) }
-    fields[#fields + 1] = { t = "Coll -> Idle",             x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_idle_collective }
-    fields[#fields + 1] = { t = "Coll -> Full",             x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_wot_collective }
-    incY(lineSpacing * 0.5)
     labels[#labels + 1] = { t = "Ramp Time",                x = x, y = incY(lineSpacing) }
     fields[#fields + 1] = { t = "Startup time",             x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_startup_time }
     fields[#fields + 1] = { t = "Spoolup time",             x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_spoolup_time }
     fields[#fields + 1] = { t = "Spooldown time",           x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_spooldown_time }
     fields[#fields + 1] = { t = "Tracking time",            x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_tracking_time }
     fields[#fields + 1] = { t = "Recovery time",            x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_recovery_time }
+    fields[#fields + 1] = { t = "AR timeout",               x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_autorotation_timeout }
     incY(lineSpacing * 0.5)
     labels[#labels + 1] = { t = "Filters",                  x = x, y = incY(lineSpacing) }
     fields[#fields + 1] = { t = "HS filter cutoff",         x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_rpm_filter }
