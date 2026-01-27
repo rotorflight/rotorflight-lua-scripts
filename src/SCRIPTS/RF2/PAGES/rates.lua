@@ -20,6 +20,14 @@ local rcTuning = rf2.useApi("mspRcTuning").getDefaults()
 collectgarbage()
 local editing = false
 local profileAdjustmentTS = nil
+local help = {}
+local t = rf2.i18n.t
+
+help = {
+    title = t("RATES_Help_title"),
+    msg = t("RATES_Help_text")
+}
+
 
 local startEditing = function(field, page)
     editing = true
@@ -52,10 +60,10 @@ local function buildForm()
 
     labels[#labels + 1] = { t = "",      x = x, y = incY(tableSpacing.header) }
     labels[#labels + 1] = { t = "",      x = x, y = incY(tableSpacing.header) }
-    labels[#labels + 1] = { t = "Roll",  x = x, y = incY(tableSpacing.row) }
-    labels[#labels + 1] = { t = "Pitch", x = x, y = incY(tableSpacing.row) }
-    labels[#labels + 1] = { t = "Yaw",   x = x, y = incY(tableSpacing.row) }
-    labels[#labels + 1] = { t = "Coll",  x = x, y = incY(tableSpacing.row) }
+    labels[#labels + 1] = { t = t("ACC_Roll"),  x = x, y = incY(tableSpacing.row) }
+    labels[#labels + 1] = { t = t("ACC_Pitch"), x = x, y = incY(tableSpacing.row) }
+    labels[#labels + 1] = { t = t("Rates_Yaw"),   x = x, y = incY(tableSpacing.row) }
+    labels[#labels + 1] = { t = t("Rates_Coll"),  x = x, y = incY(tableSpacing.row) }
 
     x = x + tableSpacing.col
     y = tableStartY
@@ -86,12 +94,12 @@ local function buildForm()
 
     x = margin
     incY(lineSpacing * 0.5)
-    fields[13] = { t = "Rates type",     x = x, y = incY(lineSpacing), sp = x + sp, data = rcTuning.rates_type, postEdit = function(self, page) page.updateRatesType(page) end }
+    fields[13] = { t = t("Rates_Type"),     x = x, y = incY(lineSpacing), sp = x + sp, data = rcTuning.rates_type, postEdit = function(self, page) page.updateRatesType(page) end }
 
     incY(lineSpacing * 0.5)
-    fields[14] = { t = "Current rate profile",            x = x,          y = incY(lineSpacing), sp = x + sp * 1.17, data = { min = 0, max = 5, value = rcTuning.currentRateProfile, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = startEditing, postEdit = endRateEditing }
-    fields[15] = { t = "Destination profile",             x = x,          y = incY(lineSpacing), sp = x + sp * 1.17, data = { min = 0, max = 5, value = rcTuning.destRateProfile, table = { [0] = "1", "2", "3", "4", "5", "6" } } }
-    fields[#fields + 1] = { t = "[Copy Current to Dest]", x = x + indent, y = incY(lineSpacing), preEdit = copyProfile }
+    fields[14] = { t = t("PAGE_Status_Rate_Profile"),     x = x,          y = incY(lineSpacing), sp = x + sp * 1.17, data = { min = 0, max = 5, value = rcTuning.currentRateProfile, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = startEditing, postEdit = endRateEditing }
+    fields[15] = { t = t("MENU_Dest_Profile"),            x = x,          y = incY(lineSpacing), sp = x + sp * 1.17, data = { min = 0, max = 5, value = rcTuning.destRateProfile, table = { [0] = "1", "2", "3", "4", "5", "6" } } }
+    fields[#fields + 1] = { t = t("MENU_Copy_Profile"),   x = x + indent, y = incY(lineSpacing), preEdit = copyProfile }
     --rf2.showMemoryUsage("after buildform")
 end
 
@@ -125,6 +133,7 @@ return {
     title       = "Rates",
     labels      = labels,
     fields      = fields,
+    help        = help,
 
     updateRatesType = function(self, applyDefaults)
         rf2.useApi("mspRcTuning").getRateDefaults(rcTuning, rcTuning.rates_type.value)
