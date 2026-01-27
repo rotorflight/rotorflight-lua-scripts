@@ -23,8 +23,8 @@ local function getTranslations()
     local lang = settings.language
     local translations = loadTranslations(lang) or loadTranslations("en") or {}
 
-    function translations.t(key, default)
-        return translations[key] or default
+    function translations.t(key)
+        return translations[key] or key
     end
 
     return translations

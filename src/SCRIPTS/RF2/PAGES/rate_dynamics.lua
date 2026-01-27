@@ -14,6 +14,13 @@ local rateSwitcher = rf2.executeScript("PAGES/helpers/rateSwitcher.lua")
 local rcTuning = rf2.useApi("mspRcTuning").getDefaults()
 collectgarbage()
 
+local t = rf2.i18n.t
+
+help = {
+    title = t("RATES_ADVANCE_Help_title"),
+    msg = t("RATES_ADVANCE_Help_text")
+}
+
 local tableStartY = yMinLim - lineSpacing
 y = tableStartY
 labels = {}
@@ -84,6 +91,7 @@ return {
     labels      = labels,
     fields      = fields,
     rateSwitcher = rateSwitcher,
+    help        = help,
 
     timer = function(self)
         self.rateSwitcher.checkStatus(self)

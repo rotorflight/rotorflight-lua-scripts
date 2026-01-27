@@ -27,44 +27,44 @@ local SYMBOL = {
 }
 
 -- Rotorflight pages.
-PageFiles[#PageFiles + 1] = { title = t("PAGE_Status", "Status"), script = "status", icon=SYMBOL.STATUS }
-PageFiles[#PageFiles + 1] = { title = t("PAGE_Rates", "Rates"), script = "rates", icon=SYMBOL.RATES }
-PageFiles[#PageFiles + 1] = { title = t("PAGE_Rate_Dynamics", "Rate Dynamics"), script = "rate_dynamics", icon=SYMBOL.ADVANCED }
-PageFiles[#PageFiles + 1] = { title = t("PAGE_PID_Gains", "PID Gains"), script = "profile_pids", icon=SYMBOL.PID }
-PageFiles[#PageFiles + 1] = { title = t("PAGE_PID_Controller", "PID Controller"), script = "profile_pidcon", icon=SYMBOL.PID_CONTROLLER }
-PageFiles[#PageFiles + 1] = { title = t("PAGE_Profile_Various", "Profile - Various"), script = "profile_various", icon=SYMBOL.MAINROTOR }
-PageFiles[#PageFiles + 1] = { title = t("PAGE_Profile_Rescue", "Profile - Rescue"), script = "profile_rescue", icon=SYMBOL.RESCUE }
-PageFiles[#PageFiles + 1] = { title = t("PAGE_Profile_Governor", "Profile - Governor"), script = "profile_governor", icon=SYMBOL.GOVERNOR }
-PageFiles[#PageFiles + 1] = { title = t("PAGE_Servos", "Servos"), script = "servos", icon=SYMBOL.SERVOS }
-PageFiles[#PageFiles + 1] = { title = t("PAGE_Mixer", "Mixer"), script = "mixer", icon=SYMBOL.MIXER }
-PageFiles[#PageFiles + 1] = { title = t("PAGE_Gyro_Filters", "Gyro Filters"), script = "filters", icon=SYMBOL.FILTERS }
-PageFiles[#PageFiles + 1] = { title = t("PAGE_Governor", "Governor"), script = "governor", icon=SYMBOL.GOVERNOR }
-PageFiles[#PageFiles + 1] = { title = t("PAGE_Accelerometer_Trim", "Accelerometer Trim"), script = "accelerometer", icon=SYMBOL.ACCELEROMETER }
+PageFiles[#PageFiles + 1] = { title = t("PAGE_Status"), script = "status", icon=SYMBOL.STATUS }
+PageFiles[#PageFiles + 1] = { title = t("PAGE_Rates"), script = "rates", icon=SYMBOL.RATES }
+PageFiles[#PageFiles + 1] = { title = t("PAGE_Rate_Dynamics"), script = "rate_dynamics", icon=SYMBOL.ADVANCED }
+PageFiles[#PageFiles + 1] = { title = t("PAGE_PID_Gains"), script = "profile_pids", icon=SYMBOL.PID }
+PageFiles[#PageFiles + 1] = { title = t("PAGE_PID_Controller"), script = "profile_pidcon", icon=SYMBOL.PID_CONTROLLER }
+PageFiles[#PageFiles + 1] = { title = t("PAGE_Profile_Various"), script = "profile_various", icon=SYMBOL.MAINROTOR }
+PageFiles[#PageFiles + 1] = { title = t("PAGE_Profile_Rescue"), script = "profile_rescue", icon=SYMBOL.RESCUE }
+PageFiles[#PageFiles + 1] = { title = t("PAGE_Profile_Governor"), script = "profile_governor", icon=SYMBOL.GOVERNOR }
+PageFiles[#PageFiles + 1] = { title = t("PAGE_Servos"), script = "servos", icon=SYMBOL.SERVOS }
+PageFiles[#PageFiles + 1] = { title = t("PAGE_Mixer"), script = "mixer", icon=SYMBOL.MIXER }
+PageFiles[#PageFiles + 1] = { title = t("PAGE_Gyro_Filters"), script = "filters", icon=SYMBOL.FILTERS }
+PageFiles[#PageFiles + 1] = { title = t("PAGE_Governor"), script = "governor", icon=SYMBOL.GOVERNOR }
+PageFiles[#PageFiles + 1] = { title = t("PAGE_Accelerometer_Trim"), script = "accelerometer", icon=SYMBOL.ACCELEROMETER }
 
 if rf2.apiVersion >= 12.07 then
     if settings.showModelOnTx == 1 then
-        PageFiles[#PageFiles + 1] = { title = t("PAGE_Model", "Model"), script = "model", icon=SYMBOL.FBLSTATUS }
+        PageFiles[#PageFiles + 1] = { title = t("PAGE_Model"), script = "model", icon=SYMBOL.FBLSTATUS }
     end
     if settings.showExperimental == 1 then
-        PageFiles[#PageFiles + 1] = { title = t("PAGE_Experimental", "Experimental (!)"), script = "experimental", icon=SYMBOL.MSP_EXP }
+        PageFiles[#PageFiles + 1] = { title = t("PAGE_Experimental"), script = "experimental", icon=SYMBOL.MSP_EXP }
     end
     if settings.showFlyRotor == 1 then
-        PageFiles[#PageFiles + 1] = { title = t("PAGE_ESC_FLYROTOR", "ESC - FLYROTOR"), script = "esc_flyrotor", icon=SYMBOL.FLRTR }
+        PageFiles[#PageFiles + 1] = { title = t("PAGE_ESC_FLYROTOR"), script = "esc_flyrotor", icon=SYMBOL.FLRTR }
     end
     if settings.showPlatinumV5 == 1 then
-        PageFiles[#PageFiles + 1] = { title = t("PAGE_ESC_HW_Platinum_V5", "ESC - HW Platinum V5"), script = "esc_hwpl5", icon=SYMBOL.HOBBYWING }
+        PageFiles[#PageFiles + 1] = { title = t("PAGE_ESC_HW_Platinum_V5"), script = "esc_hwpl5", icon=SYMBOL.HOBBYWING }
     end
     if settings.showTribunus == 1 then
-        PageFiles[#PageFiles + 1] = { title = t("PAGE_ESC_Scorpion_Tribunus", "ESC - Scorpion Tribunus"), script = "esc_scorp", icon=SYMBOL.SCORPION }
+        PageFiles[#PageFiles + 1] = { title = t("PAGE_ESC_Scorpion_Tribunus"), script = "esc_scorp", icon=SYMBOL.SCORPION }
     end
     if rf2.apiVersion >= 12.08 and settings.showXdfly == 1 then
-        PageFiles[#PageFiles + 1] = { title = t("PAGE_ESC_XDFly", "ESC - XDFly"), script = "esc_xdfly", icon=SYMBOL.XDFLY }
+        PageFiles[#PageFiles + 1] = { title = t("PAGE_ESC_XDFly"), script = "esc_xdfly", icon=SYMBOL.XDFLY }
     end
     if settings.showYge == 1 then
-        PageFiles[#PageFiles + 1] = { title = t("PAGE_ESC_YGE", "ESC - YGE"), script = "esc_yge", icon=SYMBOL.YGE }
+        PageFiles[#PageFiles + 1] = { title = t("PAGE_ESC_YGE"), script = "esc_yge", icon=SYMBOL.YGE }
     end
 
-    PageFiles[#PageFiles + 1] = { title = t("PAGE_Settings", "Settings"), script = "settings", icon=SYMBOL.SETTINGS }
+    PageFiles[#PageFiles + 1] = { title = t("PAGE_Settings"), script = "settings", icon=SYMBOL.SETTINGS }
 end
 
 return PageFiles

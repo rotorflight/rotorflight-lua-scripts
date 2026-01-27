@@ -51,7 +51,7 @@ ui.showMainMenu = function()
 
     local menu = {
         title = "Rotorflight " .. rf2.luaVersion,
-        subtitle = t("TITLE_Menu_Menu", "Main Menu"),
+        subtitle = t("TITLE_Menu_Menu"),
         items = {},
         back = function() ui.state = ui.status.exit end
     }
@@ -109,9 +109,9 @@ ui.saveSettingsToEeprom = function(eepromWrite, reboot)
             if not ui.saveWarningShown then
                 ui.saveWarningShown = true
                 if rf2.apiVersion >= 12.08 then
-                    rf2.executeScript("LVGL/messageBox").show(t("TITLE_WARNING_Save", "Save warning"), t("MSG_WARNING_Save_later", "Settings will be saved\nafter disarming."))
+                    rf2.executeScript("LVGL/messageBox").show(t("TITLE_WARNING_Save"), t("MSG_WARNING_Save_later"))
                 else
-                    rf2.executeScript("LVGL/messageBox").show(t("TITLE_Save_Error", "Save error"), t("MSG_Save_Error", "Make sure your heli\nis disarmed."))
+                    rf2.executeScript("LVGL/messageBox").show(t("TITLE_Save_Error"), t("MSG_Save_Error"))
                 end
                 ui.refresh()
             end
@@ -127,19 +127,19 @@ ui.showPopupMenu = function()
     if Page then
         if not Page.readOnly then
             menu.items[#menu.items + 1] = {
-                text = t("MENU_Save", "Save"),
+                text = t("MENU_Save"),
                 click = function() Page:write() end
             }
         end
 
         menu.items [#menu.items + 1] = {
-            text = t("MENU_Reload", "Reload"),
+            text = t("MENU_Reload"),
             click = function() Page:read() end
         }
     end
 
     menu.items[#menu.items + 1] = {
-        text = t("MENU_Reboot", "Reboot"),
+        text = t("MENU_Reboot"),
         click = function() rebootFc() end
     }
 
