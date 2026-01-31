@@ -28,6 +28,8 @@ if scriptsCompiled then
         run = rf2.executeScript("ui_lcd")
     end
     --rf2.showMemoryUsage("ui loaded")
+
+    rf2.isTool = true
 else
     run = assert(loadScript("COMPILE/compile.lua"))()
     collectgarbage()
