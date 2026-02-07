@@ -26,6 +26,7 @@ local scripts = {
     "/SCRIPTS/RF2/MSP/RATES/NONE.lua",
     "/SCRIPTS/RF2/MSP/RATES/QUICK.lua",
     "/SCRIPTS/RF2/MSP/RATES/RACEFL.lua",
+    "/SCRIPTS/RF2/MSP/RATES/ROTORFL.lua",
     "/SCRIPTS/RF2/MSP/common.lua",
     "/SCRIPTS/RF2/MSP/crsf.lua",
     "/SCRIPTS/RF2/MSP/ghst.lua",
