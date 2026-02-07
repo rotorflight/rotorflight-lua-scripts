@@ -50,11 +50,11 @@ local function getDefaults()
 end
 
 local function getRateDefaults(data, rates_type)
-    if rf2.apiVersion < 12.09 then
-        data.rates_type = { value = rates_type, min = 0, max = 5, table = { [0] = "NONE", "BETAFL", "RACEFL", "KISS", "ACTUAL", "QUICK" } }
-    else
-        data.rates_type = { value = rates_type, min = 0, max = 6, table = { [0] = "NONE", "BETAFL", "RACEFL", "KISS", "ACTUAL", "QUICK", "ROTORFL" } }
+    data.rates_type = { value = rates_type, min = 0, table = { [0] = "NONE", "BETAFL", "RACEFL", "KISS", "ACTUAL", "QUICK" } }
+    if rf2.apiVersion >= 12.09 then
+        data.rates_type.table[#data.rates_type.table + 1] = "ROTORFL"
     end
+    data.rates_type.max = #data.rates_type.table
     local rateName = data.rates_type.table[rates_type]
     --rf2.print("rateName: " .. rateName)
     local setRateDefaults = rf2.executeScript("MSP/RATES/" .. rateName)
