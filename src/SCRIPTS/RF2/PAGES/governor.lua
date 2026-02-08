@@ -17,26 +17,28 @@ y = yMinLim - tableSpacing.header
 
 fields[#fields + 1] = { t = "Mode",                         x = x, y = incY(lineSpacing), w = 150, sp = x + sp, data = governorConfig.gov_mode }
 if rf2.apiVersion >= 12.09 then
+    fields[#fields + 1] = { t = "Autorotation TO",          x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_autorotation_timeout }
+    fields[#fields + 1] = { t = "Throttle hold TO",         x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_throttle_hold_timeout }
+    incY(lineSpacing * 0.5)
+    labels[#labels + 1] = { t = "Throttle",                 x = x, y = incY(lineSpacing) }
     fields[#fields + 1] = { t = "Throttle type",            x = x, y = incY(lineSpacing), w = 150, sp = x + sp, data = governorConfig.gov_throttle_type }
     fields[#fields + 1] = { t = "Idle throttle",            x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_idle_throttle }
     fields[#fields + 1] = { t = "Auto throttle",            x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_auto_throttle }
     fields[#fields + 1] = { t = "Handover throttle",        x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_handover_throttle }
-    fields[#fields + 1] = { t = "Throttle Hold TO",         x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_throttle_hold_timeout }
     incY(lineSpacing * 0.5)
-    labels[#labels + 1] = { t = "Ramp Time",                x = x, y = incY(lineSpacing) }
+    labels[#labels + 1] = { t = "Motor Ramp",               x = x, y = incY(lineSpacing) }
     fields[#fields + 1] = { t = "Startup time",             x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_startup_time }
     fields[#fields + 1] = { t = "Spoolup time",             x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_spoolup_time }
     fields[#fields + 1] = { t = "Spooldown time",           x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_spooldown_time }
     fields[#fields + 1] = { t = "Tracking time",            x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_tracking_time }
     fields[#fields + 1] = { t = "Recovery time",            x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_recovery_time }
-    fields[#fields + 1] = { t = "AR timeout",               x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_autorotation_timeout }
     incY(lineSpacing * 0.5)
     labels[#labels + 1] = { t = "Filters",                  x = x, y = incY(lineSpacing) }
-    fields[#fields + 1] = { t = "HS filter cutoff",         x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_rpm_filter }
-    fields[#fields + 1] = { t = "Volt. filter cutoff",      x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_pwr_filter }
-    fields[#fields + 1] = { t = "D filter cutoff",          x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_d_filter }
+    fields[#fields + 1] = { t = "Headspeed cutoff",         x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_rpm_filter }
+    fields[#fields + 1] = { t = "Battery volt. cutoff",     x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_pwr_filter }
     fields[#fields + 1] = { t = "TTA bandwidth",            x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_tta_filter }
     fields[#fields + 1] = { t = "Precomp bandwidth",        x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_ff_filter }
+    fields[#fields + 1] = { t = "D-term cutoff",            x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_d_filter }
 else -- < 12.09
     fields[#fields + 1] = { t = "Handover throttle",        x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_handover_throttle }
     fields[#fields + 1] = { t = "Startup time",             x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_startup_time }
