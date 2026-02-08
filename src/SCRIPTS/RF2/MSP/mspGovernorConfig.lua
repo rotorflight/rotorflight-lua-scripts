@@ -27,7 +27,7 @@ local function getDefaults()
         defaults.gov_spoolup_min_throttle = { min = 0, max = 50, unit = rf2.units.percentage }
     end
     if rf2.apiVersion >= 12.09 then
-        defaults.gov_d_filter = { min = 0, max = 250, unit = rf2.units.herz }
+        defaults.gov_d_filter = { min = 0, max = 250, scale = 10, unit = rf2.units.herz }
         defaults.gov_spooldown_time = { min = 0, max = 600, scale = 10, unit = rf2.units.seconds }
         defaults.gov_throttle_type = { min = 0, max = 2, table = { [0] = "NORMAL", "SWITCH", "FUNCTION" } }
         defaults.gov_idle_throttle = { min = 0, max = 250, scale = 10, unit = rf2.units.percentage }
