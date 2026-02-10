@@ -8,8 +8,8 @@ end
 
 local function drawMessage(title, message)
     if rf2.radio.highRes then
-        lcd.drawFilledRectangle(50, 40, LCD_W - 100, LCD_H - 80, TITLE_BGCOLOR)
-        lcd.drawText(60, 45, title, MENU_TITLE_COLOR)
+        lcd.drawFilledRectangle(50, 40, LCD_W - 100, LCD_H - 80, TITLE_BGCOLOR or COLOR_THEME_SECONDARY1)
+        lcd.drawText(60, 45, title, MENU_TITLE_COLOR or COLOR_THEME_PRIMARY2)
         lcd.drawFilledRectangle(50, 70, LCD_W - 100, LCD_H - 100, lcdShared.backgroundFill)
         lcd.drawRectangle(50, 40, LCD_W - 100, LCD_H - 80, SOLID)
         lcdShared.drawTextMultiline(70, 80, message)
