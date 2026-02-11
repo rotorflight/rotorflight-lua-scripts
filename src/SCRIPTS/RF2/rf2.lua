@@ -1,5 +1,5 @@
 rf2 = {
-    luaVersion = "2.3.0-20260208",
+    luaVersion = "2.3.0-20260211",
     baseDir = "/SCRIPTS/RF2/",
     runningInSimulator = string.sub(select(2, getVersion()), -4) == "simu",
 

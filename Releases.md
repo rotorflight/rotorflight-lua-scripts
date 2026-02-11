@@ -1,4 +1,4 @@
-# 2.3.0-20260208
+# 2.3.0-20260211
 
 This is a *development snapshot* of the Rotorflight 2.3.0 Lua Scripts for EdgeTX/OpenTX.
 
@@ -8,7 +8,7 @@ The download locations are:
 
 - [Rotorflight Configurator](https://github.com/rotorflight/rotorflight-configurator/releases/tag/snapshot/2.3.0-20260208)
 - [Rotorflight Blackbox](https://github.com/rotorflight/rotorflight-blackbox/releases/tag/snapshot/2.3.0-20260208)
-- [Lua Scripts for EdgeTX and OpenTX](https://github.com/rotorflight/rotorflight-lua-scripts/releases/tag/snapshot/2.3.0-20260208)
+- [Lua Scripts for EdgeTX and OpenTX](https://github.com/rotorflight/rotorflight-lua-scripts/releases/tag/snapshot/2.3.0-20260211)
 - [Lua Scripts for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos/releases/tag/snapshot/2.3.0-20260208)
 - [Lua Suite for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos-suite/releases/tag/snapshot/2.3.0-20260208)
 
@@ -20,6 +20,7 @@ For more information, please join the Rotorflight Discord chat.
 
 ## Changes Since Version 2.2.1
 
+- Added support for the Radiomaster TX16S MK3
 - *Rates* page: added Rotorflight rates
 - *Hobbywing V5 ESC* page: better support for setting BEC voltage
 - *Model* page
