@@ -8,7 +8,7 @@ if scriptsCompiled then
     --print("RF2: Before rf2.lua: ", collectgarbage("count") * 1024)
     assert(loadScript("rf2.lua"))()
     --rf2.showMemoryUsage("rf2 loaded")
-    rf2.radio = rf2.executeScript("radios").msp
+    rf2.radio = rf2.executeScript("radios")
     --rf2.showMemoryUsage("radios loaded")
     rf2.mspQueue = rf2.executeScript("MSP/mspQueue")
     --rf2.showMemoryUsage("MSP queue loaded")

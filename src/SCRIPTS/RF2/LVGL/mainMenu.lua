@@ -3,14 +3,15 @@ local function show(menu)
 
     local children = {}
     local w = (LCD_W - 30) / 3
-    local h = 50
+    local screenMult = rf2.radio.screenMult or 1
+    local h = 50 * screenMult
 
     for i = 1, #menu.items do
         local item = menu.items[i]
         children[#children + 1] = {
             type = "button",
-            x = 6 + #children % 3 * (w + 4),
-            y = 6 + math.floor(#children / 3) * (h + 4),
+            x = 6 + #children % 3 * (w + (4 * screenMult)),
+            y = 6 + math.floor(#children / 3) * (h + (4 * screenMult)),
             w = w,
             h = h,
             text = item.text,

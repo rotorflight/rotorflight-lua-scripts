@@ -1,14 +1,18 @@
 local function show(menu)
-    local dg = lvgl.dialog({ title = menu.title, h = 75 + #menu.items * 50 })
-    local w = 200
-    local x = LCD_W / 2 - w / 2 - 50
+    local screenMult = rf2.radio.screenMult or 1
+    local buttonW = 200 * screenMult
+    local buttonH = 50 * screenMult
+    local dialogW = math.min(LCD_W - 50, buttonW * 1.5)
+    local dialogH = (#menu.items + 1.5) * buttonH
+    local dg = lvgl.dialog({ title = menu.title, w = dialogW,  h =dialogH })
+    local buttonX = (dialogW - buttonW) / 2
     local lyt = {}
 
     for i = 1, #menu.items do
         local item = menu.items[i]
-        local y = 25 + (i - 1) * 50
+        local buttonY = (25 * screenMult) + (i - 1) * (50 * screenMult)
         lyt[#lyt + 1] = {
-            type = "button", text = item.text, x = x, y = y, w = w,
+            type = "button", text = item.text, x = buttonX, y = buttonY, w = buttonW, h = buttonH - 10,
             press = function()
                 dg:close()
                 if item.click then

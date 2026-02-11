@@ -33,6 +33,8 @@ local function show(page)
         }
     end
 
+    local screenMult = rf2.radio.screenMult or 1
+
     for i = 1, #page.fields do
         local field = page.fields[i]
         if field.t then
@@ -49,7 +51,7 @@ local function show(page)
                 type = "button",
                 x = field.x,
                 y = field.y,
-                w = field.w or 200,
+                w = (field.w or 200) * screenMult,
                 text = function()
                     local s = string.gsub(field.t, "[%[%]]", "") -- remove brackets around [button]
                     return  s
@@ -72,7 +74,7 @@ local function show(page)
                     type = "textEdit",
                     x = field.sp or field.x,
                     y = field.y,
-                    w = field.w or 125,
+                    w = (field.w or 125) * screenMult,
                     value = field.data.value,
                     length = field.data.max or 10,
                 }
@@ -99,7 +101,7 @@ local function show(page)
                     values = choiceTable.values,
                     x = field.sp or field.x,
                     y = field.y,
-                    w = field.w or 100,
+                    w = (field.w or 100) * screenMult,
                     get = function() return choiceTable:getChoiceKey(field.data.value) end,
                     set = function(val)
                         field.data.value = choiceTable:getOriginalKey(val)
@@ -113,7 +115,7 @@ local function show(page)
                     type = "numberEdit",
                     x = field.sp or field.x,
                     y = field.y,
-                    w = field.w or 75,
+                    w = (field.w or 75) * screenMult,
                     get = function()
                         return field.data.value / (field.data.mult or 1)
                     end,
