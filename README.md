@@ -84,13 +84,6 @@ The *Adjustment Teller* can be enabled under Settings > Rf2bg Options > Adjustme
 > [!IMPORTANT]
 > Some black & white radios (e.g. the Jumper T-LITE running EdgeTX 2.11) don't have enough memory for running both the *Adjustment Teller* and *CRSF/ELRS custom telemetry*. The user interface will then randomly freeze.
 
-## Custom CRSF/ELRS sensor order
-
-To get the custom CRSF/ELRS sensors in the order as defined in the Configurator, follow these steps:
-- Switch off the flight controller and the receiver
-- *Delete all* sensors on the transmitter
-- Select *Discover new* on the transmitter
-- Power on the flight controller and wait till all sensors are populated
 
 ## Building from source on Linux
 
