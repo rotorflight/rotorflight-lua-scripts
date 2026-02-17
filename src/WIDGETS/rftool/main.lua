@@ -1,6 +1,5 @@
 local name = "rftool"
 local versionString = "v0.1.0"
-local options = {}
 local compile = nil
 local run = nil
 local useLvgl = false
@@ -15,6 +14,39 @@ if lvgl == nil then
             lcd.drawText(10, 10, "LVGL support required", COLOR_THEME_WARNING)
         end,
     }
+end
+
+local rfWidgets = {}
+local function registerWidget(widget)
+    table.insert(rfWidgets, widget)
+end
+
+local function widgetIsAlivePing(widget)
+    for k, v in pairs(rfWidgets) do
+        if v == widget then
+            print("Received ping from widget, updating lastPing time")
+            v.lastPing = getTime()
+            return
+        end
+    end
+end
+
+local timeLastPing = nil
+local function ping()
+    if timeLastPing ~= nil and (getTime() - timeLastPing) / 100 < 1 then
+        return
+    end
+
+    timeLastPing = getTime()
+    for k, v in pairs(rfWidgets) do
+        if v.lastPing ~= nil  and (getTime() - v.lastPing) / 100 > 5 then
+            -- widget is considered dead, remove it from the list
+            print("Widget considered dead, removing it")
+            table.remove(rfWidgets, k)
+        elseif v.ping then
+            local status, err = pcall(v.ping, v)
+        end
+    end
 end
 
 local function create(zone, options)
@@ -90,8 +122,15 @@ local function update(widget, options)
     end
 end
 
+-- local lastHelloTime = nil
+
 local function refresh(widget, event, touchState)
     -- print("refresh called")
+
+    -- if lastHelloTime == nil or (getTime() - lastHelloTime) / 100 > 1 then
+    --     print("rftool says hello!")
+    --     lastHelloTime = getTime()
+    -- end
 
     if widget.state == "compiling" then 
         if compile ~= nil then
@@ -105,20 +144,24 @@ local function refresh(widget, event, touchState)
     elseif widget.state == "loading" and (getTime() - timeCreated) / 100 > 5 then -- bootgrace timeout
         loadScripts(widget)
         widget.state = "ready"
+
+        rf2.model = { name = "test" }
+        rf2.print(rf2 and rf2.shared and rf2.shared.modelName or "Unknown")
+
+        rf2.registerWidget = registerWidget
+        rf2.widgetIsAlivePing = widgetIsAlivePing
     end
 
     local noUi = not(lvgl.isFullScreen() or lvgl.isAppMode())
     if run ~= nil then
         run(event, touchState, noUi)
     end
+
+    ping()
 end
 
 local function background(widget)
     --rf2.print("background called")
 end
 
-local function layout(widget)
-    --rf2.print("layout called")
-end
-
-return { useLvgl = true, name = name, options = options, create = create, update = update, refresh = refresh, background = background, layout = layout }
+return { useLvgl = true, name = name, options = {}, create = create, update = update, refresh = refresh, background = background }
