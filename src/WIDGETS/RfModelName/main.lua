@@ -1,4 +1,4 @@
-local name = "RF Tool"
+local name = "RF Model Name"
 local versionString = "v0.1.0"
 
 if lvgl == nil then
@@ -13,28 +13,28 @@ if lvgl == nil then
 end
 
 local function create(zone, options)
-    --print("RfTool: create called")
-    local widget = loadScript("/WIDGETS/RfTool/app.lua")(zone, options)
+    --print("RfModelName: create called")
+    local widget = loadScript("/WIDGETS/RfModelName/app.lua")(zone, options)
     return widget
 end
 
 local function update(widget, options)
-    --print("RfTool: update called")    
+    --print("RfModelName: update called")    
     if widget and widget.update then widget.update(widget, options) end
 end
 
 local function refresh(widget, event, touchState)
-    --print("RfTool: refresh called")    
+    --print("RfModelName: refresh called")    
     if widget and widget.refresh then widget.refresh(widget, event, touchState) end
 end
 
 local function background(widget)
-    --print("RfTool: background called")
+    --print("RfModelName: background called")
     if widget and widget.background then widget.background(widget) end
 end
 
 local function translate(widget)
-    --print("RfTool: translate called")
+    --print("RfModelName: translate called")
     if widget and widget.translate then widget.translate(widget) end
 end
 

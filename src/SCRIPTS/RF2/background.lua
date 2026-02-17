@@ -11,7 +11,12 @@ end
 
 local hasSensor = rf2.executeScript("F/hasSensor")
 
+--local lastHelloTime = nil
 local function run()
+    -- if lastHelloTime == nil or rf2.clock() - lastHelloTime > 1 then
+    --     rf2.print("Background says hello!")
+    --     lastHelloTime = rf2.clock()
+    -- end
     if rf2.runningInSimulator then
         modelIsConnected = true
     elseif isInitialized and customTelemetryTask and not hasSensor("*Cnt") then
