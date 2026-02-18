@@ -78,6 +78,7 @@ local function showWidget(widget)
             type = "box", flexFlow = lvgl.FLOW_COLUMN, children = 
             {
                 { type = "label", text = "Rotorflight", w = widget.zone.x, align = CENTER },
+                { type = "label", text = function() return tostring(getValue("RxBt")) end, w = widget.zone.x, align = CENTER },
             }
         }
     });

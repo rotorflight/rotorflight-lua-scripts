@@ -26,6 +26,7 @@ local function showWidget(widget)
             type = "box", flexFlow = lvgl.FLOW_COLUMN, children = 
             {
                 { type = "label", text = function() return getModelName() end, w = widget.zone.x, align = CENTER },
+                { type = "label", text = function() return tostring(getValue("Vbat")) end, w = widget.zone.x, align = CENTER },
             }
         }
     });
