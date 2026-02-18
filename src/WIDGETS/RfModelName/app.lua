@@ -36,8 +36,12 @@ w.update = function(widget, options)
     showWidget(widget)
 end
 
+local timeLastPing = nil
 w.background = function(widget)
-    if rf2 and rf2.widgetIsAlivePing then rf2.widgetIsAlivePing(widget) end
+    if rf2 and rf2.widgetIsAlivePing and (timeLastPing == nil or (getTime() - timeLastPing) / 100 >= 1) then 
+        rf2.widgetIsAlivePing(widget)
+        timeLastPing = getTime()
+    end
 end
 
 w.refresh = function(widget, event, touchState)

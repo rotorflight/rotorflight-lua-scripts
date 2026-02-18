@@ -12,8 +12,10 @@ else
     w.state = "compiling"
 end
 
-local compile = nil
-local run = nil
+local compileTask = nil
+local uiTask = nil
+local backgroundTask = nil
+
 local timeCreated = getTime()
 
 local rfWidgets = {}
@@ -61,9 +63,12 @@ local function loadScripts(widget)
     rf2.mspHelper = rf2.executeScript("MSP/mspHelper")
     --rf2.showMemoryUsage("MSP helper loaded")
 
-    run = rf2.executeScript("ui_lvgl_runner")
-    --run = rf2.executeScript("ui_lcd")
+    uiTask = rf2.executeScript("ui_lvgl_runner")
+    --uiTask = rf2.executeScript("ui_lcd")
     --rf2.showMemoryUsage("ui loaded")
+
+    backgroundTask = rf2.executeScript("background")
+    --rf2.showMemoryUsage("background loaded")
 end
 
 local function showWidget(widget)
@@ -88,11 +93,21 @@ w.update = function(widget, options)
     end
 end
 
+w.background = function(widget)
+    if widget.state ~= "ready" then return end
+
+    ping()
+
+    if backgroundTask ~= nil then 
+        backgroundTask(widget) 
+    end
+end
+
 w.refresh = function(widget, event, touchState)
     if widget.state == "compiling" then
-        compile = compile or assert(loadScript("/SCRIPTS/RF2/COMPILE/compile.lua"))() 
-        if compile() == 1 then
-            compile = nil
+        compileTask = compileTask or assert(loadScript("/SCRIPTS/RF2/COMPILE/compile.lua"))() 
+        if compileTask() == 1 then
+            compileTask = nil
             widget.state = "loading"
         end
         return
@@ -104,18 +119,16 @@ w.refresh = function(widget, event, touchState)
         rf2.print(rf2 and rf2.shared and rf2.shared.modelName or "Unknown")
 
         rf2.registerWidget = registerWidget
-        rf2.widgetIsAlivePing = widgetIsAlivePing
+        rf2.widgetIsAlivePing = widgetIsAlivePing -- TODO: replace ping with destroy + unregisterWidget once this gets implemented in the EdgeTX widget interface, see https://github.com/EdgeTX/edgetx/issues/7104
     end
 
     local noUi = not(lvgl.isFullScreen() or lvgl.isAppMode())
-    if run ~= nil then
-        run(event, touchState, noUi)
+    if uiTask ~= nil then
+        uiTask(event, touchState, noUi)
     end
 
-    ping()
+    w.background(widget)
 end
 
-w.background = function(widget)
-end
 
 return w

@@ -1,5 +1,5 @@
+-- Keep main.lua as lightweight as possible, since main.lua gets loaded for **all** widgets at boot time. Even if a widget isn't used by a particular model.
 local name = "RF Tool"
-local versionString = "v0.1.0"
 
 if lvgl == nil then
     return {
@@ -33,10 +33,18 @@ local function background(widget)
     if widget and widget.background then widget.background(widget) end
 end
 
-local function translate(widget)
-    --print("RfTool: translate called")
-    if widget and widget.translate then widget.translate(widget) end
-end
+-- local function translate(widget)
+--     --print("RfTool: translate called")
+--     if widget and widget.translate then widget.translate(widget) end
+-- end
 
--- See https://github.com/EdgeTX/edgetx/blob/main/radio/src/lua/widgets.cpp
-return { useLvgl = true, name = name, options = {}, create = create, update = update, refresh = refresh, background = background, translate = translate }
+return { 
+    useLvgl = true, 
+    name = name, 
+    options = {}, 
+    create = create, 
+    update = update, 
+    refresh = refresh, 
+    background = background, 
+    --translate = translate 
+}
