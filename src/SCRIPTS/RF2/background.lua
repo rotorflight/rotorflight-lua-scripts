@@ -36,7 +36,7 @@ local function run(widget)
         if lastTimeRssi and rf2.clock() - lastTimeRssi < 5 then
             -- Do not re-initialise if the RSSI is 0 for less than 5 seconds.
             -- This is also a work-around for https://github.com/ExpressLRS/ExpressLRS/issues/3207 (AUX channel bug in ELRS TX < 3.5.5)
-            setState(widget, "sensor lost")
+            -- setState(widget, "telemetry lost") -- also needs telemetry recoverede/connected
             return
         end
         if modelIsConnected then
