@@ -7,6 +7,9 @@ local w = {
     setState = function(self, state)
         if self.state == state then return end
         self.state = state
+        if state == "disconnected" then
+            rf2.modelName = nil
+        end
     end
 }
 
@@ -15,6 +18,10 @@ if scriptsCompiled then
     w.state = "loading"
 else
     w.state = "compiling"
+end
+
+w.options.getText = function(options) 
+    return options.sourceName .. ": " .. tostring(getValue(options.sourceName)) .. options.Suffix 
 end
 
 local compileTask = nil
@@ -78,15 +85,25 @@ local function loadScripts(widget)
     rf2.widget = widget
 end
 
+local function getModelName()
+    local modelName = rf2 and rf2.modelName or nil
+
+    if not modelName then
+         modelName = model.getInfo().name
+    end
+
+    return modelName or "Unknown"
+end
+
 local function showWidget(widget)
     lvgl.clear();
     lvgl.build({
         { 
             type = "box", flexFlow = lvgl.FLOW_COLUMN, children = 
             {
-                { type = "label", text = "Rotorflight", w = widget.zone.x, align = CENTER },
+                { type = "label", text = function() return getModelName() end, w = widget.zone.x, font = DBLSIZE, align = CENTER },
+                { type = "label", text = function() return rf2 and rf2.widget.options:getText() or "" end, w = widget.zone.x, align = CENTER },
                 { type = "label", text = function() return widget.state end, w = widget.zone.x, align = CENTER },
-                { type = "label", text = function() return tostring(getValue("RxBt")) end, w = widget.zone.x, align = CENTER },
             }
         }
     });

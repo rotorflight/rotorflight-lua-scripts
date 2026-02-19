@@ -163,8 +163,8 @@ local function show(page)
             type = "page",
             title = "Rotorflight " .. rf2.luaVersion,
             subtitle = function()
-                if rf2.widget and rf2.widget.options and rf2.widget.options.sourceName then
-                    return page.title .. " - " .. getValue(rf2.widget.options.sourceName) .. rf2.widget.options.Suffix
+                if rf2.widget and rf2.widget.options then
+                    return page.title .. " - " .. rf2.widget.options:getText()
                 end 
                 return page.title 
             end,
