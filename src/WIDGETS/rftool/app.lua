@@ -1,8 +1,13 @@
+-- RfTool widget
 local zone, options = ...
 
 local w = { 
     zone = zone,
     options = options,
+    setState = function(self, state)
+        if self.state == state then return end
+        self.state = state
+    end
 }
 
 local scriptsCompiled = assert(loadScript("/SCRIPTS/RF2/COMPILE/scripts_compiled.lua"))()
@@ -78,6 +83,7 @@ local function showWidget(widget)
             type = "box", flexFlow = lvgl.FLOW_COLUMN, children = 
             {
                 { type = "label", text = "Rotorflight", w = widget.zone.x, align = CENTER },
+                { type = "label", text = function() return widget.state end, w = widget.zone.x, align = CENTER },
                 { type = "label", text = function() return tostring(getValue("RxBt")) end, w = widget.zone.x, align = CENTER },
             }
         }
@@ -95,7 +101,7 @@ w.update = function(widget, options)
 end
 
 w.background = function(widget)
-    if widget.state ~= "ready" then return end
+    if not backgroundTask then return end
 
     ping()
 
@@ -116,11 +122,8 @@ w.refresh = function(widget, event, touchState)
         loadScripts(widget)
         widget.state = "ready"
 
-        rf2.model = { name = "test" }
-        rf2.print(rf2 and rf2.shared and rf2.shared.modelName or "Unknown")
-
         rf2.registerWidget = registerWidget
-        rf2.widgetIsAlivePing = widgetIsAlivePing -- TODO: replace ping with destroy + unregisterWidget once this gets implemented in the EdgeTX widget interface, see https://github.com/EdgeTX/edgetx/issues/7104
+        rf2.widgetIsAlivePing = widgetIsAlivePing -- TODO: replace ping with destroy + unregisterWidget once destroy gets implemented in the EdgeTX widget interface, see https://github.com/EdgeTX/edgetx/issues/7104
     end
 
     local noUi = not(lvgl.isFullScreen() or lvgl.isAppMode())

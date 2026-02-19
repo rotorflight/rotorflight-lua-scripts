@@ -1,3 +1,4 @@
+-- RfModelName widget
 local zone, options = ...
 
 local w = {
@@ -6,16 +7,12 @@ local w = {
 }
 
 local function getModelName()
-    local modelName = rf2 and rf2.model and rf2.model.name or nil
-
-    -- if not mspName and rf2 then
-    --     rf2.useApi("mspName").getModelName(function(page, name) mspName = name end, self)
-    -- end
-    -- local modelName = mspName
+    local modelName = rf2 and rf2.modelName or nil
 
     if not modelName then
          modelName = model.getInfo().name
     end
+
     return modelName or "Unknown"
 end
 
