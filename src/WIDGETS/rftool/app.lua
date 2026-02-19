@@ -47,7 +47,7 @@ local function ping()
     timeLastPing = getTime()
     for k, v in pairs(rfWidgets) do
         if v.lastPing ~= nil  and (getTime() - v.lastPing) / 100 > 5 then
-            -- widget is considered dead, remove it from the list
+            -- previously registered widget is considered dead, remove it from the list
             print("Widget considered dead, removing it")
             table.remove(rfWidgets, k)
         elseif v.ping then
@@ -74,6 +74,8 @@ local function loadScripts(widget)
 
     backgroundTask = rf2.executeScript("background")
     --rf2.showMemoryUsage("background loaded")
+
+    rf2.widget = widget
 end
 
 local function showWidget(widget)
@@ -92,8 +94,15 @@ end
 
 w.update = function(widget, options)
     widget.options = options
+    if options and options.Source and getFieldInfo then
+        local fieldInfo = getFieldInfo(options.Source)
+        if fieldInfo then
+            widget.options.sourceName = fieldInfo.name
+            print("RF2: source name: ", widget.options.sourceName)
+        end
+    end
 
-    if (lvgl.isFullScreen() or lvgl.isAppMode()) then
+    if (lvgl.isFullScreen() or lvgl.isAppMode()) and widget.state == "connected" then
         rf2.showMainMenu()
     else
         showWidget(widget)
