@@ -42,7 +42,8 @@ w.background = function(widget)
     end
 end
 
-w.onStateChanged = function(w, newState) 
+w.onStateChanged = function(w, newState)
+    -- Possible states: "connected", "disconnected", "armed", "disarmed"
     rf2.print("RfStatus - got new state: %s", newState) 
 end
 
