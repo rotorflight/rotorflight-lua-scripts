@@ -42,6 +42,10 @@ w.background = function(widget)
     end
 end
 
+w.onStateChanged = function(w, newState) 
+    rf2.print("RfStatus - got new state: %s", newState) 
+end
+
 w.refresh = function(widget, event, touchState)
     widget.background(widget)
 
@@ -51,7 +55,6 @@ w.refresh = function(widget, event, touchState)
     --print(modelName)
 
     if not widget.registered then
-        widget.ping = function(w) rf2.print("Ping!!!") end
         rf2.registerWidget(widget)
         widget.registered = true
     end

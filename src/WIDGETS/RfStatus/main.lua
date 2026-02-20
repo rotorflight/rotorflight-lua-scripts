@@ -14,7 +14,7 @@ end
 
 local function create(zone, options)
     --print("RfModelName: create called")
-    local widget = loadScript("/WIDGETS/RfModelName/app.lua")(zone, options)
+    local widget = loadScript("/WIDGETS/RfStatus/app.lua")(zone, options)
     return widget
 end
 

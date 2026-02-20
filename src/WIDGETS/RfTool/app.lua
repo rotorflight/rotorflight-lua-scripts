@@ -1,16 +1,11 @@
 -- RfTool widget
 local zone, options = ...
 
+local previousArmState = 0
+
 local w = { 
     zone = zone,
-    options = options,
-    setState = function(self, state)
-        if self.state == state then return end
-        self.state = state
-        if state == "disconnected" then
-            rf2.modelName = nil
-        end
-    end
+    options = options
 }
 
 local scriptsCompiled = assert(loadScript("/SCRIPTS/RF2/COMPILE/scripts_compiled.lua"))()
@@ -45,22 +40,27 @@ local function widgetIsAlivePing(widget)
     end
 end
 
-local timeLastPing = nil
-local function ping()
-    if timeLastPing ~= nil and (getTime() - timeLastPing) / 100 < 1 then
-        return
-    end
-
-    timeLastPing = getTime()
+local function publishStateChangedEvent(newState)
     for k, v in pairs(rfWidgets) do
         if v.lastPing ~= nil  and (getTime() - v.lastPing) / 100 > 5 then
             -- previously registered widget is considered dead, remove it from the list
             print("Widget considered dead, removing it")
             table.remove(rfWidgets, k)
-        elseif v.ping then
-            local status, err = pcall(v.ping, v)
+        elseif v.onStateChanged then
+            local status, err = pcall(v.onStateChanged, v, newState)
         end
     end
+end
+
+w.setState = function(self, state)
+    -- This function will also be called from the background task
+    if self.state == state then return end
+    self.state = state
+    if state == "disconnected" then
+        rf2.modelName = nil
+        previousArmState = 0
+    end
+    publishStateChangedEvent(self.state)
 end
 
 local function loadScripts(widget)
@@ -126,10 +126,18 @@ w.update = function(widget, options)
     end
 end
 
-w.background = function(widget)
-    if not backgroundTask then return end
+local function setArmState(widget)
+    if not getValue then return end
+    local armState = getValue("ARM")
+    if armState ~= previousArmState then
+        previousArmState = armState
+        local state = bit32.btest(armState, 1) and "armed" or "disarmed"
+        widget:setState(state)
+    end
+end
 
-    ping()
+w.background = function(widget)
+    setArmState(widget)
 
     if backgroundTask ~= nil then 
         backgroundTask(widget) 
