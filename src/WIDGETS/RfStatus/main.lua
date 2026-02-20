@@ -1,5 +1,5 @@
 -- Keep main.lua as lightweight as possible, since main.lua gets loaded for **all** widgets at boot time. Even if a widget isn't used by a particular model.
-local name = "RF Model Name"
+local name = "RF Status"
 
 if lvgl == nil then
     return {
