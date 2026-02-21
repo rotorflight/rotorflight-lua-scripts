@@ -44,7 +44,7 @@ local function publishStateChangedEvent(newState)
     for k, v in pairs(rfWidgets) do
         if v.lastPing ~= nil  and (getTime() - v.lastPing) / 100 > 5 then
             -- previously registered widget is considered dead, remove it from the list
-            print("Widget considered dead, removing it")
+            --print("Widget considered dead, removing it")
             table.remove(rfWidgets, k)
         elseif v.onStateChanged then
             local status, err = pcall(v.onStateChanged, v, newState)
@@ -127,8 +127,12 @@ w.update = function(widget, options)
 end
 
 local function setArmState(widget)
-    if not getValue then return end
+    if not getValue then return end -- not available at boot time
     local armState = getValue("ARM")
+    --[NIR 
+    -- Use ANT instead of ARM in the simulator
+    if rf2 and rf2.runningInSimulator then armState = getValue("ANT") end
+    --]]
     if armState ~= previousArmState then
         previousArmState = armState
         local state = bit32.btest(armState, 1) and "armed" or "disarmed"

@@ -1,19 +1,20 @@
--- RfModelName widget
+-- RfStatus widget
 local zone, options = ...
+local flighStats = nil
 
 local w = {
     zone = zone,
     options = options
 }
 
-local function getModelName()
-    local modelName = rf2 and rf2.modelName or nil
+local function getTotalFlights()
+    if not flighStats then return "Flights: " end
+    return "Flights: " .. tostring(flighStats.stats_total_flights.value)
+end
 
-    if not modelName then
-         modelName = model.getInfo().name
-    end
-
-    return modelName or "Unknown"
+local function getTotalTime()
+    if not flighStats then return "Total flight time: " end
+    return "Total flight time: " .. flighStats.stats_total_time_s.value
 end
 
 local function showWidget(widget)
@@ -22,8 +23,8 @@ local function showWidget(widget)
         { 
             type = "box", flexFlow = lvgl.FLOW_COLUMN, children = 
             {
-                { type = "label", text = function() return getModelName() end, w = widget.zone.x, align = CENTER },
-                { type = "label", text = function() return tostring(getValue("Vbat")) end, w = widget.zone.x, align = CENTER },
+                { type = "label", text = function() return getTotalFlights() end, w = widget.zone.x, align = CENTER },
+                { type = "label", text = function() return getTotalTime() end, w = widget.zone.x, align = CENTER },
             }
         }
     });
@@ -42,18 +43,25 @@ w.background = function(widget)
     end
 end
 
+local function onReceivedFlightStats(callbackParam, stats)
+    local totalTime = rf2.executeScript("F/formatSeconds")(stats.stats_total_time_s.value)
+    stats.stats_total_time_s.value = totalTime
+    flighStats = stats
+end
+
 w.onStateChanged = function(w, newState)
     -- Possible states: "connected", "disconnected", "armed", "disarmed"
-    rf2.print("RfStatus - got new state: %s", newState) 
+    rf2.print("RfStatus - got new state: %s", newState)
+
+    if newState == "connected" or newState == "disarmed" then
+        rf2.useApi("mspFlightStats").read(onReceivedFlightStats)
+    end
 end
 
 w.refresh = function(widget, event, touchState)
     widget.background(widget)
 
-    local modelName = getModelName()
-
     if not rf2 then return end
-    --print(modelName)
 
     if not widget.registered then
         rf2.registerWidget(widget)
