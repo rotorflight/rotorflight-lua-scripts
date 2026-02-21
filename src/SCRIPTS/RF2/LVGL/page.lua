@@ -162,7 +162,12 @@ local function show(page)
         {
             type = "page",
             title = "Rotorflight " .. rf2.luaVersion,
-            subtitle = page.title,
+            subtitle = function()
+                if rf2.widget and rf2.widget.options then
+                    return page.title .. " - " .. rf2.widget.options:getText()
+                end 
+                return page.title 
+            end,
             icon = rf2.baseDir .. "rf2.png",
             back = function()
                 if page.back then

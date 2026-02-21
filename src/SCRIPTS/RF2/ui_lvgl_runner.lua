@@ -4,8 +4,8 @@ local IsInitialized = false
 local InitTask
 local IgnoreNextKeyEvent = false
 
-local function run(event, touchState)
-    ui.update()
+local function run(event, touchState, noUi)
+    if not noUi then ui.update() end
 
     if not IsInitialized then
         rf2.mspQueue.maxRetries = -1 -- retry indefinitely
@@ -17,8 +17,10 @@ local function run(event, touchState)
         end
         InitTask = nil
         ui.clearWaitMessage()
-        ui.loadMainMenu()
-        ui.showMainMenu()
+        if not noUi then 
+            ui.loadMainMenu()
+            ui.showMainMenu()
+        end
         IsInitialized = true
     end
 
@@ -40,7 +42,7 @@ local function run(event, touchState)
         if event == 0x20D or event == EVT_VIRTUAL_PREV_PAGE or event == EVT_VIRTUAL_NEXT_PAGE then
             -- For some reason the tool gets all key events twice, so we need to ignore the second one.
             if not IgnoreNextKeyEvent then
-                IgnoreNextKeyEvent = true
+                if rf2.isTool then IgnoreNextKeyEvent = true end
                 if event == 0x20D then -- SYS break
                     ui.showPopupMenu()
                 elseif event == EVT_VIRTUAL_PREV_PAGE then
@@ -66,6 +68,9 @@ rf2.setWaitMessage = ui.setWaitMessage
 rf2.clearWaitMessage = ui.clearWaitMessage
 rf2.settingsSaved = ui.saveSettingsToEeprom
 rf2.onPageReady = ui.onPageReady
-
+rf2.showMainMenu = function()
+    ui.loadMainMenu()
+    ui.showMainMenu()
+end
 -- Return the run function to be called by the RF2 tool
 return run

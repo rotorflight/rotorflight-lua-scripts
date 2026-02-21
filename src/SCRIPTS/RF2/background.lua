@@ -11,10 +11,19 @@ end
 
 local hasSensor = rf2.executeScript("F/hasSensor")
 
-local function run()
-    if rf2.runningInSimulator then
-        modelIsConnected = true
-    elseif isInitialized and customTelemetryTask and not hasSensor("*Cnt") then
+local function setState(widget, state)
+    if widget == nil then return end
+    widget:setState(state)
+end
+
+--local lastHelloTime = nil
+local function run(widget)
+    -- if lastHelloTime == nil or rf2.clock() - lastHelloTime > 1 then
+    --     rf2.print("Background says hello!")
+    --     lastHelloTime = rf2.clock()
+    -- end
+
+    if isInitialized and customTelemetryTask and not hasSensor("*Cnt") then
         isInitialized = false -- user probably deleted all sensors on TX
     elseif getRSSI() > 0 then
         lastTimeRssi = rf2.clock()
@@ -27,10 +36,11 @@ local function run()
         if lastTimeRssi and rf2.clock() - lastTimeRssi < 5 then
             -- Do not re-initialise if the RSSI is 0 for less than 5 seconds.
             -- This is also a work-around for https://github.com/ExpressLRS/ExpressLRS/issues/3207 (AUX channel bug in ELRS TX < 3.5.5)
+            -- setState(widget, "telemetry lost") -- also needs telemetry recoverede/connected
             return
         end
-        rf2.executeScript("F/pilotConfigReset")()
         if modelIsConnected then
+            rf2.executeScript("F/pilotConfigReset")()
             if initTask then
                 initTask.reset()
                 initTask = nil
@@ -51,6 +61,11 @@ local function run()
         local initTaskResult = initTask.run(modelIsConnected)
         if not initTaskResult.isInitialized then
             --rf2.print("Not initialized yet")
+            if getRSSI() == 0 then
+                setState(widget, "disconnected")
+            else
+                setState(widget, "initializing")
+            end
             return
         end
         if initTaskResult.crsfCustomTelemetryEnabled then
@@ -62,6 +77,7 @@ local function run()
         end
         initTask = nil
         isInitialized = true
+        setState(widget, "connected")
     end
 
     if getRSSI() == 0 and not rf2.runningInSimulator then
@@ -78,8 +94,10 @@ local function run()
     end
 end
 
-local function runProtected()
-    local status, err = pcall(run)
+-- widget is optional and will be provided by the RfTool widget. 
+-- If the background script runs as a special function, widget will be nil.
+local function runProtected(widget)
+    local status, err = pcall(run, widget)
     --[NIR
     if not status then rf2.print(err) end
     --]]

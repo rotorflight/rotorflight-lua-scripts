@@ -46,24 +46,7 @@ local function buildForm(page)
 
         if flighStats.statsEnabled.value and flighStats.statsEnabled.value == 1 then
             fields[#fields + 1] = { t = "Total flights",  x = x, y = incY(lineSpacing), sp = x + sp, data = flighStats.stats_total_flights, readOnly = true }
-
-            local function formatSeconds(seconds)
-                local days = math.floor(seconds / 86400)
-                seconds = seconds % 86400
-                local hours = math.floor(seconds / 3600)
-                seconds = seconds % 3600
-                local minutes = math.floor(seconds / 60)
-                seconds = seconds % 60
-                local s = string.format("%02d:%02d:%02d", hours, minutes, seconds)
-                if days > 0 then
-                    -- e.g. 12d04:30:58
-                    return string.format("%dd%s", days, s)
-                else
-                    -- only 04:30:58
-                    return s
-                end
-            end
-            local totalTime = formatSeconds(flighStats.stats_total_time_s.value)
+            local totalTime = rf2.executeScript("F/formatSeconds")(flighStats.stats_total_time_s.value)
             fields[#fields + 1] = { t = "Total time",     x = x, y = incY(lineSpacing), sp = x + sp, data = { value = totalTime }, readOnly = true  }
 
             fields[#fields + 1] = { t = "Total distance", x = x, y = incY(lineSpacing), sp = x + sp, data = flighStats.stats_total_dist_m, readOnly = true  }
