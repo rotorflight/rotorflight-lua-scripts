@@ -4,7 +4,7 @@ local apiVersion
 local lastRunTS
 
 local function init()
-    if getRSSI() == 0 and not rf2.runningInSimulator then
+    if getRSSI() == 0 then
         returnTable.t = "Waiting for connection"
         return false
     end

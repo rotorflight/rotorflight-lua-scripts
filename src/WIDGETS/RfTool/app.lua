@@ -3,7 +3,7 @@ local zone, options = ...
 
 local previousArmState = 0
 
-local w = { 
+local w = {
     zone = zone,
     options = options
 }
@@ -15,8 +15,8 @@ else
     w.state = "compiling"
 end
 
-w.options.getText = function(options) 
-    return options.sourceName .. ": " .. tostring(getValue(options.sourceName)) .. options.Suffix 
+w.options.getText = function(options)
+    return options.sourceName .. ": " .. tostring(getValue(options.sourceName)) .. options.Suffix
 end
 
 local compileTask = nil
@@ -58,6 +58,7 @@ w.setState = function(self, state)
     self.state = state
     if state == "disconnected" then
         rf2.modelName = nil
+        rf2.apiVersion = nil
         previousArmState = 0
     end
     publishStateChangedEvent(self.state)
@@ -98,8 +99,8 @@ end
 local function showWidget(widget)
     lvgl.clear();
     lvgl.build({
-        { 
-            type = "box", flexFlow = lvgl.FLOW_COLUMN, children = 
+        {
+            type = "box", flexFlow = lvgl.FLOW_COLUMN, children =
             {
                 { type = "label", text = function() return getModelName() end, w = widget.zone.x, font = DBLSIZE, align = CENTER },
                 { type = "label", text = function() return rf2 and rf2.widget.options:getText() or "" end, w = widget.zone.x, align = CENTER },
@@ -119,8 +120,8 @@ w.update = function(widget, options)
         end
     end
 
-    if (lvgl.isFullScreen() or lvgl.isAppMode()) and widget.state == "connected" then
-        rf2.showMainMenu()
+    if lvgl.isFullScreen() or lvgl.isAppMode() then
+        rf2.restartUi()
     else
         showWidget(widget)
     end
@@ -129,7 +130,7 @@ end
 local function setArmState(widget)
     if not getValue then return end -- not available at boot time
     local armState = getValue("ARM")
-    --[NIR 
+    --[NIR
     -- Use ANT instead of ARM in the simulator
     if rf2 and rf2.runningInSimulator then armState = getValue("ANT") end
     --]]
@@ -143,14 +144,14 @@ end
 w.background = function(widget)
     setArmState(widget)
 
-    if backgroundTask ~= nil then 
-        backgroundTask(widget) 
+    if backgroundTask ~= nil then
+        backgroundTask(widget)
     end
 end
 
 w.refresh = function(widget, event, touchState)
     if widget.state == "compiling" then
-        compileTask = compileTask or assert(loadScript("/SCRIPTS/RF2/COMPILE/compile.lua"))() 
+        compileTask = compileTask or assert(loadScript("/SCRIPTS/RF2/COMPILE/compile.lua"))()
         if compileTask() == 1 then
             compileTask = nil
             widget.state = "loading"
@@ -164,9 +165,13 @@ w.refresh = function(widget, event, touchState)
         rf2.widgetIsAlivePing = widgetIsAlivePing -- TODO: replace ping with destroy + unregisterWidget once destroy gets implemented in the EdgeTX widget interface, see https://github.com/EdgeTX/edgetx/issues/7104
     end
 
-    local noUi = not(lvgl.isFullScreen() or lvgl.isAppMode())
     if uiTask ~= nil then
-        uiTask(event, touchState, noUi)
+        local noUi = not(lvgl.isFullScreen() or lvgl.isAppMode())
+        local result = uiTask(event, touchState, noUi)
+        if lvgl.isFullScreen() and result == 2 then
+            lvgl.exitFullScreen()
+            showWidget(widget)
+        end
     end
 
     w.background(widget)

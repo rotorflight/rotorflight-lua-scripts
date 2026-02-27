@@ -13,11 +13,12 @@ local function run(event, touchState, noUi)
         local gotApiVersion = InitTask.f()
         ui.setWaitMessage(InitTask.t)
         if not gotApiVersion then
+            if ui.state == ui.status.exit then return 2 end
             return 0
         end
         InitTask = nil
         ui.clearWaitMessage()
-        if not noUi then 
+        if not noUi then
             ui.loadMainMenu()
             ui.showMainMenu()
         end
@@ -68,9 +69,10 @@ rf2.setWaitMessage = ui.setWaitMessage
 rf2.clearWaitMessage = ui.clearWaitMessage
 rf2.settingsSaved = ui.saveSettingsToEeprom
 rf2.onPageReady = ui.onPageReady
-rf2.showMainMenu = function()
-    ui.loadMainMenu()
-    ui.showMainMenu()
+rf2.restartUi = function()
+    IsInitialized = false
+    ui.restart()
 end
+
 -- Return the run function to be called by the RF2 tool
 return run
