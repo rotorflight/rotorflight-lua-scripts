@@ -149,6 +149,7 @@ w.background = function(widget)
     end
 end
 
+local redrawWidget = false
 w.refresh = function(widget, event, touchState)
     if widget.state == "compiling" then
         compileTask = compileTask or assert(loadScript("/SCRIPTS/RF2/COMPILE/compile.lua"))()
@@ -166,11 +167,17 @@ w.refresh = function(widget, event, touchState)
     end
 
     if uiTask ~= nil then
+        if redrawWidget then
+            -- If we immediately show the widget after lvgl.exitFullScreen(), the widget if briefly displayed in full screen mode.
+            showWidget(widget)
+            redrawWidget = false
+        end
+
         local noUi = not(lvgl.isFullScreen() or lvgl.isAppMode())
         local result = uiTask(event, touchState, noUi)
         if lvgl.isFullScreen() and result == 2 then
             lvgl.exitFullScreen()
-            showWidget(widget)
+            redrawWidget = true
         end
     end
 
