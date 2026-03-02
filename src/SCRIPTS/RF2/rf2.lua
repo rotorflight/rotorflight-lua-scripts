@@ -61,7 +61,7 @@ rf2 = {
 
     --[NIR
     print = function(format, ...)
-        local str = string.format("RF2: " .. format, ...)
+        local str = string.format("RF2: " .. tostring(format), ...)
         if rf2.runningInSimulator then
             print(str)
         else
