@@ -50,7 +50,11 @@ local function getDefaults()
 end
 
 local function getRateDefaults(data, rates_type)
-    data.rates_type = { value = rates_type, min = 0, max = 5, table = { [0] = "NONE", "BETAFL", "RACEFL", "KISS", "ACTUAL", "QUICK"} }
+    data.rates_type = { value = rates_type, min = 0, table = { [0] = "NONE", "BETAFL", "RACEFL", "KISS", "ACTUAL", "QUICK" } }
+    if rf2.apiVersion >= 12.09 then
+        data.rates_type.table[#data.rates_type.table + 1] = "ROTORFL"
+    end
+    data.rates_type.max = #data.rates_type.table
     local rateName = data.rates_type.table[rates_type]
     --rf2.print("rateName: " .. rateName)
     local setRateDefaults = rf2.executeScript("MSP/RATES/" .. rateName)
@@ -106,7 +110,7 @@ local function getRcTuning(callback, callbackParam, data)
             end
             callback(callbackParam, data)
         end,
-        simulatorResponse = { 4, 18, 25, 32, 20, 0, 0, 18, 25, 32, 20, 0, 0, 32, 50, 45, 10, 0, 0, 56, 0, 56, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 30, 30, 60, 150 },
+        simulatorResponse = { 6, 50, 40, 24, 0, 0, 0, 50, 40, 24, 0, 0, 0, 80, 50, 24, 0, 0, 0, 100, 0, 24, 0, 0, 0, 0, 15, 0, 15, 0, 90, 0, 15, 30, 30, 60, 0 }
     }
     rf2.mspQueue:add(message)
 end

@@ -3,7 +3,7 @@ local function getDefaults()
     if rf2.apiVersion < 12.09 then
         defaults.gov_mode = { min = 0, max = 4, table = { [0] = "OFF", "PASSTHROUGH", "STANDARD", "MODE1", "MODE2" } }
     else
-        defaults.gov_mode = { min = 0, max = 3, table = { [0] = "OFF", "EXTERNAL", "ELECTRIC", "NITRO" } }
+        defaults.gov_mode = { min = 0, max = 4, table = { [0] = "OFF", "LIMIT", "DIRECT", "ELECTRIC", "NITRO" } }
     end
     defaults.gov_startup_time = { min = 0, max = 600, scale = 10, unit = rf2.units.seconds }
     defaults.gov_spoolup_time = { min = 0, max = 600, scale = 10, unit = rf2.units.seconds }
@@ -17,6 +17,8 @@ local function getDefaults()
     if rf2.apiVersion < 12.09 then
         defaults.gov_autorotation_bailout_time = { min = 0, max = 100, scale = 10, unit = rf2.units.seconds }
         defaults.gov_autorotation_min_entry_time = { min = 0, max = 600, scale = 10, unit = rf2.units.seconds }
+    else
+        defaults.gov_autorotation_timeout = { min = 0, max = 250, unit = rf2.units.seconds }
     end
     defaults.gov_handover_throttle = { min = 10, max = 50, unit = rf2.units.percentage }
     defaults.gov_pwr_filter = { min = 0, max = 250, unit = rf2.units.herz }
@@ -27,9 +29,9 @@ local function getDefaults()
         defaults.gov_spoolup_min_throttle = { min = 0, max = 50, unit = rf2.units.percentage }
     end
     if rf2.apiVersion >= 12.09 then
-        defaults.gov_d_filter = { min = 0, max = 250, unit = rf2.units.herz }
+        defaults.gov_d_filter = { min = 0, max = 250, scale = 10, unit = rf2.units.herz }
         defaults.gov_spooldown_time = { min = 0, max = 600, scale = 10, unit = rf2.units.seconds }
-        defaults.gov_throttle_type = { min = 0, max = 3, table = { [0] = "NORMAL", "OFF_ON", "OFF_IDLE_ON", "OFF_IDLE_AUTO_ON" } }
+        defaults.gov_throttle_type = { min = 0, max = 2, table = { [0] = "NORMAL", "SWITCH", "FUNCTION" } }
         defaults.gov_idle_throttle = { min = 0, max = 250, scale = 10, unit = rf2.units.percentage }
         defaults.gov_auto_throttle = { min = 0, max = 250, scale = 10, unit = rf2.units.percentage }
         defaults.gov_bypass_throttle = { }

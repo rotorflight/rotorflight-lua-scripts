@@ -126,6 +126,7 @@ local mspRcTuningReplacements = {
         "SCRIPTS/RF2/MSP/RATES/NONE.lua",
         "SCRIPTS/RF2/MSP/RATES/QUICK.lua",
         "SCRIPTS/RF2/MSP/RATES/RACEFL.lua",
+        "SCRIPTS/RF2/MSP/RATES/ROTORFL.lua",
         "SCRIPTS/RF2/PAGES/rates.lua",
         "SCRIPTS/RF2/PAGES/rate_dynamics.lua"
     },

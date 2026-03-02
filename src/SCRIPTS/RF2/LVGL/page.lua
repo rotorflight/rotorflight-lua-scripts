@@ -38,6 +38,8 @@ local function show(page)
         }
     end
 
+    local screenMult = rf2.radio.screenMult or 1
+
     -- 2. FELDER ERSTELLEN
     for i = 1, #page.fields do
         local field = page.fields[i]
@@ -61,8 +63,8 @@ local function show(page)
             children[#children + 1] = {
                 type = "button",
                 x = field.x,
-                y = fieldY,
-                w = field.w or 200,
+                y = field.y,
+                w = (field.w or 200) * screenMult,
                 text = function()
                     local s = string.gsub(field.t, "[%[%]]", "") 
                     return  s
@@ -84,8 +86,8 @@ local function show(page)
                 child = {
                     type = "textEdit",
                     x = field.sp or field.x,
-                    y = fieldY,
-                    w = field.w or 125,
+                    y = field.y,
+                    w = (field.w or 125) * screenMult,
                     value = field.data.value,
                     length = field.data.max or 10,
                 }
@@ -109,8 +111,8 @@ local function show(page)
                     type = "choice",
                     values = choiceTable.values,
                     x = field.sp or field.x,
-                    y = fieldY,
-                    w = field.w or 100,
+                    y = field.y,
+                    w = (field.w or 100) * screenMult,
                     get = function() return choiceTable:getChoiceKey(field.data.value) end,
                     set = function(val)
                         field.data.value = choiceTable:getOriginalKey(val)
@@ -121,9 +123,11 @@ local function show(page)
                 child = {
                     type = "numberEdit",
                     x = field.sp or field.x,
-                    y = fieldY,
-                    w = field.w or 75,
-                    get = function() return field.data.value / (field.data.mult or 1) end,
+                    y = field.y,
+                    w = (field.w or 75) * screenMult,
+                    get = function()
+                        return field.data.value / (field.data.mult or 1)
+                    end,
                     set = function(val)
                         local newVal = math.ceil(val * (field.data.mult or 1))
                         if field.change then field:change(newVal, page) end
