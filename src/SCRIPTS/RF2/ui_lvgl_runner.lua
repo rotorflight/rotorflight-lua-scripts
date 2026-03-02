@@ -34,10 +34,15 @@ local function run(event, touchState, noUi)
     -- end
 
     if event then
-        if event == EVT_EXIT_BREAK and ui.state == ui.status.pages then
-            -- Always enable exiting a page with the return key.
-            rf2.mspQueue:clear()
-            ui.showMainMenu()
+        if event == EVT_EXIT_BREAK then
+            if ui.state == ui.status.pages then
+                -- Always enable exiting a page with the return key.
+                rf2.mspQueue:clear()
+                ui.showMainMenu()
+            elseif ui.state == ui.status.mainMenu then
+                ui.exit()
+                return 2
+            end
         end
 
         if event == 0x20D or event == EVT_VIRTUAL_PREV_PAGE or event == EVT_VIRTUAL_NEXT_PAGE then
