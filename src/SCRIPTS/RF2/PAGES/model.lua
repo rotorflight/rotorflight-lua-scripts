@@ -15,6 +15,7 @@ local modelName = "---"
 local flighStats = rf2.useApi("mspFlightStats").getDefaults()
 local pilotConfig = rf2.useApi("mspPilotConfig").getDefaults()
 local setNameOnTxFieldIndex
+local t = rf2.i18n.t
 
 local function buildForm(page)
     page.labels = nil
@@ -27,12 +28,12 @@ local function buildForm(page)
     y = yMinLim - tableSpacing.header
 
     labels[#labels + 1] = { t = modelName,      x = x, y = incY(lineSpacing) }
-    fields[#fields + 1] = { t = "Model ID",     x = x, y = incY(lineSpacing), sp = x + sp, data = pilotConfig.model_id }
+    fields[#fields + 1] = { t = t("Model_ID"),  x = x, y = incY(lineSpacing), sp = x + sp, data = pilotConfig.model_id }
 
     if rf2.apiVersion >= 12.09 then
         incY(lineSpacing * 0.5)
-        labels[#labels + 1] = { t = "Statistics",         x = x, y = incY(lineSpacing) }
-        fields[#fields + 1] = { t = "Enabled",            x = x, y = incY(lineSpacing), sp = x + sp, data = flighStats.statsEnabled,
+        labels[#labels + 1] = { t = t("Model_Stats"),     x = x, y = incY(lineSpacing) }
+        fields[#fields + 1] = { t = t("Model_Stats_Enabled"), x = x, y = incY(lineSpacing), sp = x + sp, data = flighStats.statsEnabled,
             postEdit = function(self, page)
                 if self.data.value == 0 then
                     flighStats.stats_min_armed_time_s.value = -1   -- stats disabled
@@ -45,7 +46,7 @@ local function buildForm(page)
         }
 
         if flighStats.statsEnabled.value and flighStats.statsEnabled.value == 1 then
-            fields[#fields + 1] = { t = "Total flights",  x = x, y = incY(lineSpacing), sp = x + sp, data = flighStats.stats_total_flights, readOnly = true }
+            fields[#fields + 1] = { t = t("Model_Total_Flights"), x = x, y = incY(lineSpacing), sp = x + sp, data = flighStats.stats_total_flights, readOnly = true }
 
             local function formatSeconds(seconds)
                 local days = math.floor(seconds / 86400)
@@ -64,10 +65,10 @@ local function buildForm(page)
                 end
             end
             local totalTime = formatSeconds(flighStats.stats_total_time_s.value)
-            fields[#fields + 1] = { t = "Total time",     x = x, y = incY(lineSpacing), sp = x + sp, data = { value = totalTime }, readOnly = true  }
+            fields[#fields + 1] = { t = t("Model_Total_Time"), x = x, y = incY(lineSpacing), sp = x + sp, data = { value = totalTime }, readOnly = true  }
 
-            fields[#fields + 1] = { t = "Total distance", x = x, y = incY(lineSpacing), sp = x + sp, data = flighStats.stats_total_dist_m, readOnly = true  }
-            fields[#fields + 1] = { t = "Min armed time", x = x, y = incY(lineSpacing), sp = x + sp, data = flighStats.stats_min_armed_time_s }
+            fields[#fields + 1] = { t = t("Model_Total_Dist"), x = x, y = incY(lineSpacing), sp = x + sp, data = flighStats.stats_total_dist_m, readOnly = true  }
+            fields[#fields + 1] = { t = t("Model_Min_Armed_Time"), x = x, y = incY(lineSpacing), sp = x + sp, data = flighStats.stats_min_armed_time_s }
 
             local function resetStats(self, page)
                 flighStats.stats_total_flights.value = 0
@@ -76,13 +77,13 @@ local function buildForm(page)
                 buildForm(page)
                 rf2.onPageReady(page)
             end
-            fields[#fields + 1] = { t = "[Reset Stats]",  x = x + indent * 3, y = incY(lineSpacing * 1.3), preEdit = resetStats }
+            fields[#fields + 1] = { t = t("Model_Reset_Stats"), x = x + indent * 3, y = incY(lineSpacing * 1.3), preEdit = resetStats }
         end
     end
 
     incY(lineSpacing * 0.5)
-    labels[#labels + 1] = { t = "Radio Configuration",       x = x, y = incY(lineSpacing) }
-    labels[#labels + 1] = { t = "Note: requires rf2bg",   x = x + indent, y = incY(lineSpacing), bold = false }
+    labels[#labels + 1] = { t = t("Model_Radio_Config"),     x = x, y = incY(lineSpacing) }
+    labels[#labels + 1] = { t = t("Model_Requires_Rf2bg"),   x = x + indent, y = incY(lineSpacing), bold = false }
 
     local function getAutoSetName()
         if rf2.apiVersion >= 12.07 and rf2.apiVersion < 12.09 then
@@ -93,15 +94,15 @@ local function buildForm(page)
     end
     incY(lineSpacing * 0.25)
     setNameOnTxFieldIndex = #fields + 1
-    fields[setNameOnTxFieldIndex] = { t = "Set name on TX", x = x, y = incY(lineSpacing), sp = x + sp, data = { value = getAutoSetName() or 0, min = 0, max = 1, table = { [0] = "Off", "On" } } }
+    fields[setNameOnTxFieldIndex] = { t = t("Model_Set_Name_Tx"), x = x, y = incY(lineSpacing), sp = x + sp, data = { value = getAutoSetName() or 0, min = 0, max = 1, table = { [0] = "Off", "On" } } }
 
     incY(lineSpacing * 0.25)
-    fields[#fields + 1] = { t = "Param1 type",  x = x, y = incY(lineSpacing), sp = x + sp, data = pilotConfig.model_param1_type }
-    fields[#fields + 1] = { t = "Param1 value", x = x, y = incY(lineSpacing), sp = x + sp, data = pilotConfig.model_param1_value }
-    fields[#fields + 1] = { t = "Param2 type",  x = x, y = incY(lineSpacing), sp = x + sp, data = pilotConfig.model_param2_type }
-    fields[#fields + 1] = { t = "Param2 value", x = x, y = incY(lineSpacing), sp = x + sp, data = pilotConfig.model_param2_value }
-    fields[#fields + 1] = { t = "Param3 type",  x = x, y = incY(lineSpacing), sp = x + sp, data = pilotConfig.model_param3_type }
-    fields[#fields + 1] = { t = "Param3 value", x = x, y = incY(lineSpacing), sp = x + sp, data = pilotConfig.model_param3_value }
+    fields[#fields + 1] = { t = t("Model_Param") .. " 1 " .. t("Model_Type"),  x = x, y = incY(lineSpacing), sp = x + sp, data = pilotConfig.model_param1_type }
+    fields[#fields + 1] = { t = t("Model_Param") .. " 1 " .. t("Model_Value"), x = x, y = incY(lineSpacing), sp = x + sp, data = pilotConfig.model_param1_value }
+    fields[#fields + 1] = { t = t("Model_Param") .. " 2 " .. t("Model_Type"),  x = x, y = incY(lineSpacing), sp = x + sp, data = pilotConfig.model_param2_type }
+    fields[#fields + 1] = { t = t("Model_Param") .. " 2 " .. t("Model_Value"), x = x, y = incY(lineSpacing), sp = x + sp, data = pilotConfig.model_param2_value }
+    fields[#fields + 1] = { t = t("Model_Param") .. " 3 " .. t("Model_Type"),  x = x, y = incY(lineSpacing), sp = x + sp, data = pilotConfig.model_param3_type }
+    fields[#fields + 1] = { t = t("Model_Param") .. " 3 " .. t("Model_Value"), x = x, y = incY(lineSpacing), sp = x + sp, data = pilotConfig.model_param3_value }
 
     page.labels = labels
     page.fields = fields

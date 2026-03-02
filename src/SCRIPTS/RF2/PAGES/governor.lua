@@ -32,6 +32,7 @@ if rf2.apiVersion >= 12.09 then
     fields[#fields + 1] = { t = "Spooldown time",           x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_spooldown_time }
     fields[#fields + 1] = { t = "Tracking time",            x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_tracking_time }
     fields[#fields + 1] = { t = "Recovery time",            x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_recovery_time }
+    fields[#fields + 1] = { t = "AR timeout",               x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_autorotation_timeout }
     incY(lineSpacing * 0.5)
     labels[#labels + 1] = { t = "Filters",                  x = x, y = incY(lineSpacing) }
     fields[#fields + 1] = { t = "Headspeed cutoff",         x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_rpm_filter }

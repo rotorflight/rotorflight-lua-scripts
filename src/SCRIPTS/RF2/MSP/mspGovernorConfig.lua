@@ -12,7 +12,9 @@ local function getDefaults()
     defaults.gov_throttle_hold_timeout = { min = 0, max = 100, scale = 10, unit = rf2.units.seconds }
     if rf2.apiVersion < 12.09 then
         defaults.gov_lost_headspeed_timeout = { min = 0, max = 100, scale = 10, unit = rf2.units.seconds }
-        defaults.gov_autorotation_timeout = { min = 0, max = 600, scale = 10, unit = rf2.units.seconds }
+    end
+    defaults.gov_autorotation_timeout = { min = 0, max = 600, scale = 10, unit = rf2.units.seconds }
+    if rf2.apiVersion < 12.09 then
         defaults.gov_autorotation_bailout_time = { min = 0, max = 100, scale = 10, unit = rf2.units.seconds }
         defaults.gov_autorotation_min_entry_time = { min = 0, max = 600, scale = 10, unit = rf2.units.seconds }
     else
