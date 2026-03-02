@@ -17,7 +17,9 @@ rf2 = {
             script = script .. ".lua"
         end
         collectgarbage()
-        return loadScript(script)
+        local result = loadScript(script)
+        --rf2.showMemoryUsage(script .. " loaded")
+        return result
     end,
 
     executeScript = function(scriptName, ...)

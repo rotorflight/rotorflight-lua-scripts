@@ -65,23 +65,18 @@ w.setState = function(self, state)
 end
 
 local function loadScripts(widget)
-    --print("RF2: Before rf2.lua: ", collectgarbage("count") * 1024)
+    -- load required scripts
+    print("RF2: Before rf2.lua: ", collectgarbage("count") * 1024)
     assert(loadScript("/SCRIPTS/RF2/rf2.lua"))()
-    --rf2.showMemoryUsage("rf2 loaded")
+    rf2.showMemoryUsage("rf2 loaded")
     rf2.radio = rf2.executeScript("radios")
-    --rf2.showMemoryUsage("radios loaded")
     rf2.mspQueue = rf2.executeScript("MSP/mspQueue")
-    --rf2.showMemoryUsage("MSP queue loaded")
     rf2.mspQueue.maxRetries = 3
     rf2.mspHelper = rf2.executeScript("MSP/mspHelper")
-    --rf2.showMemoryUsage("MSP helper loaded")
 
+    -- load tasks
     uiTask = rf2.executeScript("ui_lvgl_runner")
-    --uiTask = rf2.executeScript("ui_lcd")
-    --rf2.showMemoryUsage("ui loaded")
-
     backgroundTask = rf2.executeScript("background")
-    --rf2.showMemoryUsage("background loaded")
 
     rf2.widget = widget
 end
