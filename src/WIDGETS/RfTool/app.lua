@@ -14,6 +14,7 @@ else
 end
 
 w.options.getText = function(options)
+    if not getValue then return options.sourceName .. ": " end
     return options.sourceName .. ": " .. tostring(getValue(options.sourceName)) .. options.Suffix
 end
 
@@ -77,11 +78,15 @@ w.setState = function(self, state)
     publishStateChangedEvent(self.state)
 end
 
+local function initializeRf2GlobalVar()
+    -- rf2 is the *only* global variable that is used by the Rotorflight scripts.
+    --print("RF2: Before rf2.lua: ", collectgarbage("count") * 1024)
+    assert(loadScript("/SCRIPTS/RF2/rf2.lua"))()
+    --rf2.showMemoryUsage("rf2 loaded")
+end
+
 local function loadScripts(widget)
     -- load required scripts
-    print("RF2: Before rf2.lua: ", collectgarbage("count") * 1024)
-    assert(loadScript("/SCRIPTS/RF2/rf2.lua"))()
-    rf2.showMemoryUsage("rf2 loaded")
     rf2.radio = rf2.executeScript("radios")
     rf2.mspQueue = rf2.executeScript("MSP/mspQueue")
     rf2.mspQueue.maxRetries = 3
@@ -90,8 +95,6 @@ local function loadScripts(widget)
     -- load tasks
     uiTask = rf2.executeScript("ui_lvgl_runner")
     backgroundTask = rf2.executeScript("background")
-
-    rf2.widget = widget
 end
 
 local function getModelName()
@@ -111,8 +114,8 @@ local function showWidget(widget)
             type = "box", flexFlow = lvgl.FLOW_COLUMN, children =
             {
                 { type = "label", text = function() return getModelName() end, w = widget.zone.x, font = DBLSIZE, align = CENTER },
-                { type = "label", text = function() return rf2 and rf2.widget.options:getText() or "" end, w = widget.zone.x, align = CENTER },
                 { type = "label", text = function() return widget.state end, w = widget.zone.x, align = CENTER },
+                { type = "label", text = function() return rf2 and rf2.widget.options:getText() or "" end, w = widget.zone.x, align = CENTER },
             }
         }
     });
@@ -152,12 +155,22 @@ w.refresh = function(widget, event, touchState)
             widget.state = "loading"
         end
         return
-    elseif widget.state == "loading" and (getTime() - timeCreated) / 100 > 5 then -- bootgrace timeout
-        loadScripts(widget)
-        widget.state = "ready"
-
-        rf2.registerWidget = registerWidget
-        rf2.widgetIsAlivePing = widgetIsAlivePing -- TODO: replace ping with destroy + unregisterWidget once destroy gets implemented in the EdgeTX widget interface, see https://github.com/EdgeTX/edgetx/issues/7104
+    elseif widget.state == "loading" then
+        if (getTime() - timeCreated) / 100 > 1 then -- bootgrace timeout
+            if not rf2 then
+                initializeRf2GlobalVar()
+                rf2.registerWidget = registerWidget
+                rf2.widgetIsAlivePing = widgetIsAlivePing -- TODO: replace ping with destroy + unregisterWidget once destroy gets implemented in the EdgeTX widget interface, see https://github.com/EdgeTX/edgetx/issues/7104
+                rf2.widget = widget
+                widget.state = "unknown protocol"
+            end
+        end
+    elseif widget.state == "unknown protocol" then
+        local protocol = rf2.executeScript("F/getProtocol")()
+        if protocol then
+            loadScripts(widget)
+            widget.state = "ready"
+        end
     end
 
     if uiTask ~= nil then
@@ -177,6 +190,5 @@ w.refresh = function(widget, event, touchState)
 
     w.background(widget)
 end
-
 
 return w
