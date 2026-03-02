@@ -1,8 +1,6 @@
 -- RfTool widget
 local zone, options = ...
 
-local previousArmState = 0
-
 local w = {
     zone = zone,
     options = options
@@ -49,6 +47,21 @@ local function publishStateChangedEvent(newState)
         elseif v.onStateChanged then
             local status, err = pcall(v.onStateChanged, v, newState)
         end
+    end
+end
+
+local previousArmState = 0
+local function setArmState(widget)
+    if not getValue then return end -- not available at boot time
+    local armState = getValue("ARM")
+    --[NIR
+    -- Use ANT instead of ARM in the simulator
+    if rf2 and rf2.runningInSimulator then armState = getValue("ANT") end
+    --]]
+    if armState ~= previousArmState then
+        previousArmState = armState
+        local state = bit32.btest(armState, 1) and "armed" or "disarmed"
+        widget:setState(state)
     end
 end
 
@@ -119,20 +132,6 @@ w.update = function(widget, options)
         rf2.restartUi()
     else
         showWidget(widget)
-    end
-end
-
-local function setArmState(widget)
-    if not getValue then return end -- not available at boot time
-    local armState = getValue("ARM")
-    --[NIR
-    -- Use ANT instead of ARM in the simulator
-    if rf2 and rf2.runningInSimulator then armState = getValue("ANT") end
-    --]]
-    if armState ~= previousArmState then
-        previousArmState = armState
-        local state = bit32.btest(armState, 1) and "armed" or "disarmed"
-        widget:setState(state)
     end
 end
 
