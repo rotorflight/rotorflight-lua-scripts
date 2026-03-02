@@ -2,9 +2,7 @@
 local name = "RF Tool"
 local options = {
     { "Source",       SOURCE, "Vcel" },
-    { "Text Color",   COLOR,  COLOR_THEME_PRIMARY1 },
-    { "Suffix",       STRING, "" },
-    { "Show Min/Max", BOOL,   1  }
+    { "Suffix",       STRING, "" }
 }
 
 if lvgl == nil then
@@ -25,12 +23,12 @@ local function create(zone, options)
 end
 
 local function update(widget, options)
-    --print("RfTool: update called")    
+    --print("RfTool: update called")
     if widget and widget.update then widget.update(widget, options) end
 end
 
 local function refresh(widget, event, touchState)
-    --print("RfTool: refresh called")    
+    --print("RfTool: refresh called")
     if widget and widget.refresh then widget.refresh(widget, event, touchState) end
 end
 
@@ -44,13 +42,13 @@ end
 --     if widget and widget.translate then widget.translate(widget) end
 -- end
 
-return { 
-    useLvgl = true, 
-    name = name, 
-    options = options, 
-    create = create, 
-    update = update, 
-    refresh = refresh, 
-    background = background, 
-    --translate = translate 
+return {
+    useLvgl = true,
+    name = name,
+    options = options,
+    create = create,
+    update = update,
+    refresh = refresh,
+    background = background,
+    --translate = translate
 }
