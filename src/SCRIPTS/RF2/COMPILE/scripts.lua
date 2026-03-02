@@ -9,7 +9,9 @@ local scripts = {
     "/SCRIPTS/RF2/LCD/shared.lua",
     "/SCRIPTS/RF2/LCD/waitMessage.lua",
     "/SCRIPTS/RF2/F/canUseLvgl.lua",
+    "/SCRIPTS/RF2/F/formatSeconds.lua",
     "/SCRIPTS/RF2/F/getBit.lua",
+    "/SCRIPTS/RF2/F/getProtocol.lua",
     "/SCRIPTS/RF2/F/hasSensor.lua",
     "/SCRIPTS/RF2/F/incMax.lua",
     "/SCRIPTS/RF2/F/pilotConfigReset.lua",
@@ -104,5 +106,7 @@ local scripts = {
     "/SCRIPTS/RF2/ui_lvgl_framework.lua",
     "/SCRIPTS/RF2/ui_lvgl_runner.lua",
     "/SCRIPTS/TOOLS/rf2.lua",
+    "/WIDGETS/RfTool/app.lua",
+    "/WIDGETS/RfTool/main.lua",
 }
 return scripts[...]
