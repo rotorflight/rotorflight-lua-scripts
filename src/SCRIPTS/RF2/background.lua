@@ -94,7 +94,7 @@ local function run(widget)
     end
 end
 
--- widget is optional and will be provided by the RfTool widget. 
+-- widget is optional and will be provided by the RfTool widget.
 -- If the background script runs as a special function, widget will be nil.
 local function runProtected(widget)
     local status, err = pcall(run, widget)

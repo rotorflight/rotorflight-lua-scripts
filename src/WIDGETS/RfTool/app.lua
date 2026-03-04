@@ -135,11 +135,12 @@ w.background = function(widget, calledFromRefresh)
         return
     elseif widget.state == "loading"
         and (getTime() - timeCreated) / 100 > 1 -- bootgrace timeout
-        and not rf2
     then
-        initializeRf2GlobalVar()
-        rf2.registerWidget = registerWidget
-        rf2.widget = widget
+        if not rf2 then
+            initializeRf2GlobalVar()
+            rf2.registerWidget = registerWidget
+            rf2.widget = widget
+        end
         widget.state = "unknown protocol"
     elseif widget.state == "unknown protocol" then
         local protocol = rf2.executeScript("F/getProtocol")()
