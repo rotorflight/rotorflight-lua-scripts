@@ -106,6 +106,8 @@ local scripts = {
     "/SCRIPTS/RF2/ui_lvgl_framework.lua",
     "/SCRIPTS/RF2/ui_lvgl_runner.lua",
     "/SCRIPTS/TOOLS/rf2.lua",
+    "/WIDGETS/RfStats/app.lua",
+    "/WIDGETS/RfStats/main.lua",
     "/WIDGETS/RfTool/app.lua",
     "/WIDGETS/RfTool/main.lua",
 }
