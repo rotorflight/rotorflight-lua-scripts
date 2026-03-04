@@ -1,8 +1,10 @@
--- Keep main.lua as lightweight as possible, since main.lua gets loaded for **all** widgets at boot time. Even if a widget isn't used by a particular model.
+-- Keep main.lua as lightweight as possible, since main.lua gets loaded for **all** widgets at boot time.
+-- Even if a widget isn't used by a particular model.
 local name = "RF Tool"
+
 local options = {
-    { "Source",       SOURCE, "Vcel" },
-    { "Suffix",       STRING, "" }
+    { "Source", SOURCE, "Vcel" },
+    { "Suffix", STRING, "" }
 }
 
 if lvgl == nil then
@@ -17,24 +19,20 @@ if lvgl == nil then
 end
 
 local function create(zone, options)
-    --print("RfTool: create called")
     local widget = loadScript("/WIDGETS/RfTool/app.lua")(zone, options)
     return widget
 end
 
 local function update(widget, options)
-    --print("RfTool: update called")
-    if widget and widget.update then widget.update(widget, options) end
+    if widget.update then widget.update(widget, options) end
 end
 
 local function refresh(widget, event, touchState)
-    --print("RfTool: refresh called")
-    if widget and widget.refresh then widget.refresh(widget, event, touchState) end
+    if widget.refresh then widget.refresh(widget, event, touchState) end
 end
 
 local function background(widget)
-    --print("RfTool: background called")
-    if widget and widget.background then widget.background(widget) end
+    if widget.background then widget.background(widget) end
 end
 
 -- local function translate(widget)

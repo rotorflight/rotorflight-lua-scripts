@@ -29,23 +29,9 @@ local function registerWidget(widget)
     table.insert(rfWidgets, widget)
 end
 
-local function widgetIsAlivePing(widget)
-    for k, v in pairs(rfWidgets) do
-        if v == widget then
-            print("Received ping from widget, updating lastPing time")
-            v.lastPing = getTime()
-            return
-        end
-    end
-end
-
 local function publishStateChangedEvent(newState)
     for k, v in pairs(rfWidgets) do
-        if v.lastPing ~= nil  and (getTime() - v.lastPing) / 100 > 5 then
-            -- previously registered widget is considered dead, remove it from the list
-            --print("Widget considered dead, removing it")
-            table.remove(rfWidgets, k)
-        elseif v.onStateChanged then
+        if v.onStateChanged then
             local status, err = pcall(v.onStateChanged, v, newState)
         end
     end
@@ -119,6 +105,8 @@ local function showWidget(widget)
             }
         }
     });
+
+    widget.visible = true
 end
 
 w.update = function(widget, options)
@@ -127,7 +115,6 @@ w.update = function(widget, options)
         local fieldInfo = getFieldInfo(options.Source)
         if fieldInfo then
             widget.options.sourceName = fieldInfo.name
-            print("RF2: source name: ", widget.options.sourceName)
         end
     end
 
@@ -138,16 +125,7 @@ w.update = function(widget, options)
     end
 end
 
-w.background = function(widget)
-    setArmState(widget)
-
-    if backgroundTask ~= nil then
-        backgroundTask(widget)
-    end
-end
-
-local redrawWidget = false
-w.refresh = function(widget, event, touchState)
+w.background = function(widget, calledFromRefresh)
     if widget.state == "compiling" then
         compileTask = compileTask or assert(loadScript("/SCRIPTS/RF2/COMPILE/compile.lua"))()
         if compileTask() == 1 then
@@ -155,16 +133,14 @@ w.refresh = function(widget, event, touchState)
             widget.state = "loading"
         end
         return
-    elseif widget.state == "loading" then
-        if (getTime() - timeCreated) / 100 > 1 then -- bootgrace timeout
-            if not rf2 then
-                initializeRf2GlobalVar()
-                rf2.registerWidget = registerWidget
-                rf2.widgetIsAlivePing = widgetIsAlivePing -- TODO: replace ping with destroy + unregisterWidget once destroy gets implemented in the EdgeTX widget interface, see https://github.com/EdgeTX/edgetx/issues/7104
-                rf2.widget = widget
-                widget.state = "unknown protocol"
-            end
-        end
+    elseif widget.state == "loading"
+        and (getTime() - timeCreated) / 100 > 1 -- bootgrace timeout
+        and not rf2
+    then
+        initializeRf2GlobalVar()
+        rf2.registerWidget = registerWidget
+        rf2.widget = widget
+        widget.state = "unknown protocol"
     elseif widget.state == "unknown protocol" then
         local protocol = rf2.executeScript("F/getProtocol")()
         if protocol then
@@ -173,9 +149,28 @@ w.refresh = function(widget, event, touchState)
         end
     end
 
+    setArmState(widget)
+
+    if not calledFromRefresh then
+        widget.visible = false
+        if uiTask then
+            -- uiTask also handles mspQueue in the background, so make sure to call it
+            -- even when the widget isn't visible.
+            uiTask()
+        end
+    end
+
+    if backgroundTask then
+        backgroundTask(widget)
+    end
+end
+
+local redrawWidget = false
+w.refresh = function(widget, event, touchState)
     if uiTask ~= nil then
-        if redrawWidget then
-            -- If we immediately show the widget after lvgl.exitFullScreen(), the widget if briefly displayed in full screen mode.
+        if redrawWidget or not widget.visible then
+            -- If we immediately show the widget after lvgl.exitFullScreen(), the widget if briefly
+            -- displayed in full screen mode. Using redrawWidget prevents that.
             showWidget(widget)
             redrawWidget = false
         end
@@ -188,7 +183,7 @@ w.refresh = function(widget, event, touchState)
         end
     end
 
-    w.background(widget)
+    w.background(widget, true)
 end
 
 return w
