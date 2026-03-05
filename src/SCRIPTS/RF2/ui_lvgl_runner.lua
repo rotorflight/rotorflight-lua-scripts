@@ -4,8 +4,8 @@ local IsInitialized = false
 local InitTask
 local IgnoreNextKeyEvent = false
 
-local function run(event, touchState)
-    ui.update()
+local function run(event, touchState, noUi)
+    if not noUi then ui.update() end
 
     if not IsInitialized then
         rf2.mspQueue.maxRetries = -1 -- retry indefinitely
@@ -13,12 +13,15 @@ local function run(event, touchState)
         local gotApiVersion = InitTask.f()
         ui.setWaitMessage(InitTask.t)
         if not gotApiVersion then
+            if ui.state == ui.status.exit then return 2 end
             return 0
         end
         InitTask = nil
         ui.clearWaitMessage()
-        ui.loadMainMenu()
-        ui.showMainMenu()
+        if not noUi then
+            ui.loadMainMenu()
+            ui.showMainMenu()
+        end
         IsInitialized = true
     end
 
@@ -31,16 +34,21 @@ local function run(event, touchState)
     -- end
 
     if event then
-        if event == EVT_EXIT_BREAK and ui.state == ui.status.pages then
-            -- Always enable exiting a page with the return key.
-            rf2.mspQueue:clear()
-            ui.showMainMenu()
+        if event == EVT_EXIT_BREAK then
+            if ui.state == ui.status.pages then
+                -- Always enable exiting a page with the return key.
+                rf2.mspQueue:clear()
+                ui.showMainMenu()
+            elseif ui.state == ui.status.mainMenu then
+                ui.exit()
+                return 2
+            end
         end
 
         if event == 0x20D or event == EVT_VIRTUAL_PREV_PAGE or event == EVT_VIRTUAL_NEXT_PAGE then
             -- For some reason the tool gets all key events twice, so we need to ignore the second one.
             if not IgnoreNextKeyEvent then
-                IgnoreNextKeyEvent = true
+                if rf2.isTool then IgnoreNextKeyEvent = true end
                 if event == 0x20D then -- SYS break
                     ui.showPopupMenu()
                 elseif event == EVT_VIRTUAL_PREV_PAGE then
@@ -66,6 +74,10 @@ rf2.setWaitMessage = ui.setWaitMessage
 rf2.clearWaitMessage = ui.clearWaitMessage
 rf2.settingsSaved = ui.saveSettingsToEeprom
 rf2.onPageReady = ui.onPageReady
+rf2.restartUi = function()
+    IsInitialized = false
+    ui.restart()
+end
 
 -- Return the run function to be called by the RF2 tool
 return run

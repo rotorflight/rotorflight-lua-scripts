@@ -16,13 +16,17 @@ local PageFiles = nil
 local Page = nil
 local CurrentPageIndex = -1
 
+ui.exit = function()
+    ui.state = ui.status.exit
+end
+
 ui.refresh = function()
     ui.previousState = nil
 end
 
 ui.setWaitMessage = function(message)
     local title = Page and Page.title or ""
-    waitMessage.setWaitMessage(title, message)
+    waitMessage.setWaitMessage(title, message, ui.exit)
 end
 
 ui.clearWaitMessage = function()
@@ -49,7 +53,7 @@ ui.showMainMenu = function()
         title = "Rotorflight " .. rf2.luaVersion,
         subtitle = "Main Menu",
         items = {},
-        back = function() ui.state = ui.status.exit end
+        back = ui.exit
     }
 
     local onMenuItemClick = function(index)
@@ -189,6 +193,11 @@ end
 ui.onPageReady = function(page)
     page.isReady = true
     ui.showPage()
+end
+
+ui.restart = function()
+    ui.state = ui.status.init
+    ui.clearWaitMessage()
 end
 
 return ui

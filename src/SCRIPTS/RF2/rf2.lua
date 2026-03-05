@@ -1,5 +1,5 @@
 rf2 = {
-    luaVersion = "2.3.0-20260211",
+    luaVersion = "2.3.0-20260305",
     baseDir = "/SCRIPTS/RF2/",
     runningInSimulator = string.sub(select(2, getVersion()), -4) == "simu",
 
@@ -17,7 +17,9 @@ rf2 = {
             script = script .. ".lua"
         end
         collectgarbage()
-        return loadScript(script)
+        local result = loadScript(script)
+        --rf2.showMemoryUsage(script .. " loaded")
+        return result
     end,
 
     executeScript = function(scriptName, ...)
@@ -59,7 +61,7 @@ rf2 = {
 
     --[NIR
     print = function(format, ...)
-        local str = string.format("RF2: " .. format, ...)
+        local str = string.format("RF2: " .. tostring(format), ...)
         if rf2.runningInSimulator then
             print(str)
         else

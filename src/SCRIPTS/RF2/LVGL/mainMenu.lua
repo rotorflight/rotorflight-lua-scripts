@@ -27,7 +27,12 @@ local function show(menu)
         {
             type = "page",
             title = menu.title,
-            subtitle = menu.subtitle,
+            subtitle = function()
+                if rf2.widget and rf2.widget.options then
+                    return menu.subtitle .. " - " .. rf2.widget.options:getText()
+                end
+                return menu.subtitle
+            end,
             icon = rf2.baseDir .. "rf2.png",
             back = function()
                 if menu.back then

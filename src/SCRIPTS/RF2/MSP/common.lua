@@ -127,7 +127,7 @@ end
 
 local function mspPollReply()
     local startTime = rf2.clock()
-    while (rf2.clock() - startTime < 0.05) do
+    while (rf2.clock() - startTime < 0.01) do
         local mspData = mspPoll()
         if mspData ~= nil and mspReceivedReply(mspData) then
             mspLastReq = 0

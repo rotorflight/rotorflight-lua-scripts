@@ -1,10 +1,11 @@
 local t = {}
 
-t.setWaitMessage = function(title, message)
+t.setWaitMessage = function(title, message, back)
     --rf2.print("Setting wait message: "..message)
     if message ~= t.message or (message == t.message and not t.shown) then
         t.message = message
         t.title = title
+        t.back = back
         t.shown = false
     end
 end
@@ -29,7 +30,7 @@ t.updateWaitMessage = function()
             title = "Rotorflight " .. rf2.luaVersion,
             subtitle = t.title or "",
             icon = rf2.baseDir .. "rf2.png",
-            --back = function() ui.show() end,
+            back = t.back,
             children = {
                 {
                     type = "label", x = 70, y = 16, color = BLACK, font = DBLSIZE, text = t.message or ""
