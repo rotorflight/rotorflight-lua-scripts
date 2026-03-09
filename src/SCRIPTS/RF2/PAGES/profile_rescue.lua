@@ -60,8 +60,10 @@ return {
         rf2.useApi("mspRescueProfile").read(receivedRescueProfile, self, rescueProfile)
     end,
     write = function(self)
-        rf2.useApi("mspRescueProfile").write(rescueProfile)
-        rf2.settingsSaved(true, false)
+        if rescueProfile.mode.value then
+            rf2.useApi("mspRescueProfile").write(rescueProfile)
+            rf2.settingsSaved(true, false)
+        end
     end,
     title       = "Profile - Rescue",
     labels      = labels,

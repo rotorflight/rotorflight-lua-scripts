@@ -68,8 +68,10 @@ return {
         rf2.useApi("mspMixer").read(receivedMixerConfig, self, mixerConfig)
     end,
     write = function(self)
-        rf2.useApi("mspMixer").write(mixerConfig)
-        rf2.settingsSaved(true, false)
+        if mixerConfig.swash_phase.value then
+            rf2.useApi("mspMixer").write(mixerConfig)
+            rf2.settingsSaved(true, false)
+        end
     end,
     title       = "Mixer",
     labels      = labels,

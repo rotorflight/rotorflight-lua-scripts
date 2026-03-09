@@ -104,8 +104,10 @@ return {
         rf2.useApi("mspPidTuning").read(receivedPidTuning, self, pids)
     end,
     write = function(self)
-        rf2.useApi("mspPidTuning").write(pids)
-        rf2.settingsSaved(true, false)
+        if pids.roll_p.value then
+            rf2.useApi("mspPidTuning").write(pids)
+            rf2.settingsSaved(true, false)
+        end
     end,
     title       = "PID Gains",
     labels      = labels,

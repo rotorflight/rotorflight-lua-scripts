@@ -139,19 +139,6 @@ local function show(page)
         end
     end
 
-    if page.isReady and not page.readOnly then
-        children[#children + 1] = {
-            type = "button",
-            x = 5,
-            y = children[#children].y + 35,
-            w = LCD_W - 20,
-            text = "Save",
-            press = function()
-                page:write()
-            end,
-        }
-    end
-
     for i = 1, #children do
         local child = children[i]
         child.x = child.x * 1.75
@@ -165,8 +152,8 @@ local function show(page)
             subtitle = function()
                 if rf2.widget and rf2.widget.options then
                     return page.title .. " - " .. rf2.widget.options:getText()
-                end 
-                return page.title 
+                end
+                return page.title
             end,
             icon = rf2.baseDir .. "rf2.png",
             back = function()
@@ -175,8 +162,22 @@ local function show(page)
                 end
             end,
             children = children
-        },
+        }
     }
+
+    if page.isReady and not page.readOnly then
+        lyt[#lyt + 1] = {
+            type = "button",
+            x = LCD_W - 100 * screenMult,
+            y = 5 * screenMult,
+            w = 95 * screenMult,
+            h = 34 * screenMult,
+            text = "Save",
+            press = function()
+                page:write()
+            end,
+        }
+    end
 
     lvgl.build(lyt)
 end

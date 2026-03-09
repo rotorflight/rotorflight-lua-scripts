@@ -63,8 +63,10 @@ return {
         rf2.useApi("mspPidProfile").read(receivedPidProfile, self, pidProfile)
     end,
     write = function(self)
-        rf2.useApi("mspPidProfile").write(pidProfile)
-        rf2.settingsSaved(true, false)
+        if pidProfile.iterm_relax_type.value then
+            rf2.useApi("mspPidProfile").write(pidProfile)
+            rf2.settingsSaved(true, false)
+        end
     end,
     title       = "PID Controller Settings",
     labels      = labels,

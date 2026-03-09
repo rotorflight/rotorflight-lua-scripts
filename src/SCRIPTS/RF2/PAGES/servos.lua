@@ -95,10 +95,12 @@ return {
         mspServos.getServoConfigurations(receivedServoConfigurations, self)
     end,
     write = function(self)
-        for servoIndex = 0, #servoConfigs do
-            mspServos.setServoConfiguration(servoIndex, servoConfigs[servoIndex])
+        if servoConfigs[0] then
+            for servoIndex = 0, #servoConfigs do
+                mspServos.setServoConfiguration(servoIndex, servoConfigs[servoIndex])
+            end
+            rf2.settingsSaved(true, false)
         end
-        rf2.settingsSaved(true, false)
     end,
     timer = function(self)
         if updateSelectedServoConfiguration then

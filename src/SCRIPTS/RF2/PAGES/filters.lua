@@ -48,8 +48,10 @@ return {
         rf2.useApi("mspFilterConfig").read(receivedFilterConfig, self, filterConfig)
     end,
     write = function(self)
-        rf2.useApi("mspFilterConfig").write(filterConfig)
-        rf2.settingsSaved(true, true)
+        if filterConfig.gyro_lpf1_type.value then
+            rf2.useApi("mspFilterConfig").write(filterConfig)
+            rf2.settingsSaved(true, true)
+        end
     end,
     title       = "Gyro Filters",
     labels      = labels,

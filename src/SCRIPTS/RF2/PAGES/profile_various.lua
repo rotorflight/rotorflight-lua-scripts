@@ -60,8 +60,10 @@ return {
         rf2.useApi("mspPidProfile").read(receivedPidProfile, self, pidProfile)
     end,
     write = function(self)
-        rf2.useApi("mspPidProfile").write(pidProfile)
-        rf2.settingsSaved(true, false)
+        if pidProfile.pitch_collective_ff_gain.value then
+            rf2.useApi("mspPidProfile").write(pidProfile)
+            rf2.settingsSaved(true, false)
+        end
     end,
     title       = "Profile - Various",
     labels      = labels,
