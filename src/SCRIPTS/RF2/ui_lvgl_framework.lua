@@ -124,13 +124,6 @@ ui.showPopupMenu = function()
     local menu = { title = "Menu", items = {} }
 
     if Page then
-        if not Page.readOnly then
-            menu.items[#menu.items + 1] = {
-                text = "Save",
-                click = function() Page:write() end
-            }
-        end
-
         menu.items [#menu.items + 1] = {
             text = "Reload",
             click = function() Page:read() end
