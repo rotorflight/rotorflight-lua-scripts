@@ -51,8 +51,10 @@ return {
         rf2.useApi("mspGovernorProfile").read(receivedGovernorProfile, self, governorProfile)
     end,
     write = function(self)
-        rf2.useApi("mspGovernorProfile").write(governorProfile)
-        rf2.settingsSaved(true, false)
+        if governorProfile.headspeed.value then
+            rf2.useApi("mspGovernorProfile").write(governorProfile)
+            rf2.settingsSaved(true, false)
+        end
     end,
     title       = "Profile - Governor",
     labels      = labels,

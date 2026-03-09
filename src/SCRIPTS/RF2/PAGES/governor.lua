@@ -68,8 +68,10 @@ return {
         rf2.useApi("mspGovernorConfig").read(receivedGovernorConfig, self, governorConfig)
     end,
     write = function(self)
-        rf2.useApi("mspGovernorConfig").write(governorConfig)
-        rf2.settingsSaved(true, true)
+        if governorConfig.gov_mode.value then
+            rf2.useApi("mspGovernorConfig").write(governorConfig)
+            rf2.settingsSaved(true, true)
+        end
     end,
     title       = "Governor",
     labels      = labels,

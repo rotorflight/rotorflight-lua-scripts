@@ -119,8 +119,10 @@ return {
         rf2.useApi("mspRcTuning").read(receivedRcTuning, self, rcTuning)
     end,
     write = function(self)
-        rf2.useApi("mspRcTuning").write(rcTuning)
-        rf2.settingsSaved(true, false)
+        if rcTuning.rates_type.value then
+            rf2.useApi("mspRcTuning").write(rcTuning)
+            rf2.settingsSaved(true, false)
+        end
     end,
     title       = "Rates",
     labels      = labels,

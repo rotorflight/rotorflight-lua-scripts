@@ -27,8 +27,10 @@ return {
         rf2.useApi(mspAccTrim).read(receivedData, self, data)
     end,
     write = function(self)
-        rf2.useApi(mspAccTrim).write(data)
-        rf2.settingsSaved(true, false)
+        if data.roll_trim.value then
+            rf2.useApi(mspAccTrim).write(data)
+            rf2.settingsSaved(true, false)
+        end
     end,
     title       = "Accelerometer",
     labels      = labels,
