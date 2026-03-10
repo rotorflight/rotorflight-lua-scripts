@@ -1,4 +1,5 @@
 local lvglHelper = rf2.executeScript("LVGL/helper")
+local saving = false
 
 local function show(page)
     lvgl.clear()
@@ -166,6 +167,7 @@ local function show(page)
     }
 
     if page.isReady and not page.readOnly then
+        saving = false
         lyt[#lyt + 1] = {
             type = "button",
             x = LCD_W - 100 * screenMult,
@@ -173,7 +175,11 @@ local function show(page)
             w = 95 * screenMult,
             h = 34 * screenMult,
             text = "Save",
+            active = function()
+                return not saving
+            end,
             press = function()
+                saving = true
                 page:write()
             end,
         }
