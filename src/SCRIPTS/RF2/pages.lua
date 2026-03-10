@@ -1,43 +1,36 @@
 local PageFiles = {}
 local settings = rf2.loadSettings()
 
--- Rotorflight pages.
-PageFiles[#PageFiles + 1] = { title = "Status", script = "status" }
-PageFiles[#PageFiles + 1] = { title = "Rates", script = "rates" }
-PageFiles[#PageFiles + 1] = { title = "Rate Dynamics", script = "rate_dynamics" }
-PageFiles[#PageFiles + 1] = { title = "PID Gains", script = "profile_pids" }
-PageFiles[#PageFiles + 1] = { title = "PID Controller", script = "profile_pidcon" }
-PageFiles[#PageFiles + 1] = { title = "Profile - Various", script = "profile_various" }
-PageFiles[#PageFiles + 1] = { title = "Profile - Rescue", script = "profile_rescue" }
-PageFiles[#PageFiles + 1] = { title = "Profile - Governor", script = "profile_governor" }
-PageFiles[#PageFiles + 1] = { title = "Servos", script = "servos" }
-PageFiles[#PageFiles + 1] = { title = "Mixer", script = "mixer" }
-PageFiles[#PageFiles + 1] = { title = "Gyro Filters", script = "filters" }
-PageFiles[#PageFiles + 1] = { title = "Governor", script = "governor" }
-PageFiles[#PageFiles + 1] = { title = "Accelerometer Trim", script = "accelerometer" }
+local function addPage(key, title, script, showIfNotSet)
+    if settings[key] == 1 or (showIfNotSet and not settings[key]) then
+        PageFiles[#PageFiles + 1] = { title = title, script = script }
+    end
+end
+
+addPage("showStatus", "Status", "status", true)
+addPage("showRates", "Rates", "rates", true)
+addPage("showRateDynamics", "Rate Dynamics", "rate_dynamics", true)
+addPage("showPidGains", "PID Gains", "profile_pids", true)
+addPage("showPidController", "PID Controller", "profile_pidcon", true)
+addPage("showProfileVarious", "Profile - Various", "profile_various", true)
+addPage("showProfileRescue", "Profile - Rescue", "profile_rescue", true)
+addPage("showProfileGovernor", "Profile - Governor", "profile_governor", true)
+addPage("showServos", "Servos", "servos", true)
+addPage("showMixer", "Mixer", "mixer", true)
+addPage("showGyroFilters", "Gyro Filters", "filters", true)
+addPage("showGovernor", "Governor", "governor", true)
+addPage("showAccelerometerTrim", "Accelerometer Trim", "accelerometer", true)
 
 if rf2.apiVersion >= 12.07 then
-    if settings.showModelOnTx == 1 then
-        PageFiles[#PageFiles + 1] = { title = "Model", script = "model" }
+    addPage("showModelOnTx", "Model", "model", true)
+    addPage("showExperimental", "Experimental (!)", "experimental", false)
+    addPage("showFlyRotor", "ESC - FLYROTOR", "esc_flyrotor", false)
+    addPage("showPlatinumV5", "ESC - HW Platinum V5", "esc_hwpl5", false)
+    addPage("showTribunus", "ESC - Scorpion Tribunus", "esc_scorp", false)
+    if rf2.apiVersion >= 12.08 then
+        addPage("showXdfly", "ESC - XDFly", "esc_xdfly", false)
     end
-    if settings.showExperimental == 1 then
-        PageFiles[#PageFiles + 1] = { title = "Experimental (!)", script = "experimental" }
-    end
-    if settings.showFlyRotor == 1 then
-        PageFiles[#PageFiles + 1] = { title = "ESC - FLYROTOR", script = "esc_flyrotor" }
-    end
-    if settings.showPlatinumV5 == 1 then
-        PageFiles[#PageFiles + 1] = { title = "ESC - HW Platinum V5", script = "esc_hwpl5" }
-    end
-    if settings.showTribunus == 1 then
-        PageFiles[#PageFiles + 1] = { title = "ESC - Scorpion Tribunus", script = "esc_scorp" }
-    end
-    if rf2.apiVersion >= 12.08 and settings.showXdfly == 1 then
-        PageFiles[#PageFiles + 1] = { title = "ESC - XDFly", script = "esc_xdfly" }
-    end
-    if settings.showYge == 1 then
-        PageFiles[#PageFiles + 1] = { title = "ESC - YGE", script = "esc_yge" }
-    end
+    addPage("showYge", "ESC - YGE", "esc_yge", false)
 
     PageFiles[#PageFiles + 1] = { title = "Settings", script = "settings" }
 end
