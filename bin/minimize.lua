@@ -50,6 +50,13 @@ local genericReplacements = {
         replacement = ""
     },
     {
+        -- Remove 'rf2.lcdNeedsInvalidate*' since it isn't used on EdgeTX/OpenTX
+        files = { "/SCRIPTS/RF2/" },
+        match = "rf2%.lcdNeedsInvalidate.*",
+        replace = "rf2%.lcdNeedsInvalidate.*",
+        replacement = ""
+    },
+    {
         -- Remove simulatorResponse = {...} from MSP APIs, since they are not used outside the simulator.
         files = "/SCRIPTS/RF2/MSP/",
         match = "simulatorResponse = {(.-)}",

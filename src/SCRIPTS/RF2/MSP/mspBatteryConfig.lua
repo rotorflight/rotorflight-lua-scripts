@@ -1,7 +1,7 @@
 local function getDefaults()
     local defaults = {}
     if rf2.apiVersion < 12.09 then
-        defaults.batteryCapacity = { min = 0, max = 20000, mult = 50, unit = rf2.units.mah }
+        defaults.batteryCapacity = { min = 0, max = 20000, mult = 25, unit = rf2.units.mah }
     end
     defaults.batteryCellCount = { min = 0, max = 24 }
     defaults.voltageMeterSource = { min = 0, max = 3, table = { [0] = "None", "ADC", "ESC" } }
@@ -15,7 +15,7 @@ local function getDefaults()
     if rf2.apiVersion >= 12.09 then
         defaults.batteryCapacity = { }
         for i = 0, 5 do
-            defaults.batteryCapacity[i] = { min = 0, max = 20000, mult = 50, units = rf2.units.mah }
+            defaults.batteryCapacity[i] = { min = 0, max = 20000, mult = 25, units = rf2.units.mah }
         end
     end
 
