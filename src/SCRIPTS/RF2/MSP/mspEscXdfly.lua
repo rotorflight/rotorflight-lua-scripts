@@ -12,9 +12,18 @@ local autoRestart = { [0] = "Off", "90s" }
 local srFunc = { [0] = "On", "Off" }
 local govMode = { [0] = "ESC Governor", "External Governor" , "Fixed Wing" }
 
-local function getModelName(modelId)
+local function getModelName(data)
+    local brand
+    if data.esc_signature.value == 208 then
+        brand = "OMP"
+    elseif data.esc_signature.value == 221 then
+        brand = "ZTW"
+    else
+        brand = "XDFly" -- 166
+    end
+
     local escModels = { "RESERVED", "35A", "65A", "85A", "125A", "155A", "130A", "195A", "300A" }
-    return "XDFly " .. (escModels[modelId] or "UNKNOWN")
+    return brand .. " " .. (escModels[data.esc_model.value] or "UNKNOWN")
 end
 
 local function getFirmwareVersion(version)
@@ -61,7 +70,7 @@ local function getEscParameters(callback, callbackParam, data)
         command = 217, -- MSP_ESC_PARAMETERS
         processReply = function(self, buf)
             local signature = rf2.mspHelper.readU8(buf)
-            if signature ~= 166 then
+            if not (signature == 166 or signature == 208 or signature == 221) then -- XDFLY / OMP / ZTW
                 --rf2.print("warning: Invalid ESC signature: " .. signature)
                 return
             end
@@ -90,7 +99,7 @@ local function getEscParameters(callback, callbackParam, data)
             data.active_fields.value = rf2.mspHelper.readU32(buf)
 
             -- Derived fields
-            data.modelName = getModelName(data.esc_model.value)
+            data.modelName = getModelName(data)
             data.firmwareVersion = getFirmwareVersion(data.esc_version.value)
 
             -- Set hidden flag if the corresponding activeFields bit is 0

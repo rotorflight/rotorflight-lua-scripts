@@ -41,7 +41,7 @@ labels[3] = { t = "Display ESC Pages",       x = x, y = incY(lineSpacing) }
 fields[16] = { t = "FLYROTOR",               x = x + indent, y = incY(lineSpacing), sp = x + sp }
 fields[17] = { t = "HW Platinum V5",         x = x + indent, y = incY(lineSpacing), sp = x + sp }
 fields[18] = { t = "Scorpion Tribunus",      x = x + indent, y = incY(lineSpacing), sp = x + sp }
-fields[19] = { t = "XDFly",                  x = x + indent, y = incY(lineSpacing), sp = x + sp }
+fields[19] = { t = "XDFly/OMP/ZTW",          x = x + indent, y = incY(lineSpacing), sp = x + sp }
 fields[20] = { t = "YGE",                    x = x + indent, y = incY(lineSpacing), sp = x + sp }
 
 incY(lineSpacing * 0.5)

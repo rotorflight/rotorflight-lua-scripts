@@ -28,7 +28,7 @@ if rf2.apiVersion >= 12.07 then
     addPage("showPlatinumV5", "ESC - HW Platinum V5", "esc_hwpl5", false)
     addPage("showTribunus", "ESC - Scorpion Tribunus", "esc_scorp", false)
     if rf2.apiVersion >= 12.08 then
-        addPage("showXdfly", "ESC - XDFly", "esc_xdfly", false)
+        addPage("showXdfly", "ESC - XDFly/OMP/ZTW", "esc_xdfly", false)
     end
     addPage("showYge", "ESC - YGE", "esc_yge", false)
 

@@ -64,7 +64,7 @@ return {
         rf2.useApi("mspEscXdfly").write(escParameters)
         rf2.settingsSaved(false, false)
     end,
-    title       = "XDFly Setup",
+    title       = "XDFly/OMP/ZTW",
     labels      = labels,
     fields      = fields,
     readOnly    = true
