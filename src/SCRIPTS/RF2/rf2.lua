@@ -53,10 +53,11 @@ rf2 = {
         herz = " Hz",
         seconds = " s",
         milliseconds = " ms",
-        volt = "V",
+        volt = " V",
         celsius = " C",
         rpm = " RPM",
-        meters = " m"
+        meters = " m",
+        mah = " mAh"
     },
 
     --[NIR

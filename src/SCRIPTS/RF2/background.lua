@@ -16,13 +16,7 @@ local function setState(widget, state)
     widget:setState(state)
 end
 
---local lastHelloTime = nil
 local function run(widget)
-    -- if lastHelloTime == nil or rf2.clock() - lastHelloTime > 1 then
-    --     rf2.print("Background says hello!")
-    --     lastHelloTime = rf2.clock()
-    -- end
-
     if isInitialized and customTelemetryTask and not hasSensor("*Cnt") then
         isInitialized = false -- user probably deleted all sensors on TX
     elseif getRSSI() > 0 then
