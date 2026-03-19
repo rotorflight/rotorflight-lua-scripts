@@ -26,7 +26,7 @@ fields[6] = { t = "Profile - Various",       x = x + indent, y = incY(lineSpacin
 fields[7] = { t = "Profile - Rescue",        x = x + indent, y = incY(lineSpacing), sp = x + sp }
 fields[8] = { t = "Profile - Governor",      x = x + indent, y = incY(lineSpacing), sp = x + sp }
 fields[9] = { t = "Battery",                 x = x + indent, y = incY(lineSpacing), sp = x + sp }
-fields[10] = { t = "Servos",                  x = x + indent, y = incY(lineSpacing), sp = x + sp }
+fields[10] = { t = "Servos",                 x = x + indent, y = incY(lineSpacing), sp = x + sp }
 fields[11] = { t = "Mixer",                  x = x + indent, y = incY(lineSpacing), sp = x + sp }
 fields[12] = { t = "Gyro Filters",           x = x + indent, y = incY(lineSpacing), sp = x + sp }
 fields[13] = { t = "Governor",               x = x + indent, y = incY(lineSpacing), sp = x + sp }
