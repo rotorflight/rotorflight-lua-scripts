@@ -32,7 +32,7 @@ end
 local function publishStateChangedEvent(newState)
     for k, v in pairs(rfWidgets) do
         if v.onStateChanged then
-            local status, err = pcall(v.onStateChanged, v, newState)
+            rf2.call(v.onStateChanged, v, newState)
         end
     end
 end
@@ -58,7 +58,6 @@ w.setState = function(self, state)
     self.state = state
     if state == "disconnected" then
         rf2.modelName = nil
-        rf2.apiVersion = nil
         previousArmState = 0
     end
     publishStateChangedEvent(self.state)
@@ -101,7 +100,7 @@ local function showWidget(widget)
             {
                 { type = "label", text = function() return getModelName() end, w = widget.zone.x, font = DBLSIZE, align = CENTER },
                 { type = "label", text = function() return widget.state end, w = widget.zone.x, align = CENTER },
-                { type = "label", text = function() return rf2 and rf2.widget.options:getText() or "" end, w = widget.zone.x, align = CENTER },
+                { type = "label", text = function() return widget.options:getText() end, w = widget.zone.x, align = CENTER },
             }
         }
     });
@@ -136,9 +135,7 @@ w.background = function(widget, calledFromRefresh)
     elseif widget.state == "loading"
         and (getTime() - timeCreated) / 100 > 1 -- bootgrace timeout
     then
-        if not rf2 then
-            initializeRf2GlobalVar()
-            rf2.registerWidget = registerWidget
+        if not rf2.widget then
             rf2.widget = widget
         end
         widget.state = "unknown protocol"
@@ -186,5 +183,8 @@ w.refresh = function(widget, event, touchState)
 
     w.background(widget, true)
 end
+
+initializeRf2GlobalVar()
+rf2.registerWidget = registerWidget
 
 return w

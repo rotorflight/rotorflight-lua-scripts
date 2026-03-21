@@ -91,10 +91,7 @@ end
 -- widget is optional and will be provided by the RfTool widget.
 -- If the background script runs as a special function, widget will be nil.
 local function runProtected(widget)
-    local status, err = pcall(run, widget)
-    --[NIR
-    if not status then rf2.print(err) end
-    --]]
+    rf2.call(run, widget)
     --collectgarbage()
     --rf2.print("Mem: %d", collectgarbage("count")*1024)
     return 0

@@ -123,7 +123,7 @@ end
 function MspQueueController:handleReply()
     --rf2.print("Length of buf: "..tostring(#self.currentMessage.buf))
     if self.currentMessage.processReply then
-        self.currentMessage:processReply(self.currentMessage.buf)
+        rf2.call(self.currentMessage.processReply, self.currentMessage, self.currentMessage.buf)
     end
     self.currentMessage = nil
     self.lastTimeCommandSent = nil

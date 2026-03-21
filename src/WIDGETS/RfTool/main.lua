@@ -24,15 +24,21 @@ local function create(zone, options)
 end
 
 local function update(widget, options)
-    if widget.update then widget.update(widget, options) end
+    if widget.update then
+        rf2.call(widget.update, widget, options)
+    end
 end
 
 local function refresh(widget, event, touchState)
-    if widget.refresh then widget.refresh(widget, event, touchState) end
+    if widget.refresh then
+        rf2.call(widget.refresh, widget, event, touchState)
+    end
 end
 
 local function background(widget)
-    if widget.background then widget.background(widget) end
+    if widget.background then
+        rf2.call(widget.background, widget)
+    end
 end
 
 -- local function translate(widget)

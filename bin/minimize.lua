@@ -8,10 +8,17 @@ print("Minimizing script memory usage...")
 local genericReplacements = {
     {
         -- Replace --[NIR with --[[ to comment out debug code that should not be in a release
-        files = "/SCRIPTS/RF2/",
+        files = { "/SCRIPTS/RF2/", "/WIDGETS/" },
         match = "--%[NIR",
         replace = "--%[NIR",
         replacement = "--[["
+    },
+    {
+        -- Replace rf2.call with pcall
+        files = { "/SCRIPTS/RF2/", "/WIDGETS/" },
+        match = "rf2%.call",
+        replace = "rf2%.call",
+        replacement = "pcall"
     },
     {
         -- Remove id = "xxx" from the fields table in page files. This id is not used by the official Rotorflight scripts.
