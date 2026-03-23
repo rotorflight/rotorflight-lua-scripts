@@ -182,6 +182,7 @@ local mspRcTuningReplacements = {
     { ".yaw_dynamic_deadband_gain", "[29]" },
     { ".yaw_dynamic_deadband_filter", "[30]" },
     { ".cyclic_ring", "[31]" },
+    { ".cyclic_polar", "[32]" },
 }
 
 local mspPidTuningReplacements = {

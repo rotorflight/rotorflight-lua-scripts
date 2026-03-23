@@ -41,7 +41,8 @@ local function getDefaults()
     end
 
     if rf2.apiVersion >= 12.09 then
-        defaults.cyclic_ring = { min = 0, max = 250 }
+        defaults.cyclic_ring = { min = 0, max = 250, unit = rf2.units.percentage }
+        defaults.cyclic_polar = { min = 0, max = 1, table = { [0] = "Off", "On" } }
     end
 
     defaults.columnHeaders = { "", "", "", "", "", "" }
@@ -107,6 +108,7 @@ local function getRcTuning(callback, callbackParam, data)
             end
             if rf2.apiVersion >= 12.09 then
                 data.cyclic_ring.value = rf2.mspHelper.readU8(buf)
+                data.cyclic_polar.value = rf2.mspHelper.readU8(buf)
             end
             callback(callbackParam, data)
         end,
@@ -157,6 +159,7 @@ local function setRcTuning(data)
     end
     if rf2.apiVersion >= 12.09 then
         rf2.mspHelper.writeU8(message.payload, data.cyclic_ring.value)
+        rf2.mspHelper.writeU8(message.payload, data.cyclic_polar.value)
     end
     rf2.mspQueue:add(message)
 end

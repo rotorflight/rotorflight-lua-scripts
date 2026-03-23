@@ -70,6 +70,7 @@ end
 if rf2.apiVersion >= 12.09 then
     incY(lineSpacing * 0.5)
     fields[#fields + 1] = { t = "Cyclic ring",         x = x,          y = incY(lineSpacing), sp = x + sp, data = rcTuning.cyclic_ring }
+    fields[#fields + 1] = { t = "Polar coordinates",   x = x,          y = incY(lineSpacing), sp = x + sp, data = rcTuning.cyclic_polar }
 end
 
 local function receivedRcTuning(page)
