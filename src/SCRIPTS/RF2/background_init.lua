@@ -106,7 +106,7 @@ local function waitForCrsfSensorsDiscovery()
         return 0
     end
 
-    local sensorsDiscovered = hasSensor("TPWR")
+    local sensorsDiscovered = hasSensor("TPWR") or hasSensor("RFMD")
     if not sensorsDiscovered then
         -- Wait 2 secs to discover all CRSF sensors before continuing.
         sensorsDiscoveredTimeout = rf2.clock() + 2
