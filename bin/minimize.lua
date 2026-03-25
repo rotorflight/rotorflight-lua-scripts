@@ -14,6 +14,13 @@ local genericReplacements = {
         replacement = "pcall"
     },
     {
+        -- Remove debug info from release builds.
+        files = "/SCRIPTS/RF2/COMPILE/compile.lua",
+        match = "loadScript%(script, %'cd%'%)",
+        replace = "loadScript%(script, %'cd%'%)",
+        replacement = "loadScript(script, 'c')"
+    },
+    {
         -- Replace --[NIR with --[[ to comment out debug code that should not be in a release
         files = { "/SCRIPTS/RF2/", "/WIDGETS/" },
         match = "--%[NIR",
@@ -70,13 +77,6 @@ local genericReplacements = {
         replace = "rf2%.lcdNeedsInvalidate.*",
         replacement = ""
     },
-    {
-        -- Remove debug info from release builds.
-        files = "/SCRIPTS/RF2/COMPILE/compile.lua",
-        match = "loadScript%(script, %'cd%'%)",
-        replace = "loadScript%(script, %'cd%'%)",
-        replacement = "loadScript(script, 'c')"
-    }
 }
 
 local function processFile(filename, genericReplacement)
@@ -311,6 +311,45 @@ local mspEscAm32Replacements = {
     { ".auto_advance", "[50]" }
 }
 
+local rf2tlm_sensorsReplacements = {
+    files = { "SCRIPTS/RF2/rf2tlm_sensors.lua" },
+
+    { "sid=0x", "[0]=0x" },  -- sid becomes [0]
+    { ", name=", ", " },     -- name becomes [1]
+    { ", unit=", ", " },     -- unit becomes [2]
+    { ", prec=", ", " },     -- prec becomes [3]
+    { ", dec=", ", " },      -- dec becomes [4]
+    {
+        "sensor.dec(data, ptr)",
+        "(sensor[4])(data, ptr)"
+    },
+    {
+        "setTelemetryValue(sensor.sid, 0, 0, 0, sensor.unit, sensor.prec, sensor.name)",
+        "setTelemetryValue(sensor[0], 0, 0, 0, sensor[2], sensor[3], sensor[1])"
+    },
+    {
+        "result[sensor.sid]={ name=sensor.name, sensor.unit, sensor.prec, sensor.dec }",
+        "result[sensor[0]]={ sensor[1], sensor[2], sensor[3], sensor[4] }" -- Note: explicitly 1-based so numbers won't change
+    },
+}
+
+local rf2tlmReplacements = {
+    files = { "SCRIPTS/RF2/rf2tlm.lua" },
+
+    {
+        "setTelemetryValue(sid, 0, 0, val, sensor.unit, sensor.prec, sensor.name)",
+        "setTelemetryValue(sid, 0, 0, val, sensor[2], sensor[3], sensor[1])"
+    },
+    {
+        "sensor.dec(data, ptr)",
+        "(sensor[4])(data, ptr)"
+    },
+}
+
+function escapeLuaPattern(s)
+    return (string.gsub(s, "([%(%)%.%%%+%-%*%?%[%^%$])", "%%%1"))
+end
+
 local function replace(r)
     for _, filename in ipairs(r.files) do
         --print("Opening " .. filename)
@@ -321,7 +360,8 @@ local function replace(r)
             for line in input_file:lines() do
                 local new_line = line
                 for _, v in ipairs(r) do
-                    new_line = string.gsub(new_line, v[1], v[2])
+                    --new_line = string.gsub(new_line, v[1], v[2])
+                    new_line = string.gsub(new_line, escapeLuaPattern(v[1]), v[2])
                 end
                 temp_file:write(new_line .. "\n")
             end
@@ -344,3 +384,5 @@ replace(mspRcTuningReplacements)
 replace(mspPidTuningReplacements)
 replace(mspPidProfileReplacements)
 replace(mspEscAm32Replacements)
+replace(rf2tlm_sensorsReplacements)
+replace(rf2tlmReplacements)
