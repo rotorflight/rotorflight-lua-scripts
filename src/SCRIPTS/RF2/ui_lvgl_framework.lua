@@ -17,6 +17,7 @@ local Page = nil
 local CurrentPageIndex = -1
 
 ui.exit = function()
+    ui.unloadPage()
     ui.state = ui.status.exit
 end
 
@@ -41,12 +42,20 @@ ui.loadMainMenu = function(setCurrentPageToLastPage)
     end
 end
 
+ui.unloadPage = function()
+    if Page and Page.unload then
+        Page:unload()
+    end
+end
+
 ui.loadPage = function()
+    ui.unloadPage()
     Page = rf2.executeScript("PAGES/" .. PageFiles[CurrentPageIndex].script)
     Page:read()
 end
 
 ui.showMainMenu = function()
+    ui.unloadPage()
     Page = nil
 
     local menu = {

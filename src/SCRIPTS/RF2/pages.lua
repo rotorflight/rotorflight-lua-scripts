@@ -25,6 +25,9 @@ addPage("showAccelerometerTrim", "Accelerometer Trim", "accelerometer", true)
 if rf2.apiVersion >= 12.07 then
     addPage("showModelOnTx", "Model", "model", true)
     addPage("showExperimental", "Experimental (!)", "experimental", false)
+    if rf2.apiVersion >= 12.09 then
+        addPage("showAm32", "ESC - AM32", "esc_am32", false)
+    end
     addPage("showFlyRotor", "ESC - FLYROTOR", "esc_flyrotor", false)
     addPage("showPlatinumV5", "ESC - HW Platinum V5", "esc_hwpl5", false)
     addPage("showTribunus", "ESC - Scorpion Tribunus", "esc_scorp", false)

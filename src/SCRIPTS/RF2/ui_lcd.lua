@@ -136,6 +136,7 @@ local function createPopupMenu()
 end
 
 local function incPage(inc)
+    if Page and Page.unload then Page:unload() end
     CurrentPageIndex = rf2.executeScript("F/incMax")(CurrentPageIndex, inc, #PageFiles)
     pageChanged = true
     invalidatePages()
@@ -211,6 +212,7 @@ local function run_ui(event)
                 if useKillEnterBreak then lcdShared.killEnterBreak = true end
                 createPopupMenu()
             elseif event == EVT_VIRTUAL_EXIT then
+                if Page and Page.unload then Page:unload() end
                 invalidatePages()
                 uiState = uiStatus.mainMenu
                 if rf2.logfile then
