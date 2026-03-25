@@ -30,8 +30,6 @@ local function addField(text, data, w)
 end
 
 local function buildForm(page)
-    rf2.print("Rebuilding form...")
-
     y = yMinLim - lineSpacing
     labels = {}
     fields = {}
