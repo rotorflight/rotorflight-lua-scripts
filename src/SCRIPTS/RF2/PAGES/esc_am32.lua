@@ -17,7 +17,17 @@ local receivedEscParameters   -- forward function declaration needed
 labels[1] = { t = "ESC not ready, waiting...", x = x, y = incY(lineSpacing) }
 fields[1] = { t = nil, x = 0, y = 0, data = nil, readOnly = true } -- dummy field since ui.lua expects at least one field
 
+local function clearForm(page)
+    y = yMinLim - lineSpacing
+    labels = {}
+    fields = {}
+    page.labels = labels
+    page.fields = fields
+    collectgarbage()
+end
+
 local endEscEditing = function(field, page)
+    clearForm(page) -- needed to free some memory
     selectedEsc = field.data.value
     rf2.useApi("mspEsc4wif").selectEsc(selectedEsc)
     rf2.useApi("mspEscAm32").read(receivedEscParameters, page)
@@ -25,17 +35,12 @@ end
 
 local function addField(text, data, w)
     if not data.hidden then
-        fields[#fields + 1] = { t = text, x = x + indent, y = incY(lineSpacing), sp = x + sp, w = w, data = data }
+        fields[#fields + 1] = { t = text, x = x, y = incY(lineSpacing), sp = x + sp, w = w, data = data }
     end
 end
 
 local function buildForm(page)
-    y = yMinLim - lineSpacing
-    labels = {}
-    fields = {}
-    page.labels = labels
-    page.fields = fields
-    collectgarbage()
+    clearForm(page)
 
     labels[1] = {
         t = escParameters.firmwareVersion,
@@ -58,7 +63,7 @@ local function buildForm(page)
     addField("Motor poles", escParameters.motor_poles)
     addField("Startup power", escParameters.startup_power)
     addField("PWM frequency", escParameters.pwm_frequency)
-    addField("Complementary PWM", escParameters.complementary_pwm)
+    addField("Compl. PWM", escParameters.complementary_pwm)
     addField("Brake on stop", escParameters.brake_on_stop)
     addField("Brake strength", escParameters.brake_strength)
     addField("Running brake", escParameters.running_brake_level)
@@ -66,13 +71,13 @@ local function buildForm(page)
 
     labels[#labels + 1] = { t = "Advanced", x = x, y = incY(lineSpacing * 2) }
     addField("Timing", escParameters.timing_advance)
-    addField("Stuck rotor protection", escParameters.stuck_rotor_protection)
+    addField("Stuck rotor prot.", escParameters.stuck_rotor_protection)
     addField("Sinusoidal startup", escParameters.sinusoidal_startup)
     addField("Sine mode power", escParameters.sine_mode_power)
     addField("Sine mode range", escParameters.sine_mode_range)
-    addField("Bidirectional mode", escParameters.bidirectional_mode)
+    addField("Bidir mode", escParameters.bidirectional_mode)
     addField("Protocol", escParameters.esc_protocol, 135)
-    addField("Variable PWM freq", escParameters.variable_pwm_frequency)
+    addField("Var. PWM freq", escParameters.variable_pwm_frequency)
     addField("Stall protection", escParameters.stall_protection)
     addField("Telemetry interval", escParameters.interval_telemetry)
     addField("Auto advance", escParameters.auto_advance)
@@ -80,8 +85,8 @@ local function buildForm(page)
     labels[#labels + 1] = { t = "Limits", x = x, y = incY(lineSpacing * 2) }
     addField("Temperature limit", escParameters.temperature_limit)
     addField("Current limit", escParameters.current_limit)
-    addField("Low voltage cutoff", escParameters.low_voltage_cutoff)
-    addField("Low voltage treshold", escParameters.low_voltage_threshold)
+    addField("Low volt. cutoff", escParameters.low_voltage_cutoff)
+    addField("Low volt. treshold", escParameters.low_voltage_threshold)
     addField("Servo low treshold", escParameters.servo_low_threshold)
     addField("Servo high treshold", escParameters.servo_high_threshold)
     addField("Servo neutral", escParameters.servo_neutral)
