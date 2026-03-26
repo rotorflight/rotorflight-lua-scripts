@@ -1,7 +1,3 @@
-local i = 1
-local scripts = assert(loadScript("/SCRIPTS/RF2/COMPILE/scripts.lua"))
-collectgarbage()
-
 local function deleteOrTruncateFile(filepath)
     local file = io.open(filepath, "r")
     if file then
@@ -22,14 +18,16 @@ end
 deleteOrTruncateFile("/SCRIPTS/MIXES/rf2tlm.lua")
 deleteOrTruncateFile("/SCRIPTS/MIXES/rf2tlm.luac")
 
+local i = 1
+
 local function compile()
-    local script = scripts(i)
+    script = assert(loadScript("/SCRIPTS/RF2/COMPILE/scripts.lua"))(i)
+    collectgarbage()
     i = i + 1
     if script then
         lcd.clear()
         lcd.drawText(2, 2, "Compiling...", SMLSIZE)
         lcd.drawText(2, 58, script, SMLSIZE)
-        collectgarbage()
         assert(loadScript(script, 'cd')) -- The 'd' flags gets removed in by minimize.lua
         return 0
     end

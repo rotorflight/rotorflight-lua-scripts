@@ -18,7 +18,7 @@ local function addField(text, data, w)
     end
 end
 
-local function buildForm(escParameters, escCount, endEscEditing)
+local function buildForm(escParameters, escCount, selectedEsc, endEscEditing)
     y = yMinLim - lineSpacing
 
     if not escParameters then
@@ -38,7 +38,7 @@ local function buildForm(escParameters, escCount, endEscEditing)
         x = x + indent,
         y = incY(lineSpacing),
         sp = x + sp,
-        data = { value = rf2.selectedEsc, min = 0, max = escCount - 1, table = { [0] = "1", "2", "3", "4" } },
+        data = { value = selectedEsc, min = 0, max = escCount - 1, table = { [0] = "1", "2", "3", "4" } },
         postEdit = endEscEditing
     }
 
