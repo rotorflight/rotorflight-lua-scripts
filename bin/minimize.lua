@@ -256,7 +256,7 @@ local mspPidProfileReplacements = {
 }
 
 local mspEscAm32Replacements = {
-    files = { "SCRIPTS/RF2/MSP/mspEscAm32.lua", "SCRIPTS/RF2/PAGES/esc_am32.lua" },
+    files = { "SCRIPTS/RF2/MSP/mspEscAm32.lua", "SCRIPTS/RF2/PAGES/esc_am32_form.lua" },
 
     { ".esc_signature", "[0]" },
     { ".esc_command", "[1]" },
