@@ -99,8 +99,17 @@ local function showWidget(widget)
             type = "box", flexFlow = lvgl.FLOW_COLUMN, children =
             {
                 { type = "label", text = function() return getModelName() end, w = widget.zone.x, font = DBLSIZE, align = CENTER },
-                { type = "label", text = function() return widget.state end, w = widget.zone.x, align = CENTER },
-                { type = "label", text = function() return widget.options:getText() end, w = widget.zone.x, align = CENTER },
+                {
+                    type = "label",
+                    text = function()
+                        return string.upper(string.sub(widget.state, 1, 1))
+                            .. string.sub(widget.state, 2)
+                            .. " - "
+                            .. widget.options:getText()
+                    end,
+                    w = widget.zone.x,
+                    align = CENTER
+                },
             }
         }
     });

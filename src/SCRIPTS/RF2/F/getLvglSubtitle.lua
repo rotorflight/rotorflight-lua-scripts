@@ -2,7 +2,12 @@ local subtitle = ...
 
 local function canUseDynamicSubtitle()
     -- Dynamic subtitles work on EdgeTX 2.11.4 or higher
-    return lcd.setColor and (select(3, getVersion()) >= 3 or (select(3, getVersion()) == 2 and select(4, getVersion()) >= 11 and select(5, getVersion()) >= 4))
+    local name, version, major, minor, patch = getVersion()
+    rf2.print("EdgeTX version %d.%d.%d", major, minor, patch)
+    return lcd.setColor and
+        (major >= 3 or
+        (major == 2 and minor >= 12) or
+        (major == 2 and minor >= 11 and patch >= 4))
 end
 
 if not (rf2.widget and rf2.widget.options and canUseDynamicSubtitle()) then
