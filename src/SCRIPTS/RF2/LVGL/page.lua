@@ -146,16 +146,13 @@ local function show(page)
         child.y = (child.y - rf2.radio.yMinLimit + 5) * 1.75
     end
 
+    local subtitle = rf2.executeScript("F/getLvglSubtitle", page.title) -- EdgeTX < 2.11.4 don't support functions as argument for subtitle
+
     local lyt = {
         {
             type = "page",
             title = "Rotorflight " .. rf2.luaVersion,
-            subtitle = function()
-                if rf2.widget and rf2.widget.options then
-                    return page.title .. " - " .. rf2.widget.options:getText()
-                end
-                return page.title
-            end,
+            subtitle = subtitle,
             icon = rf2.baseDir .. "rf2.png",
             back = function()
                 if page.back then

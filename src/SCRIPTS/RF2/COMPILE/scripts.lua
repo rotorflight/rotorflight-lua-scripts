@@ -11,6 +11,7 @@ local scripts = {
     "/SCRIPTS/RF2/F/canUseLvgl.lua",
     "/SCRIPTS/RF2/F/formatSeconds.lua",
     "/SCRIPTS/RF2/F/getBit.lua",
+    "/SCRIPTS/RF2/F/getLvglSubtitle.lua",
     "/SCRIPTS/RF2/F/getProtocol.lua",
     "/SCRIPTS/RF2/F/hasSensor.lua",
     "/SCRIPTS/RF2/F/incMax.lua",

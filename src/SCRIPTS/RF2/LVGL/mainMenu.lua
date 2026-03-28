@@ -23,16 +23,13 @@ local function show(menu)
         }
     end
 
+    local subtitle = rf2.executeScript("F/getLvglSubtitle", menu.subtitle) -- EdgeTX < 2.11.4 don't support functions as argument for subtitle
+
     local lyt = {
         {
             type = "page",
             title = menu.title,
-            subtitle = function()
-                if rf2.widget and rf2.widget.options then
-                    return menu.subtitle .. " - " .. rf2.widget.options:getText()
-                end
-                return menu.subtitle
-            end,
+            subtitle = subtitle,
             icon = rf2.baseDir .. "rf2.png",
             back = function()
                 if menu.back then
