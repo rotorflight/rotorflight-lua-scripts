@@ -23,7 +23,7 @@ rf2 = {
     end,
 
     executeScript = function(scriptName, ...)
-        return assert(rf2.loadScript(scriptName))(...)
+        return assert(rf2.loadScript(scriptName), scriptName)(...)
     end,
 
     useApi = function(apiName)
