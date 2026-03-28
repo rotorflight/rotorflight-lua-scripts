@@ -32,13 +32,14 @@ end
 local page = {
     read = function(self)
         if not self.isReady then rf2.onPageReady(self) end
-        rf2.useApi("mspEsc4wif").selectEsc(selectedEsc)
+        rf2.useApi("mspEsc4wif").selectEsc(selectedEsc, 1)
         rf2.useApi("mspStatus").getStatus(onProcessedMspStatus, self)
         rf2.useApi("mspEscAm32").read(receivedEscParameters, self)
     end,
     write = function(self)
         clearForm(self)
         rf2.useApi("mspEscAm32").write(escParameters)
+        escParameters = nil
         rf2.useApi("mspEscAm32").read(receivedEscParameters, self)
     end,
     unload = function(self)

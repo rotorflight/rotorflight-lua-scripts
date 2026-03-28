@@ -1,8 +1,8 @@
-local function selectEsc(escIndex, callback, callbackParam)
+local function selectEsc(escIndex, postSendDelay, callback, callbackParam)
     local message = {
         command = 244,     -- MSP_SET_4WIF_ESC_FWD_PROG
         payload = { escIndex },
-        postSendDelay = 1
+        postSendDelay = postSendDelay
     }
 
     if callback then
