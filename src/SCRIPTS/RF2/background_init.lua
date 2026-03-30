@@ -158,10 +158,10 @@ local function initializeQueue()
                     if autoSetName then
                         setModelName(rf2.modelName)
                     end
-                    playTone(523, 125, 0)  -- C5
-                    playTone(659, 125, 0)  -- E5
-                    playTone(784, 125, 0)  -- G5
-                    playTone(1047, 125, 0) -- C6
+                    playTone(784, 125, 0)   -- G5
+                    playTone(880, 125, 0)   -- A5
+                    playTone(988, 125, 0)   -- B5
+                    playTone(1047, 125, 0)  -- C6
                     --rf2.print("RTC set")
                     rf2.mspQueue.maxRetries = 3
                     initializationDone = true

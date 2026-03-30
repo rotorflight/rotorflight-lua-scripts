@@ -132,6 +132,7 @@ rf2 = {
     isInteger = function(n)
         return type(n) == "number" and n == math.floor(n)
     end,
+    --]]
 
     call = function(func, ...)
         -- NOTE: 'rf2.call' will be replaced by 'pcall' in release builds, see minimize.lua.
@@ -144,5 +145,4 @@ rf2 = {
         -- local status, err = pcall(func, ...)
         -- if not status then rf2.print(err) end
     end
-    --]]
 }

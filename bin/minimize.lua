@@ -7,18 +7,25 @@ print("Minimizing script memory usage...")
 
 local genericReplacements = {
     {
+        -- Replace rf2.call with pcall. Comment out for debugging minimized scripts.
+        files = { "/SCRIPTS/RF2/", "/WIDGETS/" },
+        match = "rf2%.call",
+        replace = "rf2%.call",
+        replacement = "pcall"
+    },
+    {
+        -- Remove debug info from release builds.
+        files = "/SCRIPTS/RF2/COMPILE/compile.lua",
+        match = "loadScript%(script, %'cd%'%)",
+        replace = "loadScript%(script, %'cd%'%)",
+        replacement = "loadScript(script, 'c')"
+    },
+    {
         -- Replace --[NIR with --[[ to comment out debug code that should not be in a release
         files = { "/SCRIPTS/RF2/", "/WIDGETS/" },
         match = "--%[NIR",
         replace = "--%[NIR",
         replacement = "--[["
-    },
-    {
-        -- Replace rf2.call with pcall
-        files = { "/SCRIPTS/RF2/", "/WIDGETS/" },
-        match = "rf2%.call",
-        replace = "rf2%.call",
-        replacement = "pcall"
     },
     {
         -- Remove id = "xxx" from the fields table in page files. This id is not used by the official Rotorflight scripts.
@@ -36,22 +43,29 @@ local genericReplacements = {
         replacement = ""
     },
     {
+        -- Remove simulatorResponse = {...} from MSP APIs, since they are not used outside the simulator.
+        files = "/SCRIPTS/RF2/MSP/",
+        match = "simulatorResponse = {(.-)}",
+        replace = "simulatorResponse = {(.-)},?",
+        replacement = ""
+    },
+    {
         -- large files (>10K)  can't sometimes be compiled on some b&w radios without making it smaller. This is done by removing all double spaces.
-        files = { "/SCRIPTS/RF2/adj_teller.lua", "/SCRIPTS/RF2/rf2tlm_sensors.lua" },
+        files = { "/SCRIPTS/RF2/adj_teller.lua", "/SCRIPTS/RF2/rf2tlm_sensors.lua", "/SCRIPTS/RF2/MSP/mspEscAm32.lua" },
         match = "  ",
         replace = "  ",
         replacement = ""
     },
     {
         -- This is also done by replacing ' = ' with '='.
-        files = { "/SCRIPTS/RF2/adj_teller.lua", "/SCRIPTS/RF2/rf2tlm_sensors.lua" },
+        files = { "/SCRIPTS/RF2/adj_teller.lua", "/SCRIPTS/RF2/rf2tlm_sensors.lua", "/SCRIPTS/RF2/MSP/mspEscAm32.lua" },
         match = " = ",
         replace = " = ",
         replacement = "="
     },
     {
         -- This is also done by removing comments.
-        files = { "/SCRIPTS/RF2/adj_teller.lua", "/SCRIPTS/RF2/rf2tlm_sensors.lua" },
+        files = { "/SCRIPTS/RF2/adj_teller.lua", "/SCRIPTS/RF2/rf2tlm_sensors.lua", "/SCRIPTS/RF2/MSP/mspEscAm32.lua" },
         match = "%-%-.*",
         replace = "%-%-.*",
         replacement = ""
@@ -63,20 +77,6 @@ local genericReplacements = {
         replace = "rf2%.lcdNeedsInvalidate.*",
         replacement = ""
     },
-    {
-        -- Remove simulatorResponse = {...} from MSP APIs, since they are not used outside the simulator.
-        files = "/SCRIPTS/RF2/MSP/",
-        match = "simulatorResponse = {(.-)}",
-        replace = "simulatorResponse = {(.-)},?",
-        replacement = ""
-    },
-    {
-        -- Remove debug info from release builds.
-        files = "/SCRIPTS/RF2/COMPILE/compile.lua",
-        match = "loadScript%(script, %'cd%'%)",
-        replace = "loadScript%(script, %'cd%'%)",
-        replacement = "loadScript(script, 'c')"
-    }
 }
 
 local function processFile(filename, genericReplacement)
@@ -255,6 +255,101 @@ local mspPidProfileReplacements = {
     { ".yaw_inertia_precomp_cutoff", "[42]" },
 }
 
+local mspEscAm32Replacements = {
+    files = { "SCRIPTS/RF2/MSP/mspEscAm32.lua", "SCRIPTS/RF2/PAGES/esc_am32_form.lua" },
+
+    { ".esc_signature", "[0]" },
+    { ".esc_command", "[1]" },
+    { ".reserved_0", "[2]" },
+    { ".eeprom_version", "[3]" },
+    { ".reserved_1", "[4]" },
+    { ".version_major", "[5]" },
+    { ".version_minor", "[6]" },
+    { ".max_ramp", "[7]" },
+    { ".minimum_duty_cycle", "[8]" },
+    { ".disable_stick_calibration", "[9]" },
+    { ".absolute_voltage_cutoff", "[10]" },
+    { ".current_p", "[11]" },
+    { ".current_i", "[12]" },
+    { ".current_d", "[13]" },
+    { ".active_brake_power", "[14]" },
+    { ".reserved_eeprom_3_0", "[15]" },
+    { ".reserved_eeprom_3_1", "[16]" },
+    { ".reserved_eeprom_3_2", "[17]" },
+    { ".reserved_eeprom_3_3", "[18]" },
+    { ".timing_advance_encoding", "[19]" },
+    { ".motor_direction", "[20]" },
+    { ".bidirectional_mode", "[21]" },
+    { ".sinusoidal_startup", "[22]" },
+    { ".complementary_pwm", "[23]" },
+    { ".variable_pwm_frequency", "[24]" },
+    { ".stuck_rotor_protection", "[25]" },
+    { ".timing_advance", "[26]" },
+    { ".pwm_frequency", "[27]" },
+    { ".startup_power", "[28]" },
+    { ".motor_kv", "[29]" },
+    { ".motor_poles", "[30]" },
+    { ".brake_on_stop", "[31]" },
+    { ".stall_protection", "[32]" },
+    { ".beep_volume", "[33]" },
+    { ".interval_telemetry", "[34]" },
+    { ".servo_low_threshold", "[35]" },
+    { ".servo_high_threshold", "[36]" },
+    { ".servo_neutral", "[37]" },
+    { ".servo_dead_band", "[38]" },
+    { ".low_voltage_cutoff", "[39]" },
+    { ".low_voltage_threshold", "[40]" },
+    { ".rc_car_reversing", "[41]" },
+    { ".use_hall_sensors", "[42]" },
+    { ".sine_mode_range", "[43]" },
+    { ".brake_strength", "[44]" },
+    { ".running_brake_level", "[45]" },
+    { ".temperature_limit", "[46]" },
+    { ".current_limit", "[47]" },
+    { ".sine_mode_power", "[48]" },
+    { ".esc_protocol", "[49]" },
+    { ".auto_advance", "[50]" }
+}
+
+local rf2tlm_sensorsReplacements = {
+    files = { "SCRIPTS/RF2/rf2tlm_sensors.lua" },
+
+    { "sid=0x", "[0]=0x" },  -- sid becomes [0]
+    { ", name=", ", " },     -- name becomes [1]
+    { ", unit=", ", " },     -- unit becomes [2]
+    { ", prec=", ", " },     -- prec becomes [3]
+    { ", dec=", ", " },      -- dec becomes [4]
+    {
+        "sensor.dec(data, ptr)",
+        "(sensor[4])(data, ptr)"
+    },
+    {
+        "setTelemetryValue(sensor.sid, 0, 0, 0, sensor.unit, sensor.prec, sensor.name)",
+        "setTelemetryValue(sensor[0], 0, 0, 0, sensor[2], sensor[3], sensor[1])"
+    },
+    {
+        "result[sensor.sid]={ name=sensor.name, sensor.unit, sensor.prec, sensor.dec }",
+        "result[sensor[0]]={ sensor[1], sensor[2], sensor[3], sensor[4] }" -- Note: explicitly 1-based so numbers won't change
+    },
+}
+
+local rf2tlmReplacements = {
+    files = { "SCRIPTS/RF2/rf2tlm.lua" },
+
+    {
+        "setTelemetryValue(sid, 0, 0, val, sensor.unit, sensor.prec, sensor.name)",
+        "setTelemetryValue(sid, 0, 0, val, sensor[2], sensor[3], sensor[1])"
+    },
+    {
+        "sensor.dec(data, ptr)",
+        "(sensor[4])(data, ptr)"
+    },
+}
+
+function escapeLuaPattern(s)
+    return (string.gsub(s, "([%(%)%.%%%+%-%*%?%[%^%$])", "%%%1"))
+end
+
 local function replace(r)
     for _, filename in ipairs(r.files) do
         --print("Opening " .. filename)
@@ -265,7 +360,8 @@ local function replace(r)
             for line in input_file:lines() do
                 local new_line = line
                 for _, v in ipairs(r) do
-                    new_line = string.gsub(new_line, v[1], v[2])
+                    --new_line = string.gsub(new_line, v[1], v[2])
+                    new_line = string.gsub(new_line, escapeLuaPattern(v[1]), v[2])
                 end
                 temp_file:write(new_line .. "\n")
             end
@@ -287,3 +383,6 @@ end
 replace(mspRcTuningReplacements)
 replace(mspPidTuningReplacements)
 replace(mspPidProfileReplacements)
+replace(mspEscAm32Replacements)
+replace(rf2tlm_sensorsReplacements)
+replace(rf2tlmReplacements)

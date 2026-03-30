@@ -21,7 +21,7 @@ local prevUiState
 local pageState = lcdShared.pageStatus.display
 local saveTS = 0
 local init
-local pageChanged = false
+local clearQueue = false
 
 -- Color radios on EdgeTX >= 2.11 do not send EVT_VIRTUAL_ENTER anymore after EVT_VIRTUAL_ENTER_LONG
 local useKillEnterBreak = not(lcd.setColor and (select(3, getVersion()) >= 3 or select(3, getVersion()) >= 2 and select(4, getVersion()) >= 11))
@@ -136,8 +136,12 @@ local function createPopupMenu()
 end
 
 local function incPage(inc)
+    if Page and Page.unload then
+        Page:unload()
+    else
+        clearQueue = true
+    end
     CurrentPageIndex = rf2.executeScript("F/incMax")(CurrentPageIndex, inc, #PageFiles)
-    pageChanged = true
     invalidatePages()
 end
 
@@ -211,6 +215,7 @@ local function run_ui(event)
                 if useKillEnterBreak then lcdShared.killEnterBreak = true end
                 createPopupMenu()
             elseif event == EVT_VIRTUAL_EXIT then
+                if Page and Page.unload then Page:unload() end
                 invalidatePages()
                 uiState = uiStatus.mainMenu
                 if rf2.logfile then
@@ -221,9 +226,9 @@ local function run_ui(event)
             end
         end
         if not Page then
-            if pageChanged then
+            if clearQueue then
                 -- Only clear queue when the current page has changed, and not when saving a page.
-                pageChanged = false
+                clearQueue = false
                 rf2.mspQueue:clear()
             end
             --rf2.showMemoryUsage("before loading page")
