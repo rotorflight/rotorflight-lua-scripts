@@ -15,7 +15,9 @@ addPage("showPidController", "PID Controller", "profile_pidcon", true)
 addPage("showProfileVarious", "Profile - Various", "profile_various", true)
 addPage("showProfileRescue", "Profile - Rescue", "profile_rescue", true)
 addPage("showProfileGovernor", "Profile - Governor", "profile_governor", true)
-addPage("showBattery", "Battery", "battery", true)
+if rf2.apiVersion >= 12.09 then
+    addPage("showBattery", "Battery", "battery", true)
+end
 addPage("showServos", "Servos", "servos", true)
 addPage("showMixer", "Mixer", "mixer", true)
 addPage("showGyroFilters", "Gyro Filters", "filters", true)
