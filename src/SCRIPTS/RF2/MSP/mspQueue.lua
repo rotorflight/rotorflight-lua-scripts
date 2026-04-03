@@ -53,7 +53,11 @@ function MspQueueController:processQueue()
     end
 
     if self.currentMessage.postSendDelay and self.currentMessage.buf then
-        if self.lastTimeCommandSent + self.currentMessage.postSendDelay > rf2.clock() then return end
+        if self.lastTimeCommandSent + self.currentMessage.postSendDelay > rf2.clock() then
+            -- Use postSendDelay to wait a bit before handling the response.
+            -- Useful when waiting on asynchronous tasks such as writing ESC parameters.
+            return
+        end
         self:handleReply()
         return
     end
@@ -61,7 +65,7 @@ function MspQueueController:processQueue()
     local cmd, buf, err
     --rf2.print("retryCount: "..self.retryCount)
 
-    local retryDelay = 0.8 + (self.currentMessage.postSendDelay or 0)
+    local retryDelay = 0.8 + (self.currentMessage.retryDelay or 0)
     if not rf2.runningInSimulator then
         if not self.lastTimeCommandSent or (self.lastTimeCommandSent + retryDelay < rf2.clock()) then
             if self.currentMessage.payload then
@@ -111,7 +115,7 @@ function MspQueueController:processQueue()
         self.currentMessage.buf = buf
         if self.currentMessage.postSendDelay then return end
         self:handleReply()
-    elseif err or (self.maxRetries >= 0 and self.retryCount > self.maxRetries) then
+    elseif (err and cmd ~= 217) or (self.maxRetries >= 0 and self.retryCount > self.maxRetries) then -- ignore any MSP_ESC_PARAMETERS errors
         --rf2.print("Error or max retries reached, aborting queue")
         if self.currentMessage.errorHandler then
             self.currentMessage:errorHandler()

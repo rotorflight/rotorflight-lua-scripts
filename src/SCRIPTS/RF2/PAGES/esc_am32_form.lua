@@ -54,7 +54,7 @@ local function buildForm(escParameters, escCount, selectedEsc, endEscEditing)
     addField("Running brake", escParameters.running_brake_level)
     addField("Beep volume", escParameters.beep_volume)
 
-    labels[#labels + 1] = { t = "Advanced", x = x, y = incY(lineSpacing * 2) }
+    labels[#labels + 1] = { t = "Advanced", x = x, y = incY(lineSpacing * 1.5) }
     addField("Timing", escParameters.timing_advance)
     addField("Stuck rotor prot.", escParameters.stuck_rotor_protection)
     addField("Sinusoidal startup", escParameters.sinusoidal_startup)
@@ -67,7 +67,7 @@ local function buildForm(escParameters, escCount, selectedEsc, endEscEditing)
     addField("Telemetry interval", escParameters.interval_telemetry)
     addField("Auto advance", escParameters.auto_advance)
 
-    labels[#labels + 1] = { t = "Limits", x = x, y = incY(lineSpacing * 2) }
+    labels[#labels + 1] = { t = "Limits", x = x, y = incY(lineSpacing * 1.5) }
     addField("Temperature limit", escParameters.temperature_limit)
     addField("Current limit", escParameters.current_limit)
     addField("Low volt. cutoff", escParameters.low_voltage_cutoff)
