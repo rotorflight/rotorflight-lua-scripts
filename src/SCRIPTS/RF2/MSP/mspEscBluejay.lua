@@ -159,6 +159,9 @@ local function getEscParameters(callback, callbackParam, data)
             data.esc_signature = signature
             data.esc_command = rf2.mspHelper.readU8(buf)
             data.main_revision = rf2.mspHelper.readU8(buf)
+            if data.main_revision ~= 0 then
+                return
+            end
             data.sub_revision = rf2.mspHelper.readU8(buf)
             data.layout_revision = rf2.mspHelper.readU8(buf)
             data.reserved_03 = rf2.mspHelper.readU8(buf)
