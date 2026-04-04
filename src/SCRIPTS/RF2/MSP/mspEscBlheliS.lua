@@ -81,73 +81,57 @@ local function getFirmwareVersion(major, minor)
 end
 
 local function getDefaults()
-    return {
-        esc_signature = nil,
-        esc_command = nil,
-        main_revision = nil,
-        sub_revision = nil,
-        layout_revision = nil,
-        p_gain = nil,
-        i_gain = nil,
-        governor_mode = nil,
-        low_voltage_limit = nil,
-        motor_gain = nil,
-        motor_idle = nil,
-        startup_power = { min = 0, max = #startupPower, table = startupPower },
-        pwm_frequency = nil,
-        motor_direction = { min = 0, max = #motorDirection, table = motorDirection },
-        input_pwm_polarity = nil,
-        mode_raw = nil,
-        programming_by_tx = { min = 0, max = #onOff, table = onOff },
-        rearm_at_start = nil,
-        governor_setup_target = nil,
-        startup_rpm = nil,
-        startup_acceleration = nil,
-        volt_comp = nil,
-        commutation_timing = { min = 0, max = #commutationTiming, table = commutationTiming },
-        damping_force = nil,
-        governor_range = nil,
-        startup_method = nil,
-        ppm_min_throttle = { min = 1000, max = 1500 },
-        ppm_max_throttle = { min = 1504, max = 2020 },
-        beep_strength = { min = 1, max = 255 },
-        beacon_strength = { min = 1, max = 255 },
-        beacon_delay = { min = 0, max = #beaconDelay, table = beaconDelay },
-        throttle_rate = nil,
-        demag_compensation = { min = 0, max = #demagCompensation, table = demagCompensation },
-        bec_voltage = nil,
-        ppm_center_throttle = { min = 1000, max = 2020 },
-        spoolup_time = nil,
-        temperature_protection = { min = 0, max = #temperatureProtection, table = temperatureProtection },
-        low_rpm_power_protection = { min = 0, max = #onOff, table = onOff },
-        pwm_input = nil,
-        pwm_dither = nil,
-        brake_on_stop = { min = 0, max = #onOff, table = onOff },
-        led_control = nil,
-        reserved_29 = nil,
-        reserved_2a = nil,
-        reserved_2b = nil,
-        reserved_2c = nil,
-        reserved_2d = nil,
-        reserved_2e = nil,
-        reserved_2f = nil,
-        reserved_30 = nil,
-        reserved_31 = nil,
-        reserved_32 = nil,
-        reserved_33 = nil,
-        reserved_34 = nil,
-        reserved_35 = nil,
-        reserved_36 = nil,
-        reserved_37 = nil,
-        reserved_38 = nil,
-        reserved_39 = nil,
-        reserved_3a = nil,
-        reserved_3b = nil,
-        reserved_3c = nil,
-        reserved_3d = nil,
-        reserved_3e = nil,
-        reserved_3f = nil,
-    }
+    local d = {}
+    d.esc_signature = nil
+    d.esc_command = nil
+    d.main_revision = nil
+    d.sub_revision = nil
+    d.layout_revision = nil
+    d.p_gain = nil
+    d.i_gain = nil
+    d.governor_mode = nil
+    d.low_voltage_limit = nil
+    d.motor_gain = nil
+    d.motor_idle = nil
+    d.startup_power = { min = 0, max = #startupPower, table = startupPower }
+    d.pwm_frequency = nil
+    d.motor_direction = { min = 0, max = #motorDirection, table = motorDirection }
+    d.input_pwm_polarity = nil
+    d.mode_raw = nil
+    d.programming_by_tx = { min = 0, max = #onOff, table = onOff }
+    d.rearm_at_start = nil
+    d.governor_setup_target = nil
+    d.startup_rpm = nil
+    d.startup_acceleration = nil
+    d.volt_comp = nil
+    d.commutation_timing = { min = 0, max = #commutationTiming, table = commutationTiming }
+    d.damping_force = nil
+    d.governor_range = nil
+    d.startup_method = nil
+    d.ppm_min_throttle = { min = 1000, max = 1500 }
+    d.ppm_max_throttle = { min = 1504, max = 2020 }
+    d.beep_strength = { min = 1, max = 255 }
+    d.beacon_strength = { min = 1, max = 255 }
+    d.beacon_delay = { min = 0, max = #beaconDelay, table = beaconDelay }
+    d.throttle_rate = nil
+    d.demag_compensation = { min = 0, max = #demagCompensation, table = demagCompensation }
+    d.bec_voltage = nil
+    d.ppm_center_throttle = { min = 1000, max = 2020 }
+    d.spoolup_time = nil
+    d.temperature_protection = { min = 0, max = #temperatureProtection, table = temperatureProtection }
+    d.low_rpm_power_protection = { min = 0, max = #onOff, table = onOff }
+    d.pwm_input = nil
+    d.pwm_dither = nil
+    d.brake_on_stop = { min = 0, max = #onOff, table = onOff }
+    d.led_control = nil
+    d.reserved_29 = nil
+    d.reserved_2a_2b = nil
+    d.reserved_2c_2f = nil
+    d.reserved_30_33 = nil
+    d.reserved_34_37 = nil
+    d.reserved_38_3b = nil
+    d.reserved_3c_3f = nil
+    return d
 end
 
 local function getEscParameters(callback, callbackParam, data)
@@ -207,28 +191,12 @@ local function getEscParameters(callback, callbackParam, data)
             data.brake_on_stop.value = rf2.mspHelper.readU8(buf)
             data.led_control = rf2.mspHelper.readU8(buf)
             data.reserved_29 = rf2.mspHelper.readU8(buf)
-            data.reserved_2a = rf2.mspHelper.readU8(buf)
-            data.reserved_2b = rf2.mspHelper.readU8(buf)
-            data.reserved_2c = rf2.mspHelper.readU8(buf)
-            data.reserved_2d = rf2.mspHelper.readU8(buf)
-            data.reserved_2e = rf2.mspHelper.readU8(buf)
-            data.reserved_2f = rf2.mspHelper.readU8(buf)
-            data.reserved_30 = rf2.mspHelper.readU8(buf)
-            data.reserved_31 = rf2.mspHelper.readU8(buf)
-            data.reserved_32 = rf2.mspHelper.readU8(buf)
-            data.reserved_33 = rf2.mspHelper.readU8(buf)
-            data.reserved_34 = rf2.mspHelper.readU8(buf)
-            data.reserved_35 = rf2.mspHelper.readU8(buf)
-            data.reserved_36 = rf2.mspHelper.readU8(buf)
-            data.reserved_37 = rf2.mspHelper.readU8(buf)
-            data.reserved_38 = rf2.mspHelper.readU8(buf)
-            data.reserved_39 = rf2.mspHelper.readU8(buf)
-            data.reserved_3a = rf2.mspHelper.readU8(buf)
-            data.reserved_3b = rf2.mspHelper.readU8(buf)
-            data.reserved_3c = rf2.mspHelper.readU8(buf)
-            data.reserved_3d = rf2.mspHelper.readU8(buf)
-            data.reserved_3e = rf2.mspHelper.readU8(buf)
-            data.reserved_3f = rf2.mspHelper.readU8(buf)
+            data.reserved_2a_2b = rf2.mspHelper.readU16(buf)
+            data.reserved_2c_2f = rf2.mspHelper.readU32(buf)
+            data.reserved_30_33 = rf2.mspHelper.readU32(buf)
+            data.reserved_34_37 = rf2.mspHelper.readU32(buf)
+            data.reserved_38_3b = rf2.mspHelper.readU32(buf)
+            data.reserved_3c_3f = rf2.mspHelper.readU32(buf)
 
             -- Derived fields
             data.firmwareVersion = getFirmwareVersion(data.main_revision, data.sub_revision)
@@ -236,8 +204,7 @@ local function getEscParameters(callback, callbackParam, data)
             callback(callbackParam, data)
         end,
 
-        --simulatorResponseBluejay = { 193, 0, 0, 21, 208, 255, 102, 1, 255, 50, 255, 9, 24, 2, 255, 85, 170, 255, 0, 255, 255, 255, 255, 4, 255, 255, 255, 255, 255, 40, 80, 4, 255, 2, 255, 255, 255, 0, 255, 255, 255, 0, 0, 2, 100, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255 }
-        simulatorResponse = { 193, 0, 16, 7, 33, 255, 255, 255, 255, 255, 255, 10, 255, 3, 255, 85, 170, 1, 255, 255, 255, 255, 255, 3, 255, 255, 255, 37, 208, 40, 80, 4, 255, 2, 255, 122, 255, 7, 1, 255, 255, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255 }
+        simulatorResponse = { 193, 0, 16, 7, 33, 255, 255, 255, 255, 255, 255, 10, 255, 3, 255, 85, 170, 1, 255, 255, 255, 255, 255, 3, 255, 255, 255, 37, 208, 40, 80, 4, 255, 2, 255, 122, 255, 7, 1, 255, 255, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255 },
     }
     rf2.mspQueue:add(message)
 end
@@ -293,28 +260,12 @@ local function setEscParameters(data)
     rf2.mspHelper.writeU8(message.payload, data.brake_on_stop.value)
     rf2.mspHelper.writeU8(message.payload, data.led_control)
     rf2.mspHelper.writeU8(message.payload, data.reserved_29)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_2a)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_2b)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_2c)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_2d)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_2e)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_2f)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_30)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_31)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_32)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_33)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_34)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_35)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_36)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_37)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_38)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_39)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_3a)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_3b)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_3c)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_3d)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_3e)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_3f)
+    rf2.mspHelper.writeU16(message.payload, data.reserved_2a_2b)
+    rf2.mspHelper.writeU32(message.payload, data.reserved_2c_2f)
+    rf2.mspHelper.writeU32(message.payload, data.reserved_30_33)
+    rf2.mspHelper.writeU32(message.payload, data.reserved_34_37)
+    rf2.mspHelper.writeU32(message.payload, data.reserved_38_3b)
+    rf2.mspHelper.writeU32(message.payload, data.reserved_3c_3f)
 
     rf2.mspQueue:add(message)
 end
