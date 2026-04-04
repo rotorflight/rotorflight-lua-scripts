@@ -99,73 +99,50 @@ local function encodeStartupPowerMax(value)
 end
 
 local function getDefaults()
-    return {
-        esc_signature = nil,
-        esc_command = nil,
-        main_revision = nil,
-        sub_revision = nil,
-        layout_revision = nil,
-        reserved_03 = nil,
-        startup_power_min = { min = 1000, max = 1125, mult = 5 },
-        startup_beep = nil,
-        dithering = nil,
-        startup_power_max = { min = 1004, max = 1300, mult = 4 },
-        reserved_08 = nil,
-        rpm_power_slope = { min = 0, max = 255, table = rampupPower },
-        pwm_frequency = nil,
-        motor_direction = { min = 0, max = #motorDirection, table = motorDirection },
-        reserved_0c = nil,
-        mode_raw = nil,
-        reserved_0f = nil,
-        breaking_strength = { min = 0, max = 255 },
-        reserved_11 = nil,
-        reserved_12 = nil,
-        reserved_13 = nil,
-        reserved_14 = nil,
-        commutation_timing = { min = 0, max = #commutationTiming, table = commutationTiming },
-        reserved_16 = nil,
-        reserved_17 = nil,
-        reserved_18 = nil,
-        reserved_19 = nil,
-        reserved_1a = nil,
-        beep_strength = { min = 1, max = 255 },
-        beacon_strength = { min = 1, max = 255 },
-        beacon_delay = { min = 0, max = #beaconDelay, table = beaconDelay },
-        reserved_1e = nil,
-        demag_compensation = { min = 0, max = #demagCompensation, table = demagCompensation },
-        reserved_20 = nil,
-        reserved_21 = nil,
-        reserved_22 = nil,
-        temperature_protection = { min = 0, max = #temperatureProtection, table = temperatureProtection },
-        low_rpm_power_protection = { min = 0, max = #onOff, table = onOff },
-        reserved_25 = nil,
-        reserved_26 = nil,
-        brake_on_stop = { min = 0, max = #onOff, table = onOff },
-        led_control = nil,
-        power_rating = { min = 0, max = #powerRating, table = powerRating },
-        force_edt_arm = { min = 0, max = #onOff, table = edtOnOff },
-        reserved_2b = nil,
-        reserved_2c = nil,
-        reserved_2d = nil,
-        reserved_2e = nil,
-        reserved_2f = nil,
-        reserved_30 = nil,
-        reserved_31 = nil,
-        reserved_32 = nil,
-        reserved_33 = nil,
-        reserved_34 = nil,
-        reserved_35 = nil,
-        reserved_36 = nil,
-        reserved_37 = nil,
-        reserved_38 = nil,
-        reserved_39 = nil,
-        reserved_3a = nil,
-        reserved_3b = nil,
-        reserved_3c = nil,
-        reserved_3d = nil,
-        reserved_3e = nil,
-        reserved_3f = nil,
-    }
+    local d = {}
+	d.esc_signature = nil
+	d.esc_command = nil
+	d.main_revision = nil
+	d.sub_revision = nil
+	d.layout_revision = nil
+	d.reserved_03 = nil
+	d.startup_power_min = { min = 1000, max = 1125, mult = 5 }
+	d.startup_beep = nil
+	d.dithering = nil
+	d.startup_power_max = { min = 1004, max = 1300, mult = 4 }
+	d.reserved_08 = nil
+	d.rpm_power_slope = { min = 0, max = 255, table = rampupPower }
+	d.pwm_frequency = nil
+	d.motor_direction = { min = 0, max = #motorDirection, table = motorDirection }
+	d.reserved_0c = nil
+	d.mode_raw = nil
+	d.reserved_0f = nil
+	d.breaking_strength = { min = 0, max = 255 }
+	d.reserved_11_14 = nil
+	d.commutation_timing = { min = 0, max = #commutationTiming, table = commutationTiming }
+	d.reserved_16_19 = nil
+	d.reserved_1a = nil
+	d.beep_strength = { min = 1, max = 255 }
+	d.beacon_strength = { min = 1, max = 255 }
+	d.beacon_delay = { min = 0, max = #beaconDelay, table = beaconDelay }
+	d.reserved_1e = nil
+	d.demag_compensation = { min = 0, max = #demagCompensation, table = demagCompensation }
+	d.reserved_20_21 = nil
+	d.reserved_22 = nil
+	d.temperature_protection = { min = 0, max = #temperatureProtection, table = temperatureProtection }
+	d.low_rpm_power_protection = { min = 0, max = #onOff, table = onOff }
+	d.reserved_25_26 = nil
+	d.brake_on_stop = { min = 0, max = #onOff, table = onOff }
+	d.led_control = nil
+	d.power_rating = { min = 0, max = #powerRating, table = powerRating }
+	d.force_edt_arm = { min = 0, max = #onOff, table = edtOnOff }
+	d.reserved_2b = nil
+	d.reserved_2c_2f = nil
+	d.reserved_30_33 = nil
+	d.reserved_34_37 = nil
+	d.reserved_38_3b = nil
+	d.reserved_3c_3f = nil
+    return d
 end
 
 local function getEscParameters(callback, callbackParam, data)
@@ -197,53 +174,30 @@ local function getEscParameters(callback, callbackParam, data)
             data.mode_raw = rf2.mspHelper.readU16(buf)
             data.reserved_0f = rf2.mspHelper.readU8(buf)
             data.breaking_strength.value = rf2.mspHelper.readU8(buf)
-            data.reserved_11 = rf2.mspHelper.readU8(buf)
-            data.reserved_12 = rf2.mspHelper.readU8(buf)
-            data.reserved_13 = rf2.mspHelper.readU8(buf)
-            data.reserved_14 = rf2.mspHelper.readU8(buf)
+            data.reserved_11_14 = rf2.mspHelper.readU32(buf)
             data.commutation_timing.value = rf2.mspHelper.readU8(buf) - 1
-            data.reserved_16 = rf2.mspHelper.readU8(buf)
-            data.reserved_17 = rf2.mspHelper.readU8(buf)
-            data.reserved_18 = rf2.mspHelper.readU8(buf)
-            data.reserved_19 = rf2.mspHelper.readU8(buf)
+            data.reserved_16_19 = rf2.mspHelper.readU32(buf)
             data.reserved_1a = rf2.mspHelper.readU8(buf)
             data.beep_strength.value = rf2.mspHelper.readU8(buf)
             data.beacon_strength.value = rf2.mspHelper.readU8(buf)
             data.beacon_delay.value = rf2.mspHelper.readU8(buf) - 1
             data.reserved_1e = rf2.mspHelper.readU8(buf)
             data.demag_compensation.value = rf2.mspHelper.readU8(buf) - 1
-            data.reserved_20 = rf2.mspHelper.readU8(buf)
-            data.reserved_21 = rf2.mspHelper.readU8(buf)
+            data.reserved_20_21 = rf2.mspHelper.readU16(buf)
             data.reserved_22 = rf2.mspHelper.readU8(buf)
             data.temperature_protection.value = rf2.mspHelper.readU8(buf)
             data.low_rpm_power_protection.value = rf2.mspHelper.readU8(buf) - 1
-            data.reserved_25 = rf2.mspHelper.readU8(buf)
-            data.reserved_26 = rf2.mspHelper.readU8(buf)
+            data.reserved_25_26 = rf2.mspHelper.readU16(buf)
             data.brake_on_stop.value = rf2.mspHelper.readU8(buf)
             data.led_control = rf2.mspHelper.readU8(buf)
             data.power_rating.value = rf2.mspHelper.readU8(buf) - 1
             data.force_edt_arm.value = rf2.mspHelper.readU8(buf)
             data.reserved_2b = rf2.mspHelper.readU8(buf)
-            data.reserved_2c = rf2.mspHelper.readU8(buf)
-            data.reserved_2d = rf2.mspHelper.readU8(buf)
-            data.reserved_2e = rf2.mspHelper.readU8(buf)
-            data.reserved_2f = rf2.mspHelper.readU8(buf)
-            data.reserved_30 = rf2.mspHelper.readU8(buf)
-            data.reserved_31 = rf2.mspHelper.readU8(buf)
-            data.reserved_32 = rf2.mspHelper.readU8(buf)
-            data.reserved_33 = rf2.mspHelper.readU8(buf)
-            data.reserved_34 = rf2.mspHelper.readU8(buf)
-            data.reserved_35 = rf2.mspHelper.readU8(buf)
-            data.reserved_36 = rf2.mspHelper.readU8(buf)
-            data.reserved_37 = rf2.mspHelper.readU8(buf)
-            data.reserved_38 = rf2.mspHelper.readU8(buf)
-            data.reserved_39 = rf2.mspHelper.readU8(buf)
-            data.reserved_3a = rf2.mspHelper.readU8(buf)
-            data.reserved_3b = rf2.mspHelper.readU8(buf)
-            data.reserved_3c = rf2.mspHelper.readU8(buf)
-            data.reserved_3d = rf2.mspHelper.readU8(buf)
-            data.reserved_3e = rf2.mspHelper.readU8(buf)
-            data.reserved_3f = rf2.mspHelper.readU8(buf)
+            data.reserved_2c_2f = rf2.mspHelper.readU32(buf)
+            data.reserved_30_33 = rf2.mspHelper.readU32(buf)
+            data.reserved_34_37 = rf2.mspHelper.readU32(buf)
+            data.reserved_38_3b = rf2.mspHelper.readU32(buf)
+            data.reserved_3c_3f = rf2.mspHelper.readU32(buf)
 
             -- Derived fields
             data.firmwareVersion = getFirmwareVersion(data.main_revision, data.sub_revision)
@@ -283,52 +237,30 @@ local function setEscParameters(data)
     rf2.mspHelper.writeU16(message.payload, data.mode_raw)
     rf2.mspHelper.writeU8(message.payload, data.reserved_0f)
     rf2.mspHelper.writeU8(message.payload, data.breaking_strength.value)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_11)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_12)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_13)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_14)
+    rf2.mspHelper.writeU32(message.payload, data.reserved_11_14)
     rf2.mspHelper.writeU8(message.payload, data.commutation_timing.value + 1)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_16)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_17)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_18)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_19)
+    rf2.mspHelper.writeU32(message.payload, data.reserved_16_19)
     rf2.mspHelper.writeU8(message.payload, data.reserved_1a)
     rf2.mspHelper.writeU8(message.payload, data.beep_strength.value)
     rf2.mspHelper.writeU8(message.payload, data.beacon_strength.value)
     rf2.mspHelper.writeU8(message.payload, data.beacon_delay.value + 1)
     rf2.mspHelper.writeU8(message.payload, data.reserved_1e)
     rf2.mspHelper.writeU8(message.payload, data.demag_compensation.value + 1)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_20)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_21)
+    rf2.mspHelper.writeU16(message.payload, data.reserved_20_21)
     rf2.mspHelper.writeU8(message.payload, data.reserved_22)
     rf2.mspHelper.writeU8(message.payload, data.temperature_protection.value)
     rf2.mspHelper.writeU8(message.payload, data.low_rpm_power_protection.value)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_25)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_26)
+    rf2.mspHelper.writeU16(message.payload, data.reserved_25_26)
     rf2.mspHelper.writeU8(message.payload, data.brake_on_stop.value)
     rf2.mspHelper.writeU8(message.payload, data.led_control)
     rf2.mspHelper.writeU8(message.payload, data.power_rating.value + 1)
     rf2.mspHelper.writeU8(message.payload, data.force_edt_arm.value)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_2c)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_2d)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_2e)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_2f)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_30)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_31)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_32)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_33)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_34)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_35)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_36)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_37)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_38)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_39)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_3a)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_3b)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_3c)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_3d)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_3e)
-    rf2.mspHelper.writeU8(message.payload, data.reserved_3f)
+    rf2.mspHelper.writeU8(message.payload, data.reserved_2b)
+    rf2.mspHelper.writeU32(message.payload, data.reserved_2c_2f)
+    rf2.mspHelper.writeU32(message.payload, data.reserved_30_33)
+    rf2.mspHelper.writeU32(message.payload, data.reserved_34_37)
+    rf2.mspHelper.writeU32(message.payload, data.reserved_38_3b)
+    rf2.mspHelper.writeU32(message.payload, data.reserved_3c_3f)
 
     rf2.mspQueue:add(message)
 end
