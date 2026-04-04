@@ -311,6 +311,53 @@ local mspEscAm32Replacements = {
     { ".auto_advance", "[50]" }
 }
 
+local mspEscBluejayReplacements = {
+    files = { "SCRIPTS/RF2/MSP/mspEscBluejay.lua", "SCRIPTS/RF2/PAGES/esc_bluejay_form.lua" },
+
+	{ ".esc_signature", "[0]" },
+	{ ".esc_command", "[1]" },
+	{ ".main_revision", "[2]" },
+	{ ".sub_revision", "[3]" },
+	{ ".layout_revision", "[4]" },
+	{ ".reserved_03", "[5]" },
+	{ ".startup_power_min", "[6]" },
+	{ ".startup_beep", "[7]" },
+	{ ".dithering", "[8]" },
+	{ ".startup_power_max", "[9]" },
+	{ ".reserved_08", "[10]" },
+	{ ".rpm_power_slope", "[11]" },
+	{ ".pwm_frequency", "[12]" },
+	{ ".motor_direction", "[13]" },
+	{ ".reserved_0c", "[14]" },
+	{ ".mode_raw", "[15]" },
+	{ ".reserved_0f", "[16]" },
+	{ ".breaking_strength", "[17]" },
+	{ ".reserved_11_14", "[18]" },
+	{ ".commutation_timing", "[19]" },
+	{ ".reserved_16_19", "[20]" },
+	{ ".reserved_1a", "[21]" },
+	{ ".beep_strength", "[22]" },
+	{ ".beacon_strength", "[23]" },
+	{ ".beacon_delay", "[24]" },
+	{ ".reserved_1e", "[25]" },
+	{ ".demag_compensation", "[26]" },
+	{ ".reserved_20_21", "[27]" },
+	{ ".reserved_22", "[28]" },
+	{ ".temperature_protection", "[29]" },
+	{ ".low_rpm_power_protection", "[30]" },
+	{ ".reserved_25_26", "[31]" },
+	{ ".brake_on_stop", "[32]" },
+	{ ".led_control", "[33]" },
+	{ ".power_rating", "[34]" },
+	{ ".force_edt_arm", "[35]" },
+	{ ".reserved_2b", "[36]" },
+	{ ".reserved_2c_2f", "[37]" },
+	{ ".reserved_30_33", "[38]" },
+	{ ".reserved_34_37", "[39]" },
+	{ ".reserved_38_3b", "[40]" },
+	{ ".reserved_3c_3f", "[41]" },
+}
+
 local rf2tlm_sensorsReplacements = {
     files = { "SCRIPTS/RF2/rf2tlm_sensors.lua" },
 
@@ -384,5 +431,6 @@ replace(mspRcTuningReplacements)
 replace(mspPidTuningReplacements)
 replace(mspPidProfileReplacements)
 replace(mspEscAm32Replacements)
+replace(mspEscBluejayReplacements)
 replace(rf2tlm_sensorsReplacements)
 replace(rf2tlmReplacements)
