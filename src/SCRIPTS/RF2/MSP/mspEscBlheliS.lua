@@ -108,15 +108,15 @@ local function getDefaults()
     d.damping_force = nil
     d.governor_range = nil
     d.startup_method = nil
-    d.ppm_min_throttle = { min = 1000, max = 1500 }
-    d.ppm_max_throttle = { min = 1504, max = 2020 }
+    d.ppm_min_throttle = { min = 1000, max = 1500, mult = 4 }
+    d.ppm_max_throttle = { min = 1504, max = 2020, mult = 4 }
     d.beep_strength = { min = 1, max = 255 }
     d.beacon_strength = { min = 1, max = 255 }
     d.beacon_delay = { min = 0, max = #beaconDelay, table = beaconDelay }
     d.throttle_rate = nil
     d.demag_compensation = { min = 0, max = #demagCompensation, table = demagCompensation }
     d.bec_voltage = nil
-    d.ppm_center_throttle = { min = 1000, max = 2020 }
+    d.ppm_center_throttle = { min = 1000, max = 2020, mult = 4 }
     d.spoolup_time = nil
     d.temperature_protection = { min = 0, max = #temperatureProtection, table = temperatureProtection }
     d.low_rpm_power_protection = { min = 0, max = #onOff, table = onOff }

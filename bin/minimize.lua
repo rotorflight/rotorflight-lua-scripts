@@ -311,6 +311,60 @@ local mspEscAm32Replacements = {
     { ".auto_advance", "[50]" }
 }
 
+local mspEscBlheliSReplacements = {
+    files = { "SCRIPTS/RF2/MSP/mspEscBlheliS.lua", "SCRIPTS/RF2/PAGES/esc_blhelis_form.lua" },
+
+    { ".esc_signature", "[0]" },
+    { ".esc_command", "[1]" },
+    { ".main_revision", "[2]" },
+    { ".sub_revision", "[3]" },
+    { ".layout_revision", "[4]" },
+    { ".p_gain", "[5]" },
+    { ".i_gain", "[6]" },
+    { ".governor_mode", "[7]" },
+    { ".low_voltage_limit", "[8]" },
+    { ".motor_gain", "[9]" },
+    { ".motor_idle", "[10]" },
+    { ".startup_power", "[11]" },
+    { ".pwm_frequency", "[12]" },
+    { ".motor_direction", "[13]" },
+    { ".input_pwm_polarity", "[14]" },
+    { ".mode_raw", "[15]" },
+    { ".programming_by_tx", "[16]" },
+    { ".rearm_at_start", "[17]" },
+    { ".governor_setup_target", "[18]" },
+    { ".startup_rpm", "[19]" },
+    { ".startup_acceleration", "[20]" },
+    { ".volt_comp", "[21]" },
+    { ".commutation_timing", "[22]" },
+    { ".damping_force", "[23]" },
+    { ".governor_range", "[24]" },
+    { ".startup_method", "[25]" },
+    { ".ppm_min_throttle", "[26]" },
+    { ".ppm_max_throttle", "[27]" },
+    { ".beep_strength", "[28]" },
+    { ".beacon_strength", "[29]" },
+    { ".beacon_delay", "[30]" },
+    { ".throttle_rate", "[31]" },
+    { ".demag_compensation", "[32]" },
+    { ".bec_voltage", "[33]" },
+    { ".ppm_center_throttle", "[34]" },
+    { ".spoolup_time", "[35]" },
+    { ".temperature_protection", "[36]" },
+    { ".low_rpm_power_protection", "[37]" },
+    { ".pwm_input", "[38]" },
+    { ".pwm_dither", "[39]" },
+    { ".brake_on_stop", "[40]" },
+    { ".led_control", "[41]" },
+    { ".reserved_29", "[42]" },
+    { ".reserved_2a_2b", "[43]" },
+    { ".reserved_2c_2f", "[44]" },
+    { ".reserved_30_33", "[45]" },
+    { ".reserved_34_37", "[46]" },
+    { ".reserved_38_3b", "[47]" },
+    { ".reserved_3c_3f", "[48]" },
+}
+
 local mspEscBluejayReplacements = {
     files = { "SCRIPTS/RF2/MSP/mspEscBluejay.lua", "SCRIPTS/RF2/PAGES/esc_bluejay_form.lua" },
 
@@ -431,6 +485,7 @@ replace(mspRcTuningReplacements)
 replace(mspPidTuningReplacements)
 replace(mspPidProfileReplacements)
 replace(mspEscAm32Replacements)
+replace(mspEscBlheliSReplacements)
 replace(mspEscBluejayReplacements)
 replace(rf2tlm_sensorsReplacements)
 replace(rf2tlmReplacements)
