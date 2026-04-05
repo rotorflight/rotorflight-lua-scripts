@@ -138,7 +138,7 @@ local function getEscParameters(callback, callbackParam, data)
     data = data or getDefaults()
     local message = {
         command = 217, -- MSP_ESC_PARAMETERS
-        retryDelay = 2,
+        ignoreErrors = true, -- it usually works after a few errors (?)
         processReply = function(self, buf)
             local signature = rf2.mspHelper.readU8(buf)
             if signature ~= 193 then

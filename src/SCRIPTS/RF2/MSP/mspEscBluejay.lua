@@ -149,7 +149,8 @@ local function getEscParameters(callback, callbackParam, data)
     data = data or getDefaults()
     local message = {
         command = 217, -- MSP_ESC_PARAMETERS
-        retryDelay = 2,
+        ignoreErrors = true, -- it usually works after a few errors (?)
+        retryDelay = 0, -- fast retry
         processReply = function(self, buf)
             local signature = rf2.mspHelper.readU8(buf)
             if signature ~= 193 then
@@ -208,7 +209,8 @@ local function getEscParameters(callback, callbackParam, data)
             callback(callbackParam, data)
         end,
 
-        simulatorResponse =   { 193, 0, 0, 21, 208, 255, 102, 1, 255, 50, 255, 9, 24, 2, 255, 85, 170, 255, 0, 255, 255, 255, 255, 4, 255, 255, 255, 255, 255, 40, 80, 4, 255, 2, 255, 255, 255, 0, 255, 255, 255, 0, 0, 2, 100, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255 },
+        simulatorResponse = { 193, 0, 0, 21, 208, 255, 102, 1, 255, 50, 255, 9, 24, 2, 255, 85, 170, 255, 0, 255, 255, 255, 255, 4, 255, 255, 255, 255, 255, 40, 80, 4, 255, 2, 255, 255, 255, 0, 255, 255, 255, 0, 0, 2, 100, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255 },
+        --simulatorResponseBluejay022 = { 193, 0, 0, 22, 209, 255, 51, 0, 0, 5, 255, 9, 24, 1, 255, 85, 170, 255, 255, 255, 255, 255, 255, 4, 255, 255, 255, 255, 255, 40, 80, 4, 255, 2, 255, 255, 255, 0, 1, 255, 255, 0, 0, 2, 0, 170, 85, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
     }
     rf2.mspQueue:add(message)
 end

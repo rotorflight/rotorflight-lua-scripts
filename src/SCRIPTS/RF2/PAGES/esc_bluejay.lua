@@ -32,7 +32,7 @@ end
 local page = {
     read = function(self)
         if not self.isReady then rf2.onPageReady(self) end
-        rf2.useApi("mspEsc4wif").selectEsc(selectedEsc, 1)
+        rf2.useApi("mspEsc4wif").selectEsc(selectedEsc, 2)
         rf2.useApi("mspStatus").getStatus(onProcessedMspStatus, self)
         rf2.useApi("mspEscBluejay").read(receivedEscParameters, self)
     end,

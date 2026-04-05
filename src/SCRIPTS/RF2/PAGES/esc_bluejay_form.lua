@@ -55,7 +55,7 @@ local function buildForm(escParameters, escCount, selectedEsc, endEscEditing)
     addField("Brake on stop", escParameters.brake_on_stop)
     addField("Max breaking strength", escParameters.breaking_strength)
     addField("ESC power rating", escParameters.power_rating)
-    addField("Force EDT arm", escParameters.force_edt_arm)
+    -- addField("Force EDT arm", escParameters.force_edt_arm) -- different values between Bluejay 0.21 and 0.22
     addField("Motor direction", escParameters.motor_direction, 150)
     return labels, fields
 end
