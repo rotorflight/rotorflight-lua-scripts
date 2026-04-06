@@ -29,6 +29,8 @@ if rf2.apiVersion >= 12.07 then
     addPage("showExperimental", "Experimental (!)", "experimental", false)
     if rf2.apiVersion >= 12.09 then
         addPage("showAm32", "ESC - AM32", "esc_am32", false)
+        addPage("showBlheliS", "ESC - BLHeli_S", "esc_blhelis", false)
+        addPage("showBluejay", "ESC - Bluejay", "esc_bluejay", false)
     end
     addPage("showFlyRotor", "ESC - FLYROTOR", "esc_flyrotor", false)
     addPage("showPlatinumV5", "ESC - HW Platinum V5", "esc_hwpl5", false)

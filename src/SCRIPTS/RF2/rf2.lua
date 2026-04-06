@@ -61,8 +61,21 @@ rf2 = {
     },
 
     --[NIR
+    formatTime = function(cs)
+        local hours = math.floor(cs / 360000)
+        cs = cs % 360000
+
+        local minutes = math.floor(cs / 6000)
+        cs = cs % 6000
+
+        local seconds = math.floor(cs / 100)
+        local centis = cs % 100
+
+        return string.format("%02d:%02d:%02d:%02d", hours, minutes, seconds, centis)
+    end,
+
     print = function(format, ...)
-        local str = string.format("RF2: " .. tostring(format), ...)
+        local str = string.format("%s - RF2: " .. tostring(format), rf2.formatTime(getTime()), ...)
         if rf2.runningInSimulator then
             print(str)
         else

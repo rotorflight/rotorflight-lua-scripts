@@ -2,6 +2,7 @@ local function selectEsc(escIndex, postSendDelay, callback, callbackParam)
     local message = {
         command = 244,     -- MSP_SET_4WIF_ESC_FWD_PROG
         payload = { escIndex },
+        retryDelay = postSendDelay,
         postSendDelay = postSendDelay
     }
 
@@ -19,7 +20,8 @@ end
 local function clearEscSelection(callback, callbackParam)
     local message = {
         command = 244,     -- MSP_SET_4WIF_ESC_FWD_PROG
-        payload = { 100 }  -- Any value > MOTOR_COUNT
+        payload = { 100 }, -- Any value > MOTOR_COUNT,
+        postSendDelay = 1
     }
 
     if callback then

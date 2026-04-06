@@ -133,6 +133,7 @@ local function setEscParameters(data)
     local message = {
         command = 218, -- MSP_SET_ESC_PARAMETERS
         payload = {},
+        retryDelay = 2,
         postSendDelay = 2,
         simulatorResponse = {}
     }
