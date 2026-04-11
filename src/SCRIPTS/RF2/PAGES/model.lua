@@ -97,6 +97,12 @@ end
 local function onReceivedPilotConfig(page, config)
     buildForm(page)
     rf2.onPageReady(page)
+    if rf2.resetPilotConfig then
+        -- Deferred execution needed when running as a widget,
+        -- because rf2.mspQueue:clear() will be called on reset.
+        rf2.executeScript("F/pilotConfigReset")()
+        rf2.resetPilotConfig = nil
+    end
 end
 
 local function setAutoSetName()
@@ -125,7 +131,7 @@ return {
             rf2.useApi("mspFlightStats").write(flighStats)
         end
         rf2.useApi("mspPilotConfig").write(pilotConfig)
-        rf2.executeScript("F/pilotConfigReset")()
+        rf2.resetPilotConfig = true
         rf2.settingsSaved(true, false)
     end,
     title       = "Model",

@@ -2,7 +2,7 @@
 local MspQueueController = {}
 MspQueueController.__index = MspQueueController
 
-local mspSendRequest, mspProcessTxQ, mspPollReply, mspClearTxBuf = rf2.executeScript("MSP/common")
+local mspSendRequest, mspProcessTxQ, mspPollReply, mspClearRxTxBufs = rf2.executeScript("MSP/common")
 
 function MspQueueController.new()
     local self = setmetatable({}, MspQueueController)
@@ -139,7 +139,7 @@ function MspQueueController:clear()
     self.messageQueue = {}
     self.currentMessage = nil
     self.lastTimeCommandSent = nil
-    mspClearTxBuf()
+    mspClearRxTxBufs()
     collectgarbage()
 end
 

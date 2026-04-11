@@ -24,6 +24,7 @@ local function run(widget)
         modelIsConnected = true
         if isInitialized and pilotConfigHasBeenReset() then
             -- Since EdgeTX 2.11 the background script will resume execution instead of starting it again after running a tool.
+            rf2.mspQueue:clear()
             isInitialized = false
         end
     elseif getRSSI() == 0 then
