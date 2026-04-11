@@ -50,7 +50,7 @@ fields[5] = { t = "[Erase]",               x = x + indent * 7, y = y }
 
 local function armingDisableFlagsToString(flags)
     local t = ""
-    for i = 0, 25 do
+    for i = 0, 26 do
         if bit32.band(flags, bit32.lshift(1, i)) ~= 0 then
             if t ~= "" then t = t .. ", " end
             if i == 0 then t = t .. "No Gyro" end
@@ -78,7 +78,12 @@ local function armingDisableFlagsToString(flags)
             if i == 22 then t = t .. "DSHOT Bitbang" end
             if i == 23 then t = t .. "Acc Calibration" end
             if i == 24 then t = t .. "Motor Protocol" end
-            if i == 25 then t = t .. "Arm Switch" end
+            if rf2.apiVersion < 12.09 then
+                if i == 25 then t = t .. "Arm Switch" end
+            else
+                if i == 25 then t = t .. "Override" end
+                if i == 26 then t = t .. "Arm Switch" end
+            end
         end
     end
     if t == "" then t = "-" end
