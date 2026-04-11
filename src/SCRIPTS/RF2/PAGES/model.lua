@@ -59,13 +59,15 @@ local function buildForm(page)
                 buildForm(page)
                 rf2.onPageReady(page)
             end
-            fields[#fields + 1] = { t = "[Reset Stats]",  x = x + indent * 3, y = incY(lineSpacing * 1.3), preEdit = resetStats }
+            fields[#fields + 1] = { t = "[Reset]",  x = x + indent * 3, y = incY(lineSpacing * 1.3), preEdit = resetStats }
         end
     end
 
     incY(lineSpacing * 0.5)
     labels[#labels + 1] = { t = "Radio Configuration",       x = x, y = incY(lineSpacing) }
-    labels[#labels + 1] = { t = "Note: requires rf2bg",   x = x + indent, y = incY(lineSpacing), bold = false }
+    if not rf2.widget then
+        labels[#labels + 1] = { t = "Note: requires rf2bg",   x = x + indent, y = incY(lineSpacing), bold = false }
+    end
 
     local function getAutoSetName()
         if rf2.apiVersion >= 12.07 and rf2.apiVersion < 12.09 then
