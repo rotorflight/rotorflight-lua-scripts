@@ -8,7 +8,6 @@ local function run(event, touchState, noUi)
     if not noUi then ui.update() end
 
     if not IsInitialized then
-        rf2.mspQueue.maxRetries = -1 -- retry indefinitely
         InitTask = InitTask or rf2.executeScript("ui_init")
         local gotApiVersion = InitTask.f()
         ui.setWaitMessage(InitTask.t)

@@ -74,7 +74,6 @@ local function loadScripts(widget)
     -- load required scripts
     rf2.radio = rf2.executeScript("radios")
     rf2.mspQueue = rf2.executeScript("MSP/mspQueue")
-    rf2.mspQueue.maxRetries = 3
     rf2.mspHelper = rf2.executeScript("MSP/mspHelper")
 
     -- load tasks

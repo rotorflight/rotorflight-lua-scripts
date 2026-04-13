@@ -127,8 +127,6 @@ local queueInitialized = false
 local function initializeQueue()
     --rf2.print("Initializing MSP queue")
 
-    rf2.mspQueue.maxRetries = -1       -- retry indefinitely
-
     rf2.useApi("mspApiVersion").getApiVersion(
         function(_, version)
             rf2.apiVersion = version
@@ -163,7 +161,6 @@ local function initializeQueue()
                     playTone(988, 125, 0)   -- B5
                     playTone(1047, 125, 0)  -- C6
                     --rf2.print("RTC set")
-                    rf2.mspQueue.maxRetries = 3
                     initializationDone = true
                 end)
         end)

@@ -10,7 +10,6 @@ if scriptsCompiled then
     --rf2.showMemoryUsage("rf2 loaded")
     rf2.radio = rf2.executeScript("radios")
     rf2.mspQueue = rf2.executeScript("MSP/mspQueue")
-    rf2.mspQueue.maxRetries = 3
     rf2.mspHelper = rf2.executeScript("MSP/mspHelper")
 
     local canUseLvgl = rf2.executeScript("F/canUseLvgl")()

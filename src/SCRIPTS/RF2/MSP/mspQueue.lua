@@ -10,7 +10,7 @@ function MspQueueController.new()
     self.currentMessage = nil
     self.lastTimeCommandSent = nil
     self.retryCount = 0
-    self.maxRetries = 3
+    self.maxRetries = -1 -- retry indefinitely
     return self
 end
 
@@ -116,11 +116,13 @@ function MspQueueController:processQueue()
         if self.currentMessage.postSendDelay then return end
         self:handleReply()
     elseif (err and not self.currentMessage.ignoreErrors) or (self.maxRetries >= 0 and self.retryCount > self.maxRetries) then -- ignore any MSP_ESC_PARAMETERS errors
-        --rf2.print("Error or max retries reached, aborting queue")
+        rf2.print("Error or max retries reached, aborting cmd "..self.currentMessage.command)
         if self.currentMessage.errorHandler then
             self.currentMessage:errorHandler()
         end
-        self:clear()
+        self.currentMessage = nil
+        self.lastTimeCommandSent = nil
+        collectgarbage()
     end
 end
 
