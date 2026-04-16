@@ -1,6 +1,7 @@
 local initTask = nil
 local adjTellerTask = nil
 local customTelemetryTask = nil
+local statsTask = nil
 local isInitialized = false
 local modelIsConnected = false
 local lastTimeRssi = nil
@@ -42,6 +43,7 @@ local function run(widget)
             end
             adjTellerTask = nil
             customTelemetryTask = nil
+            statsTask = nil
             modelIsConnected = false
             isInitialized = false
             collectgarbage()
@@ -51,6 +53,7 @@ local function run(widget)
     if not isInitialized then
         adjTellerTask = nil
         customTelemetryTask = nil
+        statsTask = nil
         collectgarbage()
         initTask = initTask or rf2.executeScript("background_init")
         local initTaskResult = initTask.run(modelIsConnected)
@@ -87,6 +90,14 @@ local function run(widget)
     if customTelemetryTask then
         customTelemetryTask.run()
     end
+    if rf2.apiVersion >= 12.09 then
+        if not statsTask and customTelemetryTask and hasSensor("ARM") then
+            statsTask = rf2.executeScript("background_stats")
+        end
+        if statsTask then
+            statsTask.readStats()
+        end
+    end 
 end
 
 -- widget is optional and will be provided by the RfTool widget.
