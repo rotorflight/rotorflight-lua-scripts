@@ -194,5 +194,6 @@ end
 
 initializeRf2GlobalVar()
 rf2.registerWidget = registerWidget
+rf2.rfToolApiVersion = 1.00
 
 return w
