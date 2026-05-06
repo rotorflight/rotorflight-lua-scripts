@@ -1,6 +1,6 @@
 # Rotorflight Lua Scripts
 
-[Rotorflight](https://github.com/rotorflight) is a Flight Control software suite designed for
+[Rotorflight](https://github.com/rotorflight) is a flight control software suite designed for
 single-rotor helicopters. It consists of:
 
 - Rotorflight Flight Controller Firmware
@@ -10,16 +10,7 @@ single-rotor helicopters. It consists of:
   - EdgeTX/OpenTX (this repository)
   - Ethos
 
-Built on Betaflight 4.3, Rotorflight incorporates numerous advanced features specifically
-tailored for helicopters. It's important to note that Rotorflight does _not_ support multi-rotor
-crafts or airplanes; it's exclusively designed for RC helicopters.
-
-This version of Rotorflight is also known as **Rotorflight 2** or **RF2**.
-
-
-## Information
-
-Tutorials, documentation, and flight videos can be found on the [Rotorflight website](https://www.rotorflight.org/).
+For more information, see the [Rotorflight website](https://www.rotorflight.org/), or join our [Discord server](https://discord.gg/agck9xvuP8).
 
 ## Lua Scripts Requirements
 
@@ -34,7 +25,7 @@ Tutorials, documentation, and flight videos can be found on the [Rotorflight web
 
 ## Installation
 
-Please download the latest version from [GitHub](https://github.com/rotorflight/rotorflight-lua-scripts/releases/) and copy the contents of the `SCRIPTS` folder to your transmitter. You will know that you've done it correctly when you find the `rf2.lua` file located in the `/SCRIPTS/TOOLS` directory. Plus, you should now see *Rotorflight 2* listed in the *Tools* menu of your transmitter.
+Please download the latest version from [GitHub](https://github.com/rotorflight/rotorflight-lua-scripts/releases/) and copy the contents of the `SCRIPTS` folder to your transmitter. You will know that you've done it correctly when you find the `rf2.lua` file located in the `/SCRIPTS/TOOLS` directory. Plus, you should now see *Rotorflight 2* listed in the *Tools* menu of your transmitter. Also, you should be able to see the *RF Tool* and *RF Stats* widgets if you have a color radio.
 
 ### Copying the SCRIPTS folder
 
@@ -58,7 +49,12 @@ SD Card Method
 If you copied the files correctly, you can now go into the *Tools* menu on your transmitter and access the *Rotorflight 2* tool. The first time you run the script, a message 'Compiling...' will appear in the display before the script is started. This is normal and is done to minimise the RAM usage of the script.
 
 ## Usage
-See the [Lua Scripts page](https://www.rotorflight.org/docs/Tutorial-Setup/Lua-Scripts).
+
+Start the tool using the *Tool* menu of your transmitter or by setting the *RF Tool* widget to *Full Screen* mode. Feel free to look around, changes will only be saved if you explicitly select *Save*:
+- On color radios there is a *Save* button in the upper right corner.
+- On black and white radios, select the *Save* option after long pressing the wheel/roller.
+
+For more information, see the [Lua Scripts page](https://rotorflight.org/docs/setup/lua-scripts).
 
 ## Background script
 The optional background script `rf2bg.lua` features *Real Time FC Clock synchronization*, the *Adjustment Teller* and *CRSF/ELRS custom telemetry*.
@@ -66,15 +62,34 @@ The optional background script `rf2bg.lua` features *Real Time FC Clock synchron
 - *CRSF/ELRS custom telemetry* enables all available Rotorflight telemetry sensors when using ELRS.
 - The *Adjustment Teller* will [tell you](https://www.youtube.com/watch?v=rbMiiWhzhqI) what adjustment you just made. It supports all adjustments except profile adjustments.
 
-The background script can be configured as either a special or global function in EdgeTX/OpenTX.
+There are two ways to run the background script:
+1. Either configure `rf2bg` to run as a special or global function in EdgeTX/OpenTX.
+2. Or configure the *RF Tool* widget. This only works on color radios running EdgeTX.
 
+### 1. Run the background script as a function
 In OpenTX, configure your special function as follows to run the script automatically as soon as the model is selected ('ON').
 
 ![OpenTX script setup](https://github.com/rotorflight/rotorflight-lua-scripts/assets/34315684/d91c69e3-1bcf-48ce-92bf-4cb9f6e9322e)
 
-On EdgeTX, make also sure to set repeat to *On*:
+On EdgeTX, make also sure to set *Repeat* to *On*:
 
 ![EdgeTX script setup](https://raw.githubusercontent.com/rotorflight/rotorflight-lua-scripts/master/docs/assets/images/background_script_edgetx.png)
+
+### 2. Or configure the *RF Tool* widget
+
+If you have a color radio running EdgeTX 2.11 or higher, then you can use the *RF Tool* widget that was released in Rotorflight 2.3.0. Running this widget has several benefits:
+- It will automatically show the name of the connected model.
+- *RF Tool* can also always display one sensor value of your liking. I like *Vcel* (cell voltage) to be displayed always, so I don't completely exhaust my batteries while tuning.
+- *RF Tool* defines an API that can also be used by other widgets, which makes programming Rotorflight widgets easier. The *RF Stats* widget for example uses the *RF Tool* API, and displays/updates flight statistics.
+- You don't need to configure a function for running the background script anymore.
+
+In the image below you can see the *RF Tool* widget in the upper left part, while the *RF Stats* widget sits in the lower right part of the screen.
+
+![EdgeTX script setup](https://raw.githubusercontent.com/rotorflight/rotorflight-lua-scripts/master/docs/assets/images/rotorflight-widgets.png)
+
+Here's a video that explains [how to set up the widget](https://www.youtube.com/watch?v=t72pQoBngGs).
+
+## Adjusmment Teller
 
 The *Adjustment Teller* can be enabled under Settings > Rf2bg Options > Adjustment Teller. The teller uses telemetry for getting the adjustment function and value:
 - S.port/F.port: the telemetry sensors 5110 and 5111 should be available. Discover or add them if they aren't.
