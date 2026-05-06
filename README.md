@@ -83,6 +83,8 @@ If you have a color radio running EdgeTX 2.11 or higher, then you can use the *R
 - *RF Tool* defines an API that can also be used by other widgets, which makes programming Rotorflight widgets easier. The *RF Stats* widget for example uses the *RF Tool* API, and displays/updates flight statistics.
 - You don't need to configure a function for running the background script anymore.
 
+In the image below you can see the *RF Tool* widget in the upper left part, while the *RF Stats* widget sits in the lower right part of the screen.
+
 ![EdgeTX script setup](https://raw.githubusercontent.com/rotorflight/rotorflight-lua-scripts/master/docs/assets/images/rotorflight-widgets.png)
 
 Here's a video that explains [how to set up the widget](https://www.youtube.com/watch?v=t72pQoBngGs).
