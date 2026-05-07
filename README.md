@@ -54,7 +54,7 @@ Start the tool using the *Tool* menu of your transmitter or by setting the *RF T
 - On color radios there is a *Save* button in the upper right corner.
 - On black and white radios, select the *Save* option after long pressing the wheel/roller.
 
-For more information, see the [Lua Scripts page](https://rotorflight.org/docs/setup/lua-scripts).
+For more information, see the [Rotorflight Lua Scripts](https://rotorflight.org/docs/2.3.0/setup/radio-setup/radio-setup-edgetx/edgetx-lua-scripts) page.
 
 ## Background script
 The optional background script `rf2bg.lua` features *Real Time FC Clock synchronization*, the *Adjustment Teller* and *CRSF/ELRS custom telemetry*.
@@ -63,19 +63,10 @@ The optional background script `rf2bg.lua` features *Real Time FC Clock synchron
 - The *Adjustment Teller* will [tell you](https://www.youtube.com/watch?v=rbMiiWhzhqI) what adjustment you just made. It supports all adjustments except profile adjustments.
 
 There are two ways to run the background script:
-1. Either configure `rf2bg` to run as a special or global function in EdgeTX/OpenTX.
-2. Or configure the *RF Tool* widget. This only works on color radios running EdgeTX.
+1. Either configure the *RF Tool* widget. This only works on color radios running EdgeTX.
+2. Or configure `rf2bg` to run as a special or global function in EdgeTX/OpenTX.
 
-### 1. Run the background script as a function
-In OpenTX, configure your special function as follows to run the script automatically as soon as the model is selected ('ON').
-
-![OpenTX script setup](https://github.com/rotorflight/rotorflight-lua-scripts/assets/34315684/d91c69e3-1bcf-48ce-92bf-4cb9f6e9322e)
-
-On EdgeTX, make also sure to set *Repeat* to *On*:
-
-![EdgeTX script setup](https://raw.githubusercontent.com/rotorflight/rotorflight-lua-scripts/master/docs/assets/images/background_script_edgetx.png)
-
-### 2. Or configure the *RF Tool* widget
+### 1. Configure the *RF Tool* widget
 
 If you have a color radio running EdgeTX 2.11 or higher, then you can use the *RF Tool* widget that was released in Rotorflight 2.3.0. Running this widget has several benefits:
 - It will automatically show the name of the connected model.
@@ -89,7 +80,17 @@ In the image below you can see the *RF Tool* widget in the upper left part, whil
 
 Here's a video that explains [how to set up the widget](https://www.youtube.com/watch?v=t72pQoBngGs).
 
-## Adjusmment Teller
+### 2. Or run the background script as a function
+In OpenTX, configure your special function as follows to run the script automatically as soon as the model is selected ('ON').
+
+![OpenTX script setup](https://github.com/rotorflight/rotorflight-lua-scripts/assets/34315684/d91c69e3-1bcf-48ce-92bf-4cb9f6e9322e)
+
+On EdgeTX, make also sure to set *Repeat* to *On*:
+
+![EdgeTX script setup](https://raw.githubusercontent.com/rotorflight/rotorflight-lua-scripts/master/docs/assets/images/background_script_edgetx.png)
+
+
+## Adjustment Teller
 
 The *Adjustment Teller* can be enabled under Settings > Rf2bg Options > Adjustment Teller. The teller uses telemetry for getting the adjustment function and value:
 - S.port/F.port: the telemetry sensors 5110 and 5111 should be available. Discover or add them if they aren't.
