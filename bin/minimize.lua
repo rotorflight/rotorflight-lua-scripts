@@ -205,6 +205,8 @@ local mspPidTuningReplacements = {
     { ".yaw_b", "[14]" },
     { ".roll_o", "[15]" },
     { ".pitch_o", "[16]" },
+    { ".roll_s", "[17]" },
+    { ".pitch_s", "[18]" },
 }
 
 local mspPidProfileReplacements = {
