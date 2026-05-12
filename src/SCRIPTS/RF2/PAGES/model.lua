@@ -59,13 +59,15 @@ local function buildForm(page)
                 buildForm(page)
                 rf2.onPageReady(page)
             end
-            fields[#fields + 1] = { t = "[Reset Stats]",  x = x + indent * 3, y = incY(lineSpacing * 1.3), preEdit = resetStats }
+            fields[#fields + 1] = { t = "[Reset]",  x = x + indent * 3, y = incY(lineSpacing * 1.3), preEdit = resetStats }
         end
     end
 
     incY(lineSpacing * 0.5)
     labels[#labels + 1] = { t = "Radio Configuration",       x = x, y = incY(lineSpacing) }
-    labels[#labels + 1] = { t = "Note: requires rf2bg",   x = x + indent, y = incY(lineSpacing), bold = false }
+    if not rf2.widget then
+        labels[#labels + 1] = { t = "Note: requires rf2bg",   x = x + indent, y = incY(lineSpacing), bold = false }
+    end
 
     local function getAutoSetName()
         if rf2.apiVersion >= 12.07 and rf2.apiVersion < 12.09 then
@@ -97,6 +99,12 @@ end
 local function onReceivedPilotConfig(page, config)
     buildForm(page)
     rf2.onPageReady(page)
+    if rf2.resetPilotConfig then
+        -- Deferred execution needed when running as a widget,
+        -- because rf2.mspQueue:clear() will be called on reset.
+        rf2.executeScript("F/pilotConfigReset")()
+        rf2.resetPilotConfig = nil
+    end
 end
 
 local function setAutoSetName()
@@ -125,7 +133,7 @@ return {
             rf2.useApi("mspFlightStats").write(flighStats)
         end
         rf2.useApi("mspPilotConfig").write(pilotConfig)
-        rf2.executeScript("F/pilotConfigReset")()
+        rf2.resetPilotConfig = true
         rf2.settingsSaved(true, false)
     end,
     title       = "Model",

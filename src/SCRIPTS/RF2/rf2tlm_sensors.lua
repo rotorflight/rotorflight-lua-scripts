@@ -297,6 +297,8 @@ local sensorsById  =  {
     [95] = { sid = 0x1211, name = "PID#", unit = UNIT_RAW, prec = 0, dec = decU8 },
     -- Current Rate profile
     [96] = { sid = 0x1212, name = "RTE#", unit = UNIT_RAW, prec = 0, dec = decU8 },
+    -- Battery profile
+    [97] = { sid = 0x1214, name = "BAT#", unit = UNIT_RAW, prec = 0, dec = decU8 },
     -- Current LED profile
     [98] = { sid = 0x1213, name = "LED#", unit = UNIT_RAW, prec = 0, dec = decU8 },
 

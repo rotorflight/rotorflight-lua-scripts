@@ -101,6 +101,7 @@ local function getEscParameters(callback, callbackParam, data)
     data = data or getDefaults()
     local message = {
         command = 217, -- MSP_ESC_PARAMETERS
+        ignoreErrors = true,
         processReply = function(self, buf)
             data.esc_signature.value = rf2.mspHelper.readU8(buf)
             if data.esc_signature.value ~= 253 then

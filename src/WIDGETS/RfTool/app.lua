@@ -14,8 +14,9 @@ else
 end
 
 w.options.getText = function(options)
-    if not getValue then return options.sourceName .. ": " end
-    return options.sourceName .. ": " .. tostring(getValue(options.sourceName)) .. options.Suffix
+    if not options.sourceName then return "" end
+    if not getValue then return " - " .. options.sourceName .. ": " end
+    return " - " .. options.sourceName .. ": " .. tostring(getValue(options.sourceName)) .. options.Suffix
 end
 
 local compileTask = nil
@@ -74,7 +75,6 @@ local function loadScripts(widget)
     -- load required scripts
     rf2.radio = rf2.executeScript("radios")
     rf2.mspQueue = rf2.executeScript("MSP/mspQueue")
-    rf2.mspQueue.maxRetries = 3
     rf2.mspHelper = rf2.executeScript("MSP/mspHelper")
 
     -- load tasks
@@ -104,7 +104,6 @@ local function showWidget(widget)
                     text = function()
                         return string.upper(string.sub(widget.state, 1, 1))
                             .. string.sub(widget.state, 2)
-                            .. " - "
                             .. widget.options:getText()
                     end,
                     w = widget.zone.x,
@@ -195,5 +194,6 @@ end
 
 initializeRf2GlobalVar()
 rf2.registerWidget = registerWidget
+rf2.rfToolApiVersion = 1.00
 
 return w

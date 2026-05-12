@@ -40,20 +40,22 @@ fields[16] = { t = "Experimental (!)",       x = x + indent, y = incY(lineSpacin
 incY(lineSpacing * 0.5)
 labels[3] = { t = "Display ESC Pages",       x = x, y = incY(lineSpacing) }
 fields[17] = { t = "AM32",                   x = x + indent, y = incY(lineSpacing), sp = x + sp }
-fields[18] = { t = "FLYROTOR",               x = x + indent, y = incY(lineSpacing), sp = x + sp }
-fields[19] = { t = "HW Platinum V5",         x = x + indent, y = incY(lineSpacing), sp = x + sp }
-fields[20] = { t = "Scorpion Tribunus",      x = x + indent, y = incY(lineSpacing), sp = x + sp }
-fields[21] = { t = "XDFly/OMP/ZTW",          x = x + indent, y = incY(lineSpacing), sp = x + sp }
-fields[22] = { t = "YGE",                    x = x + indent, y = incY(lineSpacing), sp = x + sp }
+fields[18] = { t = "BLHeli_S",               x = x + indent, y = incY(lineSpacing), sp = x + sp }
+fields[19] = { t = "Bluejay",                x = x + indent, y = incY(lineSpacing), sp = x + sp }
+fields[20] = { t = "FLYROTOR",               x = x + indent, y = incY(lineSpacing), sp = x + sp }
+fields[21] = { t = "HW Platinum V5",         x = x + indent, y = incY(lineSpacing), sp = x + sp }
+fields[22] = { t = "Scorpion Tribunus",      x = x + indent, y = incY(lineSpacing), sp = x + sp }
+fields[23] = { t = "XDFly/OMP/ZTW",          x = x + indent, y = incY(lineSpacing), sp = x + sp }
+fields[24] = { t = "YGE",                    x = x + indent, y = incY(lineSpacing), sp = x + sp }
 
 incY(lineSpacing * 0.5)
 labels[4] = { t = "Rf2bg Options",           x = x, y = incY(lineSpacing) }
-fields[23] = { t = "Adjustment Teller",      x = x + indent, y = incY(lineSpacing), sp = x + sp }
+fields[25] = { t = "Adjustment Teller",      x = x + indent, y = incY(lineSpacing), sp = x + sp }
 
 if canUseLvgl then
     incY(lineSpacing * 0.5)
     labels[5] = { t = "Tool Options",        x = x, y = incY(lineSpacing) }
-    fields[24] = { t = "Use touch UI",       x = x + indent, y = incY(lineSpacing), sp = x + sp }
+    fields[26] = { t = "Use touch UI",       x = x + indent, y = incY(lineSpacing), sp = x + sp }
 end
 
 local function setValues()
@@ -74,14 +76,16 @@ local function setValues()
     fields[15].data = { value = settings.showModelOnTx or 0, min = 0, max = 1, table = hideShow }
     fields[16].data = { value = settings.showExperimental or 0, min = 0, max = 1, table = hideShow }
     fields[17].data = { value = settings.showAm32 or 0, min = 0, max = 1, table = hideShow }
-    fields[18].data = { value = settings.showFlyRotor or 0, min = 0, max = 1, table = hideShow }
-    fields[19].data = { value = settings.showPlatinumV5 or 0, min = 0, max = 1, table = hideShow }
-    fields[20].data = { value = settings.showTribunus or 0, min = 0, max = 1, table = hideShow }
-    fields[21].data = { value = settings.showXdfly or 0, min = 0, max = 1, table = hideShow }
-    fields[22].data = { value = settings.showYge or 0, min = 0, max = 1, table = hideShow }
-    fields[23].data = { value = settings.useAdjustmentTeller or 0, min = 0, max = 1, table = offOn }
+    fields[18].data = { value = settings.showBlheliS or 0, min = 0, max = 1, table = hideShow }
+    fields[19].data = { value = settings.showBluejay or 0, min = 0, max = 1, table = hideShow }
+    fields[20].data = { value = settings.showFlyRotor or 0, min = 0, max = 1, table = hideShow }
+    fields[21].data = { value = settings.showPlatinumV5 or 0, min = 0, max = 1, table = hideShow }
+    fields[22].data = { value = settings.showTribunus or 0, min = 0, max = 1, table = hideShow }
+    fields[23].data = { value = settings.showXdfly or 0, min = 0, max = 1, table = hideShow }
+    fields[24].data = { value = settings.showYge or 0, min = 0, max = 1, table = hideShow }
+    fields[25].data = { value = settings.useAdjustmentTeller or 0, min = 0, max = 1, table = offOn }
     if canUseLvgl then
-        fields[24].data = { value = settings.useLvgl or 1, min = 0, max = 1, table = offOn }
+        fields[26].data = { value = settings.useLvgl or 1, min = 0, max = 1, table = offOn }
     end
 end
 
@@ -108,17 +112,19 @@ return {
         settings.showModelOnTx = fields[15].data.value
         settings.showExperimental = fields[16].data.value
         settings.showAm32 = fields[17].data.value
-        settings.showFlyRotor = fields[18].data.value
-        settings.showPlatinumV5 = fields[19].data.value
-        settings.showTribunus = fields[20].data.value
-        settings.showXdfly = fields[21].data.value
-        settings.showYge = fields[22].data.value
-        if settings.useAdjustmentTeller ~= fields[23].data.value then
-            settings.useAdjustmentTeller = fields[23].data.value
+        settings.showBlheliS = fields[18].data.value
+        settings.showBluejay = fields[19].data.value
+        settings.showFlyRotor = fields[20].data.value
+        settings.showPlatinumV5 = fields[21].data.value
+        settings.showTribunus = fields[22].data.value
+        settings.showXdfly = fields[23].data.value
+        settings.showYge = fields[24].data.value
+        if settings.useAdjustmentTeller ~= fields[25].data.value then
+            settings.useAdjustmentTeller = fields[25].data.value
             rf2.executeScript("F/pilotConfigReset")() -- restart rf2bg
         end
         if canUseLvgl then
-            settings.useLvgl = fields[24].data.value
+            settings.useLvgl = fields[26].data.value
         end
         rf2.saveSettings(settings)
         rf2.reloadMainMenu(true)

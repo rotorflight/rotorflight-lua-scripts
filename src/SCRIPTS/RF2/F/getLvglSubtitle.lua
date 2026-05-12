@@ -15,5 +15,5 @@ if not (rf2.widget and rf2.widget.options and canUseDynamicSubtitle()) then
 end
 
 return function()
-    return subtitle .. " - " .. rf2.widget.options:getText()
+    return subtitle .. rf2.widget.options:getText()
 end

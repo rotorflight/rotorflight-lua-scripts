@@ -66,6 +66,7 @@ local function getEscParameters(callback, callbackParam, data)
     data = data or getDefaults()
     local message = {
         command = 217, -- MSP_ESC_PARAMETERS
+        ignoreErrors = true,
         processReply = function(self, buf)
             local signature = rf2.mspHelper.readU8(buf)
             if signature ~= 83 then
@@ -133,6 +134,7 @@ local function setEscParameters(data)
     local message = {
         command = 218, -- MSP_SET_ESC_PARAMETERS
         payload = {},
+        retryDelay = 2,
         postSendDelay = 2,
         simulatorResponse = {}
     }

@@ -1,4 +1,4 @@
--- Usage: local mspSendRequest, mspProcessTxQ, mspPollReply, mspClearTxBuf = rf2.executeScript("MSP/common")
+-- Usage: local mspSendRequest, mspProcessTxQ, mspPollReply, mspClearRxTxBufs = rf2.executeScript("MSP/common")
 
 local mspSeq = 0 -- Sequence number for next MSP packet
 local mspRemoteSeq = 0
@@ -139,8 +139,9 @@ local function mspPollReply()
     end
 end
 
-local function mspClearTxBuf()
+local function mspClearRxTxBufs()
     mspTxBuf = {}
+    while mspPoll() do end
 end
 
-return mspSendRequest, mspProcessTxQ, mspPollReply, mspClearTxBuf
+return mspSendRequest, mspProcessTxQ, mspPollReply, mspClearRxTxBufs
