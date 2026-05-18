@@ -94,13 +94,6 @@ labels[#labels + 1] = { t = "HSI Offset Gain",        x = x,          y = incY(l
 fields[#fields + 1] = { t = "Roll",                   x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pids.roll_o }
 fields[#fields + 1] = { t = "Pitch",                  x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pids.pitch_o }
 
---if rf2.apiVersion >= 12.10 then  -- TODO
-incY(lineSpacing * 0.5)
-labels[#labels + 1] = { t = "Error Decay Stick Gain", x = x,          y = incY(lineSpacing) }
-fields[#fields + 1] = { t = "Roll",                   x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pids.roll_s }
-fields[#fields + 1] = { t = "Pitch",                  x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pids.pitch_s }
---end
-
 local function receivedPidTuning(page, data)
     rf2.onPageReady(page)
 end

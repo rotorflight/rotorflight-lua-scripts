@@ -17,10 +17,6 @@ local function getDefaults()
     defaults.yaw_b = { min = 0, max = 1000 }
     defaults.roll_o = { min = 0, max = 1000 }
     defaults.pitch_o = { min = 0, max = 1000 }
-    --if rf2.apiVersion >= 12.10 then  -- TODO
-    defaults.roll_s = { min = 0, max = 1000 }
-    defaults.pitch_s = { min = 0, max = 1000 }
-    --end
     return defaults
 end
 
@@ -46,13 +42,9 @@ local function getPidTuning(callback, callbackParam, data)
             data.yaw_b.value = rf2.mspHelper.readU16(buf)
             data.roll_o.value = rf2.mspHelper.readU16(buf)
             data.pitch_o.value = rf2.mspHelper.readU16(buf)
-            --if rf2.apiVersion >= 12.10 then  -- TODO
-            data.roll_s.value = rf2.mspHelper.readU16(buf)
-            data.pitch_s.value = rf2.mspHelper.readU16(buf)
-            -- end
             callback(callbackParam, data)
         end,
-        simulatorResponse = {70, 0, 225, 0, 90, 0, 120, 0, 100, 0, 200, 0, 70, 0, 120, 0, 100, 0, 125, 0, 83, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 0, 25, 0, 0, 0, 0, 0 },
+        simulatorResponse = {70, 0, 225, 0, 90, 0, 120, 0, 100, 0, 200, 0, 70, 0, 120, 0, 100, 0, 125, 0, 83, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 0, 25, 0 },
     }
     rf2.mspQueue:add(message)
 end
@@ -80,10 +72,6 @@ local function setPidTuning(data)
     rf2.mspHelper.writeU16(message.payload, data.yaw_b.value)
     rf2.mspHelper.writeU16(message.payload, data.roll_o.value)
     rf2.mspHelper.writeU16(message.payload, data.pitch_o.value)
-    --if rf2.apiVersion >= 12.10 then  -- TODO
-    rf2.mspHelper.writeU16(message.payload, data.roll_s.value)
-    rf2.mspHelper.writeU16(message.payload, data.pitch_s.value)
-    --end
     rf2.mspQueue:add(message)
 end
 

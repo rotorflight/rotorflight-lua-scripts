@@ -205,8 +205,6 @@ local mspPidTuningReplacements = {
     { ".yaw_b", "[14]" },
     { ".roll_o", "[15]" },
     { ".pitch_o", "[16]" },
-    { ".roll_s", "[17]" },
-    { ".pitch_s", "[18]" },
 }
 
 local mspPidProfileReplacements = {
@@ -255,6 +253,7 @@ local mspPidProfileReplacements = {
     { ".bterm_cutoff_yaw", "[40]" },
     { ".yaw_inertia_precomp_gain", "[41]" },
     { ".yaw_inertia_precomp_cutoff", "[42]" },
+    { ".error_decay_gain_cyclic", "[43]" },
 }
 
 local mspEscAm32Replacements = {
