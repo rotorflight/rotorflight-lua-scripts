@@ -314,10 +314,6 @@ local sensorsById  =  {
     [105] = {sid = 0xDB05, name = "DBG5", unit = UNIT_RAW, prec = 0, dec = decS32 },
     [106] = {sid = 0xDB06, name = "DBG6", unit = UNIT_RAW, prec = 0, dec = decS32 },
     [107] = {sid = 0xDB07, name = "DBG7", unit = UNIT_RAW, prec = 0, dec = decS32 },
-
-    -- Smart fuel
-    [118] = {sid = 0x1015, name = "SmF%", unit = UNIT_PERCENT, prec = 0, dec = decS8 },
-
 }
 
 local function initializeSensors(ids)
