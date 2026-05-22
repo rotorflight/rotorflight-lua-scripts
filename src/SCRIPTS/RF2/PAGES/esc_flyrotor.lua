@@ -62,7 +62,7 @@ local function receivedEscParameters(page, data)
         page.labels[2].t = string.format("S/N: %08X%08X", data.serial_number1, data.serial_number2)
         page.labels[3].t = string.format("HW: 1.%d - IAP: %d.%d.%d", data.hw_version, data.iap_major, data.iap_minor, data.iap_patch)
         page.labels[4].t = string.format("FW: %d.%d.%d", data.fw_major, data.fw_minor, data.fw_patch)
-        page.labels[5].t = string.format("THR: %d-%dus", data.thr_min, data.thr_max)
+        page.labels[5].t = (data.throttle_protocol.value == 0 and string.format("THR: %d-%dus", data.thr_min, data.thr_max)) or string.format("THR: %d-%d%%", data.thr_min, data.thr_max)
         page.readOnly = bit32.band(data.command, 0x40) == 0x40
     end
 
