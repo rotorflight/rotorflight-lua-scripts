@@ -4,7 +4,7 @@ local becVoltage = { [0] = "Disable", "7.5V", "8.0V", "8.5V", "12.0V" }
 local timing = { [0] = "Auto", "1°", "2°", "3°", "4°", "5°", "6°", "7°", "8°", "9°", "10°" }
 local motorDirection = { [0] = "Normal", "Reversed" }
 local fanControl = { [0] = "Temp Control", "Always On", "Always Off" }
-local throttleProtocols = { [0] = "PWM" }
+local throttleProtocols = { [0] = "PWM", "DShot", "Serial" }
 local telemetryProtocols = { [0] = "FLYROTOR" }
 local ledColors = { [0] = "CUSTOM", "OFF", "RED", "GREEN", "BLUE", "YELLOW", "MAGENTA", "CYAN", "WHITE", "ORANGE", "GRAY", "MAROON", "DARK_GREEN", "NAVY", "PURPLE", "TEAL", "SILVER", "PINK", "GOLD", "BROWN", "LIGHT_BLUE", "FL_PINK", "FL_ORANGE", "FL_LIME", "FL_MINT", "FL_CYAN", "FL_PURPLE", "FL_HOT_PINK", "FL_LIGHT_YELLOW", "FL_AQUAMARINE", "FL_GOLD", "FL_DEEP_PINK", "FL_NEON_GREEN", "FL_ORANGE_RED" }
 
@@ -120,13 +120,13 @@ local function getEscParameters(callback, callbackParam, data)
             data.capacity_cutoff.value = getUInt(buf, 2)
             callback(callbackParam, data)
         end,
-        simulatorResponse = { 115, 0, 1, 0, 155,  231, 79, 190, 216, 78, 29, 169, 244, 1, 0, 0, 1, 0, 2, 0, 4, 76, 7, 148, 0, 6, 30, 125, 1, 0, 0, 3, 15, 1, 20, 0, 10, 30, 5, 45, 35, 1, 16, 1, 251, 208, 0, 0, 3, 0, 0, 0, 0, 100, 0, 0 },
+        simulatorResponse = { 115, 0, 0, 1, 44,  231, 79, 190, 216, 78, 29, 169, 244, 1, 0, 0, 1, 0, 2, 0, 0, 0, 0, 100, 0, 6, 30, 125, 1, 0, 0, 3, 15, 1, 20, 0, 10, 30, 5, 45, 35, 1, 16, 1, 251, 208, 1, 0, 3, 0, 0, 0, 0, 100, 0, 0 },
         --[[
         simulatorResponse = {
             115, -- signature
             0, -- command
-            1, -- type
-            1, 24, -- amperage
+            0, -- type
+            1, 44, -- amperage
             231, 79, 190, 216, -- serial number1
             78, 29, 169, 244, -- serial number2
             1, 0, 0, -- IAP
@@ -154,7 +154,7 @@ local function getEscParameters(callback, callbackParam, data)
             1, -- active freewheeling
             16, -- drive-freq
             1, 251, 208 -- max motor erpm
-            0, -- throttle protocol
+            1, -- throttle protocol
             0, -- telemetry protocol
             3, -- led color index
             0, 0, 0, -- led color value
