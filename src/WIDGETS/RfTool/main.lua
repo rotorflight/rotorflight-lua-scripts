@@ -2,6 +2,9 @@
 -- Even if a widget isn't used by a particular model.
 local name = "RF Tool"
 
+--- this is for VSCode extnension 'EdgeTX Dev Kit'
+---@type WidgetScript
+
 ---@type WidgetOptions
 local options = {
     { "Source", SOURCE, "Vcel" },
@@ -11,6 +14,8 @@ local options = {
     { "HideTelemetry", BOOL, 0 },
     { "TextColor", COLOR, COLOR_THEME_PRIMARY1 }
 }
+-- newly added options in EdgeTX don't get their set default value,
+-- so the color is black by default when "updating" the widget.
 
 if lvgl == nil then
     return {
@@ -22,7 +27,6 @@ if lvgl == nil then
         end,
     }
 end
----@type WidgetScript
 
 local function create(zone, options)
     local widget = loadScript("/WIDGETS/RfTool/app.lua")(zone, options)
