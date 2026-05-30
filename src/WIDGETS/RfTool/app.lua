@@ -152,6 +152,8 @@ local function initializeRf2GlobalVar()
 end
 
 local function loadScripts(widget)
+    local shared = getRfToolShared()
+
     -- Load required scripts
     rf2.radio = rf2.radio or rf2.executeScript("radios")
     rf2.mspQueue = rf2.mspQueue or rf2.executeScript("MSP/mspQueue")
@@ -165,6 +167,7 @@ local function loadScripts(widget)
     -- rf2.widget is the active widget context consumed by RF2 helpers that
     -- need widget-specific data such as subtitle text. It is not a broadcast
     -- to all widgets.
+    shared.runtimeWidget = shared.runtimeWidget or widget
     rf2.widget = widget
 end
 
@@ -328,9 +331,15 @@ w.update = function(widget, options)
         end
     end
     widget.needsRedraw = true
+    local shared = getRfToolShared()
 
     if lvgl.isFullScreen() or lvgl.isAppMode() then
-        if not widget.pendingRf2UiRestart then
+        if shared.fullscreenWidget == nil then
+            shared.fullscreenWidget = widget
+            shared.runtimeWidget = widget
+        end
+
+        if shared.fullscreenWidget == widget and not widget.pendingRf2UiRestart then
             -- Clear the stale normal widget before the fullscreen handoff,
             -- otherwise the previous widget tree can flash briefly before RF2
             -- rebuilds its UI.
@@ -342,14 +351,18 @@ w.update = function(widget, options)
         -- visible, so it clears the stale widget tree early and stores a
         -- one-shot handoff token. refresh() consumes that token and performs
         -- the actual RF2 restart in one place.
-        widget.pendingRf2UiRestart = true
+        widget.pendingRf2UiRestart = shared.fullscreenWidget == widget
     else
         widget.pendingRf2UiRestart = false
+        if shared.fullscreenWidget == widget then
+            shared.fullscreenWidget = nil
+        end
     end
 end
 
 w.background = function(widget, calledFromRefresh)
-    local state = getRfToolShared().widgetState
+    local shared = getRfToolShared()
+    local state = shared.widgetState
 
     if state == "compiling" then
         compileTask = compileTask or assert(loadScript("/SCRIPTS/RF2/COMPILE/compile.lua"))()
@@ -378,25 +391,26 @@ w.background = function(widget, calledFromRefresh)
 
     if not calledFromRefresh then
         widget.visible = false
-        if rf2.uiTask then
+        if shared.runtimeWidget == widget and rf2.uiTask then
             -- uiTask also handles mspQueue in the background, so make sure to
             -- call it even when the widget isn't visible.
             rf2.uiTask(nil, nil, true)
         end
     end
 
-    if rf2.backgroundTask then
+    if shared.runtimeWidget == widget and rf2.backgroundTask then
         rf2.backgroundTask(widget)
     end
 end
 
 w.refresh = function(widget, event, touchState)
     local isWidgetMode = not(lvgl.isFullScreen() or lvgl.isAppMode())
+    local shared = getRfToolShared()
 
-    if not isWidgetMode and rf2 then
+    if not isWidgetMode and rf2 and shared.runtimeWidget == widget then
         -- Fullscreen RF2 pages should use the widget that actually triggered
         -- the handoff.
-        rf2.widget = widget
+        rf2.widget = shared.fullscreenWidget or widget
     end
 
     if not isWidgetMode and widget.pendingRf2UiRestart then
@@ -411,10 +425,11 @@ w.refresh = function(widget, event, touchState)
         widget.needsRedraw = false
     end
 
-    if rf2.uiTask ~= nil then
+    if shared.runtimeWidget == widget and rf2.uiTask ~= nil then
         local result = rf2.uiTask(event, touchState, isWidgetMode)
         if lvgl.isFullScreen() and result == 2 then
             lvgl.exitFullScreen()
+            shared.fullscreenWidget = nil
             widget.needsRedraw = true
         end
     end
