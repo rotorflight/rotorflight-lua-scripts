@@ -2,9 +2,14 @@
 -- Even if a widget isn't used by a particular model.
 local name = "RF Tool"
 
+---@type WidgetOptions
 local options = {
     { "Source", SOURCE, "Vcel" },
-    { "Suffix", STRING, "" }
+    { "Suffix", STRING, "" },
+    { "HideModel", BOOL, 0},
+    { "HideState", BOOL, 0 },
+    { "HideTelemetry", BOOL, 0 },
+    { "TextColor", COLOR, COLOR_THEME_PRIMARY1 }
 }
 
 if lvgl == nil then
@@ -17,6 +22,7 @@ if lvgl == nil then
         end,
     }
 end
+---@type WidgetScript
 
 local function create(zone, options)
     local widget = loadScript("/WIDGETS/RfTool/app.lua")(zone, options)
