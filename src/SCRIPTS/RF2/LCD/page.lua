@@ -54,7 +54,7 @@ t.draw = function(pageState)
                     val = math.floor(val)
                 end
             end
-            if f.data.table and f.data.table[val] then
+            if type(f.data.table) == "table" and f.data.table[val] then
                 val = f.data.table[val]
             end
         end

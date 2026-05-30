@@ -195,7 +195,8 @@ local PROFILES = {
 
 local function trim(value)
     if not value then return "" end
-    return tostring(value):gsub("%z.*", ""):match("^%s*(.-)%s*$")
+    local text = string.gsub(tostring(value), "%z.*", "")
+    return string.match(text, "^%s*(.-)%s*$")
 end
 
 local function startsWith(value, prefix)
