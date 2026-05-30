@@ -2,60 +2,132 @@ local template = rf2.executeScript(rf2.radio.template)
 local margin = template.margin
 local indent = template.indent
 local lineSpacing = template.lineSpacing
-local tableSpacing = template.tableSpacing
 local sp = template.listSpacing.field
 local yMinLim = rf2.radio.yMinLimit
 local x = margin
-local y = yMinLim - lineSpacing
-local function incY(val) y = y + val return y end
-local labels = {}
-local fields = {}
 local mspEscHwPl5 = "mspEscHwPl5"
 local escParameters = rf2.useApi(mspEscHwPl5).getDefaults()
 
-labels[1] = { t = "ESC not ready, waiting...", x = x,   y = incY(lineSpacing) }
-labels[2] = { t = "---",                x = x + indent, y = incY(lineSpacing), bold = false }
-labels[3] = { t = "---",                x = x + indent, y = incY(lineSpacing), bold = false }
+local sections = {
+    {
+        gap = lineSpacing * 2,
+        fields = {
+            { t = "Flight Mode", dataKey = "flight_mode", indent = false, w = 125 },
+            { t = "Rotation", dataKey = "rotation", indent = false },
+        }
+    },
+    {
+        title = "Voltage",
+        gap = lineSpacing * 2,
+        fields = {
+            { t = "BEC Voltage", dataKey = "bec_voltage" },
+            { t = "Lipo Cell Count", dataKey = "lipo_cell_count" },
+            { t = "Volt Cutoff Type", dataKey = "cutoff_type" },
+            { t = "Cuttoff Voltage", dataKey = "cutoff_voltage" },
+        }
+    },
+    {
+        title = "Governor",
+        fields = {
+            { t = "P-Gain", dataKey = "gov_p_gain" },
+            { t = "I-Gain", dataKey = "gov_i_gain" },
+        }
+    },
+    {
+        title = "Soft Start",
+        fields = {
+            { t = "Startup Time", dataKey = "startup_time" },
+            { t = "Restart Time", dataKey = "restart_time" },
+            { t = "Auto Restart", dataKey = "auto_restart" },
+        }
+    },
+    {
+        title = "Motor",
+        fields = {
+            { t = "Timing", dataKey = "timing" },
+            { t = "Startup Power", dataKey = "startup_power" },
+            { t = "Active Freewheel", dataKey = "active_freewheel" },
+            { t = "Response Time", dataKey = "response_time" },
+        }
+    },
+    {
+        title = "Brake",
+        fields = {
+            { t = "Brake Type", dataKey = "brake_type" },
+            { t = "Brake Force %", dataKey = "brake_force" },
+        }
+    },
+}
 
-fields[1] = { t = "Flight Mode",        x = x,          y = incY(lineSpacing * 2), sp = x + sp, w = 125, data = escParameters.flight_mode, dataKey = "flight_mode" }
-fields[2] = { t = "Rotation",           x = x,          y = incY(lineSpacing), sp = x + sp,     data = escParameters.rotation, dataKey = "rotation" }
+local function buildForm(data)
+    data = data or escParameters
+    local y = yMinLim - lineSpacing
+    local function incY(val) y = y + val return y end
+    local labels = {}
+    local fields = {}
+    local supported = data._supported
+    local filter = type(supported) == "table" and next(supported) ~= nil
 
-labels[4] = { t = "Voltage",            x = x,          y = incY(lineSpacing * 2) }
-fields[3] = { t = "BEC Voltage",        x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.bec_voltage, dataKey = "bec_voltage" }
-fields[4] = { t = "Lipo Cell Count",    x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.lipo_cell_count, dataKey = "lipo_cell_count" }
-fields[5] = { t = "Volt Cutoff Type",   x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.cutoff_type, dataKey = "cutoff_type" }
-fields[6] = { t = "Cuttoff Voltage",    x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.cutoff_voltage, dataKey = "cutoff_voltage" }
+    local function isSupported(dataKey)
+        return not filter or supported[dataKey] == true
+    end
 
-labels[5] = { t = "Governor",           x = x,          y = incY(lineSpacing) }
-fields[7] = { t = "P-Gain",             x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.gov_p_gain, dataKey = "gov_p_gain" }
-fields[8] = { t = "I-Gain",             x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.gov_i_gain, dataKey = "gov_i_gain" }
+    local function sectionHasFields(section)
+        for i = 1, #section.fields do
+            if isSupported(section.fields[i].dataKey) then return true end
+        end
+        return false
+    end
 
-labels[6] = { t = "Soft Start",         x = x,          y = incY(lineSpacing) }
-fields[9] = { t = "Startup Time",       x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.startup_time, dataKey = "startup_time" }
-fields[10] = { t = "Restart Time",      x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.restart_time, dataKey = "restart_time" }
-fields[11] = { t = "Auto Restart",      x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.auto_restart, dataKey = "auto_restart" }
+    local function addField(def)
+        if not isSupported(def.dataKey) then return end
+        local field = {
+            t = def.t,
+            x = x + (def.indent == false and 0 or indent),
+            y = incY(lineSpacing),
+            sp = x + sp,
+            data = data[def.dataKey],
+            dataKey = def.dataKey
+        }
+        if def.w then field.w = def.w end
+        fields[#fields + 1] = field
+    end
 
-labels[7] = { t = "Motor",              x = x,          y = incY(lineSpacing) }
-fields[12] = { t = "Timing",            x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.timing, dataKey = "timing" }
-fields[13] = { t = "Startup Power",     x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.startup_power, dataKey = "startup_power" }
-fields[14] = { t = "Active Freewheel",  x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.active_freewheel, dataKey = "active_freewheel" }
-fields[15] = { t = "Brake Type",        x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.brake_type, dataKey = "brake_type" }
-fields[16] = { t = "Brake Force %",     x = x + indent, y = incY(lineSpacing), sp = x + sp, data = escParameters.brake_force, dataKey = "brake_force" }
+    local function addSection(section)
+        if not sectionHasFields(section) then return end
+        local gap = section.gap or lineSpacing
+        if section.title then
+            labels[#labels + 1] = { t = section.title, x = x, y = incY(gap) }
+        else
+            y = y + gap - lineSpacing
+        end
+        for i = 1, #section.fields do
+            addField(section.fields[i])
+        end
+    end
+
+    labels[1] = { t = "ESC not ready, waiting...", x = x, y = incY(lineSpacing) }
+    labels[2] = { t = "---", x = x + indent, y = incY(lineSpacing), bold = false }
+    labels[3] = { t = "---", x = x + indent, y = incY(lineSpacing), bold = false }
+
+    for i = 1, #sections do
+        addSection(sections[i])
+    end
+
+    return labels, fields
+end
+
+local labels, fields = buildForm(escParameters)
 
 local function receivedEscParameters(page, data)
+    page.labels, page.fields = buildForm(data)
+
     if data.esc_signature.value ~= 253 then -- Hobbywing Platinum V5 signature
         page.labels[1].t = "Invalid ESC detected"
     else
         page.labels[1].t = data.esc_type.value
         page.labels[2].t = "HW: " .. data.hardware_version.value
         page.labels[3].t = "FW:" .. data.firmware_version.value
-    end
-
-    if data._supported then
-        for i = 1, #page.fields do
-            local field = page.fields[i]
-            field.readOnly = field.dataKey and not data._supported[field.dataKey]
-        end
     end
 
     page.readOnly = false     -- enable 'Save Page'

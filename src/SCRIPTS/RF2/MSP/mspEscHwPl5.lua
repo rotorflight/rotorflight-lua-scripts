@@ -43,6 +43,14 @@ local restartTime = {
     "3 s",
 }
 
+local responseTime = {
+    [0] = "1",
+    "2",
+    "3",
+    "4",
+    "5",
+}
+
 local rotation = {
     [0] = "CW",
     "CCW",
@@ -96,6 +104,7 @@ local VALUE_FIELDS = {
     "cutoff_voltage",
     "bec_voltage",
     "startup_time",
+    "response_time",
     "gov_p_gain",
     "gov_i_gain",
     "auto_restart",
@@ -128,22 +137,15 @@ local DEFAULT_LAYOUT = {
 }
 
 local HW1132_LAYOUT = {
-    flight_mode = 1,
-    lipo_cell_count = 2,
+    lipo_cell_count = 1,
+    cutoff_type = 2,
     cutoff_voltage = 3,
     bec_voltage = 4,
-    cutoff_type = 5,
-    startup_time = 6,
-    gov_p_gain = 7,
-    gov_i_gain = 8,
-    auto_restart = 9,
-    restart_time = 10,
-    brake_type = 11,
-    brake_force = 12,
-    timing = 13,
-    rotation = 14,
-    active_freewheel = 15,
-    startup_power = 16,
+    response_time = 5,
+    timing = 6,
+    rotation = 7,
+    active_freewheel = 8,
+    startup_power = 9,
 }
 
 local HW1128_LAYOUT = {
@@ -192,7 +194,7 @@ local PROFILES = {
     ["HW1106_V300456NB"] = { layout = DEFAULT_LAYOUT, bec = { min = 50, max = 120, scale = 10 }, brake = brakeTypeNoProportional, lipo = lipoCellCount, cutoffVoltage = cutoffVoltage },
     ["HW1121_V100456NB"] = { layout = DEFAULT_LAYOUT, bec = { min = 50, max = 120, scale = 10 }, brake = brakeTypeNoProportional, lipo = lipoCellCount, cutoffVoltage = cutoffVoltage },
     ["HW1121_V00456NB"] = { layout = DEFAULT_LAYOUT, bec = { min = 50, max = 120, scale = 10 }, brake = brakeTypeNoProportional, lipo = lipoCellCount, cutoffVoltage = cutoffVoltage },
-    ["HW1132_V100456NB"] = { layout = HW1132_LAYOUT, bec = { table = becVoltage60To84 }, brake = brakeTypeNoProportional, lipo = lipoCellCount, cutoffVoltage = cutoffVoltage },
+    ["HW1132_V100456NB"] = { layout = HW1132_LAYOUT, bec = { table = becVoltage60To84 }, brake = brakeTypeNoProportional, lipo = lipoCellCount, cutoffVoltage = cutoffVoltage, response = responseTime },
     ["HW198_V1.00456NB"] = { layout = DEFAULT_LAYOUT, bec = { min = 50, max = 120, scale = 10 }, brake = brakeTypeBasic, lipo = lipoCellCountEven6To14, cutoffVoltage = cutoffVoltage },
     HW1128 = { layout = HW1128_LAYOUT, bec = nil, brake = brakeTypeNoProportional, lipo = lipoCellCount2To4, cutoffVoltage = cutoffVoltage25To38 },
     OPTO = { layout = OPTO_LAYOUT, bec = nil, brake = brakeTypeBasic, lipo = lipoCellCountEven6To14, cutoffVoltage = cutoffVoltage },
@@ -244,6 +246,7 @@ local function applyProfile(data, profile)
     applyTable(data.cutoff_type, cutoffType)
     applyTable(data.cutoff_voltage, profile.cutoffVoltage or cutoffVoltage)
     applyTable(data.restart_time, restartTime)
+    applyTable(data.response_time, profile.response or responseTime)
     applyTable(data.brake_type, profile.brake or brakeType)
     applyTable(data.rotation, rotation)
     applyTable(data.active_freewheel, enabledDisabled)
@@ -313,6 +316,7 @@ local function getDefaults()
         cutoff_voltage = { min = 0, max = #cutoffVoltage, table = cutoffVoltage },
         bec_voltage = { min = 50, max = 84, scale = 10, unit = rf2.units.volt },
         startup_time = { min = 4, max = 25, unit = rf2.units.seconds },
+        response_time = { min = 0, max = #responseTime, table = responseTime },
         gov_p_gain = { min = 0, max = 9 },
         gov_i_gain = { min = 0, max = 9 },
         auto_restart = { min = 0, max = 90, unit = rf2.units.seconds },
