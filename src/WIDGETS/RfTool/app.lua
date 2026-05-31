@@ -6,6 +6,8 @@ local w = {
     options = options
 }
 
+local font_tools = assert(loadScript("/SCRIPTS/RF2/F/fontTools.lua"))()
+
 local scriptsCompiled = assert(loadScript("/SCRIPTS/RF2/COMPILE/scripts_compiled.lua"))()
 if scriptsCompiled then
     w.state = "loading"
@@ -13,41 +15,8 @@ else
     w.state = "compiling"
 end
 
-
 -- Longest possible state string
 local STATE_MEASURE_TEXT = "Unknown Protocol"
-local FONT_SIZES = { XXLSIZE, DBLSIZE, MIDSIZE, STDSIZE, SMLSIZE, TINSIZE }
--- Not available on older EdgeTX versions
-local xlsize = _G["XLSIZE"]
-if type(xlsize) == "number" then
-    table.insert(FONT_SIZES, 2, xlsize)
-end
-
-local function measureFont(font_const, max_w, test_string)
-    local test_text = test_string or "X"
-    local text_w, text_h = lcd.sizeText(test_text, font_const)
-
-    if max_w and text_w > max_w then return -1 end
-
-    return text_h
-end
-
-local function selectFittingFont(available_w, available_h, test_string, start_index)
-    start_index = start_index or 1
-    for i = start_index, #FONT_SIZES do
-        local font_const = FONT_SIZES[i]
-        if font_const then
-            local font_h = measureFont(font_const, available_w, test_string)
-            -- Allow a bit of extra height
-            if font_h > 0 and font_h <= available_h + 2 then
-                return font_const, i
-            end
-        end
-    end
-
-    -- Fallback to the smallest font if nothing fits
-    return FONT_SIZES[#FONT_SIZES], #FONT_SIZES
-end
 
 local function getTelemetryText(options, measure)
     local source = options.sourceName
@@ -223,13 +192,11 @@ local function showWidget(widget)
 
         if row2_text then
             local top_h = math.max(1, math.floor((content_h - row_gap + 1) / 2))
-            local top_font, top_index = selectFittingFont(content_w, top_h, row1_measure)
-            local top_font_h = measureFont(top_font)
+            local top_font = font_tools.selectFont(top_h, content_w, row1_measure)
+            local top_font_h = font_tools.measureFont(top_font)
             local detail_h = math.max(1, content_h - top_font_h - row_gap)
-            -- The second font should be smaller than the first one, so start
-            -- looking from the next smaller font than the one used for row 1
-            local detail_font = selectFittingFont(content_w, detail_h, row2_measure, math.min(top_index + 1, #FONT_SIZES))
-            local detail_font_h = measureFont(detail_font)
+            local detail_font = font_tools.selectFont(detail_h, content_w, row2_measure, top_font)
+            local detail_font_h = font_tools.measureFont(detail_font)
             local detail_y = pad_y + top_font_h + row_gap
 
             children[#children + 1] = {
@@ -255,8 +222,8 @@ local function showWidget(widget)
                 align = LEFT
             }
         else
-            local row_font = selectFittingFont(content_w, content_h, row1_measure)
-            local row_font_h = measureFont(row_font)
+            local row_font = font_tools.selectFont(content_h, content_w, row1_measure)
+            local row_font_h = font_tools.measureFont(row_font)
             local row_y = pad_y + math.max(0, math.floor((content_h - row_font_h) / 2))
 
             children[#children + 1] = {

@@ -9,6 +9,7 @@ local scripts = {
     "/SCRIPTS/RF2/LCD/shared.lua",
     "/SCRIPTS/RF2/LCD/waitMessage.lua",
     "/SCRIPTS/RF2/F/canUseLvgl.lua",
+    "/SCRIPTS/RF2/F/fontTools.lua",
     "/SCRIPTS/RF2/F/formatSeconds.lua",
     "/SCRIPTS/RF2/F/getBit.lua",
     "/SCRIPTS/RF2/F/getLvglSubtitle.lua",
