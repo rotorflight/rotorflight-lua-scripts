@@ -54,6 +54,11 @@ local responseTime = {
     "3",
     "4",
     "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "10",
 }
 
 local rotation = {
@@ -199,7 +204,7 @@ local PROFILES = {
     ["HW1106_V300456NB"] = { layout = DEFAULT_LAYOUT, bec = { min = 50, max = 120, scale = 10 }, brake = brakeTypeNoProportional, lipo = lipoCellCount, cutoffVoltage = cutoffVoltage },
     ["HW1121_V100456NB"] = { layout = DEFAULT_LAYOUT, bec = { min = 50, max = 120, scale = 10 }, brake = brakeTypeNoProportional, lipo = lipoCellCount, cutoffVoltage = cutoffVoltage },
     ["HW1121_V00456NB"] = { layout = DEFAULT_LAYOUT, bec = { min = 50, max = 120, scale = 10 }, brake = brakeTypeNoProportional, lipo = lipoCellCount, cutoffVoltage = cutoffVoltage },
-    ["HW1132_V100456NB"] = { layout = HW1132_LAYOUT, bec = { table = becVoltage60To84 }, brake = brakeTypeNoProportional, lipo = lipoCellCount, cutoffVoltage = cutoffVoltage, response = responseTime },
+    ["HW1132_V100456NB"] = { layout = HW1132_LAYOUT, bec = { table = becVoltage60To84 }, brake = brakeTypeNoProportional, lipo = lipoCellCount2To4, cutoffVoltage = cutoffVoltage, response = responseTime },
     ["HW198_V1.00456NB"] = { layout = DEFAULT_LAYOUT, bec = { min = 50, max = 120, scale = 10 }, brake = brakeTypeBasic, lipo = lipoCellCountEven6To14, cutoffVoltage = cutoffVoltage },
     HW1128 = { layout = HW1128_LAYOUT, bec = nil, brake = brakeTypeNoProportional, lipo = lipoCellCount2To4, cutoffVoltage = cutoffVoltage25To38 },
     OPTO = { layout = OPTO_LAYOUT, bec = nil, brake = brakeTypeBasic, lipo = lipoCellCountEven6To14, cutoffVoltage = cutoffVoltage },
