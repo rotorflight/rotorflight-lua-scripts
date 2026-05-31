@@ -2,6 +2,7 @@
 -- Keep main.lua as lightweight as possible, since main.lua gets loaded for **all** widgets at boot time.
 -- Even if a widget isn't used by a particular model.
 local name = "RF Tool"
+local ACTIVE_WIDGET_TIMEOUT = 100 -- 1 second timeout
 
 --- this is for VSCode extnension 'EdgeTX Dev Kit'
 ---@type WidgetScript
@@ -30,7 +31,10 @@ if lvgl == nil then
 end
 
 local function create(zone, options)
-    return loadScript("/WIDGETS/RfTool/app.lua")(zone, options, rf2 ~= nil)
+    local now = getTime()
+    local warning_duplicate = rf2 ~= nil and rf2.rfToolInstanceSeenAt ~= nil and now - rf2.rfToolInstanceSeenAt <= ACTIVE_WIDGET_TIMEOUT
+
+    return loadScript("/WIDGETS/RfTool/app.lua")(zone, options, warning_duplicate)
 end
 
 local function update(widget, options)

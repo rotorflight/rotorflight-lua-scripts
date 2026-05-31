@@ -283,6 +283,8 @@ w.background = function(widget, calledFromRefresh)
         return
     end
 
+    rf2.rfToolInstanceSeenAt = getTime()
+
     if widget.state == "compiling" then
         compileTask = compileTask or assert(loadScript("/SCRIPTS/RF2/COMPILE/compile.lua"))()
         if compileTask() == 1 then
@@ -330,6 +332,8 @@ w.refresh = function(widget, event, touchState)
         return
     end
 
+    rf2.rfToolInstanceSeenAt = getTime()
+
     if uiTask ~= nil then
         if redrawWidget or not widget.visible or widget.renderedModelName ~= getDisplayedModelName(widget) then
             -- If we immediately show the widget after lvgl.exitFullScreen(), the widget if briefly
@@ -355,6 +359,7 @@ if warning_duplicate then
 end
 
 initializeRf2GlobalVar()
+rf2.rfToolInstanceSeenAt = getTime()
 rf2.registerWidget = registerWidget
 rf2.rfToolApiVersion = 1.00
 
