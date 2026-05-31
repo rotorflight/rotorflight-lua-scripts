@@ -1,5 +1,7 @@
+---@diagnostic disable: undefined-global
 -- RfTool widget
-local zone, options = ...
+local zone, options, warning_duplicate = ...
+warning_duplicate = warning_duplicate == true
 
 local w = {
     zone = zone,
@@ -140,6 +142,7 @@ local function showWidget(widget)
     local row1_measure = nil
     local row2_text = nil
     local row2_measure = nil
+    local text_color = widget.options.TextColor or COLOR_THEME_PRIMARY1
 
     -- Determine what text to show in row 1 and row 2 based on the options
     if show_model then
@@ -177,6 +180,14 @@ local function showWidget(widget)
         end
     end
 
+    if warning_duplicate then
+        row1_text = "Warning"
+        row1_measure = row1_text
+        row2_text = "Use only one RfTool widget"
+        row2_measure = row2_text
+        text_color = COLOR_THEME_WARNING
+    end
+
     local children = {}
 
     if row1_text then
@@ -188,7 +199,6 @@ local function showWidget(widget)
         local row_gap = 1
         local content_w = math.max(1, widget_w - 2 * pad_x)
         local content_h = math.max(1, widget_h - 2 * pad_y)
-        local text_color = widget.options.TextColor or COLOR_THEME_PRIMARY1
 
         if row2_text then
             local top_h = math.max(1, math.floor((content_h - row_gap + 1) / 2))
@@ -256,6 +266,11 @@ w.update = function(widget, options)
         end
     end
 
+    if warning_duplicate then
+        showWidget(widget)
+        return
+    end
+
     if lvgl.isFullScreen() or lvgl.isAppMode() then
         rf2.restartUi()
     else
@@ -264,6 +279,10 @@ w.update = function(widget, options)
 end
 
 w.background = function(widget, calledFromRefresh)
+    if warning_duplicate then
+        return
+    end
+
     if widget.state == "compiling" then
         compileTask = compileTask or assert(loadScript("/SCRIPTS/RF2/COMPILE/compile.lua"))()
         if compileTask() == 1 then
@@ -304,6 +323,13 @@ end
 
 local redrawWidget = false
 w.refresh = function(widget, event, touchState)
+    if warning_duplicate then
+        if not widget.visible then
+            showWidget(widget)
+        end
+        return
+    end
+
     if uiTask ~= nil then
         if redrawWidget or not widget.visible or widget.renderedModelName ~= getDisplayedModelName(widget) then
             -- If we immediately show the widget after lvgl.exitFullScreen(), the widget if briefly
@@ -321,6 +347,11 @@ w.refresh = function(widget, event, touchState)
     end
 
     w.background(widget, true)
+end
+
+if warning_duplicate then
+    -- Duplicate instances stay warning-only so they do not reinitialize shared RF2 state.
+    return w
 end
 
 initializeRf2GlobalVar()

@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-global
 -- Keep main.lua as lightweight as possible, since main.lua gets loaded for **all** widgets at boot time.
 -- Even if a widget isn't used by a particular model.
 local name = "RF Tool"
@@ -29,8 +30,7 @@ if lvgl == nil then
 end
 
 local function create(zone, options)
-    local widget = loadScript("/WIDGETS/RfTool/app.lua")(zone, options)
-    return widget
+    return loadScript("/WIDGETS/RfTool/app.lua")(zone, options, rf2 ~= nil)
 end
 
 local function update(widget, options)
