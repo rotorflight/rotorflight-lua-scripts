@@ -15,6 +15,11 @@ local lipoCellCount2To4 = {
     "2S", "3S", "4S",
 }
 
+local lipoCellCount3To8 = {
+    [0] = "Auto",
+    "3S", "4S", "5S", "6S", "7S", "8S",
+}
+
 local lipoCellCountEven6To14 = {
     [0] = "Auto",
     "6S", "8S", "10S", "12S", "14S",
@@ -189,7 +194,7 @@ local PROFILES = {
         cutoffVoltage = cutoffVoltage,
     },
     ["HW1104_V100456NB"] = { layout = DEFAULT_LAYOUT, bec = { min = 50, max = 120, scale = 10 }, brake = brakeTypeBasic, lipo = lipoCellCountEven6To14, cutoffVoltage = cutoffVoltage },
-    ["HW1106_V100456NB"] = { layout = DEFAULT_LAYOUT, bec = { min = 54, max = 84, scale = 10 }, brake = brakeType, lipo = lipoCellCount, cutoffVoltage = cutoffVoltage },
+    ["HW1106_V100456NB"] = { layout = DEFAULT_LAYOUT, bec = { min = 54, max = 84, scale = 10 }, brake = brakeType, lipo = lipoCellCount3To8, cutoffVoltage = cutoffVoltage },
     ["HW1106_V200456NB"] = { layout = DEFAULT_LAYOUT, bec = { min = 50, max = 120, scale = 10 }, brake = brakeTypeNoProportional, lipo = lipoCellCount, cutoffVoltage = cutoffVoltage },
     ["HW1106_V300456NB"] = { layout = DEFAULT_LAYOUT, bec = { min = 50, max = 120, scale = 10 }, brake = brakeTypeNoProportional, lipo = lipoCellCount, cutoffVoltage = cutoffVoltage },
     ["HW1121_V100456NB"] = { layout = DEFAULT_LAYOUT, bec = { min = 50, max = 120, scale = 10 }, brake = brakeTypeNoProportional, lipo = lipoCellCount, cutoffVoltage = cutoffVoltage },
