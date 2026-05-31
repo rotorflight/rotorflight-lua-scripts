@@ -7,7 +7,12 @@ local w = {
 }
 
 local scriptsCompiled = assert(loadScript("/SCRIPTS/RF2/COMPILE/scripts_compiled.lua"))()
-local initialWidgetState = scriptsCompiled and "loading" or "compiling"
+if scriptsCompiled then
+    w.state = "loading"
+else
+    w.state = "compiling"
+end
+
 
 -- Longest possible state string
 local STATE_MEASURE_TEXT = "Unknown Protocol"
@@ -64,8 +69,6 @@ local function getTelemetryText(options, measure)
     return source .. ": " .. tostring(value) .. (options.Suffix or "")
 end
 
--- RF2 fullscreen pages call options:getText() on the active widget to append
--- widget-specific telemetry text to the subtitle
 w.options.getText = function(options)
     if not options.sourceName then return "" end
     if not getValue then return " - " .. options.sourceName .. ": " end
@@ -73,33 +76,18 @@ w.options.getText = function(options)
 end
 
 local compileTask = nil
+local uiTask = nil
+local backgroundTask = nil
 
 local timeCreated = getTime()
 
--- RF2 is shared across all RfTool instances on a page, so RfTool keeps one
--- shared store under rf2 for cross-instance state and subscribers.
-local function getRfToolShared()
-    rf2.rfToolShared = rf2.rfToolShared or {}
-    rf2.rfToolShared.registeredWidgets = rf2.rfToolShared.registeredWidgets or {}
-    return rf2.rfToolShared
-end
-
+local rfWidgets = {}
 local function registerWidget(widget)
-    -- Subscriber list for widgets that want RfTool onStateChanged callbacks
-    local registeredWidgets = getRfToolShared().registeredWidgets
-    for i = 1, #registeredWidgets do
-        if registeredWidgets[i] == widget then
-            return
-        end
-    end
-
-    registeredWidgets[#registeredWidgets + 1] = widget
+    table.insert(rfWidgets, widget)
 end
 
 local function publishStateChangedEvent(newState)
-    -- Only explicit subscribers are notified here. Other RfTool instances see
-    -- the shared widgetState change in their own refresh/background cycle.
-    for k, v in pairs(getRfToolShared().registeredWidgets) do
+    for k, v in pairs(rfWidgets) do
         if v.onStateChanged then
             rf2.call(v.onStateChanged, v, newState)
         end
@@ -107,12 +95,8 @@ local function publishStateChangedEvent(newState)
 end
 
 local previousArmState = 0
-
--- Multiple RfTool instances can exist on one EdgeTX page, but the RF2 runtime is shared.
--- widgetState in the shared store is the single source of truth. Each widget only keeps
--- local redraw bookkeeping such as needsRedraw and renderedState.
 local function setArmState(widget)
-    if not getValue then return end -- Not available at boot time
+    if not getValue then return end -- not available at boot time
     local armState = getValue("ARM")
     --[NIR
     -- Use ANT instead of ARM in the simulator
@@ -127,21 +111,14 @@ local function setArmState(widget)
 end
 
 w.setState = function(self, state)
-    -- This function can also be called from the background task
-    -- Multiple RfTool instances can reach the same transition. Only the first
-    -- one that changes the shared state should notify subscribers
-    if getRfToolShared().widgetState == state then return end
-
-    getRfToolShared().widgetState = state
-    -- Any logical state change can affect the rendered widget text on the
-    -- normal screen. Mark that surface dirty and let refresh() rebuild it
-    -- when widget mode is active.
-    self.needsRedraw = true
+    -- This function will also be called from the background task
+    if self.state == state then return end
+    self.state = state
     if state == "disconnected" then
         rf2.modelName = nil
         previousArmState = 0
     end
-    publishStateChangedEvent(state)
+    publishStateChangedEvent(self.state)
 end
 
 local function initializeRf2GlobalVar()
@@ -152,23 +129,14 @@ local function initializeRf2GlobalVar()
 end
 
 local function loadScripts(widget)
-    local shared = getRfToolShared()
+    -- load required scripts
+    rf2.radio = rf2.executeScript("radios")
+    rf2.mspQueue = rf2.executeScript("MSP/mspQueue")
+    rf2.mspHelper = rf2.executeScript("MSP/mspHelper")
 
-    -- Load required scripts
-    rf2.radio = rf2.radio or rf2.executeScript("radios")
-    rf2.mspQueue = rf2.mspQueue or rf2.executeScript("MSP/mspQueue")
-    rf2.mspHelper = rf2.mspHelper or rf2.executeScript("MSP/mspHelper")
-
-    -- uiTask/backgroundTask are RF2 singletons. Sharing them on rf2 avoids
-    -- each widget instance creating its own runner with conflicting
-    -- fullscreen state.
-    rf2.uiTask = rf2.uiTask or rf2.executeScript("ui_lvgl_runner")
-    rf2.backgroundTask = rf2.backgroundTask or rf2.executeScript("background")
-    -- rf2.widget is the active widget context consumed by RF2 helpers that
-    -- need widget-specific data such as subtitle text. It is not a broadcast
-    -- to all widgets.
-    shared.runtimeWidget = shared.runtimeWidget or widget
-    rf2.widget = widget
+    -- load tasks
+    uiTask = rf2.executeScript("ui_lvgl_runner")
+    backgroundTask = rf2.executeScript("background")
 end
 
 local function getModelName()
@@ -181,8 +149,8 @@ local function getModelName()
     return modelName or "Unknown"
 end
 
-local function getStateText()
-    local state = getRfToolShared().widgetState
+local function getStateText(widget)
+    local state = widget.state
     return string.upper(string.sub(state, 1, 1)) .. string.sub(state, 2)
 end
 
@@ -213,21 +181,21 @@ local function showWidget(widget)
     if show_state and show_telemetry then
         if row1_text then
             row2_text = function()
-                return getStateText() .. " - " .. getTelemetryText(widget.options)
+                return getStateText(widget) .. " - " .. getTelemetryText(widget.options)
             end
             row2_measure = STATE_MEASURE_TEXT .. " - " .. telemetry_measure
         else
-            row1_text = function() return getStateText() end
+            row1_text = function() return getStateText(widget) end
             row1_measure = STATE_MEASURE_TEXT
             row2_text = function() return getTelemetryText(widget.options) end
             row2_measure = telemetry_measure
         end
     elseif show_state then
         if row1_text then
-            row2_text = function() return getStateText() end
+            row2_text = function() return getStateText(widget) end
             row2_measure = STATE_MEASURE_TEXT
         else
-            row1_text = function() return getStateText() end
+            row1_text = function() return getStateText(widget) end
             row1_measure = STATE_MEASURE_TEXT
         end
     elseif show_telemetry then
@@ -308,18 +276,8 @@ local function showWidget(widget)
     lvgl.clear()
     lvgl.build(children)
 
-    widget.renderedState = getRfToolShared().widgetState
     widget.renderedModelName = displayed_model_name
     widget.visible = true
-end
-
-local function shouldRedrawWidget(widget)
-    local displayed_model_name = getDisplayedModelName(widget)
-
-    return widget.needsRedraw
-        or not widget.visible
-        or widget.renderedState ~= getRfToolShared().widgetState
-        or widget.renderedModelName ~= displayed_model_name
 end
 
 w.update = function(widget, options)
@@ -330,60 +288,34 @@ w.update = function(widget, options)
             widget.options.sourceName = fieldInfo.name
         end
     end
-    widget.needsRedraw = true
-    local shared = getRfToolShared()
 
     if lvgl.isFullScreen() or lvgl.isAppMode() then
-        if shared.fullscreenWidget == nil then
-            shared.fullscreenWidget = widget
-            shared.runtimeWidget = widget
-        end
-
-        if shared.fullscreenWidget == widget and not widget.pendingRf2UiRestart then
-            -- Clear the stale normal widget before the fullscreen handoff,
-            -- otherwise the previous widget tree can flash briefly before RF2
-            -- rebuilds its UI.
-            lvgl.clear()
-            lvgl.build({})
-            widget.visible = false
-        end
-        -- update() is the first point where the fullscreen transition is
-        -- visible, so it clears the stale widget tree early and stores a
-        -- one-shot handoff token. refresh() consumes that token and performs
-        -- the actual RF2 restart in one place.
-        widget.pendingRf2UiRestart = shared.fullscreenWidget == widget
+        rf2.restartUi()
     else
-        widget.pendingRf2UiRestart = false
-        if shared.fullscreenWidget == widget then
-            shared.fullscreenWidget = nil
-        end
+        showWidget(widget)
     end
 end
 
 w.background = function(widget, calledFromRefresh)
-    local shared = getRfToolShared()
-    local state = shared.widgetState
-
-    if state == "compiling" then
+    if widget.state == "compiling" then
         compileTask = compileTask or assert(loadScript("/SCRIPTS/RF2/COMPILE/compile.lua"))()
         if compileTask() == 1 then
             compileTask = nil
-            widget:setState("loading")
+            widget.state = "loading"
         end
         return
-    elseif state == "loading"
+    elseif widget.state == "loading"
         and (getTime() - timeCreated) / 100 > 1 -- bootgrace timeout
     then
         if not rf2.widget then
-            -- First initialized RfTool instance provides the initial widget context for RF2.
             rf2.widget = widget
         end
-        widget:setState("unknown protocol")
-    elseif state == "unknown protocol" then
+        widget.state = "unknown protocol"
+    elseif widget.state == "unknown protocol" then
         local protocol = rf2.executeScript("F/getProtocol")()
         if protocol then
             loadScripts(widget)
-            widget:setState("ready")
+            widget.state = "ready"
         end
     end
 
@@ -391,46 +323,33 @@ w.background = function(widget, calledFromRefresh)
 
     if not calledFromRefresh then
         widget.visible = false
-        if shared.runtimeWidget == widget and rf2.uiTask then
-            -- uiTask also handles mspQueue in the background, so make sure to
-            -- call it even when the widget isn't visible.
-            rf2.uiTask(nil, nil, true)
+        if uiTask then
+            -- uiTask also handles mspQueue in the background, so make sure to call it
+            -- even when the widget isn't visible.
+            uiTask()
         end
     end
 
-    if shared.runtimeWidget == widget and rf2.backgroundTask then
-        rf2.backgroundTask(widget)
+    if backgroundTask then
+        backgroundTask(widget)
     end
 end
 
+local redrawWidget = false
 w.refresh = function(widget, event, touchState)
-    local isWidgetMode = not(lvgl.isFullScreen() or lvgl.isAppMode())
-    local shared = getRfToolShared()
+    if uiTask ~= nil then
+        if redrawWidget or not widget.visible or widget.renderedModelName ~= getDisplayedModelName(widget) then
+            -- If we immediately show the widget after lvgl.exitFullScreen(), the widget if briefly
+            -- displayed in full screen mode. Using redrawWidget prevents that.
+            showWidget(widget)
+            redrawWidget = false
+        end
 
-    if not isWidgetMode and rf2 and shared.runtimeWidget == widget then
-        -- Fullscreen RF2 pages should use the widget that actually triggered
-        -- the handoff.
-        rf2.widget = shared.fullscreenWidget or widget
-    end
-
-    if not isWidgetMode and widget.pendingRf2UiRestart then
-        widget.pendingRf2UiRestart = false
-        rf2.restartUi()
-    end
-
-    -- needsRedraw is only for the normal widget surface. Fullscreen/app mode
-    -- is driven by RF2.
-    if isWidgetMode and shouldRedrawWidget(widget) then
-        showWidget(widget)
-        widget.needsRedraw = false
-    end
-
-    if shared.runtimeWidget == widget and rf2.uiTask ~= nil then
-        local result = rf2.uiTask(event, touchState, isWidgetMode)
+        local noUi = not(lvgl.isFullScreen() or lvgl.isAppMode())
+        local result = uiTask(event, touchState, noUi)
         if lvgl.isFullScreen() and result == 2 then
             lvgl.exitFullScreen()
-            shared.fullscreenWidget = nil
-            widget.needsRedraw = true
+            redrawWidget = true
         end
     end
 
@@ -438,7 +357,6 @@ w.refresh = function(widget, event, touchState)
 end
 
 initializeRf2GlobalVar()
-getRfToolShared().widgetState = getRfToolShared().widgetState or initialWidgetState
 rf2.registerWidget = registerWidget
 rf2.rfToolApiVersion = 1.00
 
