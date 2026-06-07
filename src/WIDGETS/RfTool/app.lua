@@ -1,14 +1,15 @@
 ---@diagnostic disable: undefined-global
 -- RfTool widget
-local zone, options, warning_duplicate = ...
-warning_duplicate = warning_duplicate == true
+local zone, options = ...
 
 local w = {
     zone = zone,
     options = options
 }
 
-local font_tools = assert(loadScript("/SCRIPTS/RF2/F/fontTools.lua"))()
+local warningDuplicate = rf2 ~= nil and rf2.rfToolInstanceSeenAt ~= nil and rf2.clock() - rf2.rfToolInstanceSeenAt <= 1
+
+local fontTools = assert(loadScript("/SCRIPTS/RF2/F/fontTools.lua"))()
 
 local scriptsCompiled = assert(loadScript("/SCRIPTS/RF2/COMPILE/scripts_compiled.lua"))()
 if scriptsCompiled then
@@ -16,9 +17,6 @@ if scriptsCompiled then
 else
     w.state = "compiling"
 end
-
--- Longest possible state string
-local STATE_MEASURE_TEXT = "Unknown Protocol"
 
 local function getTelemetryText(options, measure)
     local source = options.sourceName
@@ -28,7 +26,7 @@ local function getTelemetryText(options, measure)
         if #source < 4 then
             source = string.rep("W", 4 - #source) .. source
         end
-        return source .. ": 0000" .. (options.Suffix or "")
+        return source .. ": 0000" .. options.sourceUnit
     end
 
     -- Not available at boot time
@@ -37,13 +35,13 @@ local function getTelemetryText(options, measure)
     local value = getValue(source)
     if value == nil then return source .. ": -" end
 
-    return source .. ": " .. tostring(value) .. (options.Suffix or "")
+    return source .. ": " .. tostring(value) .. options.sourceUnit
 end
 
 w.options.getText = function(options)
     if not options.sourceName then return "" end
     if not getValue then return " - " .. options.sourceName .. ": " end
-    return " - " .. options.sourceName .. ": " .. tostring(getValue(options.sourceName)) .. options.Suffix
+    return " - " .. options.sourceName .. ": " .. tostring(getValue(options.sourceName)) .. options.sourceUnit
 end
 
 local compileTask = nil
@@ -126,125 +124,127 @@ local function getStateText(widget)
 end
 
 local function getDisplayedModelName(widget)
-    if widget.options.HideModel == 1 then return nil end
+    if widget.options["Hide Model"] == 1 then return nil end
     return getModelName()
 end
 
 local function showWidget(widget)
-    local widget_w = widget.zone.w or widget.zone.x
-    local widget_h = widget.zone.h or widget.zone.y
-    local displayed_model_name = getDisplayedModelName(widget)
-    local show_model = displayed_model_name ~= nil
-    local show_state = widget.options.HideState ~= 1
-    local show_telemetry = widget.options.HideTelemetry ~= 1
-    local telemetry_measure = show_telemetry and getTelemetryText(widget.options, true) or nil
-    local row1_text = nil
-    local row1_measure = nil
-    local row2_text = nil
-    local row2_measure = nil
-    local text_color = widget.options.TextColor or COLOR_THEME_PRIMARY1
+    local STATE_MEASURE_TEXT = "Unknown Protocol"  -- Longest possible state string
+
+    local widgetW = widget.zone.w or widget.zone.x
+    local widgetH = widget.zone.h or widget.zone.y
+    local displayedModelName = getDisplayedModelName(widget)
+    local showModel = displayedModelName ~= nil
+    local showState = widget.options["Hide State"] ~= 1
+    local showTelemetry = widget.options["Hide Telemetry"] ~= 1
+    local telemetryMeasure = showTelemetry and getTelemetryText(widget.options, true) or nil
+    local row1Text = nil
+    local row1Measure = nil
+    local row2Text = nil
+    local row2Measure = nil
+    local textColor = widget.options.Color or COLOR_THEME_PRIMARY1
 
     -- Determine what text to show in row 1 and row 2 based on the options
-    if show_model then
-        row1_text = displayed_model_name
-        row1_measure = displayed_model_name
+    if showModel then
+        row1Text = displayedModelName
+        row1Measure = displayedModelName
     end
 
-    if show_state and show_telemetry then
-        if row1_text then
-            row2_text = function()
+    if showState and showTelemetry then
+        if row1Text then
+            row2Text = function()
                 return getStateText(widget) .. " - " .. getTelemetryText(widget.options)
             end
-            row2_measure = STATE_MEASURE_TEXT .. " - " .. telemetry_measure
+            row2Measure = STATE_MEASURE_TEXT .. " - " .. telemetryMeasure
         else
-            row1_text = function() return getStateText(widget) end
-            row1_measure = STATE_MEASURE_TEXT
-            row2_text = function() return getTelemetryText(widget.options) end
-            row2_measure = telemetry_measure
+            row1Text = function() return getStateText(widget) end
+            row1Measure = STATE_MEASURE_TEXT
+            row2Text = function() return getTelemetryText(widget.options) end
+            row2Measure = telemetryMeasure
         end
-    elseif show_state then
-        if row1_text then
-            row2_text = function() return getStateText(widget) end
-            row2_measure = STATE_MEASURE_TEXT
+    elseif showState then
+        if row1Text then
+            row2Text = function() return getStateText(widget) end
+            row2Measure = STATE_MEASURE_TEXT
         else
-            row1_text = function() return getStateText(widget) end
-            row1_measure = STATE_MEASURE_TEXT
+            row1Text = function() return getStateText(widget) end
+            row1Measure = STATE_MEASURE_TEXT
         end
-    elseif show_telemetry then
-        if row1_text then
-            row2_text = function() return getTelemetryText(widget.options) end
-            row2_measure = telemetry_measure
+    elseif showTelemetry then
+        if row1Text then
+            row2Text = function() return getTelemetryText(widget.options) end
+            row2Measure = telemetryMeasure
         else
-            row1_text = function() return getTelemetryText(widget.options) end
-            row1_measure = telemetry_measure
+            row1Text = function() return getTelemetryText(widget.options) end
+            row1Measure = telemetryMeasure
         end
     end
 
-    if warning_duplicate then
-        row1_text = "Warning"
-        row1_measure = row1_text
-        row2_text = "Use only one RfTool widget"
-        row2_measure = row2_text
-        text_color = COLOR_THEME_WARNING
+    if warningDuplicate then
+        row1Text = "Warning"
+        row1Measure = row1Text
+        row2Text = "Use only one RF Tool widget"
+        row2Measure = row2Text
+        textColor = COLOR_THEME_WARNING
     end
 
     local children = {}
 
-    if row1_text then
+    if row1Text then
         -- Build the lvgl object tree. If no rows are enabled we leave
         -- children empty, which clears the widget while still flowing through
         -- the same render tail.
-        local pad_x = 2
-        local pad_y = 2
-        local row_gap = 1
-        local content_w = math.max(1, widget_w - 2 * pad_x)
-        local content_h = math.max(1, widget_h - 2 * pad_y)
+        local padX = 2
+        local padY = 2
+        local rowGap = 1
+        local contentW = math.max(1, widgetW - 2 * padX)
+        local contentH = math.max(1, widgetH - 2 * padY)
 
-        if row2_text then
-            local top_h = math.max(1, math.floor((content_h - row_gap + 1) / 2))
-            local top_font = font_tools.selectFont(top_h, content_w, row1_measure)
-            local top_font_h = font_tools.measureFont(top_font)
-            local detail_h = math.max(1, content_h - top_font_h - row_gap)
-            local detail_font = font_tools.selectFont(detail_h, content_w, row2_measure, top_font)
-            local detail_font_h = font_tools.measureFont(detail_font)
-            local detail_y = pad_y + top_font_h + row_gap
+        if row2Text then
+            local topH = math.max(1, math.floor((contentH - rowGap + 1) / 2))
+            local topFont = fontTools.selectFont(topH, contentW, row1Measure)
+            local topFontH = fontTools.measureFont(topFont)
+            local detailH = math.max(1, contentH - topFontH - rowGap)
+            local detailFont = fontTools.selectFont(detailH, contentW, row2Measure, topFont)
+            local detailFontH = fontTools.measureFont(detailFont)
+            local detailY = padY + topFontH + rowGap
 
             children[#children + 1] = {
                 type = "label",
-                x = pad_x,
-                y = pad_y,
-                w = content_w,
-                h = top_font_h,
-                text = row1_text,
-                font = top_font,
-                color = text_color,
+                x = padX,
+                y = padY,
+                w = contentW,
+                h = topFontH,
+                text = row1Text,
+                font = topFont,
+                color = textColor,
                 align = LEFT
             }
             children[#children + 1] = {
                 type = "label",
-                x = pad_x,
-                y = detail_y,
-                w = content_w,
-                h = detail_font_h,
-                text = row2_text,
-                font = detail_font,
-                color = text_color,
+                x = padX,
+                y = detailY,
+                w = contentW,
+                h = detailFontH,
+                text = row2Text,
+                font = detailFont,
+                color = textColor,
                 align = LEFT
             }
         else
-            local row_font = font_tools.selectFont(content_h, content_w, row1_measure)
-            local row_font_h = font_tools.measureFont(row_font)
-            local row_y = pad_y + math.max(0, math.floor((content_h - row_font_h) / 2))
+            local rowFont = fontTools.selectFont(contentH, contentW, row1Measure)
+            local rowFontH = fontTools.measureFont(rowFont)
+            local rowY = padY + math.max(0, math.floor((contentH - rowFontH) / 2))
 
             children[#children + 1] = {
                 type = "label",
-                x = pad_x,
-                y = row_y,
-                w = content_w,
-                h = row_font_h,
-                text = row1_text,
-                font = row_font,
-                color = text_color,
+                x = padX,
+                y = rowY,
+                w = contentW,
+                h = rowFontH,
+                text = row1Text,
+                font = rowFont,
+                color = textColor,
                 align = LEFT
             }
         end
@@ -253,7 +253,7 @@ local function showWidget(widget)
     lvgl.clear()
     lvgl.build(children)
 
-    widget.renderedModelName = displayed_model_name
+    widget.renderedModelName = displayedModelName
     widget.visible = true
 end
 
@@ -263,10 +263,11 @@ w.update = function(widget, options)
         local fieldInfo = getFieldInfo(options.Source)
         if fieldInfo then
             widget.options.sourceName = fieldInfo.name
+            widget.options.sourceUnit = rf2.executeScript("F/sensorTools").getUnitSymbol(fieldInfo.unit)
         end
     end
 
-    if warning_duplicate then
+    if warningDuplicate then
         showWidget(widget)
         return
     end
@@ -279,11 +280,11 @@ w.update = function(widget, options)
 end
 
 w.background = function(widget, calledFromRefresh)
-    if warning_duplicate then
+    if warningDuplicate then
         return
     end
 
-    rf2.rfToolInstanceSeenAt = getTime()
+    rf2.rfToolInstanceSeenAt = rf2.clock()
 
     if widget.state == "compiling" then
         compileTask = compileTask or assert(loadScript("/SCRIPTS/RF2/COMPILE/compile.lua"))()
@@ -325,14 +326,12 @@ end
 
 local redrawWidget = false
 w.refresh = function(widget, event, touchState)
-    if warning_duplicate then
+    if warningDuplicate then
         if not widget.visible then
             showWidget(widget)
         end
         return
     end
-
-    rf2.rfToolInstanceSeenAt = getTime()
 
     if uiTask ~= nil then
         if redrawWidget or not widget.visible or widget.renderedModelName ~= getDisplayedModelName(widget) then
@@ -353,13 +352,13 @@ w.refresh = function(widget, event, touchState)
     w.background(widget, true)
 end
 
-if warning_duplicate then
+if warningDuplicate then
     -- Duplicate instances stay warning-only so they do not reinitialize shared RF2 state.
     return w
 end
 
 initializeRf2GlobalVar()
-rf2.rfToolInstanceSeenAt = getTime()
+rf2.rfToolInstanceSeenAt = rf2.clock()
 rf2.registerWidget = registerWidget
 rf2.rfToolApiVersion = 1.00
 
