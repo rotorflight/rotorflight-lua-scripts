@@ -1,11 +1,20 @@
+---@diagnostic disable: undefined-global
 -- Keep main.lua as lightweight as possible, since main.lua gets loaded for **all** widgets at boot time.
 -- Even if a widget isn't used by a particular model.
 local name = "RF Tool"
 
+--- this is for VSCode extnension 'EdgeTX Dev Kit'
+---@type WidgetScript
+
+---@type WidgetOptions
 local options = {
     { "Source", SOURCE, "Vcel" },
-    { "Suffix", STRING, "" }
+    { "Color", COLOR, COLOR_THEME_PRIMARY1 },
+    { "Hide Model", BOOL, 0},
+    { "Hide State", BOOL, 0 },
+    { "Hide Telemetry", BOOL, 0 },
 }
+
 
 if lvgl == nil then
     return {
@@ -19,8 +28,7 @@ if lvgl == nil then
 end
 
 local function create(zone, options)
-    local widget = loadScript("/WIDGETS/RfTool/app.lua")(zone, options)
-    return widget
+    return loadScript("/WIDGETS/RfTool/app.lua")(zone, options)
 end
 
 local function update(widget, options)
