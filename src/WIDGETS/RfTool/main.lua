@@ -8,11 +8,11 @@ local name = "RF Tool"
 
 ---@type WidgetOptions
 local options = {
+    { "Source", SOURCE, "Vcel" },
     { "Color", COLOR, COLOR_THEME_PRIMARY1 },
     { "Hide Model", BOOL, 0},
     { "Hide State", BOOL, 0 },
     { "Hide Telemetry", BOOL, 0 },
-    { "Source", SOURCE, "Vcel" },
 }
 
 
