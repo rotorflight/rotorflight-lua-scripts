@@ -2,22 +2,19 @@
 -- Keep main.lua as lightweight as possible, since main.lua gets loaded for **all** widgets at boot time.
 -- Even if a widget isn't used by a particular model.
 local name = "RF Tool"
-local ACTIVE_WIDGET_TIMEOUT = 100 -- 1 second timeout
 
 --- this is for VSCode extnension 'EdgeTX Dev Kit'
 ---@type WidgetScript
 
 ---@type WidgetOptions
 local options = {
+    { "Color", COLOR, COLOR_THEME_PRIMARY1 },
+    { "Hide Model", BOOL, 0},
+    { "Hide State", BOOL, 0 },
+    { "Hide Telemetry", BOOL, 0 },
     { "Source", SOURCE, "Vcel" },
-    { "Suffix", STRING, "" },
-    { "HideModel", BOOL, 0},
-    { "HideState", BOOL, 0 },
-    { "HideTelemetry", BOOL, 0 },
-    { "TextColor", COLOR, COLOR_THEME_PRIMARY1 }
 }
--- newly added options in EdgeTX don't get their set default value,
--- so the color is black by default when "updating" the widget.
+
 
 if lvgl == nil then
     return {
@@ -31,10 +28,7 @@ if lvgl == nil then
 end
 
 local function create(zone, options)
-    local now = getTime()
-    local warning_duplicate = rf2 ~= nil and rf2.rfToolInstanceSeenAt ~= nil and now - rf2.rfToolInstanceSeenAt <= ACTIVE_WIDGET_TIMEOUT
-
-    return loadScript("/WIDGETS/RfTool/app.lua")(zone, options, warning_duplicate)
+    return loadScript("/WIDGETS/RfTool/app.lua")(zone, options)
 end
 
 local function update(widget, options)
