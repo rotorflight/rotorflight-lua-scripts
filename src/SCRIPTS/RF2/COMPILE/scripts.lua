@@ -18,6 +18,7 @@ local scripts = {
     "/SCRIPTS/RF2/F/incMax.lua",
     "/SCRIPTS/RF2/F/pilotConfigReset.lua",
     "/SCRIPTS/RF2/F/setBit.lua",
+    "/SCRIPTS/RF2/F/sensorTools.lua",
     "/SCRIPTS/RF2/LVGL/helper.lua",
     "/SCRIPTS/RF2/LVGL/mainMenu.lua",
     "/SCRIPTS/RF2/LVGL/messageBox.lua",
