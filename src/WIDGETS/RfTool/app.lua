@@ -73,8 +73,7 @@ local function setArmState(widget)
     --]]
     if armState ~= previousArmState then
         previousArmState = armState
-        -- bit32 is marked as deprecated, so switch to native bit operators
-        local state = (armState & 1) ~= 0 and "armed" or "disarmed"
+        local state = bit32.btest(armState, 1) and "armed" or "disarmed"
         widget:setState(state)
     end
 end
