@@ -32,6 +32,7 @@ if rf2.apiVersion >= 12.07 then
         addPage("showBlheliS", "ESC - BLHeli_S", "esc_blhelis", false)
         addPage("showBluejay", "ESC - Bluejay", "esc_bluejay", false)
     end
+    addPage("showEscSensor", "ESC Sensor", "esc_sensor", true)
     addPage("showFlyRotor", "ESC - FLYROTOR", "esc_flyrotor", false)
     addPage("showPlatinumV5", "ESC - HW Platinum V5", "esc_hwpl5", false)
     addPage("showTribunus", "ESC - Scorpion Tribunus", "esc_scorp", false)

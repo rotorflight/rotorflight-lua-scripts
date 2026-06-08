@@ -47,15 +47,16 @@ fields[21] = { t = "HW Platinum V5",         x = x + indent, y = incY(lineSpacin
 fields[22] = { t = "Scorpion Tribunus",      x = x + indent, y = incY(lineSpacing), sp = x + sp }
 fields[23] = { t = "XDFly/OMP/ZTW",          x = x + indent, y = incY(lineSpacing), sp = x + sp }
 fields[24] = { t = "YGE",                    x = x + indent, y = incY(lineSpacing), sp = x + sp }
+fields[25] = { t = "ESC Sensor",             x = x + indent, y = incY(lineSpacing), sp = x + sp }
 
 incY(lineSpacing * 0.5)
 labels[4] = { t = "Rf2bg Options",           x = x, y = incY(lineSpacing) }
-fields[25] = { t = "Adjustment Teller",      x = x + indent, y = incY(lineSpacing), sp = x + sp }
+fields[26] = { t = "Adjustment Teller",      x = x + indent, y = incY(lineSpacing), sp = x + sp }
 
 if canUseLvgl then
     incY(lineSpacing * 0.5)
     labels[5] = { t = "Tool Options",        x = x, y = incY(lineSpacing) }
-    fields[26] = { t = "Use touch UI",       x = x + indent, y = incY(lineSpacing), sp = x + sp }
+    fields[27] = { t = "Use touch UI",       x = x + indent, y = incY(lineSpacing), sp = x + sp }
 end
 
 local function setValues()
@@ -83,9 +84,10 @@ local function setValues()
     fields[22].data = { value = settings.showTribunus or 0, min = 0, max = 1, table = hideShow }
     fields[23].data = { value = settings.showXdfly or 0, min = 0, max = 1, table = hideShow }
     fields[24].data = { value = settings.showYge or 0, min = 0, max = 1, table = hideShow }
-    fields[25].data = { value = settings.useAdjustmentTeller or 0, min = 0, max = 1, table = offOn }
+    fields[25].data = { value = settings.showEscSensor or 1, min = 0, max = 1, table = hideShow }
+    fields[26].data = { value = settings.useAdjustmentTeller or 0, min = 0, max = 1, table = offOn }
     if canUseLvgl then
-        fields[26].data = { value = settings.useLvgl or 1, min = 0, max = 1, table = offOn }
+        fields[27].data = { value = settings.useLvgl or 1, min = 0, max = 1, table = offOn }
     end
 end
 
@@ -119,12 +121,13 @@ return {
         settings.showTribunus = fields[22].data.value
         settings.showXdfly = fields[23].data.value
         settings.showYge = fields[24].data.value
-        if settings.useAdjustmentTeller ~= fields[25].data.value then
-            settings.useAdjustmentTeller = fields[25].data.value
+        settings.showEscSensor = fields[25].data.value
+        if settings.useAdjustmentTeller ~= fields[26].data.value then
+            settings.useAdjustmentTeller = fields[26].data.value
             rf2.executeScript("F/pilotConfigReset")() -- restart rf2bg
         end
         if canUseLvgl then
-            settings.useLvgl = fields[26].data.value
+            settings.useLvgl = fields[27].data.value
         end
         rf2.saveSettings(settings)
         rf2.reloadMainMenu(true)
