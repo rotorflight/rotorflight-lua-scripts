@@ -1,23 +1,19 @@
 local function getDefaults()
     local defaults = {}
     local protocolTable = { [0] = "NONE", "BLHELI32", "HOBBYWING V4", "HOBBYWING V5", "SCORPION", "KONTRONIK", "OMP", "ZTW", "APD", "OPENYGE" }
-    local maxProtocol = 9
 
     if rf2.apiVersion >= 12.07 then
-        protocolTable[10] = "FLYROTOR"
-        protocolTable[11] = "GRAUPNER"
-        maxProtocol = 11
+        protocolTable[#protocolTable + 1] = "FLYROTOR"
+        protocolTable[#protocolTable + 1] = "GRAUPNER"
     end
     if rf2.apiVersion >= 12.08 then
-        protocolTable[12] = "XDFLY"
-        maxProtocol = 12
+        protocolTable[#protocolTable + 1] = "XDFLY"
     end
     if rf2.apiVersion >= 12.09 then
-        protocolTable[13] = "FrSky F.BUS"
-        maxProtocol = 13
+        protocolTable[#protocolTable + 1] = "FrSky F.BUS"
     end
 
-    defaults.protocol = { min = 0, max = maxProtocol, table = protocolTable }
+    defaults.protocol = { min = 0, max = #protocolTable, table = protocolTable }
     defaults.half_duplex = { min = 0, max = 1, table = { [0] = "Off", "On" } }
     defaults.update_hz = { min = 10, max = 500, unit = rf2.units.herz }
     defaults.current_offset = { min = 0, max = 16000 }
