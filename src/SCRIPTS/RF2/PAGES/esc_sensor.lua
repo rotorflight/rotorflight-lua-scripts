@@ -23,14 +23,14 @@ if rf2.apiVersion >= 12.07 then
     fields[#fields + 1] = { t = "Pin Swap",                  x = x, y = incY(lineSpacing), sp = x + sp, data = escSensorConfig.pin_swap }
 end
 
-incY(lineSpacing * 0.5)
-labels[#labels + 1] = { t = "Calibration",               x = x, y = incY(lineSpacing) }
-fields[#fields + 1] = { t = "Current Offset",            x = x, y = incY(lineSpacing), sp = x + sp, data = escSensorConfig.current_offset }
 if rf2.apiVersion >= 12.08 then
+    incY(lineSpacing * 0.5)
+    labels[#labels + 1] = { t = "Calibration",              x = x, y = incY(lineSpacing) }
     fields[#fields + 1] = { t = "Voltage Correction",       x = x, y = incY(lineSpacing), sp = x + sp, data = escSensorConfig.voltage_correction }
     fields[#fields + 1] = { t = "Current Correction",       x = x, y = incY(lineSpacing), sp = x + sp, data = escSensorConfig.current_correction }
     fields[#fields + 1] = { t = "Consumption Correction",   x = x, y = incY(lineSpacing), sp = x + sp, data = escSensorConfig.consumption_correction }
 end
+
 if rf2.apiVersion < 12.09 then
     incY(lineSpacing * 0.5)
     labels[#labels + 1] = { t = "HW V4 specific",           x = x, y = incY(lineSpacing) }

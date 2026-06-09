@@ -1,19 +1,38 @@
 local function getDefaults()
     local defaults = {}
-    defaults.protocol = { min = 0, max = 14, table = { [0] = "NONE", "BLHELI32", "HOBBYWING V4", "HOBBYWING V5", "SCORPION", "KONTRONIK", "OMP", "ZTW", "APD", "OPENYGE", "FLYROTOR", "GRAUPNER", "XDFLY", "FrSky F.BUS", "RECORD" } }
+    local protocolTable = { [0] = "NONE", "BLHELI32", "HOBBYWING V4", "HOBBYWING V5", "SCORPION", "KONTRONIK", "OMP", "ZTW", "APD", "OPENYGE" }
+    local maxProtocol = 9
+
+    if rf2.apiVersion >= 12.07 then
+        protocolTable[10] = "FLYROTOR"
+        protocolTable[11] = "GRAUPNER"
+        maxProtocol = 11
+    end
+    if rf2.apiVersion >= 12.08 then
+        protocolTable[12] = "XDFLY"
+        maxProtocol = 12
+    end
+    if rf2.apiVersion >= 12.09 then
+        protocolTable[13] = "FrSky F.BUS"
+        maxProtocol = 13
+    end
+
+    defaults.protocol = { min = 0, max = maxProtocol, table = protocolTable }
     defaults.half_duplex = { min = 0, max = 1, table = { [0] = "Off", "On" } }
     defaults.update_hz = { min = 10, max = 500, unit = rf2.units.herz }
-    defaults.current_offset = { min = 0, max = 1000 }
-    defaults.hw4_current_offset = { min = 0, max = 1000 }
-    defaults.hw4_current_gain = { min = 0, max = 250 }
-    defaults.hw4_voltage_gain = { min = 0, max = 250 }
+    defaults.current_offset = { min = 0, max = 16000 }
+    if rf2.apiVersion < 12.09 then
+        defaults.hw4_current_offset = { min = 0, max = 1000 }
+        defaults.hw4_current_gain = { min = 0, max = 250 }
+        defaults.hw4_voltage_gain = { min = 0, max = 250 }
+    end
     if rf2.apiVersion >= 12.07 then
         defaults.pin_swap = { min = 0, max = 1, table = { [0] = "Off", "On" } }
     end
     if rf2.apiVersion >= 12.08 then
-        defaults.voltage_correction = { min = -99, max = 125, unit = rf2.units.percentage }
-        defaults.current_correction = { min = -99, max = 125, unit = rf2.units.percentage }
-        defaults.consumption_correction = { min = -99, max = 125, unit = rf2.units.percentage }
+        defaults.voltage_correction = { min = -100, max = 125, unit = rf2.units.percentage }
+        defaults.current_correction = { min = -100, max = 125, unit = rf2.units.percentage }
+        defaults.consumption_correction = { min = -100, max = 125, unit = rf2.units.percentage }
     end
     return defaults
 end
@@ -27,20 +46,20 @@ local function getEscSensorConfig(callback, callbackParam, data)
             data.half_duplex.value = rf2.mspHelper.readU8(buf)
             data.update_hz.value = rf2.mspHelper.readU16(buf)
             data.current_offset.value = rf2.mspHelper.readU16(buf)
-            data.hw4_current_offset.value = rf2.mspHelper.readU16(buf)
-            data.hw4_current_gain.value = rf2.mspHelper.readU8(buf)
-            data.hw4_voltage_gain.value = rf2.mspHelper.readU8(buf)
+            if rf2.apiVersion < 12.09 then
+                data.hw4_current_offset.value = rf2.mspHelper.readU16(buf)
+                data.hw4_current_gain.value = rf2.mspHelper.readU8(buf)
+                data.hw4_voltage_gain.value = rf2.mspHelper.readU8(buf)
+            else
+                buf.offset = buf.offset + 4
+            end
             if rf2.apiVersion >= 12.07 then
                 data.pin_swap.value = rf2.mspHelper.readU8(buf)
-            else
-                buf.offset = buf.offset + 1
             end
             if rf2.apiVersion >= 12.08 then
                 data.voltage_correction.value = rf2.mspHelper.readS8(buf)
                 data.current_correction.value = rf2.mspHelper.readS8(buf)
                 data.consumption_correction.value = rf2.mspHelper.readS8(buf)
-            else
-                buf.offset = buf.offset + 3
             end
             callback(callbackParam, data)
         end,
@@ -59,22 +78,20 @@ local function setEscSensorConfig(config)
     rf2.mspHelper.writeU8(message.payload, config.half_duplex.value)
     rf2.mspHelper.writeU16(message.payload, config.update_hz.value)
     rf2.mspHelper.writeU16(message.payload, config.current_offset.value)
-    rf2.mspHelper.writeU16(message.payload, config.hw4_current_offset.value)
-    rf2.mspHelper.writeU8(message.payload, config.hw4_current_gain.value)
-    rf2.mspHelper.writeU8(message.payload, config.hw4_voltage_gain.value)
+    if rf2.apiVersion < 12.09 then
+        rf2.mspHelper.writeU16(message.payload, config.hw4_current_offset.value)
+        rf2.mspHelper.writeU8(message.payload, config.hw4_current_gain.value)
+        rf2.mspHelper.writeU8(message.payload, config.hw4_voltage_gain.value)
+    else
+        rf2.mspHelper.writeU32(message.payload, 0)
+    end
     if rf2.apiVersion >= 12.07 then
         rf2.mspHelper.writeU8(message.payload, config.pin_swap.value)
-    else
-        rf2.mspHelper.writeU8(message.payload, 0)
     end
     if rf2.apiVersion >= 12.08 then
         rf2.mspHelper.writeU8(message.payload, config.voltage_correction.value)
         rf2.mspHelper.writeU8(message.payload, config.current_correction.value)
         rf2.mspHelper.writeU8(message.payload, config.consumption_correction.value)
-    else
-        rf2.mspHelper.writeU8(message.payload, 0)
-        rf2.mspHelper.writeU8(message.payload, 0)
-        rf2.mspHelper.writeU8(message.payload, 0)
     end
     rf2.mspQueue:add(message)
 end
