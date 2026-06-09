@@ -17,7 +17,7 @@ y = yMinLim - tableSpacing.header
 
 fields[#fields + 1] = { t = "Protocol",                  x = x, y = incY(lineSpacing), w = 150, sp = x + sp, data = escSensorConfig.protocol }
 fields[#fields + 1] = { t = "Half Duplex",               x = x, y = incY(lineSpacing), sp = x + sp, data = escSensorConfig.half_duplex }
-fields[#fields + 1] = { t = "Update Rate",               x = x, y = incY(lineSpacing), sp = x + sp, data = escSensorConfig.update_hz }
+--fields[#fields + 1] = { t = "Update Rate",               x = x, y = incY(lineSpacing), sp = x + sp, data = escSensorConfig.update_hz }
 
 if rf2.apiVersion >= 12.07 then
     fields[#fields + 1] = { t = "Pin Swap",                  x = x, y = incY(lineSpacing), sp = x + sp, data = escSensorConfig.pin_swap }
