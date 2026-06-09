@@ -23,6 +23,7 @@ addPage("showMixer", "Mixer", "mixer", true)
 addPage("showGyroFilters", "Gyro Filters", "filters", true)
 addPage("showGovernor", "Governor", "governor", true)
 addPage("showAccelerometerTrim", "Accelerometer Trim", "accelerometer", true)
+addPage("showEscSensor", "ESC Sensor", "esc_sensor", true)
 
 if rf2.apiVersion >= 12.07 then
     addPage("showModelOnTx", "Model", "model", true)
