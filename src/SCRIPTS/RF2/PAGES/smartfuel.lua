@@ -15,10 +15,10 @@ local smartFuelConfig = rf2.useApi("mspSmartFuel").getDefaults()
 x = margin
 y = yMinLim - tableSpacing.header
 
-fields[#fields + 1] = { t = "Mode",                     x = x, y = incY(lineSpacing), sp = x + sp, w = 100, data = smartFuelConfig.smartfuel_mode }
-fields[#fields + 1] = { t = "Voltage Drop Rate",        x = x, y = incY(lineSpacing), sp = x + sp, w = 100, data = smartFuelConfig.smartfuel_voltage_drop_rate }
-fields[#fields + 1] = { t = "Charge Drop Rate",         x = x, y = incY(lineSpacing), sp = x + sp, w = 100, data = smartFuelConfig.smartfuel_charge_drop_rate }
-fields[#fields + 1] = { t = "Sag Gain",                 x = x, y = incY(lineSpacing), sp = x + sp, w = 100, data = smartFuelConfig.smartfuel_sag_gain }
+fields[#fields + 1] = { t = "Mode",                     x = x, y = incY(lineSpacing), sp = x + sp, w = 110, data = smartFuelConfig.smartfuel_mode }
+fields[#fields + 1] = { t = "Voltage Drop Rate",        x = x, y = incY(lineSpacing), sp = x + sp, w = 110, data = smartFuelConfig.smartfuel_voltage_drop_rate }
+fields[#fields + 1] = { t = "Charge Drop Rate",         x = x, y = incY(lineSpacing), sp = x + sp, w = 110, data = smartFuelConfig.smartfuel_charge_drop_rate }
+fields[#fields + 1] = { t = "Sag Gain",                 x = x, y = incY(lineSpacing), sp = x + sp, w = 110, data = smartFuelConfig.smartfuel_sag_gain }
 
 local function receivedSmartFuelConfig(page, _)
     rf2.onPageReady(page)
@@ -34,7 +34,7 @@ return {
             rf2.settingsSaved(true, false)
         end
     end,
-    title       = "SmartFuel",
+    title       = "Smart Fuel",
     labels      = labels,
     fields      = fields
 }
