@@ -17,7 +17,7 @@ local protocolScript = "MSP/" .. rf2.executeScript("protocols")
 local mspSend, mspPoll, telemetryPush, maxTxBufferSize, maxRxBufferSize = rf2.executeScript(protocolScript)
 
 local function mspProcessTxQ()
-    if (#(mspTxBuf) == 0) then
+    if #mspTxBuf == 0 then
         return false
     end
     if not telemetryPush() then
@@ -25,7 +25,7 @@ local function mspProcessTxQ()
     end
     --rf2.print("Sending mspTxBuf size "..tostring(#mspTxBuf).." at Idx "..tostring(mspTxIdx).." for cmd: "..tostring(mspLastReq))
     local payload = {}
-    local MSP_VERSION = bit32.lshift(1,5)
+    local MSP_VERSION = bit32.lshift(mspLastReq > 255 and 2 or 1, 5)
     payload[1] = mspSeq + MSP_VERSION
     mspSeq = bit32.band(mspSeq + 1, 0x0F)
     if mspTxIdx == 1 then
@@ -55,14 +55,22 @@ end
 local function mspSendRequest(cmd, payload)
     --rf2.print("Sending cmd "..cmd)
     -- busy
-    if #(mspTxBuf) ~= 0 or not cmd then
+    if #mspTxBuf ~= 0 or not cmd then
         --rf2.print("Existing mspTxBuf is still being sent, failed send of cmd: "..tostring(cmd))
         return nil
     end
-    mspTxBuf[1] = #(payload)
-    mspTxBuf[2] = bit32.band(cmd,0xFF)  -- MSP command
-    for i=1,#(payload) do
-        mspTxBuf[i+2] = bit32.band(payload[i],0xFF)
+    if cmd > 255 then -- MSP2
+        mspTxBuf[#mspTxBuf + 1] = 0 -- flag
+        mspTxBuf[#mspTxBuf + 1] = bit32.band(cmd, 0xFF)
+        mspTxBuf[#mspTxBuf + 1] = bit32.rshift(cmd, 8)
+        mspTxBuf[#mspTxBuf + 1] = bit32.band(#payload, 0xFF)
+        mspTxBuf[#mspTxBuf + 1] = bit32.rshift(#payload, 8)
+    else
+        mspTxBuf[#mspTxBuf + 1] = #payload
+        mspTxBuf[#mspTxBuf + 1] = bit32.band(cmd, 0xFF)
+    end
+    for i=1,#payload do
+        mspTxBuf[#mspTxBuf + 1] = bit32.band(payload[i], 0xFF)
     end
     mspLastReq = cmd
     return mspProcessTxQ()
@@ -82,15 +90,22 @@ local function mspReceivedReply(payload)
         -- start flag set
         mspRxBuf = {}
         mspRxError = bit32.btest(status, 0x80)
-        mspRxSize = payload[idx]
-        mspRxReq = mspLastReq
-        idx = idx + 1
-        if version == 1 then
-            --rf2.print("version == 1")
-            mspRxReq = payload[idx]
+        if version == 0 then -- implicit request (no command ID)
+            mspRxSize = payload[idx]
+            mspRxReq = mspLastReq
+            mspRxCRC = bit32.bxor(mspRxSize, mspRxReq)
             idx = idx + 1
+        elseif version == 1 then
+            mspRxSize = payload[idx]
+            mspRxReq = payload[idx+1]
+            mspRxCRC = bit32.bxor(mspRxSize, mspRxReq)
+            idx = idx + 2
+        elseif version == 2 then
+            idx = idx + 1 -- skip flag
+            mspRxReq = payload[idx] + bit32.lshift(payload[idx+1], 8)
+            mspRxSize = payload[idx+2] + bit32.lshift(payload[idx+3], 8)
+            idx = idx + 4
         end
-        mspRxCRC = bit32.bxor(mspRxSize, mspRxReq)
         if mspRxReq == mspLastReq then
             mspStarted = true
             --rf2.print("Started cmd "..mspLastReq)

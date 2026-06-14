@@ -17,6 +17,7 @@ addPage("showProfileRescue", "Profile - Rescue", "profile_rescue", true)
 addPage("showProfileGovernor", "Profile - Governor", "profile_governor", true)
 if rf2.apiVersion >= 12.09 then
     addPage("showBattery", "Battery", "battery", true)
+    addPage("showSmartFuel", "Smart Fuel", "smartfuel", true)
 end
 addPage("showServos", "Servos", "servos", true)
 addPage("showMixer", "Mixer", "mixer", true)

@@ -57,7 +57,11 @@ rf2 = {
         celsius = " C",
         rpm = " RPM",
         meters = " m",
-        mah = " mAh"
+        mah = " mAh",
+        percentagePerSecond = " %/s",
+        millivoltsPerSecond = " mV/s",
+        khz = " kHz",
+        kv = " KV"
     },
 
     --[NIR
