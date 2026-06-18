@@ -1,6 +1,7 @@
 local initTask = nil
 local adjTellerTask = nil
-local customTelemetryTask = nil
+local crsfTelemetryTask = nil
+local frskyTelemetryTask = nil
 local isInitialized = false
 local modelIsConnected = false
 local lastTimeRssi = nil
@@ -17,7 +18,7 @@ local function setState(widget, state)
 end
 
 local function run(widget)
-    if isInitialized and customTelemetryTask and not hasSensor("*Cnt") then
+    if isInitialized and crsfTelemetryTask and not hasSensor("*Cnt") then
         isInitialized = false -- user probably deleted all sensors on TX
     elseif getRSSI() > 0 then
         lastTimeRssi = rf2.clock()
@@ -41,7 +42,8 @@ local function run(widget)
                 initTask = nil
             end
             adjTellerTask = nil
-            customTelemetryTask = nil
+            crsfTelemetryTask = nil
+            frskyTelemetryTask = nil
             modelIsConnected = false
             isInitialized = false
             collectgarbage()
@@ -50,7 +52,8 @@ local function run(widget)
 
     if not isInitialized then
         adjTellerTask = nil
-        customTelemetryTask = nil
+        crsfTelemetryTask = nil
+        frskyTelemetryTask = nil
         collectgarbage()
         initTask = initTask or rf2.executeScript("background_init")
         local initTaskResult = initTask.run(modelIsConnected)
@@ -65,7 +68,9 @@ local function run(widget)
         end
         if initTaskResult.crsfCustomTelemetryEnabled then
             local requestedSensorsBySid = rf2.executeScript("rf2tlm_sensors", initTaskResult.crsfCustomTelemetrySensors)
-            customTelemetryTask = rf2.executeScript("rf2tlm", requestedSensorsBySid)
+            crsfTelemetryTask = rf2.executeScript("rf2tlm", requestedSensorsBySid)
+        elseif sportTelemetryPush() ~= nil then
+            frskyTelemetryTask = rf2.executeScript("rf2frsky_tlm")
         end
         if initTask.useAdjustmentTeller then
             adjTellerTask = rf2.executeScript("adj_teller")
@@ -84,8 +89,10 @@ local function run(widget)
         adjTellerTask = nil
     end
 
-    if customTelemetryTask then
-        customTelemetryTask.run()
+    if crsfTelemetryTask then
+        crsfTelemetryTask.run()
+    elseif frskyTelemetryTask then
+        frskyTelemetryTask.run()
     end
 end
 
