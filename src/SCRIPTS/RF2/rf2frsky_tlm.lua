@@ -1,5 +1,7 @@
--- Mirror Rotorflight SmartPort-only telemetry IDs into Lua telemetry sensors
--- so FrSky users get the same short names that CRSF/ELRS users see.
+-- Mirror Rotorflight FrSky telemetry IDs into Lua telemetry sensors so
+-- S.Port, F.Port, and FBUS users get the same short names that CRSF/ELRS
+-- users see. This does not rename native EdgeTX/OpenTX sensors; it creates
+-- parallel aliases with stable, friendly names.
 
 local aliases = {
     { sourceName = "5100", aliasId = 0xEF00, aliasName = "BEAT", unit = UNIT_RAW, prec = 0 },
@@ -22,7 +24,7 @@ local aliases = {
     { sourceName = "51A1", aliasId = 0xEFA1, aliasName = "CRol", unit = UNIT_DEGREE, prec = 1 },
     { sourceName = "51A2", aliasId = 0xEFA2, aliasName = "CYaw", unit = UNIT_DEGREE, prec = 1 },
     { sourceName = "51A3", aliasId = 0xEFA3, aliasName = "CCol", unit = UNIT_DEGREE, prec = 1 },
-    { sourceName = "51A4", aliasId = 0xEFA4, aliasName = "Thr",  unit = UNIT_PERCENT, prec = 0 },
+    { sourceName = "51A4", aliasId = 0xEFA4, aliasName = "Thr",  unit = UNIT_PERCENT, prec = 1 },
     { sourceName = "51D0", aliasId = 0xEFD0, aliasName = "CPU%", unit = UNIT_PERCENT, prec = 0 },
     { sourceName = "51D1", aliasId = 0xEFD1, aliasName = "SYS%", unit = UNIT_PERCENT, prec = 0 },
     { sourceName = "51D2", aliasId = 0xEFD2, aliasName = "RT%",  unit = UNIT_PERCENT, prec = 0 },
@@ -47,13 +49,15 @@ local lookupInterval = 2
 local nextLookup = 0
 
 local function resolveSourceId(alias)
-    if getFieldInfo == nil or alias.sourceId ~= nil then
+    if getFieldInfo == nil then
         return
     end
 
     local field = getFieldInfo(alias.sourceName)
     if field then
         alias.sourceId = field.id
+    else
+        alias.sourceId = nil
     end
 end
 
