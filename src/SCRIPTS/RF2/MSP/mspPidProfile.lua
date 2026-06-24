@@ -49,6 +49,9 @@ local function getDefaults()
         data.yaw_inertia_precomp_gain = { min = 0, max = 250 }
         data.yaw_inertia_precomp_cutoff = { min = 0, max = 250, scale = 10, unit = rf2.units.herz }
     end
+    --if rf2.apiVersion >= 12.10 then
+    data.error_decay_gain_cyclic = { min = 0, max = 250 }
+    --end
     return data
 end
 
@@ -110,9 +113,12 @@ local function getPidProfile(callback, callbackParam, data)
                 data.yaw_inertia_precomp_gain.value = rf2.mspHelper.readU8(buf)
                 data.yaw_inertia_precomp_cutoff.value = rf2.mspHelper.readU8(buf)
             end
+            --if rf2.apiVersion >= 12.10 then
+            data.error_decay_gain_cyclic.value = rf2.mspHelper.readU8(buf)
+            --end
             callback(callbackParam, data)
         end,
-        simulatorResponse = { 3, 25, 250, 0, 12, 0, 1, 30, 30, 45, 50, 50, 100, 15, 15, 20, 2, 10, 10, 15, 100, 100, 5, 0, 30, 0, 25, 0, 40, 55, 40, 75, 20, 25, 0, 15, 45, 45, 15, 15, 20, 0, 0 },
+        simulatorResponse = { 3, 25, 250, 0, 12, 0, 1, 30, 30, 45, 50, 50, 100, 15, 15, 20, 2, 10, 10, 15, 100, 100, 5, 0, 30, 0, 25, 0, 40, 55, 40, 75, 20, 25, 0, 15, 45, 45, 15, 15, 20, 0, 0, 0 },
     }
     rf2.mspQueue:add(message)
 end
@@ -177,6 +183,9 @@ local function setPidProfile(data)
         rf2.mspHelper.writeU8(message.payload, data.yaw_inertia_precomp_gain.value)
         rf2.mspHelper.writeU8(message.payload, data.yaw_inertia_precomp_cutoff.value)
     end
+    --if rf2.apiVersion >= 12.10 then
+    rf2.mspHelper.writeU8(message.payload, data.error_decay_gain_cyclic.value)
+    --end
     rf2.mspQueue:add(message)
 end
 
