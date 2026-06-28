@@ -39,6 +39,12 @@ if rf2.apiVersion >= 12.09 then
     fields[#fields + 1] = { t = "TTA bandwidth",            x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_tta_filter }
     fields[#fields + 1] = { t = "Precomp bandwidth",        x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_ff_filter }
     fields[#fields + 1] = { t = "D-term cutoff",            x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_d_filter }
+    incY(lineSpacing * 0.5)
+    labels[#labels + 1] = { t = "Bypass Throttle Curve",    x = x, y = incY(lineSpacing) }
+    for i = 0, 8 do
+        local xLabelText = tostring(i + 1) .. ". x = " .. (-100 + i * 25)
+        fields[#fields + 1] = { t = xLabelText,             x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_bypass_throttle[i] }
+    end
 else -- < 12.09
     fields[#fields + 1] = { t = "Handover throttle",        x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_handover_throttle }
     fields[#fields + 1] = { t = "Startup time",             x = x, y = incY(lineSpacing), sp = x + sp, data = governorConfig.gov_startup_time }
