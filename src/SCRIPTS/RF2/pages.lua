@@ -17,12 +17,14 @@ addPage("showProfileRescue", "Profile - Rescue", "profile_rescue", true)
 addPage("showProfileGovernor", "Profile - Governor", "profile_governor", true)
 if rf2.apiVersion >= 12.09 then
     addPage("showBattery", "Battery", "battery", true)
+    addPage("showSmartFuel", "Smart Fuel", "smartfuel", true)
 end
 addPage("showServos", "Servos", "servos", true)
 addPage("showMixer", "Mixer", "mixer", true)
 addPage("showGyroFilters", "Gyro Filters", "filters", true)
 addPage("showGovernor", "Governor", "governor", true)
 addPage("showAccelerometerTrim", "Accelerometer Trim", "accelerometer", true)
+addPage("showEscSensor", "ESC Sensor", "esc_sensor", true)
 
 if rf2.apiVersion >= 12.07 then
     addPage("showModelOnTx", "Model", "model", true)

@@ -61,7 +61,7 @@ local function show(page)
                     if field.preEdit then field.preEdit(field, page) end
                 end,
             }
-        elseif field.data and field.data.value and type(field.data.value) == "string" then
+        elseif field.data and field.data.value ~= nil and type(field.data.value) == "string" then
             local child
             if field.readOnly then
                 child = {
@@ -82,7 +82,7 @@ local function show(page)
             end
 
             children[#children + 1] = child
-        elseif field.data and field.data.value and type(field.data.value) == "number" then
+        elseif field.data and field.data.value ~= nil and type(field.data.value) == "number" then
             local child
             if field.readOnly then
                 child = {
@@ -93,7 +93,7 @@ local function show(page)
                         return formatVal(field.data.value, field)
                     end,
                 }
-            elseif field.data.table then
+            elseif type(field.data.table) == "table" then
                 local choiceTable = lvglHelper.toChoiceTable(field.data.table, field.data.max + 1)
                 --rf2.print("Choice with value: " .. tostring(field.data.value))
                 child = {

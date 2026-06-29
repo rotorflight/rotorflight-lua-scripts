@@ -1,18 +1,16 @@
-# 2.3.0-RC3
+# 2.3.0
 
-This is the *Third Release Candidate* of the *Rotorflight 2.3.0 Lua Scripts for EdgeTX and OpenTX*.
-
-NOTE: The final 2.3.0 version will be released after a few release candidates. Please don't use RCs once the final release is out.
+This is the *Official Release* of the *Rotorflight 2.3.0 Lua Scripts for EdgeTX and OpenTX*.
 
 ## Downloads
 
 The download locations are:
 
-- [Rotorflight Configurator](https://github.com/rotorflight/rotorflight-configurator/releases/tag/release/2.3.0-RC3)
+- [Rotorflight Configurator](https://github.com/rotorflight/rotorflight-configurator/releases/tag/release/2.3.0-RC2)
 - [Rotorflight Blackbox](https://github.com/rotorflight/rotorflight-blackbox/releases/tag/release/2.3.0-RC2)
-- [Lua Scripts for EdgeTX and OpenTX](https://github.com/rotorflight/rotorflight-lua-scripts/releases/tag/release/2.3.0-RC3)
-- [Lua Scripts for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos/releases/tag/release/2.3.0-RC3)
-- [Lua Suite for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos-suite/releases/tag/release/2.3.0-RC3)
+- [Lua Scripts for EdgeTX and OpenTX](https://github.com/rotorflight/rotorflight-lua-scripts/releases/tag/release/2.3.0-RC2)
+- [Lua Scripts for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos/releases/tag/release/2.3.0-RC2)
+- [Lua Suite for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos-suite/releases/tag/release/2.3.0-RC2)
 
 ## Notes
 
@@ -29,14 +27,18 @@ Rotorflight setup instructions can be found on the Rotorflight website [www.roto
 - *rf2bg* background script
   - Custom CRSF telemetry sensors can now be deleted and discovered at any time.
   - No need to follow a special procedure anymore to get the sensors in the correct order.
+- Inmproved FrSky Smart Port telemetry support featuring user-friendly sensor names.
 - *Battery* page: new page for configuring and specifying your batteries.
+- *ESC Sensor* page: new page for configuring ESC telemetry.
 - *Governor* page: added support for the new Rotorflight governor.
 - *Rates* page: added support for *Rotorflight* rates.
 - *Rate Dynamics* page: added support for *Cyclic ring* and *Polar coordinates*.
+- *Smart Fuel* page: new page for configuring *Smart Fuel*.
 - *AM32 ESC* page: new page for configuring AM32 ESCs.
 - *BLHeli_S ESC* page: new page for configuring BLHeli_S ESCs.
 - *Bluejay ESC* page: new page for configuring Bluejay ESCs.
 - *FLYROTOR ESC* page: updated parameters.
+- *HW Platinum V5* page: improved support for various Hobbywing Platinum V5 ESCs, including support for the Stratos 200 ESC.
 - Added support for configuring *OMP* and *ZTW* ESCs.
 - Added support for the *Radiomaster TX16S MK3*.
 - Added partial support for the *FlySky PA01*.

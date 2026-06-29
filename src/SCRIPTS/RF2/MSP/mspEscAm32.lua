@@ -157,9 +157,9 @@ local function getDefaults()
     d.variable_pwm_frequency = { min = 0, max = #variablePwm, table = variablePwm }
     d.stuck_rotor_protection = { min = 0, max = #onOff, table = onOff }
     d.timing_advance = { min = 0, max = #timingAdvance, table = timingAdvance }
-    d.pwm_frequency = { min = 8, max = 144, unit = " kHz" }
+    d.pwm_frequency = { min = 8, max = 144, unit = rf2.units.khz }
     d.startup_power = { min = 50, max = 150, unit = rf2.units.percentage }
-    d.motor_kv = { min = 20, max = 10220, unit = " KV" }
+    d.motor_kv = { min = 20, max = 10220, unit = rf2.units.kv }
     d.motor_poles = { min = 2, max = 36 }
     d.brake_on_stop = { min = 0, max = #brakeOnStop, table = brakeOnStop }
     d.stall_protection = { min = 0, max = #onOff, table = onOff }

@@ -44,7 +44,7 @@ t.draw = function(pageState)
                 valueOptions = valueOptions + BLINK
             end
         end
-        if f.data and f.data.value then
+        if f.data and f.data.value ~= nil then
             val = f.data.value
             if type(val) == "number" then
                 if f.data.scale then
@@ -54,7 +54,7 @@ t.draw = function(pageState)
                     val = math.floor(val)
                 end
             end
-            if f.data.table and f.data.table[val] then
+            if type(f.data.table) == "table" and f.data.table[val] then
                 val = f.data.table[val]
             end
         end

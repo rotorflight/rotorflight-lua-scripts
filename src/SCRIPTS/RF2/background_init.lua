@@ -101,7 +101,7 @@ end
 local sensorsDiscoveredTimeout = 0
 local hasSensor = rf2.executeScript("F/hasSensor")
 local function waitForCrsfSensorsDiscovery()
-    if not crossfireTelemetryPush() or rf2.runningInSimulator then
+    if crossfireTelemetryPush() == nil then
         -- Model does not use CRSF/ELRS
         return 0
     end
@@ -167,9 +167,11 @@ local function initializeQueue()
 end
 
 local function initialize(modelIsConnected)
-    local sensorsDiscoveryWaitState = waitForCrsfSensorsDiscovery()
-    if sensorsDiscoveryWaitState == 1 then
-        return false
+    if modelIsConnected then
+        local sensorsDiscoveryWaitState = waitForCrsfSensorsDiscovery()
+        if sensorsDiscoveryWaitState == 1 then
+            return false
+        end
     end
 
     if not modelIsConnected then

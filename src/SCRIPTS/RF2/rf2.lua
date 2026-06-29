@@ -1,5 +1,5 @@
 rf2 = {
-    luaVersion = "2.3.0-RC3",
+    luaVersion = "2.3.0",
     baseDir = "/SCRIPTS/RF2/",
     runningInSimulator = string.sub(select(2, getVersion()), -4) == "simu",
 
@@ -57,7 +57,11 @@ rf2 = {
         celsius = " C",
         rpm = " RPM",
         meters = " m",
-        mah = " mAh"
+        mah = " mAh",
+        percentagePerSecond = " %/s",
+        millivoltsPerSecond = " mV/s",
+        khz = " kHz",
+        kv = " KV"
     },
 
     --[NIR

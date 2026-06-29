@@ -33,6 +33,9 @@ local function getDefaults()
         defaults.gov_idle_throttle = { min = 0, max = 250, scale = 10, unit = rf2.units.percentage }
         defaults.gov_auto_throttle = { min = 0, max = 250, scale = 10, unit = rf2.units.percentage }
         defaults.gov_bypass_throttle = { }
+        for i = 0, 8 do
+            defaults.gov_bypass_throttle[i] = { min = 0, max = 200, scale = 2, unit = rf2.units.percentage }
+        end
     end
     return defaults
 end
@@ -77,14 +80,13 @@ local function getGovernorConfig(callback, callbackParam, data)
                 buf.offset = buf.offset + 2
                 data.gov_idle_throttle.value = rf2.mspHelper.readU8(buf)
                 data.gov_auto_throttle.value = rf2.mspHelper.readU8(buf)
-                data.gov_bypass_throttle = {}
                 for i = 0, 8 do
-                    data.gov_bypass_throttle[#data.gov_bypass_throttle + 1] = rf2.mspHelper.readU8(buf)
+                    data.gov_bypass_throttle[i].value = rf2.mspHelper.readU8(buf)
                 end
             end
             callback(callbackParam, data)
         end,
-        simulatorResponse = { 2, 200, 0, 100, 0, 20, 0, 20, 0, 50, 0, 0, 0, 50, 0, 0, 0, 0, 0, 20, 5, 10, 0, 5, 0, 50, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+        simulatorResponse = { 2, 200, 0, 100, 0, 20, 0, 20, 0, 50, 0, 0, 0, 50, 0, 0, 0, 0, 0, 20, 5, 10, 0, 5, 0, 50, 30, 0, 0, 0, 0, 0, 0, 0, 50, 100, 120, 140, 150, 160, 165, 170 }
     }
     rf2.mspQueue:add(message)
 end
@@ -133,7 +135,7 @@ local function setGovernorConfig(config)
         rf2.mspHelper.writeU8(message.payload, config.gov_idle_throttle.value)
         rf2.mspHelper.writeU8(message.payload, config.gov_auto_throttle.value)
         for i = 0, 8 do
-            rf2.mspHelper.writeU8(message.payload, config.gov_bypass_throttle[i + 1] or 0)
+            rf2.mspHelper.writeU8(message.payload, config.gov_bypass_throttle[i].value or 0)
         end
     end
     rf2.mspQueue:add(message)

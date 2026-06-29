@@ -61,7 +61,7 @@ return {
     write = function(self)
         if batteryConfig.voltageMeterSource.value then
             rf2.useApi("mspBatteryConfig").write(batteryConfig)
-            rf2.settingsSaved(true, true)
+            rf2.settingsSaved(true, false)
         end
     end,
     timer = function(self)
