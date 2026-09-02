@@ -193,7 +193,7 @@ local sensorsById  =  {
     -- ESC#2 eRPM
     [33] = { sid = 0x1054, name = "Es2R", unit = UNIT_RPMS, prec = 0, dec = decU24 },
     -- ESC#2 temperature
-    [36] = { sid = 0x1057, name = "Es2T", unit = UNIT_CELSIUS, prec = 0, dec = nil },
+    [36] = { sid = 0x1057, name = "Es2T", unit = UNIT_CELSIUS, prec = 0, dec = decU8 },
     -- ESC#2 Model Id
     [41] = { sid = 0x105F, name = "Es2#", unit = UNIT_RAW, prec = 0, dec = decU8 },
 
