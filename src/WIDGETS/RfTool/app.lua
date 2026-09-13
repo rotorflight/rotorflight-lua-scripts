@@ -7,7 +7,7 @@ local w = {
     options = options
 }
 
-local warningDuplicate = rf2 ~= nil and rf2.rfToolInstanceSeenAt ~= nil and rf2.clock() - rf2.rfToolInstanceSeenAt <= 1
+local warningDuplicate = rf2 ~= nil and rf2.rfToolModelFilename == model.getInfo().filename
 
 local fontTools = assert(loadScript("/SCRIPTS/RF2/F/fontTools.lua"))()
 
@@ -283,8 +283,6 @@ w.background = function(widget, calledFromRefresh)
         return
     end
 
-    rf2.rfToolInstanceSeenAt = rf2.clock()
-
     if widget.state == "compiling" then
         compileTask = compileTask or assert(loadScript("/SCRIPTS/RF2/COMPILE/compile.lua"))()
         if compileTask() == 1 then
@@ -357,8 +355,8 @@ if warningDuplicate then
 end
 
 initializeRf2GlobalVar()
-rf2.rfToolInstanceSeenAt = rf2.clock()
 rf2.registerWidget = registerWidget
 rf2.rfToolApiVersion = 1.00
+rf2.rfToolModelFilename = model.getInfo().filename
 
 return w
