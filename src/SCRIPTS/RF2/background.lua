@@ -51,10 +51,12 @@ local function run(widget)
     end
 
     if not isInitialized then
-        adjTellerTask = nil
-        crsfTelemetryTask = nil
-        frskyTelemetryTask = nil
-        collectgarbage()
+        if adjTellerTask or crsfTelemetryTask or frskyTelemetryTask then
+            adjTellerTask = nil
+            crsfTelemetryTask = nil
+            frskyTelemetryTask = nil
+            collectgarbage()
+        end
         initTask = initTask or rf2.executeScript("background_init")
         local initTaskResult = initTask.run(modelIsConnected)
         if not initTaskResult.isInitialized then
