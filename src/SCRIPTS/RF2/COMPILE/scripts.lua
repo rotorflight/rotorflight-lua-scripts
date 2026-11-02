@@ -49,6 +49,7 @@ local scripts = {
     "/SCRIPTS/RF2/MSP/mspEscHwPl5.lua",
     "/SCRIPTS/RF2/MSP/mspEscScorp.lua",
     "/SCRIPTS/RF2/MSP/mspEscSensorConfig.lua",
+    "/SCRIPTS/RF2/MSP/mspSrxl2EscConfig.lua",
     "/SCRIPTS/RF2/MSP/mspEscXdfly.lua",
     "/SCRIPTS/RF2/MSP/mspEscYge.lua",
     "/SCRIPTS/RF2/MSP/mspExperimental.lua",
