@@ -1,3 +1,17 @@
+# 2.3.0.1
+
+This is a maintenance release for the *Rotorflight 2.3.0 Lua Scripts for EdgeTX and OpenTX*.
+
+## Changes Since Version 2.3.0
+- Fixed switching between models both using *RF Tool*
+- Fixed an issue with AM32 *30° timing advance*
+- Renamed the CRSF GPS course sensor to *GCrs* instead of *GHdg*
+- Improved memory management
+
+
+
+***
+
 # 2.3.0
 
 This is the *Official Release* of the *Rotorflight 2.3.0 Lua Scripts for EdgeTX and OpenTX*.
