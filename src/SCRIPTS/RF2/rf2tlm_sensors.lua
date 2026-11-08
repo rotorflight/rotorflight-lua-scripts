@@ -193,7 +193,7 @@ local sensorsById  =  {
     -- ESC#2 eRPM
     [33] = { sid = 0x1054, name = "Es2R", unit = UNIT_RPMS, prec = 0, dec = decU24 },
     -- ESC#2 temperature
-    [36] = { sid = 0x1057, name = "Es2T", unit = UNIT_CELSIUS, prec = 0, dec = nil },
+    [36] = { sid = 0x1057, name = "Es2T", unit = UNIT_CELSIUS, prec = 0, dec = decU8 },
     -- ESC#2 Model Id
     [41] = { sid = 0x105F, name = "Es2#", unit = UNIT_RAW, prec = 0, dec = decU8 },
 
@@ -264,8 +264,8 @@ local sensorsById  =  {
     [77] = { sid = 0x1125, name = "GPS", unit = UNIT_RAW, prec = 0, dec = decLatLong },
     -- GPS altitude
     [78] = { sid = 0x1126, name = "GAlt", unit = UNIT_METERS, prec = 1, dec = decS16 },
-    -- GPS heading
-    [79] = { sid = 0x1127, name = "GHdg", unit = UNIT_DEGREE, prec = 1, dec = decS16 },
+    -- GPS course over ground
+    [79] = { sid = 0x1127, name = "GCrs", unit = UNIT_DEGREE, prec = 1, dec = decS16 },
     -- GPS ground speed
     [80] = { sid = 0x1128, name = "GSpd", unit = UNIT_METERS_PER_SECOND, prec = 2, dec = decU16 },
     -- GPS home distance
