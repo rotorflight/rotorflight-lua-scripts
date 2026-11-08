@@ -8,6 +8,7 @@ local timingAdvance = {
     "7.5 " .. rf2.units.degrees,
     "15 " .. rf2.units.degrees,
     "22.5 " .. rf2.units.degrees,
+    "30 " .. rf2.units.degrees,
 }
 
 local onOff = {
@@ -47,16 +48,17 @@ local function clamp(value, min, max)
     return value
 end
 
+-- raw 10-42 => "new" encoding (n*8+10, raw 42 = 30 deg), raw 0-3 => "legacy" (no 30 deg)
 local function normalizeTimingAdvance(raw)
     if raw == nil then return 0, "legacy" end
     if raw >= 10 and raw <= 42 then
-        return clamp(math.floor((raw - 10) / 8 + 0.5), 0, 3), "new"
+        return clamp(math.floor((raw - 10) / 8 + 0.5), 0, 4), "new"
     end
     return clamp(math.floor(raw + 0.5), 0, 3), "legacy"
 end
 
 local function encodeTimingAdvance(value, encoding)
-    value = clamp(math.floor((value or 0) + 0.5), 0, 3)
+    value = clamp(math.floor((value or 0) + 0.5), 0, encoding == "new" and 4 or 3)
     if encoding == "new" then
         return 10 + value * 8
     end
