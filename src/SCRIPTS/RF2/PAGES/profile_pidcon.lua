@@ -29,6 +29,9 @@ labels[#labels + 1] = { t = "Error Decay Ground",      x = x,          y = incY(
 fields[#fields + 1] = { t = "Time",                    x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.error_decay_time_ground }
 labels[#labels + 1] = { t = "Error Decay Cyclic",      x = x,          y = incY(lineSpacing) }
 fields[#fields + 1] = { t = "Time",                    x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.error_decay_time_cyclic }
+--if rf2.apiVersion >= 12.10 then  -- TODO
+fields[#fields + 1] = { t = "Stick Gain",              x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.error_decay_gain_cyclic }
+--end
 fields[#fields + 1] = { t = "Limit",                   x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.error_decay_limit_cyclic }
 labels[#labels + 1] = { t = "Error Decay Yaw",         x = x,          y = incY(lineSpacing) }
 fields[#fields + 1] = { t = "Time",                    x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.error_decay_time_yaw }
