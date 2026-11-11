@@ -4,10 +4,10 @@
 -- reads them at boot, so a change needs the usual save and reboot.
 local function getDefaults()
     local defaults = {}
-    -- 0 = single motor; 1..31 = the SRXL2 channel carrying motor 2 (channel 0
+    -- 0 = single motor; 2..32 = the SRXL2 channel carrying motor 2 (channel 1
     -- is always motor 1), for dual-motor Smart ESCs such as the SPMXAE1020.
     local channelTable = { [0] = "Off" }
-    for ch = 1, 31 do
+    for ch = 2, 32 do
         channelTable[ch] = tostring(ch)
     end
 
@@ -15,7 +15,7 @@ local function getDefaults()
     -- from the motor PWM rate, so the page does not show it.
     defaults.throttle_rate_hz = { min = 1, max = 2000, unit = rf2.units.herz }
     defaults.telem_interval_frames = { min = 0, max = 255 }
-    defaults.motor2_channel = { min = 0, max = 31, table = channelTable }
+    defaults.motor2_channel = { min = 0, max = 32, table = channelTable }
     return defaults
 end
 
