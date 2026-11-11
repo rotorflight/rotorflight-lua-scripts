@@ -40,8 +40,50 @@ if rf2.apiVersion < 12.09 then
 end
 
 
-local function receivedEscSensorConfig(page, _)
+-- SRXL2 ESC bus settings, read after the ESC sensor config. Firmware without
+-- the message answers with an MSP error; the section is then dropped from
+-- the page before it is shown (it is always the last label and two fields).
+local srxl2Config = rf2.useApi("mspSrxl2EscConfig").getDefaults()
+local srxl2Supported = nil
+-- Channel 1 is motor 1, so the motor 2 channel steps from Off straight to 2
+-- and back. motor2Last is the value before the edit, which gives the direction.
+local motor2Last = 0
+local function skipMotor1Channel(field)
+    local data = field.data
+    if data.value == 1 then
+        data.value = motor2Last >= 2 and 0 or 2
+    end
+    motor2Last = data.value
+end
+if rf2.apiVersion >= 12.10 then
+incY(lineSpacing * 0.5)
+labels[#labels + 1] = { t = "SRXL2 ESC",                x = x, y = incY(lineSpacing) }
+fields[#fields + 1] = { t = "Telemetry Interval",       x = x, y = incY(lineSpacing), sp = x + sp, data = srxl2Config.telem_interval_frames }
+fields[#fields + 1] = { t = "Motor 2 Channel",          x = x, y = incY(lineSpacing), sp = x + sp, data = srxl2Config.motor2_channel, change = skipMotor1Channel }
+end
+
+local function srxl2Unsupported(page)
+    if srxl2Supported ~= false then
+        srxl2Supported = false
+        fields[#fields] = nil
+        fields[#fields] = nil
+        labels[#labels] = nil
+    end
     rf2.onPageReady(page)
+end
+
+local function receivedSrxl2Config(page, _)
+    srxl2Supported = true
+    motor2Last = srxl2Config.motor2_channel.value or 0
+    rf2.onPageReady(page)
+end
+
+local function receivedEscSensorConfig(page, _)
+    if rf2.apiVersion >= 12.10 then
+        rf2.useApi("mspSrxl2EscConfig").read(receivedSrxl2Config, page, srxl2Config, srxl2Unsupported)
+    else
+        rf2.onPageReady(page)
+    end
 end
 
 return {
@@ -51,6 +93,9 @@ return {
     write = function(self)
         if escSensorConfig.protocol.value then
             rf2.useApi("mspEscSensorConfig").write(escSensorConfig)
+            if srxl2Supported and srxl2Config.motor2_channel.value then
+                rf2.useApi("mspSrxl2EscConfig").write(srxl2Config)
+            end
             rf2.settingsSaved(true, true)
         end
     end,
